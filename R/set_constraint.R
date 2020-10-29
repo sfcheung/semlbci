@@ -39,7 +39,7 @@ set_constraint <- function(sem_out, ciperc = .95) {
     fmin <- lavaan::lavTech(sem_out, "optim")$fx
     n <- lavaan::lavTech(sem_out, "nobs")
     # NOTE: For lavaan, chisq = 2 * n * fmin
-    target <- fmin + qcrit/(2 * n)
+    target <- fmin + qcrit / (2 * n)
       fn_constraint <- function(param) {
         start0 <- lavaan::parameterTable(sem_out)
         start0[p_free, "est"] <- param
