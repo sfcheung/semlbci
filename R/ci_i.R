@@ -11,7 +11,7 @@
 #' Can return the optimization history as an attribute.
 #'
 #' @param i The position of the target parameters.
-#' @param ... Parameters to be passed to \code{ci_bound_i}.
+#' @param ... Arguments to be passed to \code{ci_bound_i}.
 #' 
 #'@examples
 #' library(lavaan)
