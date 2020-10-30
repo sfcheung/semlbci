@@ -20,9 +20,7 @@ is .95.}
 \item{ncpu}{The number of workers, if parallel is TRUE.}
 }
 \value{
-A boolean vector of the same length as the number of rows of the \code{lavaan}.
-parameter tables. A position is \code{TRUE} if the corresponding parameter
-is free.
+The LBCIs for all free parameters
 }
 \description{
 Find the LBCIs for all free parameters in an SEM output
