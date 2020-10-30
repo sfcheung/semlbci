@@ -57,7 +57,7 @@ ci_bound_i <- function(i = NULL,
     lbci_b_grad <- function(param) {
         grad_c
       }
-    out <- nloptr::nloptr(x0 = coef(environment(f_constr)$sem_out), 
+    out <- nloptr::nloptr(x0 = lavaan::coef(environment(f_constr)$sem_out), 
                         eval_f = lbci_b_f, 
                         lb = rep(-Inf, npar), # To-Do: Check
                         ub = rep( Inf, npar), # To-Do: Check
