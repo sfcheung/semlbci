@@ -1,5 +1,5 @@
 library(testthat)
-library(stdmod)
+library(semlbci)
 
 context("Check find_free")
 
