@@ -12,6 +12,7 @@
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.
 #' @param pars Positions of the parameters for which the LBCI to be found.
 #'              Use the position as appeared on the parameter tables of the fit object.
+#'              If NULL, the default, then LBCIs will be found for all free parameters.
 #' @param ciperc The proportion of coverage for the confidence interval. Default
 #'               is .95.
 #' @param ... Arguments to be passed to \code{ci_bound_i}.
