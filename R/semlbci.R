@@ -44,15 +44,16 @@ semlbci <- function(sem_out,
     ptable <- lavaan::parameterTable(sem_out)
     # Do not check for 
     i <- ptable$free > 0
-    i_id <- ptable$id[i]
+    #i_id <- ptable$id[i]
+    i_id <- ptable$id
     # pars must be the position as in the lavaan parameterTable.
     if (!is.null(pars)) {
         i_selected <- i_id[pars]
       } else {
-        pars <- seq_len(length(i_id))
-        i_selected <- i_id
+        pars <- seq_len(sum(i))
+        i_selected <- i_id[pars]
       }
-    npar <- length(i_id)
+    npar <- sum(i)
     environment(set_constraint) <- parent.frame()
     f_constr <- set_constraint(sem_out = sem_out, ciperc = ciperc)
     if (parallel) {
