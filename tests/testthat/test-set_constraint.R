@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check ci_bound_i: No equality constraints")
+context("Check set_constraint: No equality constraints")
 
 data(simple_med)
 dat <- simple_med
