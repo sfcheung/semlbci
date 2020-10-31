@@ -51,13 +51,13 @@ ci_bound_i <- function(i = NULL,
     k <- switch(which,
                 lbound = 1,
                 ubound = -1)
-    lbci_b_f <- function(param, sem_out, debug) {
+    lbci_b_f <- function(param, sem_out, debug, lav_warn) {
         k * param[i]
       }
     # The gradient of the function to be minimized
     grad_c <- rep(0, npar)
     grad_c[i] <- k
-    lbci_b_grad <- function(param, sem_out, debug) {
+    lbci_b_grad <- function(param, sem_out, debug, lav_warn) {
         grad_c
       }
     out <- nloptr::nloptr(
@@ -70,6 +70,7 @@ ci_bound_i <- function(i = NULL,
                         eval_g_eq = f_constr,
                         opts = opts,
                         sem_out = sem_out,
+                        lav_warn = FALSE,
                         debug = FALSE)
     bound <- k * out$objective
     if (history) {
