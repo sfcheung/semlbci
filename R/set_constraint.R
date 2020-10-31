@@ -33,22 +33,47 @@
 #'@export
 
 set_constraint <- function(sem_out, ciperc = .95) {
-    force(sem_out)
+#    force(sem_out)
+    # sem_out2 <- eval(sem_out)
     p_free <- find_free(sem_out)
     qcrit <- stats::qchisq(ciperc, 1)
     fmin <- lavaan::lavTech(sem_out, "optim")$fx
     n <- lavaan::lavTech(sem_out, "nobs")
     # NOTE: For lavaan, chisq = 2 * n * fmin
     target <- fmin + qcrit / (2 * n)
-      fn_constraint <- function(param) {
-        start0 <- lavaan::parameterTable(sem_out)
-        start0[p_free, "est"] <- param
-        fit2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE)
-        list(
-              objective = lavaan::lavTech(fit2, "optim")$fx,
-              gradient = rbind(lavaan::lavTech(fit2, "gradient")),
-              constraints = lavaan::lavTech(fit2, "optim")$fx - target,
-              jacobian = rbind(lavaan::lavTech(fit2, "gradient")))
+    # Check if there are any equality constraints
+    if (sem_out@Model@eq.constraints) {
+        fn_constraint <- function(param, sem_out = NULL, debug = FALSE) {
+            if (debug) {
+                cat(ls())
+                cat(ls(globalenv()))
+                }
+            start0 <- lavaan::parameterTable(sem_out)
+            start0[p_free, "est"] <- param
+            eq_out <- sem_out@Model@ceq.function(param)
+            eq_jac <- sem_out@Model@con.jac
+            fit2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE)
+            list(
+                  objective = lavaan::lavTech(fit2, "optim")$fx,
+                  gradient = rbind(lavaan::lavTech(fit2, "gradient")),
+                  constraints = rbind(t(t(eq_out)), lavaan::lavTech(fit2, "optim")$fx - target),
+                  jacobian = rbind(eq_jac, lavaan::lavTech(fit2, "gradient")))
+          }
+      } else {
+        fn_constraint <- function(param, sem_out = NULL, debug = FALSE) {
+            if (debug) {
+                cat(ls())
+                cat(ls(globalenv()))
+                }
+            start0 <- lavaan::parameterTable(sem_out)
+            start0[p_free, "est"] <- param
+            fit2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE)
+            list(
+                  objective = lavaan::lavTech(fit2, "optim")$fx,
+                  gradient = rbind(lavaan::lavTech(fit2, "gradient")),
+                  constraints = lavaan::lavTech(fit2, "optim")$fx - target,
+                  jacobian = rbind(lavaan::lavTech(fit2, "gradient")))
+          }
       }
     fn_constraint
   }
