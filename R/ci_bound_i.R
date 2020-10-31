@@ -45,7 +45,8 @@ ci_bound_i <- function(i = NULL,
                           "local_opts" = list("algorithm" = "NLOPT_LD_SLSQP",
                                               "xtol_rel"  = 1.0e-10,
                                               "maxeval" = 1000,
-                                              "print_level" = 0))) {
+                                              "print_level" = 0)),
+                       ...) {
     # The function to be minimized.
     k <- switch(which,
                 lbound = 1,
