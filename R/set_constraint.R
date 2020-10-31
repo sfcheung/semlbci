@@ -61,7 +61,8 @@ set_constraint <- function(sem_out, ciperc = .95) {
                   objective = lavaan::lavTech(fit2, "optim")$fx,
                   gradient = rbind(lavaan::lavTech(fit2, "gradient")),
                   constraints = rbind(t(t(eq_out)), lavaan::lavTech(fit2, "optim")$fx - target),
-                  jacobian = rbind(eq_jac, lavaan::lavTech(fit2, "gradient")))
+                  jacobian = rbind(eq_jac, lavaan::lavTech(fit2, "gradient")),
+                  parameterTable = lavaan::parameterTable(fit2))
           }
       } else {
         fn_constraint <- function(param, sem_out = NULL, debug = FALSE, lav_warn = FALSE) {
@@ -80,7 +81,8 @@ set_constraint <- function(sem_out, ciperc = .95) {
                   objective = lavaan::lavTech(fit2, "optim")$fx,
                   gradient = rbind(lavaan::lavTech(fit2, "gradient")),
                   constraints = lavaan::lavTech(fit2, "optim")$fx - target,
-                  jacobian = rbind(lavaan::lavTech(fit2, "gradient")))
+                  jacobian = rbind(lavaan::lavTech(fit2, "gradient")),
+                  parameterTable = lavaan::parameterTable(fit2))
           }
       }
     fn_constraint
