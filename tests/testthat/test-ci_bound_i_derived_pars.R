@@ -17,10 +17,10 @@ lavaan::parameterTable(fit_med)
 
 fn_constr0 <- set_constraint(fit_med)
 
-out1l <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound")
-out1u <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound")
-out2l <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound")
-out2u <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound")
+out1l <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound")
+out1u <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound")
+out2l <- ci_bound_i(7, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound")
+out2u <- ci_bound_i(7, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound")
 
 
 library(OpenMx)
@@ -40,7 +40,8 @@ mod_mx <- mxModel("Mediation", type = "RAM",
     mxPath(from = "y", arrows = 2, free = TRUE, values = 1,
                   labels = "evar_y"),
     mxAlgebra(a * b , name = "ab"),
-    mxCI(reference = c("a", "b", "ab"), 
+    mxAlgebra(a ^ 2 , name = "asq"),
+    mxCI(reference = c("a", "b", "ab", "asq"), 
                        interval = .95, type = "both"),
     mxData(observed = cov_dat, type = "cov", numObs = n)
   )
@@ -52,7 +53,7 @@ ci_semlbci <- c(out1l, out2l, out1u, out2u)
 test_that("Equal to OpenMx LBCI", {
     expect_equivalent(
         ci_semlbci, 
-         unlist(ci_OpenMx[c("a", "b"), c("lbound", "ubound")]),
-        tolerance = 1e-5
+        unlist(ci_OpenMx[c(3, 4), c("lbound", "ubound")]),
+        tolerance = 1e-4
       )
   })
