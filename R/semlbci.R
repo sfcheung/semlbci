@@ -59,6 +59,8 @@ semlbci <- function(sem_out,
                           function(x, ...) tryCatch(
                             semlbci::ci_i(x,
                               npar = npar,
+                              sem_out = sem_out,
+                              debug = FALSE,
                               f_constr = f_constr),
                               error = function(e) e
                           ),
@@ -72,6 +74,8 @@ semlbci <- function(sem_out,
       } else {
         out <- lapply(seq_len(npar), ci_i, 
                       npar = npar,
+                      sem_out = sem_out,
+                      debug = FALSE,
                       f_constr = f_constr,
                       ...)
       }

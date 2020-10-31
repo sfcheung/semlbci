@@ -13,7 +13,7 @@ mod <-
 m ~ x
 y ~ m
 "
-fit_med <- lavaan::sem(mod, dat, fixed.x = FALSE)
+fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
 library(OpenMx)
 cov_dat <- cov(dat)
@@ -38,12 +38,13 @@ mod_mx <- mxModel("Mediation", type = "RAM",
   )
 fit_med_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
 ci_OpenMx <- summary(fit_med_OpenMx)$CI
+
 lbci_med <- semlbci(fit_med)
 
 test_that("Equal to OpenMx LBCIs for free parameters", {
     expect_equivalent(
-        as.matrix(lbci_med[c(1, 2), c("lbci_lb", "lbci_ub")]), 
-        ci_OpenMx[c("a", "b"), c("lbound", "ubound")],
+        as.numeric(unlist(lbci_med[c(1, 2), c("lbci_lb", "lbci_ub")])), 
+        unlist(ci_OpenMx[c("a", "b"), c("lbound", "ubound")]) ,
         tolerance = 1e-5
       )
   })
