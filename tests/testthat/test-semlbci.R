@@ -32,7 +32,7 @@ mod_mx <- mxModel("Mediation", type = "RAM",
     mxPath(from = "y", arrows = 2, free = TRUE, values = 1,
                   labels = "evar_y"),
     mxAlgebra(a * b , name = "ab"),
-    mxCI(reference = c("a", "b", "ab"), 
+    mxCI(reference = c("a", "b", "ab", "evar_m"), 
                        interval = .95, type = "both"),
     mxData(observed = cov_dat, type = "cov", numObs = n)
   )
@@ -48,6 +48,17 @@ test_that("Equal to OpenMx LBCIs for free parameters", {
         tolerance = 1e-5
       )
   })
+
+lbci_med2 <- semlbci(fit_med, pars = c(1, 3))
+
+test_that("Check whether only selectd parameters were processed", {
+    expect_equivalent(
+        as.numeric(unlist(lbci_med2[c(1, 3), c("lbci_lb", "lbci_ub")])), 
+        unlist(ci_OpenMx[c("a", "evar_m"), c("lbound", "ubound")]) ,
+        tolerance = 1e-5
+      )
+  })
+
 
 
 # Do CFA later. Too slow for lavaan

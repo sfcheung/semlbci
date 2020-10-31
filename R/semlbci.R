@@ -10,6 +10,8 @@
 #' The LBCIs for all free parameters
 #'
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.
+#' @param pars Positions of the parameters for which the LBCI to be found.
+#'              Use the position as appeared on the parameter tables of the fit object.
 #' @param ciperc The proportion of coverage for the confidence interval. Default
 #'               is .95.
 #' @param ... Arguments to be passed to \code{ci_bound_i}.
@@ -30,6 +32,7 @@
 #'@export
 
 semlbci <- function(sem_out,
+                    pars = NULL,
                     ciperc = .95,
                     ...,
                     parallel = FALSE,
@@ -41,6 +44,12 @@ semlbci <- function(sem_out,
     # Do not check for 
     i <- ptable$free > 0
     i_id <- ptable$id[i]
+    if (!is.null(pars)) {
+        i_selected <- i_id[pars]
+      } else {
+        pars <- seq_len(length(i_id))
+        i_selected <- i_id
+      }
     npar <- length(i_id)
     environment(set_constraint) <- parent.frame()
     f_constr <- set_constraint(sem_out = sem_out, ciperc = ciperc)
@@ -55,7 +64,7 @@ semlbci <- function(sem_out,
         parallel::clusterExport(cl, "f_constr")
         parallel::clusterExport(cl, "npar")
         out <- parallel::parLapply(cl,
-                         seq_len(npar),
+                         pars,
                           function(x, ...) tryCatch(
                             semlbci::ci_i(x,
                               npar = npar,
@@ -72,7 +81,7 @@ semlbci <- function(sem_out,
             stop("Error occured in parallel mode. Try setting parallel = FALSE")
           }
       } else {
-        out <- lapply(seq_len(npar), ci_i, 
+        out <- lapply(pars, ci_i, 
                       npar = npar,
                       sem_out = sem_out,
                       debug = FALSE,
@@ -84,7 +93,7 @@ semlbci <- function(sem_out,
     out_p$lbci_lb <- NA
     out_p$est <- ptable[, c("est")]
     out_p$lbci_ub <- NA
-    out_p[i_id, "lbci_lb"] <- out[, 1]
-    out_p[i_id, "lbci_ub"] <- out[, 2]
+    out_p[i_selected, "lbci_lb"] <- out[, 1]
+    out_p[i_selected, "lbci_ub"] <- out[, 2]
     out_p
   }
