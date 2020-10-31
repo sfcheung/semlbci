@@ -44,6 +44,7 @@ semlbci <- function(sem_out,
     # Do not check for 
     i <- ptable$free > 0
     i_id <- ptable$id[i]
+    # pars must be the position as in the lavaan parameterTable.
     if (!is.null(pars)) {
         i_selected <- i_id[pars]
       } else {
