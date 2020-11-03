@@ -22,6 +22,7 @@
 #' @param lb_var The lower bound for free parameters that are variances. Defautl is -Inf. This is not an admissible
 #'                value but seems to be necessary when we need to find the LBCI for user-defined parameter.
 #' @param opts Options to be passed to \code{nloptr}
+#' @param ... Optional arguments. Not used.
 #' 
 #'@examples
 #' library(lavaan)

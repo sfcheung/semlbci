@@ -39,6 +39,8 @@ in the first few iterations. Default is .90.}
 value but seems to be necessary when we need to find the LBCI for user-defined parameter.}
 
 \item{opts}{Options to be passed to \code{nloptr}}
+
+\item{...}{Optional arguments. Not used.}
 }
 \value{
 The requested bound.
