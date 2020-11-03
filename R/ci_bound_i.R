@@ -105,6 +105,20 @@ ci_bound_i <- function(i = NULL,
                         lav_warn = FALSE,
                         debug = FALSE)
     bound <- k * out$objective
+
+    # Check whether admissible
+    start0 <- lavaan::parameterTable(sem_out)
+    i_free <- find_free(sem_out)
+    start0[i_free, "est"] <- out$solution
+    fit_final <- lavaan::update(sem_out, start = start0, do.fit = FALSE,
+                                check.start = TRUE,
+                                check.post = TRUE,
+                                check.vcov = TRUE)
+    fit_post_check <- lavaan::lavInspect(fit_final, "post.check")
+    if (!fit_post_check) {
+        bound <- NA
+        warning("Optimization converged but the final solution is not admissible.")
+      }
     if (history) {
         attr(bound, "history") <- out
       }
