@@ -3,5 +3,6 @@
 export(ci_bound_i)
 export(ci_i)
 export(find_free)
+export(find_variance_in_free)
 export(semlbci)
 export(set_constraint)
