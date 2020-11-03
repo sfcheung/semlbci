@@ -34,7 +34,7 @@ find_variance_in_free <- function(sem_out) {
     # Do not check for 
     i_id <- ptable$id
     i_free <- ptable$free > 0
-    id_free <- i_id[find_free(fit)]
+    id_free <- i_id[find_free(sem_out)]
     i_var <- (ptable$lhs == ptable$rhs) & (ptable$op == "~~")
     id_var <- i_id[i_var]
     id_free %in% id_var
