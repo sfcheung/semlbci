@@ -58,14 +58,17 @@ ci_bound_i <- function(i = NULL,
         i_name <- p_table[i, "label"]
         # The function to be minimized.
         lbci_b_f <- function(param, sem_out, debug, lav_warn) {
-            start0 <- lavaan::parameterTable(sem_out)
-            start0[find_free(sem_out), "est"] <- param
-            if (lav_warn) {
-                    fit2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE)
-                } else {
-                    suppressWarnings(fit2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE))                    
-                }
-            k * fit2@Model@def.function(lavaan::coef(fit2))[i_name]
+            # The following block, from set_constraint, is not necessary.
+            # def.function is defined by the model and does not change with
+            # the parameter values
+            # start0 <- lavaan::parameterTable(sem_out)
+            # start0[find_free(sem_out), "est"] <- param
+            # if (lav_warn) {
+            #         fit2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE)
+            #     } else {
+            #         suppressWarnings(fit2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE))                    
+            #     }
+            k * sem_out@Model@def.function(param)[i_name]
           }
         # The gradient of the function to be minimized
         lbci_b_grad <- function(param, sem_out, debug, lav_warn) {
