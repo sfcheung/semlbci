@@ -19,6 +19,8 @@
 #' @param perturbation_factor A number multiplied to the parameter estimates in the fit object.
 #'                            Using the parameter estimates as starting values may lead to errors
 #'                            in the first few iterations. Default is .90.
+#' @param lb_var The lower bound for free parameters that are variances. Defautl is -Inf. This is not an admissible
+#'                value but seems to be necessary when we need to find the LBCI for user-defined parameter.
 #' @param opts Options to be passed to \code{nloptr}
 #' 
 #'@examples
@@ -41,6 +43,7 @@ ci_bound_i <- function(i = NULL,
                        which = NULL,
                        history = FALSE,
                        perturbation_factor = .9,
+                       lb_var = -Inf,
                        opts = list(
                           "algorithm" = "NLOPT_LD_SLSQP",
                           "xtol_rel" = 1.0e-10,
@@ -87,11 +90,13 @@ ci_bound_i <- function(i = NULL,
                 grad_c
           }
       }
+    fit_lb <- rep(-Inf, npar)
+    fit_lb[find_variance_in_free(sem_out)] <- lb_var
     out <- nloptr::nloptr(
                         x0 = perturbation_factor *
                           lavaan::coef(sem_out), 
                         eval_f = lbci_b_f, 
-                        lb = rep(-Inf, npar), # To-Do: Check
+                        lb = fit_lb, # To-Do: Check
                         ub = rep( Inf, npar), # To-Do: Check
                         eval_grad_f = lbci_b_grad,
                         eval_g_eq = f_constr,
