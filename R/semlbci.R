@@ -16,7 +16,9 @@
 #' @param ciperc The proportion of coverage for the confidence interval. Default
 #'               is .95.
 #' @param ... Arguments to be passed to \code{ci_bound_i}.
-#' @param parallel If \code{TRUE}, will use parallel.
+#' @param parallel If \code{TRUE}, will use parallel. Currently disabled.
+#'                  Need to find out how to make \code{lavaan::udpate} works
+#'                  currently in the workers.
 #' @param ncpu The number of workers, if parallel is TRUE.
 #'
 #'@examples
@@ -58,32 +60,35 @@ semlbci <- function(sem_out,
     f_constr <- eval(set_constraint(sem_out = sem_out, ciperc = ciperc),
                      envir = parent.frame())
     if (parallel) {
-        cl <- parallel::makeCluster(ncpu)
-        pkgs <- .packages()
-        pkgs <- rev(pkgs)
-        parallel::clusterExport(cl, "pkgs", envir = environment())
-        parallel::clusterEvalQ(cl, {sapply(pkgs, 
-                        function(x) library(x, character.only = TRUE))
-                      })
-        parallel::clusterExport(cl, "f_constr")
-        parallel::clusterExport(cl, "npar")
-        out <- parallel::parLapply(cl,
-                         pars,
-                          function(x, ...) tryCatch(
-                            semlbci::ci_i(x,
-                              npar = npar,
-                              sem_out = sem_out,
-                              debug = FALSE,
-                              f_constr = f_constr),
-                              error = function(e) e
-                          ),
-                          ...
-                         )
-        parallel::stopCluster(cl)
-        out_error <- sapply(out, inherits, what = "error")
-        if (any(out_error)) {
-            stop("Error occured in parallel mode. Try setting parallel = FALSE")
-          }
+        message("Parallel processing is currently disabled.")
+      }
+    if (FALSE) {        
+        # cl <- parallel::makeCluster(ncpu)
+        # pkgs <- .packages()
+        # pkgs <- rev(pkgs)
+        # parallel::clusterExport(cl, "pkgs", envir = environment())
+        # parallel::clusterEvalQ(cl, {sapply(pkgs, 
+        #                 function(x) library(x, character.only = TRUE))
+        #               })
+        # parallel::clusterExport(cl, "f_constr")
+        # parallel::clusterExport(cl, "npar")
+        # out <- parallel::parLapply(cl,
+        #                  pars,
+        #                   function(x, ...) tryCatch(
+        #                     semlbci::ci_i(x,
+        #                       npar = npar,
+        #                       sem_out = sem_out,
+        #                       debug = FALSE,
+        #                       f_constr = f_constr),
+        #                       error = function(e) e
+        #                   ),
+        #                   ...
+        #                  )
+        # parallel::stopCluster(cl)
+        # out_error <- sapply(out, inherits, what = "error")
+        # if (any(out_error)) {
+        #     stop("Error occured in parallel mode. Try setting parallel = FALSE")
+        #   }
       } else {
         out <- lapply(pars, ci_i, 
                       npar = npar,
