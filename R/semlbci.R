@@ -54,8 +54,9 @@ semlbci <- function(sem_out,
         i_selected <- i_id[pars]
       }
     npar <- sum(i)
-    environment(set_constraint) <- parent.frame()
-    f_constr <- set_constraint(sem_out = sem_out, ciperc = ciperc)
+    # environment(set_constraint) <- parent.frame()
+    f_constr <- eval(set_constraint(sem_out = sem_out, ciperc = ciperc),
+                     envir = parent.frame())
     if (parallel) {
         cl <- parallel::makeCluster(ncpu)
         pkgs <- .packages()
