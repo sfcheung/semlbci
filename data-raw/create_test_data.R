@@ -29,3 +29,27 @@ head(dat)
 cfa_two_factors <- dat
 
 usethis::use_data(cfa_two_factors, overwrite = TRUE)
+
+# Data based on a simple mediation model
+
+library(MASS)
+
+set.seed(9654534)
+n <- 500
+gamma <- matrix(c(2,
+                  1), 2, 1, byrow = TRUE)
+beta  <- matrix(c(0, 0,
+                  3, 0), 2, 2, byrow = TRUE)
+theta <- matrix(2, 1, 1)
+psi   <- diag(c(3, 4))
+xi    <- mvrnorm(n, 0, theta)
+eta   <- solve(diag(2) - beta) %*% (gamma %*% t(xi) + t(mvrnorm(n, c(0, 0), psi)))
+eta   <- t(eta)
+dat   <- cbind(xi, eta)
+dat   <- as.data.frame(dat)
+colnames(dat) <- c("x", "m", "y")
+head(dat)
+
+simple_med <- dat
+
+usethis::use_data(simple_med, overwrite = TRUE)

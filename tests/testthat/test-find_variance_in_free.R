@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check find_free")
+context("Check find_variance_in_free")
 
 dat <- cfa_two_factors
 
@@ -15,17 +15,19 @@ asq := a^2
 
 fit <- lavaan::sem(mod, dat)
 ptable <- lavaan::parameterTable(fit)
-pfree <- ptable$free > 0
+id_free <- ptable[ptable$free > 0, "id"]
+p_var <- (ptable$lhs == ptable$rhs) & ptable$op == "~~"
+id_free_var <- ptable[(ptable$free > 0) & (p_var), "id"]
 
-test_that("Correct free parameters", {
+test_that("Correct variance parameters", {
     expect_equivalent(
-        find_free(fit), pfree
+        find_variance_in_free(fit), id_free %in% id_free_var
       )
   })
 
 test_that("Stop when the object is invalid", {
     expect_error(
-        find_free(mod),
+        find_variance_in_free(mod),
         class = "simpleError"
       )
   })

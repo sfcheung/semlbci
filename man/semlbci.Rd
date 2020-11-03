@@ -5,24 +5,28 @@
 \alias{semlbci}
 \title{semlbci: Likelihood Based Confidence Interval for SEM}
 \usage{
-semlbci(sem_out, ciperc = 0.95, ..., parallel = FALSE, ncpu = 2)
+semlbci(sem_out, pars = NULL, ciperc = 0.95, ..., parallel = FALSE, ncpu = 2)
 }
 \arguments{
 \item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
+
+\item{pars}{Positions of the parameters for which the LBCI to be found.
+Use the position as appeared on the parameter tables of the fit object.
+If NULL, the default, then LBCIs will be found for all free parameters.}
 
 \item{ciperc}{The proportion of coverage for the confidence interval. Default
 is .95.}
 
 \item{...}{Arguments to be passed to \code{ci_bound_i}.}
 
-\item{parallel}{If \code{TRUE}, will use parallel.}
+\item{parallel}{If \code{TRUE}, will use parallel. Currently disabled.
+Need to find out how to make \code{lavaan::udpate} works
+currently in the workers.}
 
 \item{ncpu}{The number of workers, if parallel is TRUE.}
 }
 \value{
-A boolean vector of the same length as the number of rows of the \code{lavaan}.
-parameter tables. A position is \code{TRUE} if the corresponding parameter
-is free.
+The LBCIs for all free parameters
 }
 \description{
 Find the LBCIs for all free parameters in an SEM output
