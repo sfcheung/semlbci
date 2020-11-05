@@ -13,6 +13,8 @@
 #' @param pars Positions of the parameters for which the LBCI to be found.
 #'              Use the position as appeared on the parameter tables of the fit object.
 #'              If NULL, the default, then LBCIs will be found for all free parameters.
+#'              Can also be a vector of strings to indicate the paramters on the 
+#'              parameter table.
 #' @param ciperc The proportion of coverage for the confidence interval. Default
 #'               is .95.
 #' @param ... Arguments to be passed to \code{ci_bound_i}.
@@ -50,6 +52,9 @@ semlbci <- function(sem_out,
     i_id <- ptable$id
     # pars must be the position as in the lavaan parameterTable.
     if (!is.null(pars)) {
+        if (is.character(pars)) {
+            pars <- syntax_to_i(pars, sem_out)
+          }
         i_selected <- i_id[pars]
       } else {
         pars <- seq_len(sum(i))
