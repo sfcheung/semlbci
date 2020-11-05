@@ -21,6 +21,8 @@
 #'                            in the first few iterations. Default is .90.
 #' @param lb_var The lower bound for free parameters that are variances. Defautl is -Inf. This is not an admissible
 #'                value but seems to be necessary when we need to find the LBCI for user-defined parameter.
+#' @param wald_ci_start If TRUE and there are no equality constraints in the model, Wald confidence limit will
+#'                       be used as the starting value for the target parameter if it is not a userd-defined paramter.
 #' @param opts Options to be passed to \code{nloptr}
 #' @param ... Optional arguments. Not used.
 #' 
@@ -45,6 +47,7 @@ ci_bound_i <- function(i = NULL,
                        history = FALSE,
                        perturbation_factor = .9,
                        lb_var = -Inf,
+                       wald_ci_start = TRUE,
                        opts = list(
                           "algorithm" = "NLOPT_LD_SLSQP",
                           "xtol_rel" = 1.0e-10,
@@ -91,11 +94,20 @@ ci_bound_i <- function(i = NULL,
                 grad_c
           }
       }
+    if (wald_ci_start) {
+        if (i_op == ":=" || sem_out@Model@eq.constraints) {
+              xstart <- perturbation_factor * lavaan::coef(sem_out)
+            } else {
+              xstart <- set_start(i, sem_out, which)
+              xstart <- xstart[xstart$free > 0, "est"]
+            } 
+      } else {
+        xstart <- perturbation_factor * lavaan::coef(sem_out)
+      }
     fit_lb <- rep(-Inf, npar)
     fit_lb[find_variance_in_free(sem_out)] <- lb_var
     out <- nloptr::nloptr(
-                        x0 = perturbation_factor *
-                          lavaan::coef(sem_out), 
+                        x0 = xstart, 
                         eval_f = lbci_b_f, 
                         lb = fit_lb, # To-Do: Check
                         ub = rep( Inf, npar), # To-Do: Check
