@@ -12,7 +12,9 @@ semlbci(sem_out, pars = NULL, ciperc = 0.95, ..., parallel = FALSE, ncpu = 2)
 
 \item{pars}{Positions of the parameters for which the LBCI to be found.
 Use the position as appeared on the parameter tables of the fit object.
-If NULL, the default, then LBCIs will be found for all free parameters.}
+If NULL, the default, then LBCIs will be found for all free parameters.
+Can also be a vector of strings to indicate the paramters on the
+parameter table.}
 
 \item{ciperc}{The proportion of coverage for the confidence interval. Default
 is .95.}
