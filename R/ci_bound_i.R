@@ -94,9 +94,10 @@ ci_bound_i <- function(i = NULL,
                 grad_c
           }
       }
-    if (wald_ci_start) {
-        if (i_op == ":=" || sem_out@Model@eq.constraints) {
-              xstart <- perturbation_factor * lavaan::coef(sem_out)
+    if (wald_ci_start & !sem_out@Model@eq.constraints) {
+        if (i_op == ":=") {
+              xstart <- set_start(i, sem_out, which)
+              xstart <- xstart[xstart$free > 0, "est"]
             } else {
               xstart <- set_start(i, sem_out, which)
               xstart <- xstart[xstart$free > 0, "est"]

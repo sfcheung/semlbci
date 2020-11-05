@@ -56,7 +56,33 @@ set_start <- function(i = NULL,
         ptable2_final[i, "ustart"] <- NA
         ptable2_final[i, "free"]  <- max(ptable2_final$free) + 1
       } else {
-
+        i_name <- ptable[i, "label"]
+        k <- switch(which,
+                    lbound = 1,
+                    ubound = -1)
+        tmp_fct <- function(param, sem_out) {
+            k * sem_out@Model@def.function(param)[i_name]
+          }
+        g_i <- numDeriv::grad(tmp_fct, 
+                              x = lavaan::coef(sem_out), 
+                              sem_out = sem_out)
+        g_i <- (round(g_i, 5) != 0)
+        id_g <- id_free[g_i]
+        i_est_fix2 <- switch(which,
+                            lbound = est[id_g, "ci.lower"],
+                            ubound = est[id_g, "ci.upper"])
+        ptable2 <- ptable
+        ptable2[id_g, "ustart"] <- i_est_fix2
+        ptable2[id_g, "start"] <- i_est_fix2
+        ptable2[id_g, "free"]  <- 0
+        ptable2_def <- ptable2[ptable2$op == ":=", ]
+        ptable2 <- ptable2[ptable2$op != ":=", ]
+        sem_out2 <- lavaan::update(sem_out, model = ptable2, start = ptable2)
+        ptable2_out <- as.data.frame(sem_out2@ParTable, stringsAsFactors = FALSE)
+        ptable2_final <- rbind(ptable2_out, ptable2_def)
+        ptable2_final[id_g, "ustart"] <- NA
+        ptable2_final[id_g, "free"]  <- max(ptable2_final$free) + 
+                                            seq_len(length(id_g))
       }
     ptable2_final
   }  
