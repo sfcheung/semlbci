@@ -13,6 +13,7 @@ ci_bound_i(
   history = FALSE,
   perturbation_factor = 0.9,
   lb_var = -Inf,
+  wald_ci_start = TRUE,
   opts = list(algorithm = "NLOPT_LD_SLSQP", xtol_rel = 1e-10, maxeval = 1000,
     print_level = 0),
   ...
@@ -37,6 +38,9 @@ in the first few iterations. Default is .90.}
 
 \item{lb_var}{The lower bound for free parameters that are variances. Defautl is -Inf. This is not an admissible
 value but seems to be necessary when we need to find the LBCI for user-defined parameter.}
+
+\item{wald_ci_start}{If TRUE and there are no equality constraints in the model, Wald confidence limit will
+be used as the starting value for the target parameter if it is not a userd-defined paramter.}
 
 \item{opts}{Options to be passed to \code{nloptr}}
 
