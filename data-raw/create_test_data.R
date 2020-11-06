@@ -35,13 +35,13 @@ usethis::use_data(cfa_two_factors, overwrite = TRUE)
 library(MASS)
 
 set.seed(9654534)
-n <- 500
+n <- 200
 gamma <- matrix(c(2,
                   1), 2, 1, byrow = TRUE)
 beta  <- matrix(c(0, 0,
-                  3, 0), 2, 2, byrow = TRUE)
-theta <- matrix(2, 1, 1)
-psi   <- diag(c(3, 4))
+                  .5, 0), 2, 2, byrow = TRUE)
+theta <- matrix(1, 1, 1)
+psi   <- diag(c(6, 6)^2)
 xi    <- mvrnorm(n, 0, theta)
 eta   <- solve(diag(2) - beta) %*% (gamma %*% t(xi) + t(mvrnorm(n, c(0, 0), psi)))
 eta   <- t(eta)
