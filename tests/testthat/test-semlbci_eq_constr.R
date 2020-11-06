@@ -51,7 +51,7 @@ test_that("Equal to OpenMx LBCI", {
     expect_equivalent(
         lbci_med[1, c("lbci_lb", "est", "lbci_ub")], 
         as.numeric(ci_OpenMx)[1:3],
-        tolerance = 1e-5
+        tolerance = 1e-4
       )
   })
 
