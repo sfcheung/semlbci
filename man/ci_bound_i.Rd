@@ -14,6 +14,7 @@ ci_bound_i(
   perturbation_factor = 0.9,
   lb_var = -Inf,
   wald_ci_start = TRUE,
+  standardized = FALSE,
   opts = list(algorithm = "NLOPT_LD_SLSQP", xtol_rel = 1e-10, maxeval = 1000,
     print_level = 0),
   ...
@@ -41,6 +42,8 @@ value but seems to be necessary when we need to find the LBCI for user-defined p
 
 \item{wald_ci_start}{If TRUE and there are no equality constraints in the model, Wald confidence limit will
 be used as the starting value for the target parameter if it is not a userd-defined paramter.}
+
+\item{standardized}{If TRUE, the LBCI is for the standardized estimate.}
 
 \item{opts}{Options to be passed to \code{nloptr}}
 

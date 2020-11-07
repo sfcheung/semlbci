@@ -5,7 +5,7 @@
 \alias{simple_med}
 \title{Generated from a simple mediation model, n 500}
 \format{
-An object of class \code{data.frame} with 500 rows and 3 columns.
+An object of class \code{data.frame} with 200 rows and 3 columns.
 }
 \usage{
 simple_med
