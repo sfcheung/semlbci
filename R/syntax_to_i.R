@@ -32,13 +32,25 @@ syntax_to_i <- function(syntax,
       }
     ptable <- lavaan::parameterTable(sem_out)
     l_model <- lavaan::lavParseModelString(syntax, as.data.frame = TRUE)
-    l_model$req <- TRUE
-    p_out <- merge(ptable, l_model[, c("lhs", "op", "rhs", "req")], 
-                   by = c("lhs", "op", "rhs"), all.x = TRUE, sort = FALSE)
+    if (nrow(l_model) > 0) {
+        l_model$req <- TRUE
+        p_out <- merge(ptable, l_model[, c("lhs", "op", "rhs", "req")], 
+                      by = c("lhs", "op", "rhs"), all.x = TRUE, sort = FALSE)
+        i_par <- which(p_out$req)
+      } else {
+        i_par <- NULL
+      }
+    # User defined parameter
     syntax_def <- syntax[grepl(":=", syntax)]
-    l_def <- strsplit(syntax_def, ":=")
-    l_def <- sapply(l_def, function(x) trimws(x[1]))
-    i_def <- match(l_def, p_out$label)
-    p_out[i_def, "req"] <- TRUE
-    which(p_out$req)
+    if (length(syntax_def) > 0) {
+        l_def <- strsplit(syntax_def, ":=")
+        l_def <- sapply(l_def, function(x) trimws(x[1]))
+        # i_def <- match(l_def, p_out$label)
+        i_def <- match(l_def, ptable$label)
+        # p_out[i_def, "req"] <- TRUE
+      } else {
+        i_def <- NULL
+      }
+    # which(p_out$req)
+    c(i_par, i_def)
   }

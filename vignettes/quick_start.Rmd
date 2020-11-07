@@ -1,0 +1,138 @@
+---
+title: "Quick Start"
+author: "Shu Fai Cheung"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Quick Start}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(semlbci)
+```
+
+# Introduction
+
+This package includes functions for finding the likelihood based confidence intervals (LBCIs) of parameters in the fitted object of a structural equation modeling (SEM) function. Currently, it only supports the output from `lavaan`.
+
+# Fit a model to a dataset
+
+The package has a dataset, `simple_med`, with three variables, `x`, `m`, and `y`. Let us fit a simple complete mediation model to this datast.
+
+```{r}
+data(simple_med)
+dat <- simple_med
+head(dat)
+library(lavaan)
+mod <- 
+"
+m ~ a*x
+y ~ b*m
+ab := a * b
+"
+# We set fixed.x = FALSE because we will also find the LBCIs for standardized solution
+fit <- sem(mod, simple_med, fixed.x = FALSE)
+```
+
+We labelled the `m ~ x` path by `a`, the `y ~ m` path by `b`, and define the indirect effect, `ab`, by `a * b`.
+
+This is the summary:
+
+```{r}
+summary(fit, standardized = TRUE)
+```
+
+# Find the LBCI for a free parameter
+
+We can use the function `semlbci::semlbci` to do this. The parameters can be defined using `lavaan` syntax.
+
+```{r}
+out <- semlbci(sem_out = fit,
+               pars = c("y ~ m",
+                        "m ~ x"))
+```
+
+The output is the parameter table of the fitted `lavaan` object, with two columns added, `lbci_lb` and `lbci_ub`, the likelihood-based lower bounds and upper bounds, respectively.
+
+```{r}
+out
+```
+
+# Find the LBCI for a user defined parameter
+
+To find the LBCI for a user defined parameter, use `label :=`, where `label` is the label used in the model. The definition of this parameter can be omitted.
+
+```{r}
+out <- semlbci(sem_out = fit,
+               pars = c("ab := "))
+out
+```
+
+# Find the LBCI for the parameters in the standardized metric
+
+Setting `standardized = TRUE` will instruct the function to find the LBCIs after the parameters are standardized.
+
+```{r}
+out <- semlbci(sem_out = fit,
+               pars = c("y ~ m",
+                        "m ~ x"),
+               standardized = TRUE)
+out
+```
+
+The LBCIs for user defined parameters can be requested similarly.
+
+```{r}
+out <- semlbci(sem_out = fit,
+               pars = c("ab :="),
+               standardized = TRUE)
+out
+```
+
+Note that it can be very slow when finding the LBCIs for standardized solution.
+
+# Specify the coverage probability of the LBCI
+
+This can be done by `ciperc`. The default is .95.
+
+```{r}
+out <- semlbci(sem_out = fit,
+               pars = c("y ~ m",
+                        "m ~ x"),
+               ciperc = .99)
+out
+```
+
+NOTE: This argument is used by `semlbci::ci_bound_i`, the function for finding the limit for one parameter. This lower level function is not supposed to be used by users. The argument will be documented in `semlbci::semlbci` later.
+
+# Limitations
+
+This package is still in its (very) early development (pre-alpha). These are the limitations:
+
+- IMPORTANT: It uses only the method by Neale and Miller (2012), as demonstrated by Pek and Wu (2015), and does not check whether a parameter is near its boundary. The more advanced methods by Pritikin, Rappaport, and Neale (2017) should be considered.
+
+- It only supports single-sample SEM. It *may* work for multiple-sample SEM but this has not been tested.
+
+- It only supports models fitted by maximum likelihood (ML) estimation, including full information maximum likelihood (FIML).
+
+- It only supports models with continuous variables.
+
+# References
+
+Neale, M. C., & Miller, M. B. (1997). The use of likelihood-based confidence intervals in genetic models. *Behavior Genetics, 27*(2), 113–120.
+
+Pek, J., & Wu, H. (2015). Profile likelihood-based confidence intervals and regions for structural equation models. *Psychometrika, 80*(4), 1123–1145. https://doi.org/10.1007/s11336-015-9461-1
+
+Pritikin, J. N., Rappaport, L. M., & Neale, M. C. (2017). Likelihood-based confidence intervals for a parameter with an upper or lower bound. *Structural Equation Modeling: A Multidisciplinary Journal, 24*(3), 395-401. https://doi.org/10.1080/10705511.2016.1275969
+
+Wu, H., & Neale, M. C. (2012). Adjusted confidence intervals for a bounded parameter. *Behavior Genetics, 42*(6), 886–898. https://doi.org/10.1007/s10519-012-9560-z
+
