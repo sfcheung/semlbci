@@ -90,18 +90,18 @@ set_start <- function(i = NULL,
             g_i0 <- round(g_i0, 5)
             g_i  <- (g_i0 != 0)
             id_g <- id_free[g_i]
-            id_g_pos <- id_g[g_i0 > 0]
-            id_g_neg <- id_g[g_i0 < 0]
-            i_est_fix2 <- rep(NA, length(id_g))
+            id_g_pos <- id_free[g_i0 > 0]
+            id_g_neg <- id_free[g_i0 < 0]
+            i_est_fix2 <- lavaan::parameterTable(sem_out)$est
             if (length(id_g_neg) > 0) {
-              i_est_fix2[id_g_neg] <- est[id_g_neg, "ci.upper"]
+                i_est_fix2[id_g_neg] <- est[id_g_neg, "ci.upper"]
               }
             if (length(id_g_pos) > 0) {
                 i_est_fix2[id_g_pos] <- est[id_g_pos, "ci.lower"]
               }
             ptable2 <- ptable
-            ptable2[id_g, "ustart"] <- i_est_fix2
-            ptable2[id_g, "start"] <- i_est_fix2
+            ptable2[id_g, "ustart"] <- i_est_fix2[id_g]
+            ptable2[id_g, "start"] <- i_est_fix2[id_g]
             ptable2[id_g, "free"]  <- 0
             ptable2_def <- ptable2[ptable2$op == ":=", ]
             ptable2 <- ptable2[ptable2$op != ":=", ]
@@ -142,18 +142,18 @@ set_start <- function(i = NULL,
         g_i0 <- round(g_i0, 5)
         g_i  <- (g_i0 != 0)
         id_g <- id_free[g_i]
-        id_g_pos <- id_g[g_i0 > 0]
-        id_g_neg <- id_g[g_i0 < 0]
-        i_est_fix2 <- rep(NA, length(id_g))
+        id_g_pos <- id_free[g_i0 > 0]
+        id_g_neg <- id_free[g_i0 < 0]
+        i_est_fix2 <- lavaan::parameterTable(sem_out)$est
         if (length(id_g_neg) > 0) {
-          i_est_fix2[id_g_neg] <- est[id_g_neg, "ci.upper"]
+            i_est_fix2[id_g_neg] <- est[id_g_neg, "ci.upper"]
           }
         if (length(id_g_pos) > 0) {
             i_est_fix2[id_g_pos] <- est[id_g_pos, "ci.lower"]
           }
         ptable2 <- ptable
-        ptable2[id_g, "ustart"] <- i_est_fix2
-        ptable2[id_g, "start"] <- i_est_fix2
+        ptable2[id_g, "ustart"] <- i_est_fix2[id_g]
+        ptable2[id_g, "start"] <- i_est_fix2[id_g]
         ptable2[id_g, "free"]  <- 0
         ptable2_def <- ptable2[ptable2$op == ":=", ]
         ptable2 <- ptable2[ptable2$op != ":=", ]
