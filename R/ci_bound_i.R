@@ -94,19 +94,25 @@ ci_bound_i <- function(i = NULL,
             lbci_b_f <- function(param, sem_out, debug, lav_warn) {
                 start1 <- start0
                 start1[start1$free > 0, "est"] <- param
+                sem_out2 <- sem_out
+                sem_out2@ParTable <- as.list(start1)
+                sem_model <- sem_out2@Model
+                sem_model <- update_model(sem_model, 
+                                          start1[start1$free > 0, "est"] )
+                sem_out2@Model <- sem_model
                 # sem_out0 <- sem_out
                 # sem_out0@ParTable <- as.list(start1)
-                sem_out0 <- lavaan::update(sem_out,
-                                            start = start1,
-                                            do.fit = FALSE,
-                                            # slotOptions = sem_out@Options,
-                                            slotParTable = sem_out@ParTable,
-                                            slotSampleStats = sem_out@SampleStats,
-                                            slotData = sem_out@Data,
-                                            # slotModel = sem_out@Model,
-                                            slotCache = sem_out@Cache,
-                                            sloth1 = sem_out@h1)
-                std0 <- lavaan::standardizedSolution(sem_out0,
+                # sem_out0 <- lavaan::update(sem_out,
+                #                             start = start1,
+                #                             do.fit = FALSE,
+                #                             # slotOptions = sem_out@Options,
+                #                             slotParTable = sem_out@ParTable,
+                #                             slotSampleStats = sem_out@SampleStats,
+                #                             slotData = sem_out@Data,
+                #                             # slotModel = sem_out@Model,
+                #                             slotCache = sem_out@Cache,
+                #                             sloth1 = sem_out@h1)
+                std0 <- lavaan::standardizedSolution(sem_out2,
                                                 type = "std.all",
                                                 se = FALSE,
                                                 zstat = FALSE,
