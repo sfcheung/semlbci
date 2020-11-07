@@ -100,18 +100,6 @@ ci_bound_i <- function(i = NULL,
                 sem_model <- update_model(sem_model, 
                                           start1[start1$free > 0, "est"] )
                 sem_out2@Model <- sem_model
-                # sem_out0 <- sem_out
-                # sem_out0@ParTable <- as.list(start1)
-                # sem_out0 <- lavaan::update(sem_out,
-                #                             start = start1,
-                #                             do.fit = FALSE,
-                #                             # slotOptions = sem_out@Options,
-                #                             slotParTable = sem_out@ParTable,
-                #                             slotSampleStats = sem_out@SampleStats,
-                #                             slotData = sem_out@Data,
-                #                             # slotModel = sem_out@Model,
-                #                             slotCache = sem_out@Cache,
-                #                             sloth1 = sem_out@h1)
                 std0 <- lavaan::standardizedSolution(sem_out2,
                                                 type = "std.all",
                                                 se = FALSE,
@@ -148,7 +136,8 @@ ci_bound_i <- function(i = NULL,
               xstart <- xstart[xstart$free > 0, "est"]
             } else {
               if (standardized) {
-                  xstart <- perturbation_factor * lavaan::coef(sem_out)
+                  xstart <- set_start(i, sem_out, which, standardized)
+                  xstart <- xstart[xstart$free > 0, "est"]
                 } else {
                   xstart <- set_start(i, sem_out, which)
                   xstart <- xstart[xstart$free > 0, "est"]
