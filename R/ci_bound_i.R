@@ -62,61 +62,152 @@ ci_bound_i <- function(i = NULL,
     # Check if the parameter is a user-defined parameter
     p_table <- lavaan::parameterTable(sem_out) 
     i_op <- p_table[i, "op"]
-    if (i_op == ":=") {
-        # Get the name of the defined parameter
-        i_name <- p_table[i, "label"]
+    if (standardized && (i_op %in% c("=~", "~", "~~", ":="))) {
+        p_std <- lavaan::standardizedSolution(sem_out,
+                                              type = "std.all",
+                                              se = FALSE,
+                                              zstat = FALSE,
+                                              pvalue = FALSE,
+                                              ci = FALSE,
+                                              remove.eq = FALSE,
+                                              remove.ineq = FALSE,
+                                              remove.def = FALSE,
+                                              output = "data.frame")
+        p_std$id <- seq_len(nrow(p_std))
+        i_lor <- get_lhs_op_rhs(i, sem_out)
+        i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
+        start0 <- lavaan::parameterTable(sem_out)
         # The function to be minimized.
         lbci_b_f <- function(param, sem_out, debug, lav_warn) {
-            k * sem_out@Model@def.function(param)[i_name]
+            start1 <- start0
+            start1[start1$free > 0, "est"] <- param
+            sem_out2 <- sem_out
+            sem_out2@ParTable <- as.list(start1)
+            sem_model <- sem_out2@Model
+            sem_model <- update_model(sem_model, 
+                                      start1[start1$free > 0, "est"] )
+            sem_out2@Model <- sem_model
+            std0 <- lavaan::standardizedSolution(sem_out2,
+                                            type = "std.all",
+                                            se = FALSE,
+                                            zstat = FALSE,
+                                            pvalue = FALSE,
+                                            ci = FALSE,
+                                            remove.eq = FALSE,
+                                            remove.ineq = FALSE,
+                                            remove.def = FALSE,
+                                            output = "data.frame")
+            k * std0[i_std, "est.std"]
           }
         # The gradient of the function to be minimized
         lbci_b_grad <- function(param, sem_out, debug, lav_warn) {
             numDeriv::grad(lbci_b_f, param, sem_out = sem_out, 
-                                     debug = debug, lav_warn = lav_warn)
+                                    debug = debug, lav_warn = lav_warn)
           }
-      } else {
+      }
+    if (i_op == ":=") {
         if (standardized) {
-            p_std <- lavaan::standardizedSolution(sem_out,
-                                                  type = "std.all",
-                                                  se = FALSE,
-                                                  zstat = FALSE,
-                                                  pvalue = FALSE,
-                                                  ci = FALSE,
-                                                  remove.eq = FALSE,
-                                                  remove.ineq = FALSE,
-                                                  remove.def = FALSE,
-                                                  output = "data.frame")
-            p_std$id <- seq_len(nrow(p_std))
-            i_lor <- get_lhs_op_rhs(i, sem_out)
-            i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
-            start0 <- lavaan::parameterTable(sem_out)
+            # # To be deleted
+            # # Copied from the block for standardized free parameters.
+            # # If works, should merge the two blocks together
+            # p_std <- lavaan::standardizedSolution(sem_out,
+            #                                       type = "std.all",
+            #                                       se = FALSE,
+            #                                       zstat = FALSE,
+            #                                       pvalue = FALSE,
+            #                                       ci = FALSE,
+            #                                       remove.eq = FALSE,
+            #                                       remove.ineq = FALSE,
+            #                                       remove.def = FALSE,
+            #                                       output = "data.frame")
+            # p_std$id <- seq_len(nrow(p_std))
+            # i_lor <- get_lhs_op_rhs(i, sem_out)
+            # i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
+            # start0 <- lavaan::parameterTable(sem_out)
+            # # The function to be minimized.
+            # lbci_b_f <- function(param, sem_out, debug, lav_warn) {
+            #     start1 <- start0
+            #     start1[start1$free > 0, "est"] <- param
+            #     sem_out2 <- sem_out
+            #     sem_out2@ParTable <- as.list(start1)
+            #     sem_model <- sem_out2@Model
+            #     sem_model <- update_model(sem_model, 
+            #                               start1[start1$free > 0, "est"] )
+            #     sem_out2@Model <- sem_model
+            #     std0 <- lavaan::standardizedSolution(sem_out2,
+            #                                     type = "std.all",
+            #                                     se = FALSE,
+            #                                     zstat = FALSE,
+            #                                     pvalue = FALSE,
+            #                                     ci = FALSE,
+            #                                     remove.eq = FALSE,
+            #                                     remove.ineq = FALSE,
+            #                                     remove.def = FALSE,
+            #                                     output = "data.frame")
+            #     k * std0[i_std, "est.std"]
+            #   }
+            # # The gradient of the function to be minimized
+            # lbci_b_grad <- function(param, sem_out, debug, lav_warn) {
+            #     numDeriv::grad(lbci_b_f, param, sem_out = sem_out, 
+            #                             debug = debug, lav_warn = lav_warn)
+            #   }
+          } else {
+            # Get the name of the defined parameter
+            i_name <- p_table[i, "label"]
             # The function to be minimized.
             lbci_b_f <- function(param, sem_out, debug, lav_warn) {
-                start1 <- start0
-                start1[start1$free > 0, "est"] <- param
-                sem_out2 <- sem_out
-                sem_out2@ParTable <- as.list(start1)
-                sem_model <- sem_out2@Model
-                sem_model <- update_model(sem_model, 
-                                          start1[start1$free > 0, "est"] )
-                sem_out2@Model <- sem_model
-                std0 <- lavaan::standardizedSolution(sem_out2,
-                                                type = "std.all",
-                                                se = FALSE,
-                                                zstat = FALSE,
-                                                pvalue = FALSE,
-                                                ci = FALSE,
-                                                remove.eq = FALSE,
-                                                remove.ineq = FALSE,
-                                                remove.def = FALSE,
-                                                output = "data.frame")
-                k * std0[i_std, "est.std"]
+                k * sem_out@Model@def.function(param)[i_name]
               }
             # The gradient of the function to be minimized
             lbci_b_grad <- function(param, sem_out, debug, lav_warn) {
                 numDeriv::grad(lbci_b_f, param, sem_out = sem_out, 
                                         debug = debug, lav_warn = lav_warn)
-              }
+              }            
+          }
+      } else {
+        if (standardized) {
+            # # To be deleted:
+            # p_std <- lavaan::standardizedSolution(sem_out,
+            #                                       type = "std.all",
+            #                                       se = FALSE,
+            #                                       zstat = FALSE,
+            #                                       pvalue = FALSE,
+            #                                       ci = FALSE,
+            #                                       remove.eq = FALSE,
+            #                                       remove.ineq = FALSE,
+            #                                       remove.def = FALSE,
+            #                                       output = "data.frame")
+            # p_std$id <- seq_len(nrow(p_std))
+            # i_lor <- get_lhs_op_rhs(i, sem_out)
+            # i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
+            # start0 <- lavaan::parameterTable(sem_out)
+            # # The function to be minimized.
+            # lbci_b_f <- function(param, sem_out, debug, lav_warn) {
+            #     start1 <- start0
+            #     start1[start1$free > 0, "est"] <- param
+            #     sem_out2 <- sem_out
+            #     sem_out2@ParTable <- as.list(start1)
+            #     sem_model <- sem_out2@Model
+            #     sem_model <- update_model(sem_model, 
+            #                               start1[start1$free > 0, "est"] )
+            #     sem_out2@Model <- sem_model
+            #     std0 <- lavaan::standardizedSolution(sem_out2,
+            #                                     type = "std.all",
+            #                                     se = FALSE,
+            #                                     zstat = FALSE,
+            #                                     pvalue = FALSE,
+            #                                     ci = FALSE,
+            #                                     remove.eq = FALSE,
+            #                                     remove.ineq = FALSE,
+            #                                     remove.def = FALSE,
+            #                                     output = "data.frame")
+            #     k * std0[i_std, "est.std"]
+            #   }
+            # # The gradient of the function to be minimized
+            # lbci_b_grad <- function(param, sem_out, debug, lav_warn) {
+            #     numDeriv::grad(lbci_b_f, param, sem_out = sem_out, 
+            #                             debug = debug, lav_warn = lav_warn)
+            #   }
           } else {
             # The function to be minimized.
             lbci_b_f <- function(param, sem_out, debug, lav_warn) {
