@@ -17,6 +17,7 @@
 #'              parameter table.
 #' @param ciperc The proportion of coverage for the confidence interval. Default
 #'               is .95.
+#' @param standardized If TRUE, the LBCI is for the standardized estimate. 
 #' @param ... Arguments to be passed to \code{ci_bound_i}.
 #' @param parallel If \code{TRUE}, will use parallel. Currently disabled.
 #'                  Need to find out how to make \code{lavaan::udpate} works
@@ -39,6 +40,7 @@
 semlbci <- function(sem_out,
                     pars = NULL,
                     ciperc = .95,
+                    standardized = FALSE,
                     ...,
                     parallel = FALSE,
                     ncpu = 2) {
@@ -98,6 +100,7 @@ semlbci <- function(sem_out,
         out <- lapply(pars, ci_i, 
                       npar = npar,
                       sem_out = sem_out,
+                      standardized = standardized,
                       debug = FALSE,
                       f_constr = f_constr,
                       ...)
@@ -105,7 +108,13 @@ semlbci <- function(sem_out,
     out <- do.call(rbind, out)
     out_p <- ptable[, c("id", "lhs", "op", "rhs")]
     out_p$lbci_lb <- NA
-    out_p$est <- ptable[, c("est")]
+    if (standardized) {
+        pstd <- lavaan::standardizedSolution(sem_out)
+        out_p <- merge(out_p, pstd[, c("lhs", "op", "rhs", "est.std")], 
+                by = c("lhs", "op", "rhs"), all.x = TRUE, sort = FALSE)
+      } else {
+        out_p$est <- ptable[, c("est")]        
+      }
     out_p$lbci_ub <- NA
     out_p[i_selected, "lbci_lb"] <- out[, 1]
     out_p[i_selected, "lbci_ub"] <- out[, 2]
