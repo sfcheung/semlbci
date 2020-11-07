@@ -1,0 +1,36 @@
+---
+title: "Quick Start"
+author: "Shu Fai Cheung"
+date: "`r Sys.Date()"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Quick Start}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(semlbci)
+```
+
+# Introduction
+
+This package includes functions for finding the likelihood based confidence intervals of parameters in the fitted object of a structural equation modeling (SEM) function. Currently, it only supports the output from `lavaan`.
+
+# Limitations
+
+This package is still in its early development (pre-alpha). These are the limitations:
+
+- It only supports single-sample SEM. It *may* work for multiple-sample SEM but this has not been tested.
+
+- It only supports model fitted by maximum likelihood (ML) estimation, including full information maximum likelihood (FIML).
+
+- It uses the method by Neales and Miller (2012) but can not yet check whether a parameter is near its boundary. Nevertheless, a post-search test will be done by `lavaan` to check whether the final solution after finding a confidence limit is admissible.
+
