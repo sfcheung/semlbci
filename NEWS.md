@@ -1,3 +1,7 @@
+# semlbci 0.0.0.4
+
+* Work in progress ... 
+
 # semlbci 0.0.0.3
 
 * Can find the LBCI for free parameters and user-defined parameters.
