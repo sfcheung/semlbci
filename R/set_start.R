@@ -39,8 +39,8 @@ set_start <- function(i = NULL,
     if (sem_out@Model@eq.constraints) {
         return(ptable)
       }
-    # If the target is not a user-defined parameter
     if (ptable[i, "op"] != ":=") {
+        # If the target is not a user-defined parameter
         i_est_fix2 <- switch(which,
                             lbound = est[i, "ci.lower"],
                             ubound = est[i, "ci.upper"])
@@ -55,7 +55,8 @@ set_start <- function(i = NULL,
         ptable2_final <- rbind(ptable2_out, ptable2_def)
         ptable2_final[i, "ustart"] <- NA
         ptable2_final[i, "free"]  <- max(ptable2_final$free) + 1
-      } else {
+      } else if (ptable[i, "op"] == ":=") {
+        # If the target is not a user-defined parameter
         i_name <- ptable[i, "label"]
         k <- switch(which,
                     lbound = 1,
@@ -63,14 +64,21 @@ set_start <- function(i = NULL,
         tmp_fct <- function(param, sem_out) {
             k * sem_out@Model@def.function(param)[i_name]
           }
-        g_i <- numDeriv::grad(tmp_fct, 
+        g_i0 <- numDeriv::grad(tmp_fct, 
                               x = lavaan::coef(sem_out), 
                               sem_out = sem_out)
-        g_i <- (round(g_i, 5) != 0)
+        g_i0 <- round(g_i0, 5)
+        g_i  <- (g_i0 != 0)
         id_g <- id_free[g_i]
-        i_est_fix2 <- switch(which,
-                            lbound = est[id_g, "ci.lower"],
-                            ubound = est[id_g, "ci.upper"])
+        id_g_pos <- id_g[g_i0 > 0]
+        id_g_neg <- id_g[g_i0 < 0]
+        i_est_fix2 <- rep(NA, length(id_g))
+        if (length(id_g_neg) > 0) {
+          i_est_fix2[id_g_neg] <- est[id_g_neg, "ci.upper"]
+          }
+        if (length(id_g_pos) > 0) {
+            i_est_fix2[id_g_pos] <- est[id_g_pos, "ci.lower"]
+          }
         ptable2 <- ptable
         ptable2[id_g, "ustart"] <- i_est_fix2
         ptable2[id_g, "start"] <- i_est_fix2
@@ -83,6 +91,9 @@ set_start <- function(i = NULL,
         ptable2_final[id_g, "ustart"] <- NA
         ptable2_final[id_g, "free"]  <- max(ptable2_final$free) + 
                                             seq_len(length(id_g))
+      } else {
+        # If the target is none of the above
+        return(ptable)
       }
     ptable2_final
   }  
