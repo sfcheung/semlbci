@@ -75,84 +75,45 @@ set_constraint_nm <- function(i, sem_out, ciperc = .95) {
           }
       } else {
         # if (length(i) == 1) {
-            fn_constraint <- function(p_f, sem_out = NULL, debug = FALSE, lav_warn = FALSE) {
-                force(i)
-                if (debug) {
-                    cat(ls())
-                    cat(ls(globalenv()))
-                    }
-                start0 <- lavaan::parameterTable(sem_out)
-                start0[i, "free"] <- 0
-                start0[i, "ustart"] <- 0
-                start0[i, "est"] <- p_f
-                if (lav_warn) {
-                        fit2 <- lavaan::update(sem_out, start0)
-                    } else {
-                        suppressWarnings(fit2 <- lavaan::update(sem_out, start0))                    
-                    }
-                f_i_shared <<- fit2
-                if (lav_warn) {
-                        start0_free <- lavaan::parameterTable(fit2)
-                        start0_free[i, "free"] <- 1
-                        fit2_free <- lavaan::update(sem_out, start = start0_free, do.fit = FALSE)
-                        fit2_gradient <- rbind(lavaan::lavTech(fit2_free, "gradient")[i])
-                        fit2_jacobian <- rbind(lavaan::lavTech(fit2_free, "gradient")[i])
-                    } else {
-                        start0_free <- lavaan::parameterTable(fit2)
-                        start0_free[i, "free"] <- 1
-                        fit2_free <- lavaan::update(sem_out, start = start0_free, do.fit = FALSE)
-                        suppressWarnings(fit2_gradient <- rbind(lavaan::lavTech(fit2_free, "gradient")[i]))
-                        suppressWarnings(fit2_jacobian <- rbind(lavaan::lavTech(fit2_free, "gradient")[i]))
-                    }
-                f_i_free_shared <<- fit2_free
-                list(
-                    objective = lavaan::lavTech(fit2, "optim")$fx,
-                    gradient = fit2_gradient,
-                    constraints = lavaan::lavTech(fit2, "optim")$fx - target,
-                    jacobian = fit2_jacobian,
-                    parameterTable = lavaan::parameterTable(fit2))
-              }
-            return(fn_constraint)
-        # } else {
-        #     fn_constraint <- function(p_f, sem_out = NULL, debug = FALSE, lav_warn = FALSE) {
-        #         force(i)
-        #         if (debug) {
-        #             cat(ls())
-        #             cat(ls(globalenv()))
-        #             }
-        #         start0 <- lavaan::parameterTable(sem_out)
-        #         start0[i, "free"] <- 0
-        #         start0[i, "ustart"] <- 0
-        #         start0[i, "est"] <- p_f
-        #         if (lav_warn) {
-        #                 fit2 <- lavaan::update(sem_out, start0)
-        #             } else {
-        #                 suppressWarnings(fit2 <- lavaan::update(sem_out, start0))                    
-        #             }
-        #         f_i_shared <<- fit2
-        #         if (lav_warn) {
-        #                 start0_free <- lavaan::parameterTable(fit2)
-        #                 start0_free[i, "free"] <- 1
-        #                 fit2_free <- lavaan::update(sem_out, start = start0_free, do.fit = FALSE)
-        #                 fit2_gradient <- rbind(lavaan::lavTech(fit2_free, "gradient")[i])
-        #                 fit2_jacobian <- rbind(lavaan::lavTech(fit2_free, "gradient")[i])
-        #             } else {
-        #                 start0_free <- lavaan::parameterTable(fit2)
-        #                 start0_free[i, "free"] <- 1
-        #                 fit2_free <- lavaan::update(sem_out, start = start0_free, do.fit = FALSE)
-        #                 suppressWarnings(fit2_gradient <- rbind(lavaan::lavTech(fit2_free, "gradient")[i]))
-        #                 suppressWarnings(fit2_jacobian <- rbind(lavaan::lavTech(fit2_free, "gradient")[i]))
-        #             }
-        #         f_i_free_shared <<- fit2_free
-        #         list(
-        #             objective = lavaan::lavTech(fit2, "optim")$fx,
-        #             gradient = fit2_gradient,
-        #             constraints = lavaan::lavTech(fit2, "optim")$fx - target,
-        #             jacobian = fit2_jacobian,
-        #             parameterTable = lavaan::parameterTable(fit2))
-        #       }
-        #     return(fn_constraint)
-        }
-    #   }
+        fn_constraint <- function(p_f, sem_out = NULL, debug = FALSE, lav_warn = FALSE) {
+            force(i)
+            if (debug) {
+                cat(ls())
+                cat(ls(globalenv()))
+                }
+            start0 <- lavaan::parameterTable(sem_out)
+            start0 <- start0[!(start0$op == ":="), ]
+            start0[i, "free"] <- 0
+            start0[i, "ustart"] <- 0
+            start0[i, "est"] <- p_f
+            if (lav_warn) {
+                    fit2 <- lavaan::update(sem_out, start0)
+                } else {
+                    suppressWarnings(fit2 <- lavaan::update(sem_out, start0))                    
+                }
+            f_i_shared <<- fit2
+            if (lav_warn) {
+                    start0_free <- lavaan::parameterTable(fit2)
+                    start0_free[i, "free"] <- 1
+                    fit2_free <- lavaan::update(sem_out, start = start0_free, do.fit = FALSE)
+                    fit2_gradient <- rbind(lavaan::lavTech(fit2_free, "gradient")[i])
+                    fit2_jacobian <- rbind(lavaan::lavTech(fit2_free, "gradient")[i])
+                } else {
+                    start0_free <- lavaan::parameterTable(fit2)
+                    start0_free[i, "free"] <- 1
+                    fit2_free <- lavaan::update(sem_out, start = start0_free, do.fit = FALSE)
+                    suppressWarnings(fit2_gradient <- rbind(lavaan::lavTech(fit2_free, "gradient")[i]))
+                    suppressWarnings(fit2_jacobian <- rbind(lavaan::lavTech(fit2_free, "gradient")[i]))
+                }
+            f_i_free_shared <<- fit2_free
+            list(
+                objective = lavaan::lavTech(fit2, "optim")$fx,
+                gradient = fit2_gradient,
+                constraints = lavaan::lavTech(fit2, "optim")$fx - target,
+                jacobian = fit2_jacobian,
+                parameterTable = lavaan::parameterTable(fit2))
+            }
+        return(fn_constraint)
+     }
     fn_constraint
   }
