@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check ci_bound_i: Derived parameters")
+context("Check ci_bound_nm_i: Derived parameters")
 
 data(simple_med)
 dat <- simple_med
