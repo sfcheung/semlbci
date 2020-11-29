@@ -61,6 +61,8 @@ ci_bound_nm_i <- function(i = NULL,
     k <- switch(which,
                 lbound = 1,
                 ubound = -1)
+    p_table <- lavaan::parameterTable(sem_out) 
+    i_op <- p_table[i, "op"]
     if (wald_ci_start & !sem_out@Model@eq.constraints) {
         if (i_op == ":=") {
               xstart <- set_start(i, sem_out, which)
@@ -78,9 +80,8 @@ ci_bound_nm_i <- function(i = NULL,
         xstart <- perturbation_factor * lavaan::coef(sem_out)
       }
     # Check if the parameter is a user-defined parameter
-    p_table <- lavaan::parameterTable(sem_out) 
-    i_op <- p_table[i, "op"]
     if (standardized && (i_op %in% c("=~", "~", "~~", ":="))) {
+        # TODO: Not ready
         p_std <- lavaan::standardizedSolution(sem_out,
                                               type = "std.all",
                                               se = FALSE,
@@ -126,6 +127,7 @@ ci_bound_nm_i <- function(i = NULL,
     if (i_op == ":=") {
         if (standardized) {
           } else {
+            # TODO: Not ready
             # Get the name of the defined parameter
             i_name <- p_table[i, "label"]
             # The function to be minimized.
@@ -142,38 +144,18 @@ ci_bound_nm_i <- function(i = NULL,
         if (standardized) {
           } else {
             # The function to be minimized.
-            # p_free <- find_free(sem_out)
-            qcrit <- stats::qchisq(.95, 1) # TODO: Add ciperc as an argument
-            fmin <- lavaan::lavTech(sem_out, "optim")$fx
-            n <- lavaan::lavTech(sem_out, "nobs")
-            # NOTE: For lavaan, chisq = 2 * n * fmin
-            fd <- (2 * n * fmin + qcrit)
-            pt <- p_table
-            pt[i, "free"] <- 0
-            pt[i, "ustart"] <- 0
-            pt[i, "est"] <- 0
             lbci_b_f <- function(p_f, sem_out, debug, lav_warn) {
-                pt[i, "est"] <- p_f
-                f_i <- lavaan::update(sem_out, pt)
-                fmin_i <- 2 * n * lavaan::lavTech(f_i, "optim")$fx
-                obj_i <- (fd - fmin_i)^2 + k * p_f
-                # Find the gradient # TO FIX
-                # pt0 <- p_table
-                # pt0[i, "start"] <- p_f
-                # f_g_i <- lavaan::update(sem_out, start = pt0, do.fit = FALSE)
-                # grad_i <- (fd - fmin_i) * 
-                #             lavaan::lavInspect(f_g_i, "gradient")[i] + k
-                # # Output
-                # list(objective = obj_i,
-                #      gradient  = grad_i)
-                obj_i
+                k * p_f
               }
             # The gradient of the function to be minimized
             lbci_b_grad <- function(p_f, sem_out, debug, lav_warn) {
-                numDeriv::grad(lbci_b_f, p_f, method = numDeriv_grad_method,
-                                sem_out = sem_out, 
-                                debug = debug, lav_warn = lav_warn)
+                force(i)
+                lavaan::lavTech(f_i_free_shared, "gradient")[i]
               }
+            f_constr = set_constraint_nm(i, sem_out)
+            # Set shared variables
+            f_i_shared <- sem_out
+            f_i_free_shared <- sem_out
             # lbci_b_grad <- NULL
             fit_lb <- -Inf
             fit_ub <-  Inf
@@ -188,12 +170,12 @@ ci_bound_nm_i <- function(i = NULL,
                         lb = fit_lb, # To-Do: Check
                         ub = fit_ub, # To-Do: Check
                         eval_grad_f = lbci_b_grad,
-                        # eval_g_eq = f_constr,
+                        eval_g_eq = f_constr,
                         opts = opts,
                         sem_out = sem_out,
                         lav_warn = FALSE,
                         debug = FALSE)
-    bound <- out$solution
+    bound <- k * out$objective
 
     # Check whether admissible
     start0 <- lavaan::parameterTable(sem_out)
