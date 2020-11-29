@@ -1,6 +1,8 @@
-# semlbci 0.0.0.4
+# semlbci 0.0.0.6
 
-* (Work in progress .... )
+* (WIP). Try the Neale-Miller-1997 approach.
+
+# semlbci 0.0.0.4
 
 * Can find the LBCI for the free and user-defined parameters in the standardized solution.
 
