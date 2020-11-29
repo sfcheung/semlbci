@@ -83,29 +83,45 @@ ci_bound_nm_i <- function(i = NULL,
     # Check if the parameter is a user-defined parameter
     if (standardized && (i_op %in% c("=~", "~", "~~", ":="))) {
         # TODO: Not ready
-        p_std <- lavaan::standardizedSolution(sem_out,
-                                              type = "std.all",
-                                              se = FALSE,
-                                              zstat = FALSE,
-                                              pvalue = FALSE,
-                                              ci = FALSE,
-                                              remove.eq = FALSE,
-                                              remove.ineq = FALSE,
-                                              remove.def = FALSE,
-                                              output = "data.frame")
-        p_std$id <- seq_len(nrow(p_std))
-        i_lor <- get_lhs_op_rhs(i, sem_out)
-        i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
-        start0 <- lavaan::parameterTable(sem_out)
+        # Get the name of the defined parameter
+        i_name <- p_table[i, "label"]
         # The function to be minimized.
-        lbci_b_f <- function(param, sem_out, debug, lav_warn) {
-            start1 <- start0
-            start1[start1$free > 0, "est"] <- param
+        i_depend <- find_dependent(i, sem_out = sem_out, standardized = TRUE)
+        # The function to be minimized.
+        param_i <- rep(NA, npar)
+        start0 <- lavaan::parameterTable(sem_out)
+        lbci_b_f <- function(param_depend, sem_out, debug, lav_warn) {
+            force(i_depend)
+            force(param_i)
+            force(i_name)
+            force(start0)
+            if (is.null(attr(param_depend, "refit"))) {
+                param_i[i_depend] <- param_depend
+                start1 <- start0[!(start0$op == ":="), ]
+                start1[i_depend, "free"] <- 0
+                start1[i_depend, "ustart"] <- 0
+                start1[i_depend, "est"] <- param_depend
+                fit2 <- lavaan::update(sem_out, start1)
+                f_i_shared <<- fit2
+                p_table2 <- lavaan::parameterTable(fit2)
+                p_table2$esty <- p_table2$est
+              } else {
+                p_table2 <- lavaan::parameterTable(f_i_shared)
+                p_table2[i_depend, "est"] <- param_depend
+                p_table2$esty <- p_table2$est
+              }
+            # start1 <- start0[start0$op != "==", ]
+            # start1[i_depend, "est"] <- param_i
             sem_out2 <- sem_out
-            sem_out2@ParTable <- as.list(start1)
+            start3 <- merge(p_table, p_table2[, c("lhs", "op", "rhs", "esty")], 
+                        by = c("lhs", "op", "rhs"), all.x = TRUE, all.y = FALSE,
+                        sort = FALSE)
+            start3$est <- start3$esty
+            start3$esty <- NULL
+            sem_out2@ParTable <- as.list(start3)
             sem_model <- sem_out2@Model
             sem_model <- update_model(sem_model, 
-                                      start1[start1$free > 0, "est"] )
+                                      start3[start3$free > 0, "est"] )
             sem_out2@Model <- sem_model
             std0 <- lavaan::standardizedSolution(sem_out2,
                                             type = "std.all",
@@ -117,13 +133,23 @@ ci_bound_nm_i <- function(i = NULL,
                                             remove.ineq = FALSE,
                                             remove.def = FALSE,
                                             output = "data.frame")
-            k * std0[i_std, "est.std"]
+            k * std0[i, "est.std"]
           }
-        # The gradient of the function to be minimized
-        lbci_b_grad <- function(param, sem_out, debug, lav_warn) {
-            numDeriv::grad(lbci_b_f, param, sem_out = sem_out, 
+        lbci_b_grad <- function(param_depend, sem_out, debug, lav_warn) {
+            param_depend_g <- param_depend
+            attr(param_depend_g, "refit") <- FALSE 
+            lavaan::lav_func_gradient_simple(lbci_b_f, param_depend_g, sem_out = sem_out, 
                                     debug = debug, lav_warn = lav_warn)
           }
+        f_constr = set_constraint_nm(i_depend, sem_out, get_fit_from_prent = TRUE)
+        # Set shared variables
+        f_i_shared <- sem_out
+        f_i_free_shared <- sem_out
+        # lbci_b_grad <- NULL
+        fit_lb <- rep(-Inf, length(i_depend))
+        fit_ub <- rep( Inf, length(i_depend))
+        fit_lb[find_variance_in_free(sem_out)[i_depend]] <- lb_var
+        xstart <-  xstart[i_depend]
       }
     if (i_op == ":=") {
         if (standardized) {
@@ -195,16 +221,20 @@ ci_bound_nm_i <- function(i = NULL,
     # Check whether admissible
     start0 <- lavaan::parameterTable(sem_out)
     i_free <- find_free(sem_out)
-    if (i_op == ":=") {
-        start0[which(i_free)[i_depend], "est"] <- out$solution
+    if (standardized) {
+        fit_post_check <- lavaan::lavInspect(f_i_free_shared, "post.check")
       } else {
-        start0[i_free, "est"] <- out$solution
+        if (i_op == ":=") {
+            start0[which(i_free)[i_depend], "est"] <- out$solution
+          } else {
+            start0[i_free, "est"] <- out$solution
+          }
+        fit_final <- lavaan::update(sem_out, start = start0, do.fit = FALSE,
+                                    check.start = TRUE,
+                                    check.post = TRUE,
+                                    check.vcov = TRUE)
+        fit_post_check <- lavaan::lavInspect(fit_final, "post.check")
       }
-    fit_final <- lavaan::update(sem_out, start = start0, do.fit = FALSE,
-                                check.start = TRUE,
-                                check.post = TRUE,
-                                check.vcov = TRUE)
-    fit_post_check <- lavaan::lavInspect(fit_final, "post.check")
     if (!fit_post_check) {
         bound <- NA
         warning("Optimization converged but the final solution is not admissible.")

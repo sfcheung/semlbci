@@ -13,6 +13,7 @@
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.
 #' @param ciperc The proportion of coverage for the confidence interval. Default
 #'               is .95.
+#' @param get_fit_from_prent Get the fitted model from the parent.frame. Default is FALSE
 #'
 #'@examples
 #' library(lavaan)
@@ -33,7 +34,7 @@
 #' #fn1(coef(sem_out) - .12)
 #'@export
 
-set_constraint_nm <- function(i, sem_out, ciperc = .95) {
+set_constraint_nm <- function(i, sem_out, ciperc = .95, get_fit_from_prent = FALSE) {
 #    force(sem_out)
     # sem_out2 <- eval(sem_out)
     p_free <- find_free(sem_out)
@@ -86,12 +87,16 @@ set_constraint_nm <- function(i, sem_out, ciperc = .95) {
             start0[i, "free"] <- 0
             start0[i, "ustart"] <- 0
             start0[i, "est"] <- p_f
-            if (lav_warn) {
-                    fit2 <- lavaan::update(sem_out, start0)
+            if (get_fit_from_prent) {
+                    fit2 <- f_i_shared
                 } else {
-                    suppressWarnings(fit2 <- lavaan::update(sem_out, start0))                    
+                    if (lav_warn) {
+                            fit2 <- lavaan::update(sem_out, start0)
+                        } else {
+                            suppressWarnings(fit2 <- lavaan::update(sem_out, start0))                    
+                       }
+                    f_i_shared <<- fit2
                 }
-            f_i_shared <<- fit2
             if (lav_warn) {
                     start0_free <- lavaan::parameterTable(fit2)
                     start0_free[i, "free"] <- 1
