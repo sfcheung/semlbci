@@ -118,5 +118,6 @@ semlbci <- function(sem_out,
     out_p$lbci_ub <- NA
     out_p[i_selected, "lbci_lb"] <- out[, 1]
     out_p[i_selected, "lbci_ub"] <- out[, 2]
+    class(out_p) <- c("semlbci", class(out_p))
     out_p
   }
