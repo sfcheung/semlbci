@@ -62,6 +62,7 @@ ci_bound_nm_i <- function(i = NULL,
                 lbound = 1,
                 ubound = -1)
     p_table <- lavaan::parameterTable(sem_out) 
+    npar <- sum(p_table$free > 0)
     i_op <- p_table[i, "op"]
     if (wald_ci_start & !sem_out@Model@eq.constraints) {
         if (i_op == ":=") {
@@ -131,14 +132,34 @@ ci_bound_nm_i <- function(i = NULL,
             # Get the name of the defined parameter
             i_name <- p_table[i, "label"]
             # The function to be minimized.
-            lbci_b_f <- function(param, sem_out, debug, lav_warn) {
-                k * sem_out@Model@def.function(param)[i_name]
+            i_depend <- find_dependent(i, sem_out = sem_out, standardized = FALSE)
+            # The function to be minimized.
+            param_i <- rep(NA, npar)
+            lbci_b_f <- function(param_depend, sem_out, debug, lav_warn) {
+                force(i_depend)
+                force(param_i)
+                force(i_name)
+                param_i[i_depend] <- param_depend
+                k * sem_out@Model@def.function(param_i)[i_name]
               }
             # The gradient of the function to be minimized
-            lbci_b_grad <- function(param, sem_out, debug, lav_warn) {
-                numDeriv::grad(lbci_b_f, param, sem_out = sem_out, 
+            # lbci_b_grad <- function(param_depend, sem_out, debug, lav_warn) {
+            #     force(i)
+            #     lavaan::lavTech(f_i_free_shared, "gradient")[i]
+            #   }
+            lbci_b_grad <- function(param_depend, sem_out, debug, lav_warn) {
+                numDeriv::grad(lbci_b_f, param_depend, sem_out = sem_out, 
                                         debug = debug, lav_warn = lav_warn)
-              }            
+              }
+            f_constr = set_constraint_nm(i_depend, sem_out)
+            # Set shared variables
+            f_i_shared <- sem_out
+            f_i_free_shared <- sem_out
+            # lbci_b_grad <- NULL
+            fit_lb <- rep(-Inf, length(i_depend))
+            fit_ub <- rep( Inf, length(i_depend))
+            fit_lb[find_variance_in_free(sem_out)[i_depend]] <- lb_var
+            xstart <-  xstart[i_depend]
           }
       } else {
         if (standardized) {
@@ -180,7 +201,11 @@ ci_bound_nm_i <- function(i = NULL,
     # Check whether admissible
     start0 <- lavaan::parameterTable(sem_out)
     i_free <- find_free(sem_out)
-    start0[i_free, "est"] <- out$solution
+    if (i_op == ":=") {
+        start0[which(i_free)[i_depend], "est"] <- out$solution
+      } else {
+        start0[i_free, "est"] <- out$solution
+      }
     fit_final <- lavaan::update(sem_out, start = start0, do.fit = FALSE,
                                 check.start = TRUE,
                                 check.post = TRUE,

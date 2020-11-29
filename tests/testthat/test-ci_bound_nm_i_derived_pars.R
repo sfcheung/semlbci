@@ -17,12 +17,12 @@ am:= mean(c(ab, asq, abc))
 fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 lavaan::parameterTable(fit_med)
 
-fn_constr0 <- set_constraint(fit_med)
+# fn_constr0 <- set_constraint(fit_med)
 
-out1l <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound")
-out1u <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound")
-out2l <- ci_bound_i(7, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound")
-out2u <- ci_bound_i(7, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound")
+system.time(out1l <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "lbound"))
+system.time(out1u <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "ubound"))
+system.time(out2l <- ci_bound_nm_i(7, 5, sem_out = fit_med, which = "lbound"))
+system.time(out2u <- ci_bound_nm_i(7, 5, sem_out = fit_med, which = "ubound"))
 
 
 library(OpenMx)
