@@ -89,6 +89,7 @@ set_constraint_nm <- function(i, sem_out, ciperc = .95) {
                 } else {
                     suppressWarnings(fit2 <- lavaan::update(sem_out, start0))                    
                 }
+            f_i_shared <<- fit2
             if (lav_warn) {
                     start0_free <- lavaan::parameterTable(fit2)
                     start0_free[i, "free"] <- 1
@@ -99,9 +100,10 @@ set_constraint_nm <- function(i, sem_out, ciperc = .95) {
                     start0_free <- lavaan::parameterTable(fit2)
                     start0_free[i, "free"] <- 1
                     fit2_free <- lavaan::update(sem_out, start = start0_free, do.fit = FALSE)
-                    suppressWarnings(fit2_gradient <- rbind(lavaan::lavTech(fit2_free, "gradient")))
-                    suppressWarnings(fit2_jacobian <- rbind(lavaan::lavTech(fit2_free, "gradient")))
+                    suppressWarnings(fit2_gradient <- rbind(lavaan::lavTech(fit2_free, "gradient")[i]))
+                    suppressWarnings(fit2_jacobian <- rbind(lavaan::lavTech(fit2_free, "gradient")[i]))
                 }
+            f_i_free_shared <<- fit2_free
             list(
                   objective = lavaan::lavTech(fit2, "optim")$fx,
                   gradient = fit2_gradient,
