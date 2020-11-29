@@ -128,7 +128,6 @@ ci_bound_nm_i <- function(i = NULL,
     if (i_op == ":=") {
         if (standardized) {
           } else {
-            # TODO: Not ready
             # Get the name of the defined parameter
             i_name <- p_table[i, "label"]
             # The function to be minimized.
@@ -142,11 +141,6 @@ ci_bound_nm_i <- function(i = NULL,
                 param_i[i_depend] <- param_depend
                 k * sem_out@Model@def.function(param_i)[i_name]
               }
-            # The gradient of the function to be minimized
-            # lbci_b_grad <- function(param_depend, sem_out, debug, lav_warn) {
-            #     force(i)
-            #     lavaan::lavTech(f_i_free_shared, "gradient")[i]
-            #   }
             lbci_b_grad <- function(param_depend, sem_out, debug, lav_warn) {
                 numDeriv::grad(lbci_b_f, param_depend, sem_out = sem_out, 
                                         debug = debug, lav_warn = lav_warn)
