@@ -202,7 +202,7 @@ ci_bound_nm_i <- function(i = NULL,
                 force(envir0)
                 lavaan::lavTech(envir0$f_i_free_shared, "gradient")[i]
               }
-            f_constr = set_constraint_nm(i, sem_out, get_fit_from_envir = TRUE,
+            f_constr = set_constraint_nm(i, sem_out, get_fit_from_envir = FALSE,
                                          envir = envir0)
             # lbci_b_grad <- NULL
             fit_lb <- -Inf

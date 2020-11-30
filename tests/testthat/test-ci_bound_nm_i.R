@@ -12,7 +12,7 @@ y ~ m
 "
 fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
-opts0 <- list(print_level = 3)
+# opts0 <- list(print_level = 3)
 opts0 <- list()
 system.time(out1l <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "lbound", opts = opts0))
 system.time(out1u <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "ubound", opts = opts0))
@@ -44,6 +44,7 @@ mod_mx <- mxModel("Mediation", type = "RAM",
   )
 fit_med_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
 ci_OpenMx <- summary(fit_med_OpenMx)$CI
+ci_semlbci <- c(out1l, out2l, out1u, out2u)
 
 test_that("Equal to OpenMx LBCI", {
     expect_equivalent(

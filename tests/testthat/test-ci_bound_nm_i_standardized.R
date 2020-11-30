@@ -14,8 +14,8 @@ fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
 # fn_constr0 <- set_constraint(fit_med)
 
-opts0 <- list(print_level = 3)
-opts0 <- NULL
+# opts0 <- list(print_level = 3)
+opts0 <- list()
 system.time(out1l <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "lbound", standardized = TRUE, opts = opts0))
 system.time(out1u <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "ubound", standardized = TRUE, opts = opts0))
 system.time(out2l <- ci_bound_nm_i(2, 5, sem_out = fit_med, which = "lbound", standardized = TRUE, opts = opts0))
