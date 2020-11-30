@@ -174,11 +174,19 @@ ci_bound_nm_i <- function(i = NULL,
                 param_i[i_depend] <- param_depend
                 k * sem_out@Model@def.function(param_i)[i_name]
               }
+            # lbci_b_grad <- function(param_depend, sem_out, debug, lav_warn) {
+            #     numDeriv::grad(lbci_b_f, param_depend, sem_out = sem_out, 
+            #                             debug = debug, lav_warn = lav_warn)
+            #   }
             lbci_b_grad <- function(param_depend, sem_out, debug, lav_warn) {
-                numDeriv::grad(lbci_b_f, param_depend, sem_out = sem_out, 
-                                        debug = debug, lav_warn = lav_warn)
+                force(i)
+                force(envir0)
+                force(i_depend)
+                lavaan::lavTech(envir0$f_i_free_shared, "gradient")[i_depend]
               }
-            f_constr = set_constraint_nm(i_depend, sem_out)
+            # f_constr = set_constraint_nm(i_depend, sem_out)
+            f_constr = set_constraint_nm(i_depend, sem_out, get_fit_from_envir = FALSE,
+                                         envir = envir0)
             # lbci_b_grad <- NULL
             fit_lb <- rep(-Inf, length(i_depend))
             fit_ub <- rep( Inf, length(i_depend))
