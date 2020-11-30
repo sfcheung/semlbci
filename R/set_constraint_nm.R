@@ -44,8 +44,10 @@ set_constraint_nm <- function(i, sem_out, ciperc = .95, envir = NULL, get_fit_fr
     # NOTE: For lavaan, chisq = 2 * n * fmin
     target <- fmin + qcrit / (2 * n)
     # Check if there are any equality constraints
-    if (sem_out@Model@eq.constraints) {
-        # TODO: Not ready.
+    # if (sem_out@Model@eq.constraints) {
+    if (FALSE) {
+        # Disabled. Not necessary for the Neale-Miller-1997 approach
+        # This part is to be deleted. It is copied from the code for the Wu-Nealed 2012 approach.
         fn_constraint <- function(param, sem_out = NULL, debug = FALSE, lav_warn = FALSE) {
             if (debug) {
                 cat(ls())
