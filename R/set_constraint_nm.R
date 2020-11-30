@@ -13,7 +13,7 @@
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.
 #' @param ciperc The proportion of coverage for the confidence interval. Default
 #'               is .95.
-#' @param get_fit_from_prent Get the fitted model from the parent.frame. Default is FALSE
+#' @param envir The enviroment to stroe the state. Default is NULL
 #'
 #'@examples
 #' library(lavaan)
@@ -34,7 +34,7 @@
 #' #fn1(coef(sem_out) - .12)
 #'@export
 
-set_constraint_nm <- function(i, sem_out, ciperc = .95, get_fit_from_prent = FALSE) {
+set_constraint_nm <- function(i, sem_out, ciperc = .95, envir = NULL, get_fit_from_envir = FALSE) {
 #    force(sem_out)
     # sem_out2 <- eval(sem_out)
     p_free <- find_free(sem_out)
@@ -78,6 +78,7 @@ set_constraint_nm <- function(i, sem_out, ciperc = .95, get_fit_from_prent = FAL
         # if (length(i) == 1) {
         fn_constraint <- function(p_f, sem_out = NULL, debug = FALSE, lav_warn = FALSE) {
             force(i)
+            force(get_fit_from_envir)
             if (debug) {
                 cat(ls())
                 cat(ls(globalenv()))
@@ -87,15 +88,15 @@ set_constraint_nm <- function(i, sem_out, ciperc = .95, get_fit_from_prent = FAL
             start0[i, "free"] <- 0
             start0[i, "ustart"] <- 0
             start0[i, "est"] <- p_f
-            if (get_fit_from_prent) {
-                    fit2 <- f_i_shared
+            if (!is.null(envir) & (get_fit_from_envir == TRUE)) {
+                    fit2 <- envir$f_i_shared
                 } else {
                     if (lav_warn) {
                             fit2 <- lavaan::update(sem_out, start0)
                         } else {
                             suppressWarnings(fit2 <- lavaan::update(sem_out, start0))                    
                        }
-                    f_i_shared <<- fit2
+                    envir$f_i_shared <- fit2
                 }
             if (lav_warn) {
                     start0_free <- lavaan::parameterTable(fit2)
@@ -110,7 +111,11 @@ set_constraint_nm <- function(i, sem_out, ciperc = .95, get_fit_from_prent = FAL
                     suppressWarnings(fit2_gradient <- rbind(lavaan::lavTech(fit2_free, "gradient")[i]))
                     suppressWarnings(fit2_jacobian <- rbind(lavaan::lavTech(fit2_free, "gradient")[i]))
                 }
-            f_i_free_shared <<- fit2_free
+            if (!is.null(envir)) {
+                envir$f_i_free_shared <- fit2_free
+            } else {
+                f_i_free_shared <<- fit2_free
+            }
             list(
                 objective = lavaan::lavTech(fit2, "optim")$fx,
                 gradient = fit2_gradient,

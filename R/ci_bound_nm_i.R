@@ -51,11 +51,7 @@ ci_bound_nm_i <- function(i = NULL,
                        lb_var = -Inf,
                        wald_ci_start = TRUE,
                        standardized = FALSE,
-                       opts = list(
-                          "algorithm" = "NLOPT_LD_SLSQP",
-                          "xtol_rel" = 1.0e-10,
-                          "maxeval" = 1000,
-                          "print_level" = 0),
+                       opts = list(),
                        numDeriv_grad_method = "Richardson",
                        ...) {
     k <- switch(which,
@@ -90,11 +86,17 @@ ci_bound_nm_i <- function(i = NULL,
         # The function to be minimized.
         param_i <- rep(NA, npar)
         start0 <- lavaan::parameterTable(sem_out)
+        envir0 <- new.env()
+        assign("f_i_shared", sem_out, envir = envir0)
+        assign("f_i_shared_free", sem_out, envir = envir0)
+        # f_i_shared <- sem_out
+        # f_i_free_shared <- sem_out
         lbci_b_f <- function(param_depend, sem_out, debug, lav_warn) {
             force(i_depend)
             force(param_i)
             force(i_name)
             force(start0)
+            force(envir0)
             if (is.null(attr(param_depend, "refit"))) {
                 param_i[i_depend] <- param_depend
                 start1 <- start0[!(start0$op == ":="), ]
@@ -102,11 +104,12 @@ ci_bound_nm_i <- function(i = NULL,
                 start1[i_depend, "ustart"] <- 0
                 start1[i_depend, "est"] <- param_depend
                 fit2 <- lavaan::update(sem_out, start1)
-                f_i_shared <<- fit2
+                # f_i_shared <<- fit2
+                assign("f_i_shared", fit2, envir0)
                 p_table2 <- lavaan::parameterTable(fit2)
                 p_table2$esty <- p_table2$est
               } else {
-                p_table2 <- lavaan::parameterTable(f_i_shared)
+                p_table2 <- lavaan::parameterTable(envir0$f_i_shared)
                 p_table2[i_depend, "est"] <- param_depend
                 p_table2$esty <- p_table2$est
               }
@@ -141,10 +144,8 @@ ci_bound_nm_i <- function(i = NULL,
             lavaan::lav_func_gradient_simple(lbci_b_f, param_depend_g, sem_out = sem_out, 
                                     debug = debug, lav_warn = lav_warn)
           }
-        f_constr = set_constraint_nm(i_depend, sem_out, get_fit_from_prent = TRUE)
+        f_constr = set_constraint_nm(i_depend, sem_out, envir = envir0)
         # Set shared variables
-        f_i_shared <- sem_out
-        f_i_free_shared <- sem_out
         # lbci_b_grad <- NULL
         fit_lb <- rep(-Inf, length(i_depend))
         fit_ub <- rep( Inf, length(i_depend))
@@ -158,6 +159,12 @@ ci_bound_nm_i <- function(i = NULL,
             i_name <- p_table[i, "label"]
             # The function to be minimized.
             i_depend <- find_dependent(i, sem_out = sem_out, standardized = FALSE)
+            # Set shared variables
+            envir0 <- new.env()
+            assign("f_i_shared", sem_out, envir = envir0)
+            assign("f_i_shared_free", sem_out, envir = envir0)
+            # f_i_shared <- sem_out
+            # f_i_free_shared <- sem_out
             # The function to be minimized.
             param_i <- rep(NA, npar)
             lbci_b_f <- function(param_depend, sem_out, debug, lav_warn) {
@@ -172,9 +179,6 @@ ci_bound_nm_i <- function(i = NULL,
                                         debug = debug, lav_warn = lav_warn)
               }
             f_constr = set_constraint_nm(i_depend, sem_out)
-            # Set shared variables
-            f_i_shared <- sem_out
-            f_i_free_shared <- sem_out
             # lbci_b_grad <- NULL
             fit_lb <- rep(-Inf, length(i_depend))
             fit_ub <- rep( Inf, length(i_depend))
@@ -184,6 +188,10 @@ ci_bound_nm_i <- function(i = NULL,
       } else {
         if (standardized) {
           } else {
+            # Set shared variables
+            envir0 <- new.env()
+            assign("f_i_shared", sem_out, envir = envir0)
+            assign("f_i_shared_free", sem_out, envir = envir0)
             # The function to be minimized.
             lbci_b_f <- function(p_f, sem_out, debug, lav_warn) {
                 k * p_f
@@ -191,12 +199,11 @@ ci_bound_nm_i <- function(i = NULL,
             # The gradient of the function to be minimized
             lbci_b_grad <- function(p_f, sem_out, debug, lav_warn) {
                 force(i)
-                lavaan::lavTech(f_i_free_shared, "gradient")[i]
+                force(envir0)
+                lavaan::lavTech(envir0$f_i_free_shared, "gradient")[i]
               }
-            f_constr = set_constraint_nm(i, sem_out)
-            # Set shared variables
-            f_i_shared <- sem_out
-            f_i_free_shared <- sem_out
+            f_constr = set_constraint_nm(i, sem_out, get_fit_from_envir = TRUE,
+                                         envir = envir0)
             # lbci_b_grad <- NULL
             fit_lb <- -Inf
             fit_ub <-  Inf
@@ -205,6 +212,11 @@ ci_bound_nm_i <- function(i = NULL,
       }
     # fit_lb <- rep(-Inf, npar)
     # fit_lb[find_variance_in_free(sem_out)] <- lb_var
+    opts_final <- modifyList(list("algorithm" = "NLOPT_LD_SLSQP",
+                        "xtol_rel" = 1.0e-10,
+                        "maxeval" = 1000,
+                        "print_level" = 0),
+                        opts)    
     out <- nloptr::nloptr(
                         x0 = xstart, 
                         eval_f = lbci_b_f, 
@@ -212,7 +224,7 @@ ci_bound_nm_i <- function(i = NULL,
                         ub = fit_ub, # To-Do: Check
                         eval_grad_f = lbci_b_grad,
                         eval_g_eq = f_constr,
-                        opts = opts,
+                        opts = opts_final,
                         sem_out = sem_out,
                         lav_warn = FALSE,
                         debug = FALSE)
@@ -222,7 +234,7 @@ ci_bound_nm_i <- function(i = NULL,
     start0 <- lavaan::parameterTable(sem_out)
     i_free <- find_free(sem_out)
     if (standardized) {
-        fit_post_check <- lavaan::lavInspect(f_i_free_shared, "post.check")
+        fit_post_check <- lavaan::lavInspect(envir0$f_i_free_shared, "post.check")
       } else {
         if (i_op == ":=") {
             start0[which(i_free)[i_depend], "est"] <- out$solution

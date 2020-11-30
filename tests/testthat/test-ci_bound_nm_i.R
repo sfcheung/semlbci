@@ -12,12 +12,12 @@ y ~ m
 "
 fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
-# fn_constr0 <- set_constraint_nm(1, fit_med)
-
-system.time(out1l <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "lbound"))
-system.time(out1u <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "ubound"))
-system.time(out2l <- ci_bound_nm_i(2, 5, sem_out = fit_med, which = "lbound"))
-system.time(out2u <- ci_bound_nm_i(2, 5, sem_out = fit_med, which = "ubound"))
+opts0 <- list(print_level = 3)
+opts0 <- list()
+system.time(out1l <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "lbound", opts = opts0))
+system.time(out1u <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "ubound", opts = opts0))
+system.time(out2l <- ci_bound_nm_i(2, 5, sem_out = fit_med, which = "lbound", opts = opts0))
+system.time(out2u <- ci_bound_nm_i(2, 5, sem_out = fit_med, which = "ubound", opts = opts0))
 # (ci_semlbci <- c(out1l, out2l, out1u, out2u)) -
 #   unlist(ci_OpenMx[c("a", "b"), c("lbound", "ubound")])
 
