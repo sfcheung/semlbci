@@ -15,7 +15,12 @@ fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
 # opts0 <- list(print_level = 3)
 opts0 <- list()
-
+opts0 <- list(ftol_abs = 1e-7,
+              ftol_rel = 1e-7,
+              xtol_abs = 1e-7,
+              xtol_rel = 1e-7,
+              tol_constraints_eq = 1e-7
+              )
 system.time(out1l <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "lbound", standardized = TRUE, opts = opts0))
 system.time(out1u <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "ubound", standardized = TRUE, opts = opts0))
 system.time(out2l <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "lbound", standardized = TRUE, opts = opts0))
