@@ -88,7 +88,7 @@ ci_bound_nm_i <- function(i = NULL,
         start0 <- lavaan::parameterTable(sem_out)
         envir0 <- new.env()
         assign("f_i_shared", sem_out, envir = envir0)
-        assign("f_i_shared_free", sem_out, envir = envir0)
+        assign("f_i_free_shared", sem_out, envir = envir0)
         # f_i_shared <- sem_out
         # f_i_free_shared <- sem_out
         lbci_b_f <- function(param_depend, sem_out, debug, lav_warn) {
@@ -162,7 +162,7 @@ ci_bound_nm_i <- function(i = NULL,
             # Set shared variables
             envir0 <- new.env()
             assign("f_i_shared", sem_out, envir = envir0)
-            assign("f_i_shared_free", sem_out, envir = envir0)
+            assign("f_i_free_shared", sem_out, envir = envir0)
             # f_i_shared <- sem_out
             # f_i_free_shared <- sem_out
             # The function to be minimized.
@@ -191,7 +191,7 @@ ci_bound_nm_i <- function(i = NULL,
             # Set shared variables
             envir0 <- new.env()
             assign("f_i_shared", sem_out, envir = envir0)
-            assign("f_i_shared_free", sem_out, envir = envir0)
+            assign("f_i_free_shared", sem_out, envir = envir0)
             # The function to be minimized.
             lbci_b_f <- function(p_f, sem_out, debug, lav_warn) {
                 k * p_f
