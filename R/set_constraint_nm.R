@@ -100,16 +100,13 @@ set_constraint_nm <- function(i, sem_out, ciperc = .95, envir = NULL, get_fit_fr
                        }
                     envir$f_i_shared <- fit2
                 }
+            start0_free <- lavaan::parameterTable(fit2)
+            start0_free[i, "free"] <- 1
+            fit2_free <- lavaan::update(sem_out, start = start0_free, do.fit = FALSE)
             if (lav_warn) {
-                    start0_free <- lavaan::parameterTable(fit2)
-                    start0_free[i, "free"] <- 1
-                    fit2_free <- lavaan::update(sem_out, start = start0_free, do.fit = FALSE)
                     fit2_gradient <- rbind(lavaan::lavTech(fit2_free, "gradient")[i])
                     fit2_jacobian <- rbind(lavaan::lavTech(fit2_free, "gradient")[i])
                 } else {
-                    start0_free <- lavaan::parameterTable(fit2)
-                    start0_free[i, "free"] <- 1
-                    fit2_free <- lavaan::update(sem_out, start = start0_free, do.fit = FALSE)
                     suppressWarnings(fit2_gradient <- rbind(lavaan::lavTech(fit2_free, "gradient")[i]))
                     suppressWarnings(fit2_jacobian <- rbind(lavaan::lavTech(fit2_free, "gradient")[i]))
                 }
