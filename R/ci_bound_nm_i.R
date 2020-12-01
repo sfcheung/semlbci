@@ -25,7 +25,9 @@
 #'                       be used as the starting value for the target parameter if it is not a userd-defined paramter.
 #' @param standardized If TRUE, the LBCI is for the standardized estimate. 
 #' @param opts Options to be passed to \code{nloptr}
-#' @param test_generic If [`TRUE`], will use the work-in-progress generic functions. Default if [`FALSE`].
+#' @param test_generic If [`TRUE`], will use the work-in-progress generic functions. Default is [`TRUE`].
+#' @param ciperc The proportion of coverage for the confidence interval. Default
+#'               is .95.
 #' @param ... Optional arguments. Not used.
 #' 
 #'@examples
@@ -52,7 +54,8 @@ ci_bound_nm_i <- function(i = NULL,
                        wald_ci_start = TRUE,
                        standardized = FALSE,
                        opts = list(),
-                       test_generic = FALSE,
+                       test_generic = TRUE,
+                       ciperc = .95,
                        ...) {
     k <- switch(which,
                 lbound = 1,
@@ -182,7 +185,6 @@ ci_bound_nm_i <- function(i = NULL,
               }
           }
         # Define constraint function
-        ciperc <- .95
         qcrit <- stats::qchisq(ciperc, 1)
         fmin <- lavaan::lavTech(sem_out, "optim")$fx
         n <- lavaan::lavTech(sem_out, "nobs")
