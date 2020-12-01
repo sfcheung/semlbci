@@ -11,6 +11,8 @@
 #' Can return the optimization history as an attribute.
 #'
 #' @param i The position of the target parameters.
+#' @param method The approach to be used. Can be "wn" (Wu-Neale-2012) or "nm" 
+#'               (Neale-Miller-1997). Default is "wn".
 #' @param ... Arguments to be passed to \code{ci_bound_i}.
 #' 
 #'@examples
@@ -26,9 +28,15 @@
 #' fit <- sem(mod, cfa_two_factors)
 #'@export
 
-ci_i <- function(i, ...) {
-    lb <- ci_bound_i(i, which = "lbound", ...)
-    ub <- ci_bound_i(i, which = "ubound", ...)
+ci_i <- function(i, method = "wn", ...) {
+    if (method == "wn") {
+        lb <- ci_bound_i(i, which = "lbound", ...)
+        ub <- ci_bound_i(i, which = "ubound", ...)
+      }
+    if (method == "nm") {
+        lb <- ci_bound_nm_i(i, which = "lbound", ...)
+        ub <- ci_bound_nm_i(i, which = "ubound", ...)
+      }
     out <- c(lb, ub)
     if (!is.null(attr(lb, "history"))) {
         attr(out, "lb_history") <- attr(lb, "history")
