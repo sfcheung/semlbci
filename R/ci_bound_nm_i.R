@@ -25,6 +25,7 @@
 #'                       be used as the starting value for the target parameter if it is not a userd-defined paramter.
 #' @param standardized If TRUE, the LBCI is for the standardized estimate. 
 #' @param opts Options to be passed to \code{nloptr}
+#' @param test_generic If [`TRUE`], will use the work-in-progress generic functions. Default if [`FALSE`].
 #' @param ... Optional arguments. Not used.
 #' 
 #'@examples
@@ -51,6 +52,7 @@ ci_bound_nm_i <- function(i = NULL,
                        wald_ci_start = TRUE,
                        standardized = FALSE,
                        opts = list(),
+                       test_generic = FALSE,
                        ...) {
     k <- switch(which,
                 lbound = 1,
@@ -75,7 +77,10 @@ ci_bound_nm_i <- function(i = NULL,
         xstart <- perturbation_factor * lavaan::coef(sem_out)
       }
     # Check if the parameter is a user-defined parameter
-    if (standardized && (i_op %in% c("=~", "~", "~~", ":="))) {
+    if (test_generic) {
+
+      }
+    if (standardized && (i_op %in% c("=~", "~", "~~", ":=")) && !test_generic) {
         # TODO: Not ready
         # Get the name of the defined parameter
         i_name <- p_table[i, "label"]
@@ -150,7 +155,7 @@ ci_bound_nm_i <- function(i = NULL,
         fit_lb[find_variance_in_free(sem_out)[i_depend]] <- lb_var
         xstart <-  xstart[i_depend]
       }
-    if (i_op == ":=") {
+    if ((i_op == ":=") && !test_generic) {
         if (standardized) {
           } else {
             # Get the name of the defined parameter
@@ -192,29 +197,31 @@ ci_bound_nm_i <- function(i = NULL,
             xstart <-  xstart[i_depend]
           }
       } else {
-        if (standardized) {
-          } else {
-            # Set shared variables
-            envir0 <- new.env()
-            assign("f_i_shared", sem_out, envir = envir0)
-            assign("f_i_free_shared", sem_out, envir = envir0)
-            # The function to be minimized.
-            lbci_b_f <- function(p_f, sem_out, debug, lav_warn) {
-                k * p_f
-              }
-            # The gradient of the function to be minimized
-            lbci_b_grad <- function(p_f, sem_out, debug, lav_warn) {
-                force(i)
-                force(envir0)
-                lavaan::lavTech(envir0$f_i_free_shared, "gradient")[i]
-              }
-            f_constr = set_constraint_nm(i, sem_out, get_fit_from_envir = FALSE,
-                                         envir = envir0)
-            # lbci_b_grad <- NULL
-            fit_lb <- -Inf
-            fit_ub <-  Inf
-            xstart <-  xstart[i]
-          }
+        if (!test_generic) {
+          if (standardized) {
+            } else {
+              # Set shared variables
+              envir0 <- new.env()
+              assign("f_i_shared", sem_out, envir = envir0)
+              assign("f_i_free_shared", sem_out, envir = envir0)
+              # The function to be minimized.
+              lbci_b_f <- function(p_f, sem_out, debug, lav_warn) {
+                  k * p_f
+                }
+              # The gradient of the function to be minimized
+              lbci_b_grad <- function(p_f, sem_out, debug, lav_warn) {
+                  force(i)
+                  force(envir0)
+                  lavaan::lavTech(envir0$f_i_free_shared, "gradient")[i]
+                }
+              f_constr = set_constraint_nm(i, sem_out, get_fit_from_envir = FALSE,
+                                          envir = envir0)
+              # lbci_b_grad <- NULL
+              fit_lb <- -Inf
+              fit_ub <-  Inf
+              xstart <-  xstart[i]
+            }
+        }
       }
     # fit_lb <- rep(-Inf, npar)
     # fit_lb[find_variance_in_free(sem_out)] <- lb_var
