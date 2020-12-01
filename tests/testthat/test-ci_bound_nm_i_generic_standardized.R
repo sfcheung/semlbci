@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check ci_bound_nm_i: Standardized, No equality constraints")
+context("Check ci_bound_nm_i: Standardized, No equality constraints, test_generic = TRUE")
 
 data(simple_med)
 dat <- simple_med

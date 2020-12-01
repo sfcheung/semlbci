@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check set_constraint_nm: No equality constraints")
+context("Check set_constraint_nm: No equality constraints, Neale-Miller-1997")
 
 data(simple_med)
 dat <- simple_med
