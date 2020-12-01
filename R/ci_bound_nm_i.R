@@ -25,7 +25,6 @@
 #'                       be used as the starting value for the target parameter if it is not a userd-defined paramter.
 #' @param standardized If TRUE, the LBCI is for the standardized estimate. 
 #' @param opts Options to be passed to \code{nloptr}
-#' @param numDeriv_grad_method The method used in \code{numDeriv::grad}.
 #' @param ... Optional arguments. Not used.
 #' 
 #'@examples
@@ -52,7 +51,6 @@ ci_bound_nm_i <- function(i = NULL,
                        wald_ci_start = TRUE,
                        standardized = FALSE,
                        opts = list(),
-                       numDeriv_grad_method = "Richardson",
                        ...) {
     k <- switch(which,
                 lbound = 1,
