@@ -21,7 +21,9 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_rel = 1e-7,
               tol_constraints_eq = 1e-7
               )
-system.time(out1l <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "lbound", standardized = TRUE, opts = opts0, test_generic = TRUE))
+system.time(out0l <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "lbound", standardized = FALSE, opts = opts0, test_generic = TRUE, history = FALSE))
+system.time(out0u <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "ubound", standardized = FALSE, opts = opts0, test_generic = TRUE, history = FALSE))
+system.time(out1l <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "lbound", standardized = TRUE, opts = opts0, test_generic = TRUE, history = TRUE))
 system.time(out1u <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "ubound", standardized = TRUE, opts = opts0, test_generic = TRUE))
 system.time(out2l <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "lbound", standardized = TRUE, opts = opts0, test_generic = TRUE))
 system.time(out2u <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "ubound", standardized = TRUE, opts = opts0, test_generic = TRUE))
