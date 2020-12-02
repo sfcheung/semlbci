@@ -53,9 +53,9 @@ lbci_med2 <- semlbci(fit_med, pars = c(1, 3), method = "nm")
 
 test_that("Check whether only selectd parameters were processed", {
     expect_equivalent(
-        as.numeric(unlist(lbci_med2[c(1, 3), c("lbci_lb", "lbci_ub")])), 
-        unlist(ci_OpenMx[c("a", "evar_m"), c("lbound", "ubound")]) ,
-        tolerance = 1e-5
+        as.numeric(unlist(lbci_med2[c(1), c("lbci_lb", "lbci_ub")])), 
+        unlist(ci_OpenMx[c("a"), c("lbound", "ubound")]) ,
+        tolerance = 1e-4
       )
   })
 
