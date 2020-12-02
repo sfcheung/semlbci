@@ -1,6 +1,8 @@
-# semlbci 0.0.0.4
+# semlbci 0.0.0.6
 
-* (Work in progress .... )
+* Added functions to implement the Neale-Miller 1992 approach. Preliminary tests passed. Can be invoked by `method = "nm"`.
+
+# semlbci 0.0.0.4
 
 * Can find the LBCI for the free and user-defined parameters in the standardized solution.
 

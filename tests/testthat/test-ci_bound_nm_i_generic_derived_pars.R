@@ -1,18 +1,21 @@
 library(testthat)
 library(semlbci)
 
-context("Check ci_bound_i: No equality constraints")
+context("Check ci_bound_nm_i: Derived parameters, test_generic = TRUE")
 
 data(simple_med)
 dat <- simple_med
 mod <- 
 "
-m ~ x
-y ~ m
+m ~ a*x
+y ~ b*m
+ab:= a*b
+asq:= a^2
+abc:= ab*asq
+am:= mean(c(ab, asq, abc))
 "
 fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
-
-fn_constr0 <- set_constraint(fit_med)
+lavaan::parameterTable(fit_med)
 
 # opts0 <- list(print_level = 3)
 opts0 <- list()
@@ -22,11 +25,10 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_rel = 1e-7,
               tol_constraints_eq = 1e-7
               )
-system.time(out1l <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0))
-system.time(out1u <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0))
-system.time(out2l <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0))
-system.time(out2u <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0))
-
+system.time(out1l <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "lbound", opts = opts0, test_generic = TRUE))
+system.time(out1u <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "ubound", opts = opts0, test_generic = TRUE))
+system.time(out2l <- ci_bound_nm_i(7, 5, sem_out = fit_med, which = "lbound", opts = opts0, test_generic = TRUE))
+system.time(out2u <- ci_bound_nm_i(7, 5, sem_out = fit_med, which = "ubound", opts = opts0, test_generic = TRUE))
 
 library(OpenMx)
 cov_dat <- cov(dat)
@@ -45,7 +47,8 @@ mod_mx <- mxModel("Mediation", type = "RAM",
     mxPath(from = "y", arrows = 2, free = TRUE, values = 1,
                   labels = "evar_y"),
     mxAlgebra(a * b , name = "ab"),
-    mxCI(reference = c("a", "b", "ab"), 
+    mxAlgebra(a ^ 2 , name = "asq"),
+    mxCI(reference = c("a", "b", "ab", "asq"), 
                        interval = .95, type = "both"),
     mxData(observed = cov_dat, type = "cov", numObs = n)
   )
@@ -57,7 +60,7 @@ ci_semlbci <- c(out1l, out2l, out1u, out2u)
 test_that("Equal to OpenMx LBCI", {
     expect_equivalent(
         ci_semlbci, 
-         unlist(ci_OpenMx[c("a", "b"), c("lbound", "ubound")]),
-        tolerance = 1e-5
+        unlist(ci_OpenMx[c(3, 4), c("lbound", "ubound")]),
+        tolerance = 1e-3
       )
   })

@@ -14,10 +14,18 @@ fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
 fn_constr0 <- set_constraint(fit_med)
 
-out1l <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = TRUE)
-out1u <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE)
-out2l <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = TRUE)
-out2u <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE)
+# opts0 <- list(print_level = 3)
+opts0 <- list()
+opts0 <- list(ftol_abs = 1e-7,
+              ftol_rel = 1e-7,
+              xtol_abs = 1e-7,
+              xtol_rel = 1e-7,
+              tol_constraints_eq = 1e-7
+              )
+system.time(out1l <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = TRUE, opts = opts0))
+system.time(out1u <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE, opts = opts0))
+system.time(out2l <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = TRUE, opts = opts0))
+system.time(out2u <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE, opts = opts0))
 
 
 library(OpenMx)

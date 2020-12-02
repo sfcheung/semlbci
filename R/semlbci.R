@@ -17,7 +17,9 @@
 #'              parameter table.
 #' @param ciperc The proportion of coverage for the confidence interval. Default
 #'               is .95.
-#' @param standardized If TRUE, the LBCI is for the standardized estimate. 
+#' @param standardized If TRUE, the LBCI is for the standardized estimate.
+#' @param method The approach to be used. Can be "wn" (Wu-Neale-2012) or "nm" 
+#'               (Neale-Miller-1997). Default is "wn".
 #' @param ... Arguments to be passed to \code{ci_bound_i}.
 #' @param parallel If \code{TRUE}, will use parallel. Currently disabled.
 #'                  Need to find out how to make \code{lavaan::udpate} works
@@ -41,6 +43,7 @@ semlbci <- function(sem_out,
                     pars = NULL,
                     ciperc = .95,
                     standardized = FALSE,
+                    method = "wn",
                     ...,
                     parallel = FALSE,
                     ncpu = 2) {
@@ -64,8 +67,12 @@ semlbci <- function(sem_out,
       }
     npar <- sum(i)
     # environment(set_constraint) <- parent.frame()
-    f_constr <- eval(set_constraint(sem_out = sem_out, ciperc = ciperc),
-                     envir = parent.frame())
+    if (method == "wn") {
+        f_constr <- eval(set_constraint(sem_out = sem_out, ciperc = ciperc),
+                        envir = parent.frame())
+      } else {
+        f_constr <- NULL
+      }
     if (parallel) {
         message("Parallel processing is currently disabled.")
       }
@@ -103,6 +110,8 @@ semlbci <- function(sem_out,
                       standardized = standardized,
                       debug = FALSE,
                       f_constr = f_constr,
+                      method = method,
+                      ciperc = ciperc,
                       ...)
       }
     out <- do.call(rbind, out)
@@ -118,5 +127,6 @@ semlbci <- function(sem_out,
     out_p$lbci_ub <- NA
     out_p[i_selected, "lbci_lb"] <- out[, 1]
     out_p[i_selected, "lbci_ub"] <- out[, 2]
+    class(out_p) <- c("semlbci", class(out_p))
     out_p
   }

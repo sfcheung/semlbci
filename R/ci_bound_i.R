@@ -50,11 +50,7 @@ ci_bound_i <- function(i = NULL,
                        lb_var = -Inf,
                        wald_ci_start = TRUE,
                        standardized = FALSE,
-                       opts = list(
-                          "algorithm" = "NLOPT_LD_SLSQP",
-                          "xtol_rel" = 1.0e-10,
-                          "maxeval" = 1000,
-                          "print_level" = 0),
+                       opts = list(),
                        ...) {
     k <- switch(which,
                 lbound = 1,
@@ -239,6 +235,11 @@ ci_bound_i <- function(i = NULL,
       }
     fit_lb <- rep(-Inf, npar)
     fit_lb[find_variance_in_free(sem_out)] <- lb_var
+    opts_final <- modifyList(list("algorithm" = "NLOPT_LD_SLSQP",
+                        "xtol_rel" = 1.0e-10,
+                        "maxeval" = 1000,
+                        "print_level" = 0),
+                        opts)    
     out <- nloptr::nloptr(
                         x0 = xstart, 
                         eval_f = lbci_b_f, 
@@ -246,7 +247,7 @@ ci_bound_i <- function(i = NULL,
                         ub = rep( Inf, npar), # To-Do: Check
                         eval_grad_f = lbci_b_grad,
                         eval_g_eq = f_constr,
-                        opts = opts,
+                        opts = opts_final,
                         sem_out = sem_out,
                         lav_warn = FALSE,
                         debug = FALSE)
