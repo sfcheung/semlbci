@@ -1,6 +1,6 @@
 # semlbci 0.0.0.6
 
-* (WIP). Try the Neale-Miller-1997 approach.
+* Added functions to implement the Neale-Miller 1992 approach. Preliminary tests passed. Can be invoked by `method = "nm"`.
 
 # semlbci 0.0.0.4
 
