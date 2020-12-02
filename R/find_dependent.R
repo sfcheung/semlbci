@@ -12,6 +12,8 @@
 #' @param i The position of the target parameter as in the parameter table of lavaan.
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.
 #' @param standardized If TRUE, the LBCI is for the standardized estimate.
+#' @param signed If TRUE, return a vector of 1 or -1 to indicate the direction of the dependence.
+#'        Default is [`FALSE`].
 #'
 #'@examples
 #' library(lavaan)
@@ -28,7 +30,8 @@
 
 find_dependent <- function(i = NULL,
                       sem_out = NULL,
-                      standardized = FALSE) {
+                      standardized = FALSE,
+                      signed = FALSE) {
     ptable <- as.data.frame(sem_out@ParTable, stringsAsFactors = FALSE)
     est    <- lavaan::parameterEstimates(sem_out)
     p_free <- ptable$free > 0
@@ -91,7 +94,14 @@ find_dependent <- function(i = NULL,
                               sem_out = sem_out)
         g_i0 <- round(g_i0, 5)
         g_i  <- (g_i0 != 0)
-        return(which(g_i))
+        if (signed) {
+            tmp1 <- ifelse(g_i0 > 0,  1, 0)
+            tmp2 <- ifelse(g_i0 < 0, -1, 0)
+            tmp <- tmp1 + tmp2
+            return(tmp[which(g_i)])
+          } else {
+            return(which(g_i))
+          }
       } else if (ptable[i, "op"] == ":=") {
         # If the target is a user-defined parameter
         i_name <- ptable[i, "label"]
@@ -103,10 +113,21 @@ find_dependent <- function(i = NULL,
                               sem_out = sem_out)
         g_i0 <- round(g_i0, 5)
         g_i  <- (g_i0 != 0)
-        return(which(g_i))
+        if (signed) {
+            tmp1 <- ifelse(g_i0 > 0,  1, 0)
+            tmp2 <- ifelse(g_i0 < 0, -1, 0)
+            tmp <- tmp1 + tmp2
+            return(tmp[which(g_i)])
+          } else {
+            return(which(g_i))
+          }
       } else {
         # If the target is none of the above
-        return(i)
+        if (signed) {
+            return(1)
+          } else {
+            return(i)
+          }
       }
     npar
   }  
