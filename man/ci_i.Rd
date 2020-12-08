@@ -4,10 +4,13 @@
 \alias{ci_i}
 \title{Find the lower bound and upper bound for one parameter}
 \usage{
-ci_i(i, ...)
+ci_i(i, method = "wn", ...)
 }
 \arguments{
 \item{i}{The position of the target parameters.}
+
+\item{method}{The approach to be used. Can be "wn" (Wu-Neale-2012) or "nm"
+(Neale-Miller-1997). Default is "wn".}
 
 \item{...}{Arguments to be passed to \code{ci_bound_i}.}
 }

@@ -15,7 +15,7 @@ update_model(model, est)
 An updated lavModel object.
 }
 \description{
-
+Update a \code{lavaan} model using user-supplied estimates
 }
 \details{
 Modified from lav_model_set_parameters in lavaan.
