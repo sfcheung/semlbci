@@ -118,6 +118,18 @@ dplyr::filter(as.data.frame(parameterEstimates(fit)),
 dplyr::filter(as.data.frame(standardizedSolution(fit)), 
               lhs == paste0("x", k),
               rhs == paste0("x", k + 1))
+mod2 <- 
+paste(mod, "\n",
+"
+x4 ~~ r45*x5
+r45 < 1
+")
+fit2 <- sem(mod2, dat, fixed.x = FALSE)
+dplyr::filter(as.data.frame(parameterEstimates(fit2)), 
+              lhs == "y", rhs == "y")
+dplyr::filter(as.data.frame(standardizedSolution(fit2)), 
+              lhs == paste0("x", k),
+              rhs == paste0("x", k + 1))
 
 reg_cor_near_one <- dat
 
@@ -158,6 +170,19 @@ fit <- cfa(mod, dat)
 dplyr::filter(as.data.frame(parameterEstimates(fit)), 
               lhs == "x3", rhs == "x3")
 dplyr::filter(parameterEstimates(fit), 
+              lhs == rhs)
+
+mod2 <- 
+"
+f1 =~ x1 + x2 + x3
+f2 =~ x4 + x5 + x6
+x3 ~~ e3*x3
+e3 > 0
+"
+fit2 <- cfa(mod2, dat)
+dplyr::filter(as.data.frame(parameterEstimates(fit2)), 
+              lhs == "x3", rhs == "x3")
+dplyr::filter(parameterEstimates(fit2), 
               lhs == rhs)
 
 
