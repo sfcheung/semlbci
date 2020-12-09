@@ -1,6 +1,8 @@
 library(testthat)
 library(semlbci)
 
+# This test is passed if ran interactively
+
 context("Check update_model")
 
 dat <- cfa_two_factors
