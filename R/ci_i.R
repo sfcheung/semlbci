@@ -38,11 +38,15 @@ ci_i <- function(i, method = "wn", ...) {
         ub <- ci_bound_nm_i(i, which = "ubound", ...)
       }
     out <- c(lb, ub)
-    if (!is.null(attr(lb, "history"))) {
-        attr(out, "lb_history") <- attr(lb, "history")
-      }
-    if (!is.null(attr(ub, "history"))) {
-        attr(out, "ub_history") <- attr(ub, "history")
-      }
+    # TO DELETE
+    # if (!is.null(attr(lb, "history"))) {
+    #     attr(out, "lb_history") <- attr(lb, "history")
+    #   }
+    # if (!is.null(attr(ub, "history"))) {
+    #     attr(out, "ub_history") <- attr(ub, "history")
+    #   }
+    attr(out, "lb_diag") <- attr(lb, "diag")
+    attr(out, "ub_diag") <- attr(ub, "diag")
+    attr(out, "method") <- method
     out
   }
