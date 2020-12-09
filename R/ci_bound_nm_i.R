@@ -539,10 +539,14 @@ ci_bound_nm_i <- function(i = NULL,
     i_org_ci_limit <- switch(which,
                         lbound = i_org_ci_lower,
                         ubound = i_org_ci_upper)
-    ci_limit_ratio <- abs((bound - i_est) / (i_org_ci_limit - i_est))
-    if (ci_limit_ratio > ci_limit_ratio_tol) {
-        status <- 1
-        # Do not set the bound to NA because the limit may still be valid.
+    if (!is.na(bound)) {
+        ci_limit_ratio <- abs((bound - i_est) / (i_org_ci_limit - i_est))
+        if (ci_limit_ratio > ci_limit_ratio_tol) {
+            status <- 1
+            # Do not set the bound to NA because the limit may still be valid.
+          }
+      } else {
+        ci_limit_ratio <- NA
       }
 
     # Check whether the solution at the limit is admissible
