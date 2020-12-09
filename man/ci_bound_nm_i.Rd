@@ -18,6 +18,8 @@ ci_bound_nm_i(
   opts = list(),
   test_generic = TRUE,
   ciperc = 0.95,
+  ci_limit_ratio_tol = 1.5,
+  verbose = FALSE,
   ...
 )
 }
@@ -32,7 +34,8 @@ ci_bound_nm_i(
 
 \item{which}{Whether the lower bound or the upper bound is to be found. Must be "lbound" or "ubound".}
 
-\item{history}{If \code{TRUE}, return the full optimization output as an attribute. Default is \code{FALSE}.}
+\item{history}{If \code{TRUE}, return the full optimization output, stored in the \code{\link{diag}} attribute.
+Default is \code{FALSE}. This argument is no longer used. \code{\link{verbose}} will be used instead.}
 
 \item{perturbation_factor}{A number multiplied to the parameter estimates in the fit object.
 Using the parameter estimates as starting values may lead to errors
@@ -48,10 +51,20 @@ be used as the starting value for the target parameter if it is not a userd-defi
 
 \item{opts}{Options to be passed to \code{nloptr}}
 
-\item{test_generic}{If \code{\link{TRUE}}, will use the work-in-progress generic functions. Default is \code{\link{TRUE}}.}
+\item{test_generic}{If \code{\link{TRUE}}, will use the work-in-progress generic functions. Default is \code{\link{TRUE}}.
+The generic functions are now the default and other functions should not be used.
+Therefore, this argument will be ignored.}
 
 \item{ciperc}{The proportion of coverage for the confidence interval. Default
 is .95.}
+
+\item{ci_limit_ratio_tol}{The tolerance for the ratio of a to b, where a is the distance between an LBCI limit and the
+point estimate, and the b is the distance between the original \code{\link{lavaan}} CI limit (by default the Wald CI)
+and the point estimate. If the ratio is larger than this value, a warning is set in the status code.
+Default is 1.5.}
+
+\item{verbose}{If \code{\link{TRUE}}, will store more diagnostic information in the attribute \code{\link{diag}}.GlobalEnv
+Default is \code{\link{FALSE}}.}
 
 \item{...}{Optional arguments. Not used.}
 }
