@@ -20,7 +20,7 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_abs = 1e-7,
               # xtol_rel = 1e-7,
               tol_constraints_eq = 1e-10,
-              print_level = 3
+              print_level = 0
               )
 system.time(out1l <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "lbound", opts = opts0, test_generic = TRUE, history = FALSE))
 system.time(out1u <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "ubound", opts = opts0, test_generic = TRUE, history = TRUE))
