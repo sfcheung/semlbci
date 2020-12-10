@@ -52,6 +52,5 @@ syntax_to_i <- function(syntax,
       } else {
         i_def <- NULL
       }
-    # which(p_out$req)
     c(i_par, i_def)
   }
