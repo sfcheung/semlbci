@@ -30,19 +30,18 @@
 
 ci_i <- function(i, method = "wn", ...) {
     if (method == "wn") {
-        lb <- ci_bound_i(i, which = "lbound", ...)
-        ub <- ci_bound_i(i, which = "ubound", ...)
+        lb_time <- system.time(lb <- ci_bound_i(i, which = "lbound", ...))
+        ub_time <- system.time(ub <- ci_bound_i(i, which = "ubound", ...))
       }
     if (method == "nm") {
-        lb <- ci_bound_nm_i(i, which = "lbound", ...)
-        ub <- ci_bound_nm_i(i, which = "ubound", ...)
+        lb_time <- system.time(lb <- ci_bound_nm_i(i, which = "lbound", ...))
+        ub_time <- system.time(ub <- ci_bound_nm_i(i, which = "ubound", ...))
       }
     out <- c(lb, ub)
-    if (!is.null(attr(lb, "history"))) {
-        attr(out, "lb_history") <- attr(lb, "history")
-      }
-    if (!is.null(attr(ub, "history"))) {
-        attr(out, "ub_history") <- attr(ub, "history")
-      }
+    attr(out, "lb_diag") <- attr(lb, "diag")
+    attr(out, "ub_diag") <- attr(ub, "diag")
+    attr(out, "method") <- method
+    attr(out, "lb_time") <- lb_time[3]
+    attr(out, "ub_time") <- ub_time[3]
     out
   }

@@ -1,6 +1,6 @@
 #'@title Update a lavModel objec using user-supplied estimates
 #'
-#'@description Update a \code{lavaan model using user-supplied estimates
+#'@description Update a \code{lavaan} model using user-supplied estimates
 #'
 #'@details 
 #' 

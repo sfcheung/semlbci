@@ -37,12 +37,12 @@ fit_med_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
 ci_OpenMx <- summary(fit_med_OpenMx)$CI
 ci_OpenMx_target <- unlist(ci_OpenMx[c("a"), c("lbound", "ubound")])
 
-lbci_debug_TRUE <- semlbci(fit_med, pars = c(1), debug = TRUE)
-lbci_debug_FALSE <- semlbci(fit_med, pars = c(1), debug = FALSE)
-lbci_lav_warn_TRUE <- semlbci(fit_med, pars = c(1), lav_warn = TRUE)
-lbci_lav_warn_FALSE <- semlbci(fit_med, pars = c(1), lav_warn = FALSE)
-lbci_history_TRUE <- semlbci(fit_med, pars = c(1), history = TRUE)
-lbci_history_FALSE <- semlbci(fit_med, pars = c(1), history = FALSE)
+lbci_debug_TRUE <- semlbci(fit_med, pars = c(1), debug = TRUE, method = "wn")
+lbci_debug_FALSE <- semlbci(fit_med, pars = c(1), debug = FALSE, method = "wn")
+lbci_lav_warn_TRUE <- semlbci(fit_med, pars = c(1), lav_warn = TRUE, method = "wn")
+lbci_lav_warn_FALSE <- semlbci(fit_med, pars = c(1), lav_warn = FALSE, method = "wn")
+lbci_history_TRUE <- semlbci(fit_med, pars = c(1), history = TRUE, method = "wn")
+lbci_history_FALSE <- semlbci(fit_med, pars = c(1), history = FALSE, method = "wn")
 
 test_that("Can run with debug = TRUE", {
     expect_equivalent(

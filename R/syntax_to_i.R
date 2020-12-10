@@ -36,6 +36,7 @@ syntax_to_i <- function(syntax,
         l_model$req <- TRUE
         p_out <- merge(ptable, l_model[, c("lhs", "op", "rhs", "req")], 
                       by = c("lhs", "op", "rhs"), all.x = TRUE, sort = FALSE)
+        p_out <- p_out[match(ptable$id, p_out$id), ]
         i_par <- which(p_out$req)
       } else {
         i_par <- NULL
@@ -51,6 +52,5 @@ syntax_to_i <- function(syntax,
       } else {
         i_def <- NULL
       }
-    # which(p_out$req)
     c(i_par, i_def)
   }

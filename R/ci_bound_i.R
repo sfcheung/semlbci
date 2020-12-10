@@ -25,6 +25,12 @@
 #'                       be used as the starting value for the target parameter if it is not a userd-defined paramter.
 #' @param standardized If TRUE, the LBCI is for the standardized estimate. 
 #' @param opts Options to be passed to \code{nloptr}
+#' @param ci_limit_ratio_tol The tolerance for the ratio of a to b, where a is the distance between an LBCI limit and the 
+#'               point estimate, and the b is the distance between the original [`lavaan`] CI limit (by default the Wald CI)
+#'               and the point estimate. If the ratio is larger than this value, a warning is set in the status code.
+#'               Default is 1.5.
+#' @param verbose If [`TRUE`], will store more diagnostic information in the attribute [`diag`].GlobalEnv
+#'                Default is [`FALSE`].
 #' @param ... Optional arguments. Not used.
 #' 
 #'@examples
@@ -51,6 +57,8 @@ ci_bound_i <- function(i = NULL,
                        wald_ci_start = TRUE,
                        standardized = FALSE,
                        opts = list(),
+                       ci_limit_ratio_tol = 1.5,
+                       verbose = FALSE,
                        ...) {
     k <- switch(which,
                 lbound = 1,
@@ -58,6 +66,34 @@ ci_bound_i <- function(i = NULL,
     # Check if the parameter is a user-defined parameter
     p_table <- lavaan::parameterTable(sem_out) 
     i_op <- p_table[i, "op"]
+
+    # Get original point estiamte and CI
+    if (standardized) {
+        p_est <- lavaan::standardizedSolution(sem_out,
+                    type = "std.all",
+                    se = TRUE,
+                    zstat = FALSE,
+                    pvalue = FALSE,
+                    ci = TRUE,
+                    remove.eq = FALSE,
+                    remove.ineq = FALSE,
+                    remove.def = FALSE,
+                    output = "data.frame")
+        i_est <- p_est[i, "est.std"]
+        i_org_ci_lower <- p_est[i, "ci.lower"]
+        i_org_ci_upper <- p_est[i, "ci.upper"]
+      } else {
+        p_est <- lavaan::parameterEstimates(sem_out,
+                                            se = TRUE,
+                                            zstat = FALSE,
+                                            fmi = FALSE,
+                                            rsquare = TRUE,
+                                            output = "data.frame")
+        i_est <- p_est[i, "est"]
+        i_org_ci_lower <- p_est[i, "ci.lower"]
+        i_org_ci_upper <- p_est[i, "ci.upper"]
+      }
+
     if (standardized && (i_op %in% c("=~", "~", "~~", ":="))) {
         p_std <- lavaan::standardizedSolution(sem_out,
                                               type = "std.all",
@@ -103,50 +139,6 @@ ci_bound_i <- function(i = NULL,
       }
     if (i_op == ":=") {
         if (standardized) {
-            # # To be deleted
-            # # Copied from the block for standardized free parameters.
-            # # If works, should merge the two blocks together
-            # p_std <- lavaan::standardizedSolution(sem_out,
-            #                                       type = "std.all",
-            #                                       se = FALSE,
-            #                                       zstat = FALSE,
-            #                                       pvalue = FALSE,
-            #                                       ci = FALSE,
-            #                                       remove.eq = FALSE,
-            #                                       remove.ineq = FALSE,
-            #                                       remove.def = FALSE,
-            #                                       output = "data.frame")
-            # p_std$id <- seq_len(nrow(p_std))
-            # i_lor <- get_lhs_op_rhs(i, sem_out)
-            # i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
-            # start0 <- lavaan::parameterTable(sem_out)
-            # # The function to be minimized.
-            # lbci_b_f <- function(param, sem_out, debug, lav_warn) {
-            #     start1 <- start0
-            #     start1[start1$free > 0, "est"] <- param
-            #     sem_out2 <- sem_out
-            #     sem_out2@ParTable <- as.list(start1)
-            #     sem_model <- sem_out2@Model
-            #     sem_model <- update_model(sem_model, 
-            #                               start1[start1$free > 0, "est"] )
-            #     sem_out2@Model <- sem_model
-            #     std0 <- lavaan::standardizedSolution(sem_out2,
-            #                                     type = "std.all",
-            #                                     se = FALSE,
-            #                                     zstat = FALSE,
-            #                                     pvalue = FALSE,
-            #                                     ci = FALSE,
-            #                                     remove.eq = FALSE,
-            #                                     remove.ineq = FALSE,
-            #                                     remove.def = FALSE,
-            #                                     output = "data.frame")
-            #     k * std0[i_std, "est.std"]
-            #   }
-            # # The gradient of the function to be minimized
-            # lbci_b_grad <- function(param, sem_out, debug, lav_warn) {
-            #     numDeriv::grad(lbci_b_f, param, sem_out = sem_out, 
-            #                             debug = debug, lav_warn = lav_warn)
-            #   }
           } else {
             # Get the name of the defined parameter
             i_name <- p_table[i, "label"]
@@ -162,48 +154,6 @@ ci_bound_i <- function(i = NULL,
           }
       } else {
         if (standardized) {
-            # # To be deleted:
-            # p_std <- lavaan::standardizedSolution(sem_out,
-            #                                       type = "std.all",
-            #                                       se = FALSE,
-            #                                       zstat = FALSE,
-            #                                       pvalue = FALSE,
-            #                                       ci = FALSE,
-            #                                       remove.eq = FALSE,
-            #                                       remove.ineq = FALSE,
-            #                                       remove.def = FALSE,
-            #                                       output = "data.frame")
-            # p_std$id <- seq_len(nrow(p_std))
-            # i_lor <- get_lhs_op_rhs(i, sem_out)
-            # i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
-            # start0 <- lavaan::parameterTable(sem_out)
-            # # The function to be minimized.
-            # lbci_b_f <- function(param, sem_out, debug, lav_warn) {
-            #     start1 <- start0
-            #     start1[start1$free > 0, "est"] <- param
-            #     sem_out2 <- sem_out
-            #     sem_out2@ParTable <- as.list(start1)
-            #     sem_model <- sem_out2@Model
-            #     sem_model <- update_model(sem_model, 
-            #                               start1[start1$free > 0, "est"] )
-            #     sem_out2@Model <- sem_model
-            #     std0 <- lavaan::standardizedSolution(sem_out2,
-            #                                     type = "std.all",
-            #                                     se = FALSE,
-            #                                     zstat = FALSE,
-            #                                     pvalue = FALSE,
-            #                                     ci = FALSE,
-            #                                     remove.eq = FALSE,
-            #                                     remove.ineq = FALSE,
-            #                                     remove.def = FALSE,
-            #                                     output = "data.frame")
-            #     k * std0[i_std, "est.std"]
-            #   }
-            # # The gradient of the function to be minimized
-            # lbci_b_grad <- function(param, sem_out, debug, lav_warn) {
-            #     numDeriv::grad(lbci_b_f, param, sem_out = sem_out, 
-            #                             debug = debug, lav_warn = lav_warn)
-            #   }
           } else {
             # The function to be minimized.
             lbci_b_f <- function(param, sem_out, debug, lav_warn) {
@@ -252,6 +202,31 @@ ci_bound_i <- function(i = NULL,
                         lav_warn = FALSE,
                         debug = FALSE)
     bound <- k * out$objective
+    bound_unchecked <- bound
+
+    # Initialize the status code
+    status <- 0
+
+    # Check convergence
+    if (out$status < 0) {
+        # Verify the range that denotes error
+        status <- 1
+        bound <- NA
+      }
+
+    # Check the limit
+    i_org_ci_limit <- switch(which,
+                        lbound = i_org_ci_lower,
+                        ubound = i_org_ci_upper)
+    if (!is.na(bound)) {
+        ci_limit_ratio <- abs((bound - i_est) / (i_org_ci_limit - i_est))
+        if (ci_limit_ratio > ci_limit_ratio_tol) {
+            status <- 1
+            # Do not set the bound to NA because the limit may still be valid.
+          }
+      } else {
+        ci_limit_ratio <- NA
+      }
 
     # Check whether admissible
     start0 <- lavaan::parameterTable(sem_out)
@@ -263,11 +238,30 @@ ci_bound_i <- function(i = NULL,
                                 check.vcov = TRUE)
     fit_post_check <- lavaan::lavInspect(fit_final, "post.check")
     if (!fit_post_check) {
+        status <- 0
         bound <- NA
-        warning("Optimization converged but the final solution is not admissible.")
+        # The warning should be raised by the calling function, not this one
+        # warning("Optimization converged but the final solution is not admissible.")
       }
-    if (history) {
-        attr(bound, "history") <- out
+    diag <- list(status = status,
+                 est_org = i_est,
+                 ci_org_limit = i_org_ci_limit,
+                 ci_limit_ratio = ci_limit_ratio,
+                 fit_post_check = fit_post_check,
+                 start_values = xstart,
+                 bound_unchecked = bound_unchecked
+                 )
+    if (verbose) {
+        diag$history <- out
+        diag$fit_final <- fit_final
+      } else {
+        diag$history <- NULL
+        diag$fit_final <- NULL
       }
+    if (out$status < 0) {
+        # If convergence status < 0, override verbose
+        diag$history <- out        
+      }
+    attr(bound, "diag") <- diag
     bound
   }

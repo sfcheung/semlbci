@@ -37,7 +37,7 @@ mod_mx <- mxModel("Mediation", type = "RAM",
 fit_med_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
 ci_OpenMx <- summary(fit_med_OpenMx)$CI
 
-lbci_med <- semlbci(fit_med)
+lbci_med <- semlbci(fit_med, method = "wn")
 
 test_that("Equality constraints are observed", {
     expect_equivalent(

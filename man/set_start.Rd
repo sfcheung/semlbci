@@ -4,7 +4,7 @@
 \alias{set_start}
 \title{Set the starting values for optimization}
 \usage{
-set_start(i = NULL, sem_out = NULL, which = NULL)
+set_start(i = NULL, sem_out = NULL, which = NULL, standardized = FALSE)
 }
 \arguments{
 \item{i}{The position of the target parameters as in the parameter table of lavaan.}
@@ -12,6 +12,8 @@ set_start(i = NULL, sem_out = NULL, which = NULL)
 \item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
 
 \item{which}{Whether the lower bound or the upper bound is to be found. Must be "lbound" or "ubound".}
+
+\item{standardized}{If TRUE, the LBCI is for the standardized estimate.}
 }
 \value{
 A lavaan parameter table, with parameters estimated with target fixed to its

@@ -39,7 +39,7 @@ mod_mx <- mxModel("Mediation", type = "RAM",
 fit_med_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
 ci_OpenMx <- summary(fit_med_OpenMx)$CI
 
-lbci_med <- semlbci(fit_med)
+lbci_med <- semlbci(fit_med, method = "wn")
 
 test_that("Equal to OpenMx LBCIs for free parameters", {
     expect_equivalent(
@@ -49,7 +49,7 @@ test_that("Equal to OpenMx LBCIs for free parameters", {
       )
   })
 
-lbci_med2 <- semlbci(fit_med, pars = c(1, 3))
+lbci_med2 <- semlbci(fit_med, pars = c(1, 3), method = "wn")
 
 test_that("Check whether only selectd parameters were processed", {
     expect_equivalent(

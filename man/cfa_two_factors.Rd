@@ -3,7 +3,7 @@
 \docType{data}
 \name{cfa_two_factors}
 \alias{cfa_two_factors}
-\title{Sample dataset for testing}
+\title{Generated from a two-factor model with six variables, n 500}
 \format{
 An object of class \code{data.frame} with 500 rows and 6 columns.
 }

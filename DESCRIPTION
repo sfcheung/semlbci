@@ -1,6 +1,6 @@
 Package: semlbci
 Title: Likelihood Based Confidence Interval for SEM
-Version: 0.0.0.6
+Version: 0.0.0.7
 Authors@R: 
     person(given = "Shu Fai",
            family = "Cheung",

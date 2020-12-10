@@ -5,7 +5,16 @@
 \alias{semlbci}
 \title{semlbci: Likelihood Based Confidence Interval for SEM}
 \usage{
-semlbci(sem_out, pars = NULL, ciperc = 0.95, ..., parallel = FALSE, ncpu = 2)
+semlbci(
+  sem_out,
+  pars = NULL,
+  ciperc = 0.95,
+  standardized = FALSE,
+  method = "nm",
+  ...,
+  parallel = FALSE,
+  ncpu = 2
+)
 }
 \arguments{
 \item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
@@ -18,6 +27,11 @@ parameter table.}
 
 \item{ciperc}{The proportion of coverage for the confidence interval. Default
 is .95.}
+
+\item{standardized}{If TRUE, the LBCI is for the standardized estimate.}
+
+\item{method}{The approach to be used. Can be "wn" (Wu-Neale-2012) or "nm"
+(Neale-Miller-1997). Default is "nm".}
 
 \item{...}{Arguments to be passed to \code{ci_bound_i}.}
 
