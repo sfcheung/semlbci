@@ -19,7 +19,7 @@
 #'               is .95.
 #' @param standardized If TRUE, the LBCI is for the standardized estimate.
 #' @param method The approach to be used. Can be "wn" (Wu-Neale-2012) or "nm" 
-#'               (Neale-Miller-1997). Default is "wn".
+#'               (Neale-Miller-1997). Default is "nm".
 #' @param ... Arguments to be passed to \code{ci_bound_i}.
 #' @param parallel If \code{TRUE}, will use parallel. Currently disabled.
 #'                  Need to find out how to make \code{lavaan::udpate} works
@@ -43,7 +43,7 @@ semlbci <- function(sem_out,
                     pars = NULL,
                     ciperc = .95,
                     standardized = FALSE,
-                    method = "wn",
+                    method = "nm",
                     ...,
                     parallel = FALSE,
                     ncpu = 2) {
