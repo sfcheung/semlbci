@@ -16,6 +16,8 @@ ci_bound_i(
   wald_ci_start = TRUE,
   standardized = FALSE,
   opts = list(),
+  ci_limit_ratio_tol = 1.5,
+  verbose = FALSE,
   ...
 )
 }
@@ -45,6 +47,14 @@ be used as the starting value for the target parameter if it is not a userd-defi
 \item{standardized}{If TRUE, the LBCI is for the standardized estimate.}
 
 \item{opts}{Options to be passed to \code{nloptr}}
+
+\item{ci_limit_ratio_tol}{The tolerance for the ratio of a to b, where a is the distance between an LBCI limit and the
+point estimate, and the b is the distance between the original \code{\link{lavaan}} CI limit (by default the Wald CI)
+and the point estimate. If the ratio is larger than this value, a warning is set in the status code.
+Default is 1.5.}
+
+\item{verbose}{If \code{\link{TRUE}}, will store more diagnostic information in the attribute \code{\link{diag}}.GlobalEnv
+Default is \code{\link{FALSE}}.}
 
 \item{...}{Optional arguments. Not used.}
 }

@@ -10,7 +10,7 @@ semlbci(
   pars = NULL,
   ciperc = 0.95,
   standardized = FALSE,
-  method = "wn",
+  method = "nm",
   ...,
   parallel = FALSE,
   ncpu = 2
@@ -31,7 +31,7 @@ is .95.}
 \item{standardized}{If TRUE, the LBCI is for the standardized estimate.}
 
 \item{method}{The approach to be used. Can be "wn" (Wu-Neale-2012) or "nm"
-(Neale-Miller-1997). Default is "wn".}
+(Neale-Miller-1997). Default is "nm".}
 
 \item{...}{Arguments to be passed to \code{ci_bound_i}.}
 
