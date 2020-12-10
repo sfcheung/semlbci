@@ -243,10 +243,6 @@ ci_bound_i <- function(i = NULL,
         # The warning should be raised by the calling function, not this one
         # warning("Optimization converged but the final solution is not admissible.")
       }
-    # TO DELETE
-    # if (history) {
-    #     attr(bound, "history") <- out
-    #   }
     diag <- list(status = status,
                  est_org = i_est,
                  ci_org_limit = i_org_ci_limit,
@@ -267,4 +263,5 @@ ci_bound_i <- function(i = NULL,
         diag$history <- out        
       }
     attr(bound, "diag") <- diag
-    bound  }
+    bound
+  }
