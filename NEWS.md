@@ -1,6 +1,6 @@
 # semlbci 0.0.0.7
 
-- (WIP)
+- Added diagnostic info to the output.
 
 # semlbci 0.0.0.6
 
