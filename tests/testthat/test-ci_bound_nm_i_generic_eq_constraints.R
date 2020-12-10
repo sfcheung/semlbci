@@ -29,8 +29,8 @@ system.time(out2u <- ci_bound_nm_i(2, 5, sem_out = fit_med, which = "ubound", op
 system.time(out3l <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "lbound", opts = opts0, test_generic = TRUE))
 system.time(out3u <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "ubound", opts = opts0, test_generic = TRUE))
 
-system.time(out1sl <- ci_bound_nm_i(3, 5, sem_out = fit_med, which = "lbound", opts = opts0, test_generic = TRUE, history = TRUE, standardized = TRUE))
-system.time(out1su <- ci_bound_nm_i(3, 5, sem_out = fit_med, which = "ubound", opts = opts0, test_generic = TRUE, history = TRUE, standardized = TRUE))
+# system.time(out1sl <- ci_bound_nm_i(3, 5, sem_out = fit_med, which = "lbound", opts = opts0, test_generic = TRUE, history = TRUE, standardized = TRUE))
+# system.time(out1su <- ci_bound_nm_i(3, 5, sem_out = fit_med, which = "ubound", opts = opts0, test_generic = TRUE, history = TRUE, standardized = TRUE))
 
 # (ci_semlbci <- c(out1l, out2l, out1u, out2u)) -
 #   unlist(ci_OpenMx[c("a", "b"), c("lbound", "ubound")])
