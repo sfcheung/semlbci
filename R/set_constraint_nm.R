@@ -46,36 +46,6 @@ set_constraint_nm <- function(i, sem_out, ciperc = .95, envir = NULL, get_fit_fr
     # Check if there are any equality constraints
     # if (sem_out@Model@eq.constraints) {
     if (FALSE) {
-        # Disabled. Not necessary for the Neale-Miller-1997 approach
-        # This part is to be deleted. It is copied from the code for the Wu-Nealed 2012 approach.
-        fn_constraint <- function(param, sem_out = NULL, debug = FALSE, lav_warn = FALSE) {
-            if (debug) {
-                cat(ls())
-                cat(ls(globalenv()))
-                }
-            start0 <- lavaan::parameterTable(sem_out)
-            start0[p_free, "est"] <- param
-            eq_out <- sem_out@Model@ceq.function(param)
-            eq_jac <- sem_out@Model@con.jac
-            if (lav_warn) {
-                    fit2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE)
-                } else {
-                    suppressWarnings(fit2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE))                    
-                }
-            if (lav_warn) {
-                    fit2_gradient <- rbind(lavaan::lavTech(fit2, "gradient"))
-                    fit2_jacobian <- rbind(eq_jac, lavaan::lavTech(fit2, "gradient"))
-                } else {
-                    suppressWarnings(fit2_gradient <- rbind(lavaan::lavTech(fit2, "gradient")))
-                    suppressWarnings(fit2_jacobian <- rbind(eq_jac, lavaan::lavTech(fit2, "gradient")))
-                }
-            list(
-                  objective = lavaan::lavTech(fit2, "optim")$fx,
-                  gradient = fit2_gradient,
-                  constraints = rbind(t(t(eq_out)), lavaan::lavTech(fit2, "optim")$fx - target),
-                  jacobian = fit2_jacobian,
-                  parameterTable = lavaan::parameterTable(fit2))
-          }
       } else {
         # if (length(i) == 1) {
         fn_constraint <- function(p_f, sem_out = NULL, debug = FALSE, lav_warn = FALSE) {
