@@ -104,21 +104,6 @@ ci_bound_nm_i <- function(i = NULL,
         i_org_ci_lower <- p_est[i, "ci.lower"]
         i_org_ci_upper <- p_est[i, "ci.upper"]
       }
-    # TO DELETE
-    # if (standardized) {
-    #     i_est <- lavaan::standardizedSolution(sem_out,
-    #                 type = "std.all",
-    #                 se = TRUE,
-    #                 zstat = FALSE,
-    #                 pvalue = FALSE,
-    #                 ci = TRUE,
-    #                 remove.eq = FALSE,
-    #                 remove.ineq = FALSE,
-    #                 remove.def = FALSE,
-    #                 output = "data.frame")[i, "est.std"]
-    #   } else {
-    #     i_est <- p_table[i, "est"]
-    #   }
     if (wald_ci_start) {
         if (i_op == ":=") {
               xstart <- set_start(i, sem_out, which)
@@ -212,7 +197,6 @@ ci_bound_nm_i <- function(i = NULL,
 
             # Enforce linear equality constraints
             if (!is.null(eq_K)) {
-                # stop("Not yet work for models with equality constraints")
                 param_i_reduced <- rep(0, npar_reduced)
                 param_i_reduced[i_depend_reduced] <- param_depend
                 param_i <- as.numeric(eq_K %*% matrix(param_i_reduced, npar_reduced, 1) + eq_k0)
@@ -233,46 +217,13 @@ ci_bound_nm_i <- function(i = NULL,
                                        baseline = FALSE,
                                        h1 = FALSE)
                 assign("f_i_shared", fit2, envir0)
-                # p_table2 <- lavaan::parameterTable(fit2)
-                # p_table2$esty <- p_table2$est
               } else {
-                # p_table2 <- lavaan::parameterTable(envir0$f_i_shared)
-                # p_table2[i_depend, "est"] <- param_depend
-                # p_table2[i_exp_target, "est"] <- p_table2[i_exp_source, "est"] 
-                # p_table2$esty <- p_table2$est
               }
             if (standardized) {
-                # p_table2 <- lavaan::parameterTable(envir0$f_i_shared)
-                # p_table2 <- as.data.frame(envir0$f_i_shared@ParTable)
-                # p_table2[i_depend, "est"] <- param_depend
-                # p_table2[i_exp_target, "est"] <- p_table2[i_exp_source, "est"] 
-                # p_table2$esty <- p_table2$est
-
                 p_table2 <- envir0$f_i_shared@ParTable
                 p_table2$est[i_depend] <- param_depend
                 p_table2$est[i_exp_target] <- p_table2$est[i_exp_source] 
-
-                # sem_out2 <- sem_out
-                # p_table2 <- as.data.frame(envir0$f_i_shared@ParTable)
-                # k1 <- paste0(p_table$lhs, p_table$op, p_table$rhs)
-                # k2 <- paste0(p_table2$lhs, p_table2$op, p_table2$rhs)
-                # start3 <- p_table
-                # start3[match(k2, k1), "est"] <- p_table2[k2 %in% k1, "est"]
-                # sem_out2@ParTable <- as.list(start3)
-                # sem_model <- sem_out2@Model
-                # sem_model <- update_model(sem_model, 
-                #                           start3[start3$free > 0, "est"] )
-                # sem_out2@Model <- sem_model
-                # sem_out2@Model@GLIST <- envir0$f_i_shared@Model@GLIST
-
                 sem_out2 <- sem_out
-
-                # start3 <- merge(p_table, p_table2[, c("lhs", "op", "rhs", "esty")], 
-                #             by = c("lhs", "op", "rhs"), all.x = TRUE, all.y = FALSE,
-                #             sort = FALSE)
-                # start3$est <- start3$esty
-                # start3$esty <- NULL
-
                 start3 <- p_table
                 k1 <- paste0(p_table$lhs, p_table$op, p_table$rhs)
                 k2 <- paste0(p_table2$lhs, p_table2$op, p_table2$rhs)
@@ -293,24 +244,12 @@ ci_bound_nm_i <- function(i = NULL,
                                                 remove.ineq = FALSE,
                                                 remove.def = FALSE,
                                                 output = "data.frame")
-                # return(k * std0[i, "est.std"])
                 return(k * ( std0[i, "est.std"] - i_est))
               } else {
                 if (i_op == ":=") {
-                  # return(k * sem_out@Model@def.function(param_i)[i_name])
                   return(k * (sem_out@Model@def.function(param_i)[i_name] - i_est))
                 } else {
-                  # return(k * p_table2[i, "est"])
-                  # tmp <- mapply(function(x, y, z) {
-                  #     z[y[x == i]]
-                  #     },
-                  #       sem_out@Model@x.free.idx,
-                  #       sem_out@Model@m.free.idx, 
-                  #       envir0$f_i_shared@Model@GLIST)
-                  # tmp <- unlist(tmp)
-                  # return(k * (tmp - i_est))
                   return(k * (envir0$f_i_shared@ParTable$est[i] - i_est))
-                  # return(k * (p_table2[i, "est"] - i_est))
                 }
               }
           }
@@ -338,7 +277,6 @@ ci_bound_nm_i <- function(i = NULL,
 
             g3_tmp <- lavaan::lavTech(fit3, "gradient")
             if (!is.null(eq_K)) {
-                # stop("Not yet work for models with equality constraints")
                 g3_tmp <- (g3_tmp - eq_k0) %*% eq_K
               }
             list(constraints = rbind(f_obj),
@@ -360,149 +298,7 @@ ci_bound_nm_i <- function(i = NULL,
         fit_lb[find_variance_in_free(sem_out)[i_depend]] <- lb_var
         xstart <-  xstart[i_depend_reduced]
       }
-    if (standardized && (i_op %in% c("=~", "~", "~~", ":=")) && !test_generic) {
-        # TODO: Not ready
-        # Get the name of the defined parameter
-        i_name <- p_table[i, "label"]
-        # The function to be minimized.
-        i_depend <- find_dependent(i, sem_out = sem_out, standardized = TRUE)
-        # The function to be minimized.
-        param_i <- rep(NA, npar)
-        start0 <- lavaan::parameterTable(sem_out)
-        envir0 <- new.env()
-        assign("f_i_shared", sem_out, envir = envir0)
-        assign("f_i_free_shared", sem_out, envir = envir0)
-        # f_i_shared <- sem_out
-        # f_i_free_shared <- sem_out
-        lbci_b_f <- function(param_depend, sem_out, debug, lav_warn) {
-            force(i_depend)
-            force(param_i)
-            force(i_name)
-            force(start0)
-            force(envir0)
-            if (is.null(attr(param_depend, "refit"))) {
-                param_i[i_depend] <- param_depend
-                start1 <- start0[!(start0$op == ":="), ]
-                start1[i_depend, "free"] <- 0
-                start1[i_depend, "ustart"] <- 0
-                start1[i_depend, "est"] <- param_depend
-                fit2 <- lavaan::update(sem_out, start1)
-                # f_i_shared <<- fit2
-                assign("f_i_shared", fit2, envir0)
-                p_table2 <- lavaan::parameterTable(fit2)
-                p_table2$esty <- p_table2$est
-              } else {
-                p_table2 <- lavaan::parameterTable(envir0$f_i_shared)
-                p_table2[i_depend, "est"] <- param_depend
-                p_table2$esty <- p_table2$est
-              }
-            # start1 <- start0[start0$op != "==", ]
-            # start1[i_depend, "est"] <- param_i
-            sem_out2 <- sem_out
-            start3 <- merge(p_table, p_table2[, c("lhs", "op", "rhs", "esty")], 
-                        by = c("lhs", "op", "rhs"), all.x = TRUE, all.y = FALSE,
-                        sort = FALSE)
-            start3$est <- start3$esty
-            start3$esty <- NULL
-            sem_out2@ParTable <- as.list(start3)
-            sem_model <- sem_out2@Model
-            sem_model <- update_model(sem_model, 
-                                      start3[start3$free > 0, "est"] )
-            sem_out2@Model <- sem_model
-            std0 <- lavaan::standardizedSolution(sem_out2,
-                                            type = "std.all",
-                                            se = FALSE,
-                                            zstat = FALSE,
-                                            pvalue = FALSE,
-                                            ci = FALSE,
-                                            remove.eq = FALSE,
-                                            remove.ineq = FALSE,
-                                            remove.def = FALSE,
-                                            output = "data.frame")
-            k * std0[i, "est.std"]
-          }
-        lbci_b_grad <- function(param_depend, sem_out, debug, lav_warn) {
-            param_depend_g <- param_depend
-            attr(param_depend_g, "refit") <- FALSE 
-            lavaan::lav_func_gradient_simple(lbci_b_f, param_depend_g, sem_out = sem_out, 
-                                    debug = debug, lav_warn = lav_warn)
-          }
-        f_constr = set_constraint_nm(i_depend, sem_out, envir = envir0)
-        # Set shared variables
-        # lbci_b_grad <- NULL
-        fit_lb <- rep(-Inf, length(i_depend))
-        fit_ub <- rep( Inf, length(i_depend))
-        fit_lb[find_variance_in_free(sem_out)[i_depend]] <- lb_i_var
-        xstart <-  xstart[i_depend]
-      }
-    if ((i_op == ":=") && !test_generic) {
-        if (standardized) {
-          } else {
-            # Get the name of the defined parameter
-            i_name <- p_table[i, "label"]
-            # The function to be minimized.
-            i_depend <- find_dependent(i, sem_out = sem_out, standardized = FALSE)
-            # Set shared variables
-            envir0 <- new.env()
-            assign("f_i_shared", sem_out, envir = envir0)
-            assign("f_i_free_shared", sem_out, envir = envir0)
-            # f_i_shared <- sem_out
-            # f_i_free_shared <- sem_out
-            # The function to be minimized.
-            param_i <- rep(NA, npar)
-            lbci_b_f <- function(param_depend, sem_out, debug, lav_warn) {
-                force(i_depend)
-                force(param_i)
-                force(i_name)
-                param_i[i_depend] <- param_depend
-                k * sem_out@Model@def.function(param_i)[i_name]
-              }
-            # lbci_b_grad <- function(param_depend, sem_out, debug, lav_warn) {
-            #     numDeriv::grad(lbci_b_f, param_depend, sem_out = sem_out, 
-            #                             debug = debug, lav_warn = lav_warn)
-            #   }
-            lbci_b_grad <- function(param_depend, sem_out, debug, lav_warn) {
-                force(i)
-                force(envir0)
-                force(i_depend)
-                lavaan::lavTech(envir0$f_i_free_shared, "gradient")[i_depend]
-              }
-            # f_constr = set_constraint_nm(i_depend, sem_out)
-            f_constr = set_constraint_nm(i_depend, sem_out, get_fit_from_envir = FALSE,
-                                         envir = envir0)
-            # lbci_b_grad <- NULL
-            fit_lb <- rep(-Inf, length(i_depend))
-            fit_ub <- rep( Inf, length(i_depend))
-            fit_lb[find_variance_in_free(sem_out)[i_depend]] <- lb_var
-            xstart <-  xstart[i_depend]
-          }
-      } else {
-        if (!test_generic) {
-          if (standardized) {
-            } else {
-              # Set shared variables
-              envir0 <- new.env()
-              assign("f_i_shared", sem_out, envir = envir0)
-              assign("f_i_free_shared", sem_out, envir = envir0)
-              # The function to be minimized.
-              lbci_b_f <- function(p_f, sem_out, debug, lav_warn) {
-                  k * p_f
-                }
-              # The gradient of the function to be minimized
-              lbci_b_grad <- function(p_f, sem_out, debug, lav_warn) {
-                  force(i)
-                  force(envir0)
-                  lavaan::lavTech(envir0$f_i_free_shared, "gradient")[i]
-                }
-              f_constr = set_constraint_nm(i, sem_out, get_fit_from_envir = FALSE,
-                                          envir = envir0)
-              # lbci_b_grad <- NULL
-              fit_lb <- -Inf
-              fit_ub <-  Inf
-              xstart <-  xstart[i]
-            }
-        }
-      }
+
     # fit_lb <- rep(-Inf, npar)
     # fit_lb[find_variance_in_free(sem_out)] <- lb_var
     opts_final <- modifyList(list("algorithm" = "NLOPT_LD_SLSQP",
@@ -521,7 +317,6 @@ ci_bound_nm_i <- function(i = NULL,
                         sem_out = sem_out,
                         lav_warn = FALSE,
                         debug = FALSE)
-    # bound <- k * out$objective
     bound <- i_est + k * out$objective
     bound_unchecked <- bound
 
@@ -573,13 +368,7 @@ ci_bound_nm_i <- function(i = NULL,
         # The warning should be raised by the calling function, not this one
         # warning("Optimization converged but the final solution is not admissible.")
       }
-    # TO DELETE
-    # if (history) {
-    #     attr(bound, "history") <- out
-    #     attr(bound, "fit") <- envir0$f_i_shared
-    #     attr(bound, "xstart") <- xstart
-    #     attr(bound, "i_est") <- i_est
-    #   }
+
     diag <- list(status = status,
                  est_org = i_est,
                  ci_org_limit = i_org_ci_limit,
