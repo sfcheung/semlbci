@@ -47,7 +47,7 @@ lbci_med <- semlbci(fit_med, pars = c("m ~ x",
                                       "y ~ m",
                                       "asq := 1",
                                       "ab  := 2",
-                                      "not in table")) 
+                                      "not in table"), method = "wn") 
 
 test_that("Equal to OpenMx LBCI", {
     expect_equivalent(

@@ -43,7 +43,7 @@ mod_mx <- mxModel("Mediation", type = "RAM",
 fit_med_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
 ci_OpenMx <- summary(fit_med_OpenMx)$CI
 
-lbci_med <- semlbci(fit_med, pars = 6) 
+lbci_med <- semlbci(fit_med, pars = 6, method = "wn") 
 
 test_that("Equal to OpenMx LBCI", {
     expect_equivalent(
