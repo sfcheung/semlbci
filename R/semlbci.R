@@ -50,7 +50,7 @@ semlbci <- function(sem_out,
     if (!inherits(sem_out, "lavaan")) {
         stop("sem_out is not a supported object.")
       }
-    ptable <- lavaan::parameterTable(sem_out)
+    ptable <- as.data.frame(lavaan::parameterTable(sem_out))
     # Do not check for 
     i <- ptable$free > 0
     #i_id <- ptable$id[i]
@@ -133,24 +133,38 @@ semlbci <- function(sem_out,
 
     lb_diag <- lapply(out_raw, attr, which = "lb_diag")
     ub_diag <- lapply(out_raw, attr, which = "ub_diag")
-    p_names <- mapply(paste0, out_p$lhs, out_p$op, out_p$rhs,
+    lb_time <- sapply(out_raw, attr, which = "lb_time")
+    ub_time <- sapply(out_raw, attr, which = "ub_time")
+    ci_method <- sapply(out_raw, attr, which = "method")
+    p_names <- mapply(paste0, out_p[pars, "lhs"],
+                              out_p[pars, "op" ],
+                              out_p[pars, "rhs"],
                       USE.NAMES = FALSE)
     names(lb_diag) <- p_names
     names(ub_diag) <- p_names
+    names(lb_time) <- p_names
+    names(ub_time) <- p_names
+    names(ci_method) <- p_names
     
     attr(out_p, "lb_diag") <- lb_diag
     attr(out_p, "ub_diag") <- ub_diag
+    attr(out_p, "lb_time") <- lb_time
+    attr(out_p, "ub_time") <- ub_time
+    attr(out_p, "ci_method") <- ci_method
 
     # Append diagnostic info
 
-    out_p$status_lb <- sapply(lb_diag, function(x) x$status)
-    out_p$status_ub <- sapply(ub_diag, function(x) x$status)
-    out_p$ci_org_lb <- sapply(lb_diag, function(x) x$ci_org_limit)
-    out_p$ci_org_ub <- sapply(ub_diag, function(x) x$ci_org_limit)
-    out_p$ratio_lb <- sapply(lb_diag, function(x) x$ci_limit_ratio)
-    out_p$ratio_ub <- sapply(ub_diag, function(x) x$ci_limit_ratio)
-    out_p$post_check_lb <- sapply(lb_diag, function(x) x$fit_post_check)
-    out_p$post_check_ub <- sapply(ub_diag, function(x) x$fit_post_check)
+    out_p[pars, "status_lb"] <- sapply(lb_diag, function(x) x$status)
+    out_p[pars, "status_ub"] <- sapply(ub_diag, function(x) x$status)
+    out_p[pars, "ci_org_lb"] <- sapply(lb_diag, function(x) x$ci_org_limit)
+    out_p[pars, "ci_org_ub"] <- sapply(ub_diag, function(x) x$ci_org_limit)
+    out_p[pars, "ratio_lb"] <- sapply(lb_diag, function(x) x$ci_limit_ratio)
+    out_p[pars, "ratio_ub"] <- sapply(ub_diag, function(x) x$ci_limit_ratio)
+    out_p[pars, "post_check_lb"] <- sapply(lb_diag, function(x) x$fit_post_check)
+    out_p[pars, "post_check_ub"] <- sapply(ub_diag, function(x) x$fit_post_check)
+    out_p[pars, "time_lb"] <- as.numeric(lb_time)
+    out_p[pars, "time_ub"] <- as.numeric(ub_time)
+    out_p[pars, "method"] <- ci_method
 
     class(out_p) <- c("semlbci", class(out_p))
     out_p
