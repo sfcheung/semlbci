@@ -104,7 +104,7 @@ semlbci <- function(sem_out,
         #     stop("Error occured in parallel mode. Try setting parallel = FALSE")
         #   }
       } else {
-        out <- lapply(pars, ci_i, 
+        out_raw <- lapply(pars, ci_i, 
                       npar = npar,
                       sem_out = sem_out,
                       standardized = standardized,
@@ -114,7 +114,7 @@ semlbci <- function(sem_out,
                       ciperc = ciperc,
                       ...)
       }
-    out <- do.call(rbind, out)
+    out <- do.call(rbind, out_raw)
     out_p <- ptable[, c("id", "lhs", "op", "rhs")]
     out_p$lbci_lb <- NA
     if (standardized) {
@@ -125,8 +125,33 @@ semlbci <- function(sem_out,
         out_p$est <- ptable[, c("est")]        
       }
     out_p$lbci_ub <- NA
+    
     out_p[i_selected, "lbci_lb"] <- out[, 1]
     out_p[i_selected, "lbci_ub"] <- out[, 2]
+
+    # Collect diagnostic info
+
+    lb_diag <- lapply(out_raw, attr, which = "lb_diag")
+    ub_diag <- lapply(out_raw, attr, which = "ub_diag")
+    p_names <- mapply(paste0, out_p$lhs, out_p$op, out_p$rhs,
+                      USE.NAMES = FALSE)
+    names(lb_diag) <- p_names
+    names(ub_diag) <- p_names
+    
+    attr(out_p, "lb_diag") <- lb_diag
+    attr(out_p, "ub_diag") <- ub_diag
+
+    # Append diagnostic info
+
+    out_p$status_lb <- sapply(lb_diag, function(x) x$status)
+    out_p$status_ub <- sapply(ub_diag, function(x) x$status)
+    out_p$ci_org_lb <- sapply(lb_diag, function(x) x$ci_org_limit)
+    out_p$ci_org_ub <- sapply(ub_diag, function(x) x$ci_org_limit)
+    out_p$ratio_lb <- sapply(lb_diag, function(x) x$ci_limit_ratio)
+    out_p$ratio_ub <- sapply(ub_diag, function(x) x$ci_limit_ratio)
+    out_p$post_check_lb <- sapply(lb_diag, function(x) x$fit_post_check)
+    out_p$post_check_ub <- sapply(ub_diag, function(x) x$fit_post_check)
+
     class(out_p) <- c("semlbci", class(out_p))
     out_p
   }
