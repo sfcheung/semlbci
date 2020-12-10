@@ -55,16 +55,16 @@ ab := a * b
 "
 fit_med2 <- lavaan::sem(mod2, simple_med, fixed.x = FALSE)
 
-lbci_med2 <- semlbci(fit_med2, method = "nm")
-lbci_med2 <- semlbci(fit_med2, pars = c("m ~x", "y ~ m", "ab :="), method = "nm")
-lbci_med2 <- semlbci(fit_med2, pars = c("m ~x", "y ~ m", "ab :="), method = "nm", verbose = TRUE)
-lbci_med2_std <- semlbci(fit_med2, pars = c("m ~ x",
-                                            "y ~ m",
-                                            "ab := "),
-                        method = "nm", standardized = TRUE)
-lbci_med2_wn <- semlbci(fit_med2, method = "wn")
-lbci_med2_wn_std <- semlbci(fit_med2, pars = c("m ~  x",
-                                               "y ~  m",
-                                               "ab := "),
-                            method = "wn", standardized = TRUE)
+# lbci_med2 <- semlbci(fit_med2, method = "nm")
+# lbci_med2 <- semlbci(fit_med2, pars = c("m ~x", "y ~ m", "ab :="), method = "nm")
+# lbci_med2 <- semlbci(fit_med2, pars = c("m ~x", "y ~ m", "ab :="), method = "nm", verbose = TRUE)
+# lbci_med2_std <- semlbci(fit_med2, pars = c("m ~ x",
+#                                             "y ~ m",
+#                                             "ab := "),
+#                         method = "nm", standardized = TRUE)
+# lbci_med2_wn <- semlbci(fit_med2, method = "wn")
+# lbci_med2_wn_std <- semlbci(fit_med2, pars = c("m ~  x",
+#                                                "y ~  m",
+#                                                "ab := "),
+#                             method = "wn", standardized = TRUE)
 
