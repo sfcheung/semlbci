@@ -50,6 +50,18 @@ semlbci <- function(sem_out,
     if (!inherits(sem_out, "lavaan")) {
         stop("sem_out is not a supported object.")
       }
+      
+    # Check sem_out
+    sem_out_check <- check_sem_out(sem_out)
+    if (sem_out_check > 0) {
+        msg <- paste0(paste(attr(sem_out_check, "info"), collapse = "\n"), "\n")
+        warning(msg, immediate. = TRUE)
+      }
+    if (sem_out_check < 0) {
+        msg <- paste0(paste(attr(sem_out_check, "info"), collapse = "\n"), "\n")
+        stop(msg)
+      }
+    
     ptable <- as.data.frame(lavaan::parameterTable(sem_out))
     # Do not check for 
     i <- ptable$free > 0

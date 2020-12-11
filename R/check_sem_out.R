@@ -7,8 +7,8 @@
 #'              [`semlbci`].
 #'
 #'@details
-#' Currenctly supported estimation methods ([`estimator`] in
-#'     [`lavaan`]):
+#' Estimation methods ([`estimator`] in
+#'     [`lavaan`]) currently supported:
 #'
 #'    - Maximum likelihood [`ML`]
 #'
@@ -18,7 +18,7 @@
 #'
 #'    - Weighted least squares (a.k.a. ADF) [`WLS`]
 #'
-#' Unsupported estimation methods ([`estimator`]):est
+#' Estimation methods not yet supported:
 #'
 #'    - Unweighted least squares [`ULS`]
 #' 
@@ -33,21 +33,21 @@
 #'
 #'        - [`ULSM`], [`ULSMV`]
 #' 
-#' Currenctly supported models:
+#' Currently supported models:
 #' 
 #'    - Single group models with continuous variables.
 #' 
 #' Models not tested:
 #' 
-#'    - Multigroup models.
-#' 
 #'    - Models with categorical variables.
 #' 
-#' Models not supported:
+#' Models not yet supported:
+#' 
+#'    - Multigroup models.
 #' 
 #'    - Models with formative factors
 #' 
-#' 
+#'    - Multilevel models
 #' 
 #'@return
 #' A numeric vector of one element. If 0, the model and 
@@ -73,16 +73,134 @@
 #' asq := a^2
 #' "
 #' fit <- sem(mod, cfa_two_factors)
+#' 
 
 
 check_sem_out <- function(sem_out) {
+    p_table <- lavaan::parameterTable(sem_out)
+
     sem_options <- lavaan::lavInspect(sem_out, "options")
     sem_estimator <- sem_options$estimator
+    sem_se <- sem_options$se
+    sem_test <- sem_options$test
     sem_missing   <- sem_options$missing 
     sem_converged <- lavaan::lavInspect(sem_out, "converged")
     sem_post_check <- lavaan::lavInspect(sem_out, "post.check")
     sem_lavaan_ver <- lavaan::lavInspect(sem_out, "version")
-    sem_lavaan_oreder <- lavaan::lavInspect(sem_out, "ordered")
+    sem_lavaan_ordered <- lavaan::lavInspect(sem_out, "ordered")
     sem_ngroups <- lavaan::lavInspect(sem_out, "ngroups")
     sem_nlevels <- lavaan::lavInspect(sem_out, "nlevels")
-  }  
+    sem_nclusters <- lavaan::lavInspect(sem_out, "nclusters")
+
+    estimators_supported <- c("ML",
+                              "GLS",
+                              "WLS")
+    estimators_unsupported <- c("ULS",
+                                "DWLS",
+                                "MLM",
+                                "MLMV",
+                                "MLMVS",
+                                "MLF",
+                                "MLR",
+                                "WLSM",
+                                "WLSMV",
+                                "ULSM",
+                                "ULSMV",
+                                "PML")
+    se_supported <- c("standard")
+    se_unsupported <- c("robust.sem",
+                        "robust.huber.white",
+                        "robust",
+                        "boot",
+                        "bootstrap")
+    test_supported <- c("standard")
+    test_unsupported <- c("Satorra.Bentler",
+                          "Yuan.Bentler",
+                          "Yuan.Bentler.Mplus",
+                          "scaled.shifted",
+                          "boot",
+                          "bootstrap",
+                          "Bollen.Stine")
+    missing_supported <- c("listwise",
+                           "ml", "fiml", "direct",
+                           "ml.x", "fiml.x", "direct.x")
+    missing_unsupported <- c("two.stages", "robust.two.stages",
+                             "pairwise",
+                             "available.cases",
+                             "doubly.robust")
+
+    estimator_ok <- (tolower(sem_estimator) %in% tolower(estimators_supported))
+    missing_ok <- (tolower(sem_missing) %in% tolower(missing_supported))
+    se_ok <- (tolower(sem_se) %in% tolower(se_supported))
+    test_ok <- (tolower(sem_test) %in% tolower(test_supported))
+
+    model_formative_factor <- "<~" %in% p_table$op
+    model_multilevel <- (sem_nlevels > 1)
+    model_multicluster <- (sem_nclusters > 1)
+    model_multigroup <- (sem_ngroups > 1)
+    model_ordered <- (length(sem_lavaan_ordered) > 0)
+
+    optim_converged <- sem_converged
+    optim_admissible <- sem_post_check
+
+    out <- 0
+    msg <- NULL
+
+    if (!estimator_ok) {
+          out <- ifelse(out >= 0, -1, out - 1)
+          msg <- c(msg, paste("Estimator", sem_estimator, "is not yet supported."))
+        }
+
+    if (!missing_ok) {
+          out <- ifelse(out >= 0, -1, out - 1)
+          msg <- c(msg, paste("Missing handling method", sem_estimator, "is not yet supported."))
+        }
+
+    if (!se_ok) {
+          out <- ifelse(out >= 0, -1, out - 1)
+          msg <- c(msg, paste("Standard error method", sem_se, "is not yet supported."))
+        }
+
+    if (!test_ok) {
+          out <- ifelse(out >= 0, -1, out - 1)
+          msg <- c(msg, paste("Test method", sem_test, "is not yet supported."))
+        }
+
+    if (model_formative_factor) {
+          out <- ifelse(out >= 0, -1, out - 1)
+          msg <- c(msg, "Models with formative factor(s) are not yet supported.")
+        }
+
+    if (model_multilevel) {
+          out <- ifelse(out >= 0, -1, out - 1)
+          msg <- c(msg, "Multilevel models are not yet supported.")
+        }
+
+    if (model_multicluster) {
+          out <- ifelse(out >= 0, -1, out - 1)
+          msg <- c(msg, "Clustered models are not yet supported.")
+        }
+
+    if (model_multigroup) {
+          out <- ifelse(out >= 0, -1, out - 1)
+          msg <- c(msg, "Multigroup models are not yet supported.")
+        }
+
+    if (model_ordered) {
+          out <- ifelse(out >= 0, out + 1, out)
+          msg <- c(msg, "Not fully tested on models with ordered variables. Use the function at your own risk.")
+        }
+
+    if (!optim_converged) {
+          out <- ifelse(out >= 0, -1, out - 1)
+          msg <- c(msg, "The estimation has not converged. Fix the estimation first.")
+        }
+
+    if (!optim_admissible) {
+          out <- ifelse(out >= 0, -1, out - 1)
+          msg <- c(msg, "The solution is not admissible by lavaan post.check. Check the SEM results first.")
+        }
+
+    attr(out, "info") <- msg
+    out
+  }
