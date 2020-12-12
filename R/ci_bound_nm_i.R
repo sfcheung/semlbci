@@ -347,20 +347,21 @@ ci_bound_nm_i <- function(i = NULL,
     # Check whether the solution at the limit is admissible
     start0 <- lavaan::parameterTable(sem_out)
     i_free <- find_free(sem_out)
-    if (standardized) {
+    if (TRUE) {
         fit_final <- envir0$f_i_shared
         fit_post_check <- lavaan::lavInspect(fit_final, "post.check")
       } else {
-        if (i_op == ":=") {
-            start0[which(i_free)[i_depend], "est"] <- out$solution
-          } else {
-            start0[i_free, "est"] <- out$solution
-          }
-        fit_final <- lavaan::update(sem_out, start = start0, do.fit = FALSE,
-                                    check.start = TRUE,
-                                    check.post = TRUE,
-                                    check.vcov = TRUE)
-        fit_post_check <- lavaan::lavInspect(fit_final, "post.check")
+        # TO DELETE
+        # if (i_op == ":=") {
+            # start0[which(i_free)[i_depend], "est"] <- out$solution
+          # } else {
+            # start0[i_free, "est"] <- out$solution
+          # }
+        # fit_final <- lavaan::update(sem_out, start = start0, do.fit = FALSE,
+        #                             check.start = TRUE,
+        #                             check.post = TRUE,
+        #                             check.vcov = TRUE)
+        # fit_post_check <- lavaan::lavInspect(fit_final, "post.check")
       }
     if (!fit_post_check) {
         status <- 0
