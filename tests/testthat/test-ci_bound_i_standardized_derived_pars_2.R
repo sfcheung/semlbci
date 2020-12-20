@@ -1,31 +1,26 @@
 library(testthat)
 library(semlbci)
 
-# context("Check ci_bound_nm_i: Standardized, No equality constraints, test_generic = TRUE")
+# context("Check ci_bound_i: Standardized user defined parameters. No constraints.")
 
 data(simple_med)
 dat <- simple_med
 mod <- 
 "
-m ~ x
-y ~ m
+m ~ a*x
+y ~ b*m
+ab := a*b
 "
 fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
-# fn_constr0 <- set_constraint(fit_med)
+fn_constr0 <- set_constraint(fit_med)
 
-# opts0 <- list(print_level = 3)
-opts0 <- list()
-opts0 <- list(ftol_abs = 1e-7,
-              ftol_rel = 1e-7,
-              xtol_abs = 1e-7,
-              xtol_rel = 1e-7,
-              tol_constraints_eq = 1e-7
-              )
-system.time(out1l <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "lbound", standardized = TRUE, opts = opts0, test_generic = TRUE))
-system.time(out1u <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "ubound", standardized = TRUE, opts = opts0, test_generic = TRUE))
-system.time(out2l <- ci_bound_nm_i(2, 5, sem_out = fit_med, which = "lbound", standardized = TRUE, opts = opts0, test_generic = TRUE))
-system.time(out2u <- ci_bound_nm_i(2, 5, sem_out = fit_med, which = "ubound", standardized = TRUE, opts = opts0, test_generic = TRUE))
+# system.time(out1l <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = TRUE))
+# system.time(out1u <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE))
+system.time(out2l <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = TRUE))
+system.time(out2u <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE))
+# system.time(out1ul <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = FALSE))
+# system.time(out1uu <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = FALSE))
 
 
 library(OpenMx)
@@ -49,19 +44,22 @@ mod_mx <- mxModel("Mediation", type = "RAM",
     mxAlgebra((b^2) * var_m + evar_y, name = "var_y"),
     mxAlgebra(a * sqrt(var_x) / sqrt(var_m), name = "a_std"),
     mxAlgebra(b * sqrt(var_m) / sqrt(var_y) , name = "b_std"),
-    mxCI(reference = c("a", "b", "ab", "a_std", "b_std"), 
+    mxAlgebra(a * b * sqrt(var_x / ((b^2)*evar_m + evar_y + var_x*(a * b + 0)^2)),
+                            name = "ab_std"),
+    mxCI(reference = c("a", "b", "ab", "a_std", "b_std", "ab_std"), 
                        interval = .95, type = "both"),
     mxData(observed = cov_dat, type = "cov", numObs = n)
   )
 fit_med_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
 ci_OpenMx <- summary(fit_med_OpenMx)$CI
 
-ci_semlbci <- c(out1l, out2l, out1u, out2u)
+#ci_semlbci <- c(out1l, out2l, out1ul, out1u, out2u, out1uu)
+ci_semlbci <- c(out2l, out2u)
 
 test_that("Equal to OpenMx LBCI", {
     expect_equal(
         ci_semlbci, 
-        unlist(ci_OpenMx[c(4, 5), c("lbound", "ubound")]),
+        unlist(ci_OpenMx[c(4), c("lbound", "ubound")]),
         tolerance = 1e-3,
         ignore_attr = TRUE
       )

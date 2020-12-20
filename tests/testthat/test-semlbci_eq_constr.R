@@ -1,10 +1,7 @@
-# WARNING!
-# WIP. Not ready. semlbci not yet works for the CFA model.
-
 library(testthat)
 library(semlbci)
 
-context("Check semlbci: With equality constraints")
+# context("Check semlbci: With equality constraints")
 
 dat <- simple_med
 mod <- 
@@ -40,18 +37,20 @@ ci_OpenMx <- summary(fit_med_OpenMx)$CI
 lbci_med <- semlbci(fit_med, method = "wn")
 
 test_that("Equality constraints are observed", {
-    expect_equivalent(
+    expect_equal(
         lbci_med[1, c("lbci_lb", "est", "lbci_ub")], 
         lbci_med[2, c("lbci_lb", "est", "lbci_ub")],
-        tolerance = 1e-5
+        tolerance = 1e-5,
+        ignore_attr = TRUE
       )
   })
 
 test_that("Equal to OpenMx LBCI", {
-    expect_equivalent(
-        lbci_med[1, c("lbci_lb", "est", "lbci_ub")], 
+    expect_equal(
+        as.numeric(lbci_med[1, c("lbci_lb", "est", "lbci_ub")]),
         as.numeric(ci_OpenMx)[1:3],
-        tolerance = 1e-4
+        tolerance = 1e-4,
+        ignore_attr = TRUE
       )
   })
 

@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check extra arguments")
+# context("Check extra arguments")
 
 data(simple_med)
 dat <- simple_med
@@ -45,50 +45,56 @@ lbci_history_TRUE <- semlbci(fit_med, pars = c(1), history = TRUE, method = "wn"
 lbci_history_FALSE <- semlbci(fit_med, pars = c(1), history = FALSE, method = "wn")
 
 test_that("Can run with debug = TRUE", {
-    expect_equivalent(
+    expect_equal(
         as.numeric(unlist(lbci_debug_TRUE[c(1), c("lbci_lb", "lbci_ub")])),
         ci_OpenMx_target,
-        tolerance = 1e-5
+        tolerance = 1e-5,
+        ignore_attr = TRUE
       )
   })
 
 test_that("Can run with debug = FALSE", {
-    expect_equivalent(
+    expect_equal(
         as.numeric(unlist(lbci_debug_FALSE[c(1), c("lbci_lb", "lbci_ub")])),
         ci_OpenMx_target,
-        tolerance = 1e-5
+        tolerance = 1e-5,
+        ignore_attr = TRUE
       )
   })
 
 test_that("Can run with lav_warn = TRUE", {
-    expect_equivalent(
+    expect_equal(
         as.numeric(unlist(lbci_lav_warn_TRUE[c(1), c("lbci_lb", "lbci_ub")])),
         ci_OpenMx_target,
-        tolerance = 1e-5
+        tolerance = 1e-5,
+        ignore_attr = TRUE
       )
   })
 
 test_that("Can run with lav_warn = FALSE", {
-    expect_equivalent(
+    expect_equal(
         as.numeric(unlist(lbci_lav_warn_FALSE[c(1), c("lbci_lb", "lbci_ub")])),
         ci_OpenMx_target,
-        tolerance = 1e-5
+        tolerance = 1e-5,
+        ignore_attr = TRUE
       )
   })
 
 test_that("Can run with history = TRUE", {
-    expect_equivalent(
+    expect_equal(
         as.numeric(unlist(lbci_history_TRUE[c(1), c("lbci_lb", "lbci_ub")])),
         ci_OpenMx_target,
-        tolerance = 1e-5
+        tolerance = 1e-5,
+        ignore_attr = TRUE
       )
   })
 
 test_that("Can run with history = FALSE", {
-    expect_equivalent(
+    expect_equal(
         as.numeric(unlist(lbci_history_FALSE[c(1), c("lbci_lb", "lbci_ub")])),
         ci_OpenMx_target,
-        tolerance = 1e-5
+        tolerance = 1e-5,
+        ignore_attr = TRUE
       )
   })
 

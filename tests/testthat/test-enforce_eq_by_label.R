@@ -1,10 +1,7 @@
-# WARNING!
-# WIP. Not ready. semlbci not yet works for the CFA model.
-
 library(testthat)
 library(semlbci)
 
-context("Check semlbci: With equality constraints")
+# context("Check semlbci: With equality constraints")
 
 dat <- cfa_two_factors
 mod <- 

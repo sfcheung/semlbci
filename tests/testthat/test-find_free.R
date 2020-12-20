@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check find_free")
+# context("Check find_free")
 
 dat <- cfa_two_factors
 
@@ -18,8 +18,9 @@ ptable <- lavaan::parameterTable(fit)
 pfree <- ptable$free > 0
 
 test_that("Correct free parameters", {
-    expect_equivalent(
-        find_free(fit), pfree
+    expect_equal(
+        find_free(fit), pfree,
+        ignore_attr = TRUE
       )
   })
 

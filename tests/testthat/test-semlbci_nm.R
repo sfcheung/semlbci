@@ -1,10 +1,7 @@
-# WARNING!
-# WIP. Not ready. semlbci not yet works for the CFA model.
-
 library(testthat)
 library(semlbci)
 
-context("Check semlbci: No equality constraints, Neale-Miller-1997")
+# context("Check semlbci: No equality constraints, Neale-Miller-1997")
 
 data(simple_med)
 dat <- simple_med
@@ -42,20 +39,22 @@ ci_OpenMx <- summary(fit_med_OpenMx)$CI
 lbci_med <- semlbci(fit_med, method = "nm")
 
 test_that("Equal to OpenMx LBCIs for free parameters", {
-    expect_equivalent(
+    expect_equal(
         as.numeric(unlist(lbci_med[c(1, 2), c("lbci_lb", "lbci_ub")])), 
         unlist(ci_OpenMx[c("a", "b"), c("lbound", "ubound")]) ,
-        tolerance = 1e-5
+        tolerance = 1e-5,
+        ignore_attr = TRUE
       )
   })
 
 lbci_med2 <- semlbci(fit_med, pars = c(1, 3), method = "nm")
 
 test_that("Check whether only selectd parameters were processed", {
-    expect_equivalent(
+    expect_equal(
         as.numeric(unlist(lbci_med2[c(1), c("lbci_lb", "lbci_ub")])), 
         unlist(ci_OpenMx[c("a"), c("lbound", "ubound")]) ,
-        tolerance = 1e-4
+        tolerance = 1e-4,
+        ignore_attr = TRUE
       )
   })
 

@@ -3,7 +3,7 @@ library(semlbci)
 
 # This test is passed if ran interactively
 
-context("Check update_model")
+# context("Check update_model")
 
 dat <- cfa_two_factors
 
@@ -37,7 +37,8 @@ std_check <- lavaan::standardizedSolution(fit_check)
 std_check
 
 test_that("Check against standardized solution by update", {
-    expect_equivalent(
-        std2, std_check
+    expect_equal(
+        std2, std_check,
+        ignore_attr = TRUE
       )
   })

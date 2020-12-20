@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check sem_out")
+#context("Check sem_out")
 
 dat <- cfa_two_factors
 
@@ -28,7 +28,7 @@ fit03 <- lavaan::sem(mod, dat, estimator = "ML", se = "robust")
 fit04<- lavaan::sem(mod, dat, estimator = "DWLS")
 (out_04 <- check_sem_out(fit04))
 
-fit05 <- lavaan::sem(mod, dat, group = "gp")
+suppressWarnings(fit05 <- lavaan::sem(mod, dat, group = "gp"))
 (out_05 <- check_sem_out(fit05))
 
 test_that("Check against the flags", {

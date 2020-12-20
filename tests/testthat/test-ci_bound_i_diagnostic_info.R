@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check ci_bound_i: Check diagnostic info")
+# context("Check ci_bound_i: Check diagnostic info")
 
 data(simple_med)
 dat <- simple_med
@@ -31,8 +31,9 @@ out1l_diag <- attr(out1l, "diag")
 # out1ls_diag <- attr(out1ls, "diag")
 
 test_that("Check diagnostic object: status", {
-    expect_equivalent(
-        out1l_diag$status, 0
+    expect_equal(
+        out1l_diag$status, 0,
+        ignore_attr = TRUE
       )
   })
 
@@ -49,9 +50,10 @@ test_that("Check diagnostic object: ci_org_limit", {
   })
 
 test_that("Check diagnostic object: ci_limit_ratio", {
-    expect_equivalent(
+    expect_equal(
         out1l_diag$ci_limit_ratio,
-        abs((out1l - out1l_diag$est_org) / (out1l_diag$ci_org_limit - out1l_diag$est_org))
+        abs((out1l - out1l_diag$est_org) / (out1l_diag$ci_org_limit - out1l_diag$est_org)),
+        ignore_attr = TRUE
       )
   })
 

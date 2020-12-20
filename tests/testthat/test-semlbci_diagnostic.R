@@ -1,7 +1,9 @@
 library(testthat)
 library(semlbci)
 
-context("Check semlbci: Diagnostic info")
+# Disabled
+
+# context("Check semlbci: Diagnostic info")
 
 data(simple_med)
 dat <- simple_med

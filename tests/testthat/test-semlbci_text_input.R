@@ -1,10 +1,7 @@
-# WARNING!
-# WIP. Not ready. semlbci not yet works for the CFA model.
-
 library(testthat)
 library(semlbci)
 
-context("Check semlbci: Use syntax to specify parameters")
+# context("Check semlbci: Use syntax to specify parameters")
 
 data(simple_med)
 dat <- simple_med
@@ -50,10 +47,11 @@ lbci_med <- semlbci(fit_med, pars = c("m ~ x",
                                       "not in table"), method = "wn") 
 
 test_that("Equal to OpenMx LBCI", {
-    expect_equivalent(
+    expect_equal(
         lbci_med[c(1, 2, 6, 7), c("lbci_lb", "est", "lbci_ub")], 
         ci_OpenMx[, 1:3],
-        tolerance = 1e-5
+        tolerance = 1e-5,
+        ignore_attr = TRUE
       )
   })
 

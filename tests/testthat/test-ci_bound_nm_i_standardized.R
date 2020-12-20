@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check ci_bound_nm_i: Standardized, No equality constraints")
+# context("Check ci_bound_nm_i: Standardized, No equality constraints")
 
 data(simple_med)
 dat <- simple_med
@@ -59,9 +59,10 @@ ci_OpenMx <- summary(fit_med_OpenMx)$CI
 ci_semlbci <- c(out1l, out2l, out1u, out2u)
 
 test_that("Equal to OpenMx LBCI", {
-    expect_equivalent(
-        ci_semlbci, 
+    expect_equal(
+        ci_semlbci,
         unlist(ci_OpenMx[c(4, 5), c("lbound", "ubound")]),
-        tolerance = 1e-3
+        tolerance = 1e-3,
+        ignore_attr = TRUE
       )
   })

@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check ci_bound_i: Standardized parameters")
+# context("Check ci_bound_i: Standardized parameters")
 
 data(simple_med)
 dat <- simple_med
