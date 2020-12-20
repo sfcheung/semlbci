@@ -90,7 +90,7 @@ check_sem_out <- function(sem_out) {
     sem_lavaan_ordered <- lavaan::lavInspect(sem_out, "ordered")
     sem_ngroups <- lavaan::lavInspect(sem_out, "ngroups")
     sem_nlevels <- lavaan::lavInspect(sem_out, "nlevels")
-    sem_nclusters <- lavaan::lavInspect(sem_out, "nclusters")
+    sem_max_nclusters <- max(unlist(lavaan::lavInspect(sem_out, "nclusters")))
 
     estimators_supported <- c("ML",
                               "GLS",
@@ -136,7 +136,7 @@ check_sem_out <- function(sem_out) {
 
     model_formative_factor <- "<~" %in% p_table$op
     model_multilevel <- (sem_nlevels > 1)
-    model_multicluster <- (sem_nclusters > 1)
+    model_multicluster <- (sem_max_nclusters > 1)
     model_multigroup <- (sem_ngroups > 1)
     model_ordered <- (length(sem_lavaan_ordered) > 0)
 
