@@ -1,37 +1,41 @@
 #'@title Check whether the sem_out passed to semlbci is
 #'        acceptable
 #'
-#'@description Check whether the sem_out passed to semlbci
-#'             contains a model and estimation method 
-#'             that are supported by the current version of
-#'              [`semlbci`].
+#'@description Check whether the model and the estimation method in the 
+#'             `sem_out` 
+#'             object passed to [semlbci()] 
+#'              are supported by the current version of
+#'              [semlbci()].
 #'
 #'@details
-#' Estimation methods ([`estimator`] in
-#'     [`lavaan`]) currently supported:
+#' This function is to be used by [semlbci()] but is exported such that
+#' the compatibility of an SEM output can be checked independently.
+#' 
+#' Estimation methods (`estimator` in
+#'     [lavaan::lavaan()]) currently supported:
 #'
-#'    - Maximum likelihood [`ML`]
+#'    - Maximum likelihood (`ML`)
 #'
-#'    - Full information maximum likelihood with missing data [`fiml`]
+#'    - Full information maximum likelihood with missing data (`fiml`)
 #'
-#'    - Generalized least squares [`GLS`]
+#'    - Generalized least squares (`GLS`)
 #'
-#'    - Weighted least squares (a.k.a. ADF) [`WLS`]
+#'    - Weighted least squares (a.k.a. ADF) (`WLS`)
 #'
 #' Estimation methods not yet supported:
 #'
-#'    - Unweighted least squares [`ULS`]
+#'    - Unweighted least squares (`ULS`)
 #' 
-#'    - Diagonally weighted least squares [`DWLS`]
+#'    - Diagonally weighted least squares (`DWLS`)
 #'
 #'    - Variants with robust standard errors and/or robust 
 #'      test statistics:
 #' 
-#'       - [`MLM`], [`MLMV`], [`MLMVS`], [`MLF`], and [`MLR`]
+#'       - `MLM`, `MLMV`, `MLMVS`, `MLF`, and `MLR`.
 #'
-#'        - [`WLSM`], [`WLSMV`]
+#'        - `WLSM`, `WLSMV`.
 #'
-#'        - [`ULSM`], [`ULSMV`]
+#'        - `ULSM`, `ULSMV`.
 #' 
 #' Currently supported models:
 #' 
@@ -51,30 +55,37 @@
 #' 
 #'@return
 #' A numeric vector of one element. If 0, the model and 
-#' estimation method are formally supported. If larger than zero,
-#' then the model and method are not formally supported. If less
-#' than zero, then the model and/or the method are formally
+#' estimation method are officially supported. If larger than zero,
+#' then the model and method are not officially supported. If less
+#' than zero, then the model and/or the method are officially
 #' not supported.
 #' 
-#' The attributes [`info`] contains the reason for a value other
+#' The attributes `info` contains the reason for a value other
 #' than zero.
 #' 
 #' @param sem_out The output from an SEM analysis. Currently only
-#'                supports a [`lavaan`] object.
+#'                supports a [lavaan::lavaan-class] object.
 #'
 #'@examples
 #' library(lavaan)
 #' data(cfa_two_factors)
 #' mod <- 
 #' "
-#' f1 =~ x1 + x2 + a*x3
-#' f2 =~ x4 + a*x5 + equal('f1=~x2')*x6
-#' f1 ~~ 0*f2
-#' asq := a^2
+#' f1 =~ x1 + x2 + x3
+#' f2 =~ x4 + x5 + x6
 #' "
+#' 
 #' fit <- sem(mod, cfa_two_factors)
 #' 
-
+#' # Should be 0
+#' check_sem_out(fit)
+#' 
+#' fit2 <- sem(mod, cfa_two_factors, estimator = "MLR")
+#' 
+#' # Should be negative
+#' check_sem_out(fit2)
+#' 
+#'@export
 
 check_sem_out <- function(sem_out) {
     p_table <- lavaan::parameterTable(sem_out)
