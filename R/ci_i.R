@@ -1,20 +1,32 @@
-#'@title Find the lower bound and upper bound for one parameter
+#' @title Find the LBCI for one parameter
 #'
-#'@description Find the lower and upper bound for one parameter.
+#' @description Find the likelihood-based confidence interval (LBCI)
+#'              for one parameter.
 #'
-#'@details
+#' @details
 #'
-#' Currently supports \code{lavaan} output only.
+#' This function calls a function to find a bound ([ci_bound_i_nm()] by default)
+#' twice to find the two bounds for a confidence interval. The default method 
+#' is the Neale-Miller-1997 method. Please refer to [ci_bound_i_nm() for further
+#' information.
 #'
-#'@return
-#' The requested bounds
-#' Can return the optimization history as an attribute.
+#' This function is not supposed to be used directly by users. It is
+#' exported such that interested users can examine how a confidence bound is
+#' found.
+#'
+#' @return
+#' A numeric vector of two elements. The first element is the 
+#' lower bound, and the second element is the upper bound.
+#' 
+#' The diagnostic information from the function called in finding the 
+#' lower and upper founds are stored in the 
+#' attributes `lb_diag` and `ub_diag`, respectively.
 #'
 #' @param i The position of the target parameters.
 #' @param method The approach to be used. Can be "wn" (Wu-Neale-2012) or "nm" 
 #'               (Neale-Miller-1997). Default is "wn".
 #' @param ... Arguments to be passed to \code{ci_bound_i}.
-#' 
+#'
 #'@examples
 #' library(lavaan)
 #' data(cfa_two_factors)
