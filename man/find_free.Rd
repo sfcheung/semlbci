@@ -7,7 +7,7 @@
 find_free(sem_out)
 }
 \arguments{
-\item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
+\item{sem_out}{The SEM output. Currently supports \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.}
 }
 \value{
 A boolean vector of the same length as the number of rows of the \code{lavaan}.
@@ -18,11 +18,14 @@ is free.
 Compute the standardized moderation effect given the \code{lm} output.
 }
 \details{
-Currently supports \code{lavaan} output only.
+Currently supports \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.
 }
 \examples{
-library(lavaan)
+\dontrun{
+
 data(cfa_two_factors)
+library(lavaan)
+
 mod <- 
 "
 f1 =~ x1 + x2 + a*x3
@@ -30,5 +33,11 @@ f2 =~ x4 + a*x5 + equal('f1=~x2')*x6
 f1 ~~ 0*f2
 asq := a^2
 "
+
 fit <- sem(mod, cfa_two_factors)
+parameterTable(fit)
+find_free(fit)
+
 }
+}
+\keyword{internal}

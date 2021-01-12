@@ -20,7 +20,7 @@
 #'    - Generalized least squares (`GLS`)
 #'
 #'    - Weighted least squares (a.k.a.
-#'         asymptotically distribution free [ADF]) (`WLS`)
+#'         asymptotically distribution free) (`WLS`)
 #'
 #' Estimation methods not yet supported:
 #'
@@ -66,6 +66,9 @@
 #' @param sem_out The output from an SEM analysis. Currently only
 #'                supports a [lavaan::lavaan-class] object.
 #'
+#' @seealso 
+#' [semlbci()], [ci_i()]
+#' 
 #' @examples
 #' library(lavaan)
 #' data(cfa_two_factors)

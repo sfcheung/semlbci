@@ -32,3 +32,4 @@ asq := a^2
 "
 fit <- sem(mod, cfa_two_factors)
 }
+\keyword{internal}

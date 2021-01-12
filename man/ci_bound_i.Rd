@@ -146,3 +146,6 @@ Wu, H., & Neale, M. C. (2012). Adjusted confidence intervals for a bounded
 parameter. \emph{Behavior Genetics, 42}(6), 886–898.
 \url{https://doi.org/10.1007/s10519-012-9560-z}
 }
+\seealso{
+\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_i]{ci_i()}}
+}

@@ -3,7 +3,7 @@
 \docType{data}
 \name{simple_med}
 \alias{simple_med}
-\title{Simple mediation model, one IV, one DV, one mediation, 500 cases}
+\title{Dataset: Simple mediation model, one IV, one DV, one mediation, 500 cases}
 \format{
 A data framw with 500 rows and three variables:
 \describe{

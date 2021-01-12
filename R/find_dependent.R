@@ -19,7 +19,7 @@
 #' Currently supports a [lavaan::lavaan-class] output only.
 #'
 #' @seealso
-#' [ci_bound_nmi_i()]
+#' [ci_bound_nm_i()]
 #'
 #' @return
 #' A numeric vector of the positions of the free parameters in the
@@ -61,7 +61,7 @@
 #' #' all free parameters
 #' ptable[out_std[[6]], ]
 #' }
-#'@export
+#' @keywords internal
 
 find_dependent <- function(i = NULL,
                       sem_out = NULL,

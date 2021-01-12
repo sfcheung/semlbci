@@ -90,6 +90,8 @@
 #'  parameter. *Behavior Genetics, 42*(6), 886–898.
 #'  \url{https://doi.org/10.1007/s10519-012-9560-z}
 #'
+#' @seealso
+#' [semlbci()], [ci_i()]
 #'
 #' @examples
 #' data(simple_med)

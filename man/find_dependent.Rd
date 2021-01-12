@@ -70,5 +70,6 @@ ptable[out_std[[6]], ]
 }
 }
 \seealso{
-\code{\link[=ci_bound_nmi_i]{ci_bound_nmi_i()}}
+\code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}}
 }
+\keyword{internal}

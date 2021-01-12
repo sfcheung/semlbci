@@ -5,9 +5,9 @@
 #'
 #' @details
 #'
-#' This function calls a function to find a bound ([ci_bound_i_nm()] by default)
+#' This function calls a function to find a bound ([ci_bound_nm_i()] by default)
 #' twice to find the two bounds for a confidence interval. The default method
-#' is the Neale-Miller-1997 method. Please refer to [ci_bound_i_nm() for further
+#' is the Neale-Miller-1997 method. Please refer to [ci_bound_nm_i() for further
 #' information.
 #'
 #' This function is not supposed to be used directly by users. It is
@@ -34,8 +34,12 @@
 #'               which calls this function, already 
 #'                use "nm" as the default.)
 #' @param ... Arguments to be passed to [ci_bound_i()], 
-#'            [ci_bound_i_nm()], or similar funtions to be 
+#'            [ci_bound_nm_i()], or similar funtions to be 
 #'            developed.
+#' 
+#' @seealso
+#' [semlbci()], [ci_bound_i()], [ci_bound_nm_i()]
+#'
 #'
 #'@examples
 #'

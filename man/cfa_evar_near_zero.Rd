@@ -3,7 +3,7 @@
 \docType{data}
 \name{cfa_evar_near_zero}
 \alias{cfa_evar_near_zero}
-\title{Two factors with one standardied error variance close to zero.}
+\title{Dataset: Two factors with one standardied error variance close to zero.}
 \format{
 A data frame with 100 rows and six variables:
 \describe{

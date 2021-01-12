@@ -38,7 +38,7 @@ Estimation methods (\code{estimator} in
 \item Full information maximum likelihood with missing data (\code{fiml})
 \item Generalized least squares (\code{GLS})
 \item Weighted least squares (a.k.a.
-asymptotically distribution free \link{ADF}) (\code{WLS})
+asymptotically distribution free) (\code{WLS})
 }
 
 Estimation methods not yet supported:
@@ -90,4 +90,7 @@ fit2 <- sem(mod, cfa_two_factors, estimator = "MLR")
 # Should be negative because MLR is officially not supported
 check_sem_out(fit2)
 
+}
+\seealso{
+\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_i]{ci_i()}}
 }

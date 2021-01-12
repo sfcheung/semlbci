@@ -1,4 +1,4 @@
-#' Two factors, six variables, 500 cases
+#' Dataset: Two factors, six variables, 500 cases
 #'
 #' Generated from a two-factor model with six variables, n = 500
 #'
@@ -16,7 +16,7 @@
 
 "cfa_two_factors"
 
-#' Simple mediation model, one IV, one DV, one mediation, 500 cases
+#' Dataset: Simple mediation model, one IV, one DV, one mediation, 500 cases
 #'
 #' Generated from a simple mediation model, n = 500
 #'
@@ -39,7 +39,7 @@
 #' 
 "simple_med"
 
-#' Five-predictor regression model with one correlation close to one
+#' Dataset: Five-predictor regression model with one correlation close to one
 #'
 #' Generated from a regression model six variables, with correlation
 #' between x4 and x5 close to one.
@@ -65,9 +65,9 @@
 #' 
 "reg_cor_near_one"
 
-#'  Two factors with one standardied error variance close to zero.
+#' Dataset: Two factors with one standardied error variance close to zero.
 #'
-#'  Generated from a two-factor model, with one standardized error variacne close to zero.
+#' Generated from a two-factor model, with one standardized error variacne close to zero.
 #' 
 #' @format A data frame with 100 rows and six variables:
 #' \describe{

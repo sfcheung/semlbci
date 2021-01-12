@@ -1,16 +1,27 @@
-#'@title Find the LBCIs for all free parameters in an SEM output
+#' @title Find the LBCIs for selected free parameters in an SEM output
 #'
-#'@description Find the LBCIs for all free parameters in an SEM output
+#' @description Find the likelihood-based confidence intervals (LBCIs) for
+#'              selected free parameters in an SEM output
 #'
-#'@details
+#' @details
 #'
-#' Currently supports \code{lavaan} output only.
+#' This function finds the positions of the selected parameters in the parameter
+#' table and then call [ci_i()] once for each of them. Please see [ci_i()] and
+#' it child functions (currently [ci_bound_nm_i()] and [ci_bound_i()]) for the 
+#' technical details.
+#' 
+#' The SEM output will first checked by [check_sme_out()] to see whether the model
+#' and the estimation method are supported.
+#' 
+#' Currently supports [lavaan::lavaan-class] outputs only.
 #'
-#'@return
-#' The LBCIs for all free parameters
+#' @return
+#' A modified `lavaan` parameter table with the LBCIs for selected 
+#'    free parameters
 #'
-#' @param sem_out The SEM output. Currently \code{lavaan} output only.
-#' @param pars Positions of the parameters for which the LBCI to be found.
+#' @param sem_out The SEM output. Currently supports a [lavaan::lavaan-class]
+#'                output only.
+#' @param pars The positions of the parameters for which the LBCI to be found.
 #'              Use the position as appeared on the parameter tables of the fit object.
 #'              If NULL, the default, then LBCIs will be found for all free parameters.
 #'              Can also be a vector of strings to indicate the paramters on the 
@@ -26,7 +37,18 @@
 #'                  currently in the workers.
 #' @param ncpu The number of workers, if parallel is TRUE.
 #'
-#'@examples
+#' @references
+#'
+#' Neale, M. C., & Miller, M. B. (1997). The use of likelihood-based confidence
+#' intervals in genetic models. *Behavior Genetics, 27*(2), 113–120.
+#' \url{https://doi.org/10.1023/A:1025681223921}
+#'
+#' Pritikin, J. N., Rappaport, L. M., & Neale, M. C. (2017). Likelihood-based
+#' confidence intervals for a parameter with an upper or lower bound.
+#' *Structural Equation Modeling: A Multidisciplinary Journal, 24*(3), 395–401.
+#' \url{https://doi.org/10.1080/10705511.2016.1275969}
+#' 
+#' @examples
 #' library(lavaan)
 #' data(cfa_two_factors)
 #' mod <-
@@ -37,7 +59,7 @@
 #' asq := a^2
 #' "
 #' fit <- sem(mod, cfa_two_factors)
-#'@export
+#' @export
 
 semlbci <- function(sem_out,
                     pars = NULL,

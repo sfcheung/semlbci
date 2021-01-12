@@ -96,6 +96,9 @@
 #' *Structural Equation Modeling: A Multidisciplinary Journal, 24*(3), 395–401.
 #' \url{https://doi.org/10.1080/10705511.2016.1275969}
 #'
+#' @seealso
+#' [semlbci()], [ci_i()]
+#'
 #' @examples
 #' data(simple_med)
 #' dat <- simple_med

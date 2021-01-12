@@ -25,15 +25,4 @@ Set the starting values for optimization
 \details{
 Currently supports \code{lavaan} output only.
 }
-\examples{
-library(lavaan)
-data(cfa_two_factors)
-mod <- 
-"
-f1 =~ x1 + x2 + a*x3
-f2 =~ x4 + a*x5 + equal('f1=~x2')*x6
-f1 ~~ 0*f2
-asq := a^2
-"
-fit <- sem(mod, cfa_two_factors)
-}
+\keyword{internal}

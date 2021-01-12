@@ -151,3 +151,6 @@ confidence intervals for a parameter with an upper or lower bound.
 \emph{Structural Equation Modeling: A Multidisciplinary Journal, 24}(3), 395–401.
 \url{https://doi.org/10.1080/10705511.2016.1275969}
 }
+\seealso{
+\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_i]{ci_i()}}
+}

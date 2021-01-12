@@ -3,7 +3,7 @@
 \docType{data}
 \name{cfa_two_factors}
 \alias{cfa_two_factors}
-\title{Two factors, six variables, 500 cases}
+\title{Dataset: Two factors, six variables, 500 cases}
 \format{
 A data framw with 500 rows and six variables.
 }

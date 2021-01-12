@@ -3,7 +3,7 @@
 \docType{data}
 \name{reg_cor_near_one}
 \alias{reg_cor_near_one}
-\title{Five-predictor regression model with one correlation close to one}
+\title{Dataset: Five-predictor regression model with one correlation close to one}
 \format{
 A data frame with 100 rows and six variables:
 \describe{
