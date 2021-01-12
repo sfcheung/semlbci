@@ -3,14 +3,33 @@
 \docType{data}
 \name{reg_cor_near_one}
 \alias{reg_cor_near_one}
-\title{Generated from a regression model, with one correlation close to one.}
+\title{Five-predictor regression model with one correlation close to one}
 \format{
-An object of class \code{data.frame} with 100 rows and 6 columns.
+A data frame with 100 rows and six variables:
+\describe{
+\item{x1}{x1}
+\item{x2}{x2}
+\item{x3}{x3}
+\item{x4}{x4, with correlation with x5 nearly equal to 1}
+\item{x5}{x5, with correlation with x4 nearly equal to 1}
+\item{y}{y, the dependent variable}
+}
 }
 \usage{
 reg_cor_near_one
 }
 \description{
-Generated from a regression model, with one correlation close to one.
+Generated from a regression model six variables, with correlation
+between x4 and x5 close to one.
+}
+\examples{
+\dontrun{
+
+ library(lavaan)
+ out <- lm(y ~ x1 + x2 + x3 + x4 + x5, reg_cor_near_one)
+ sumamry(out)
+ cor(x4, x5)
+}
+
 }
 \keyword{datasets}

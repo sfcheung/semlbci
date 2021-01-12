@@ -3,14 +3,30 @@
 \docType{data}
 \name{simple_med}
 \alias{simple_med}
-\title{Generated from a simple mediation model, n 500}
+\title{Simple mediation model, one IV, one DV, one mediation, 500 cases}
 \format{
-An object of class \code{data.frame} with 200 rows and 3 columns.
+A data framw with 500 rows and three variables:
+\describe{
+\item{x}{x, the independent variable}
+\item{m}{m, the mediatior}
+\item{y}{y, the dependent variable}
+}
 }
 \usage{
 simple_med
 }
 \description{
-Generated from a simple mediation model, n 500
+Generated from a simple mediation model, n = 500
+}
+\examples{
+\dontrun{
+
+ library(lavaan)
+ mod <- "m ~ x
+         y ~ m"
+ fit <- cfa(mod, simple_med)
+ summary(fit)
+}
+
 }
 \keyword{datasets}

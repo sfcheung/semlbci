@@ -3,14 +3,35 @@
 \docType{data}
 \name{cfa_evar_near_zero}
 \alias{cfa_evar_near_zero}
-\title{Generated from a two-factor model, with one error variacne close to zero.}
+\title{Two factors with one standardied error variance close to zero.}
 \format{
-An object of class \code{data.frame} with 120 rows and 6 columns.
+A data frame with 100 rows and six variables:
+\describe{
+\item{x1}{x1}
+\item{x2}{x2}
+\item{x3}{x3}
+\item{x4}{x4}
+\item{x5}{x5}
+\item{x6}{x6}
+}
 }
 \usage{
 cfa_evar_near_zero
 }
 \description{
-Generated from a two-factor model, with one error variacne close to zero.
+Generated from a two-factor model, with one standardized error variacne close to zero.
+}
+\examples{
+\dontrun{
+ # If fitted by the following model, the standardized 
+ # error variance of `x3` is close to zero.
+ # Consequnently, the R-square of `x3` is close to one:
+
+ library(lavaan)
+ mod <- "f1 =~ x1 + x2 + x3
+         f2 =~ x4 + x5 + x6"
+ fit <- cfa(mod, cfa_evar_near_zero)
+ summary(fit, standardized = TRUE, rsquare = TRUE)
+}
 }
 \keyword{datasets}

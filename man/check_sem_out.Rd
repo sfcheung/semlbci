@@ -2,8 +2,7 @@
 % Please edit documentation in R/check_sem_out.R
 \name{check_sem_out}
 \alias{check_sem_out}
-\title{Check whether the sem_out passed to semlbci is
-acceptable}
+\title{Check the SEM output in semlbci}
 \usage{
 check_sem_out(sem_out)
 }
@@ -38,7 +37,8 @@ Estimation methods (\code{estimator} in
 \item Maximum likelihood (\code{ML})
 \item Full information maximum likelihood with missing data (\code{fiml})
 \item Generalized least squares (\code{GLS})
-\item Weighted least squares (a.k.a. ADF) (\code{WLS})
+\item Weighted least squares (a.k.a.
+asymptotically distribution free \link{ADF}) (\code{WLS})
 }
 
 Estimation methods not yet supported:
@@ -74,7 +74,7 @@ Models not yet supported:
 \examples{
 library(lavaan)
 data(cfa_two_factors)
-mod <- 
+mod <-
 "
 f1 =~ x1 + x2 + x3
 f2 =~ x4 + x5 + x6
@@ -87,7 +87,7 @@ check_sem_out(fit)
 
 fit2 <- sem(mod, cfa_two_factors, estimator = "MLR")
 
-# Should be negative
+# Should be negative because MLR is officially not supported
 check_sem_out(fit2)
 
 }

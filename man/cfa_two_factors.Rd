@@ -3,14 +3,24 @@
 \docType{data}
 \name{cfa_two_factors}
 \alias{cfa_two_factors}
-\title{Generated from a two-factor model with six variables, n 500}
+\title{Two factors, six variables, 500 cases}
 \format{
-An object of class \code{data.frame} with 500 rows and 6 columns.
+A data framw with 500 rows and six variables.
 }
 \usage{
 cfa_two_factors
 }
 \description{
-Generated from a two-factor model with six variables, n 500
+Generated from a two-factor model with six variables, n = 500
+}
+\examples{
+\dontrun{
+
+ library(lavaan)
+ mod <- "f1 =~ x1 + x2 + x3
+         f2 =~ x4 + x5 + x6"
+ fit <- cfa(mod, cfa_two_factors)
+ summary(fit)
+}
 }
 \keyword{datasets}
