@@ -7,33 +7,68 @@
 find_dependent(i = NULL, sem_out = NULL, standardized = FALSE, signed = FALSE)
 }
 \arguments{
-\item{i}{The position of the target parameter as in the parameter table of lavaan.}
+\item{i}{The position of the target parameter as in the parameter table of
+lavaan.}
 
-\item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
+\item{sem_out}{The SEM output. Currently support \link[lavaan:lavaan-class]{lavaan::lavaan}
+outputs only.}
 
-\item{standardized}{If TRUE, the LBCI is for the standardized estimate.}
+\item{standardized}{If \code{TRUE}, the LBCI is for the standardized estimate.}
 
-\item{signed}{If TRUE, return a vector of 1 or -1 to indicate the direction of the dependence.
-Default is \code{\link{FALSE}}.}
+\item{signed}{If \code{TRUE}, return a vector of 1 or -1 to indicate the
+direction of the dependence. Default is \code{\link{FALSE}}.}
 }
 \value{
-A numeric vector of the positions of the free parameters in the \code{lavaan} parameter table.
+A numeric vector of the positions of the free parameters in the
+\link[lavaan:lavaan-class]{lavaan::lavaan} parameter table.
 }
 \description{
 Find the free parameters on which a parameter depends on
 }
 \details{
-Currently supports \code{lavaan} output only.
+Ideally, this should be done analytically. However, it is not easy to
+implement this for a wide variety of models. Therefore, whether a parameter
+depends on another parameter is determined by the graident of the function
+with the target parameter as the output other parameters as the control
+variables of this function.
+
+This function is particularly important when the target parameter is one
+in the standardized solution. In this case, the dependency among parameters
+can be very complicated.
+
+This function is currently used by \code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}}.
+
+Currently supports a \link[lavaan:lavaan-class]{lavaan::lavaan} output only.
 }
 \examples{
-library(lavaan)
-data(cfa_two_factors)
-mod <- 
+\dontrun{
+data(simple_med)
+dat <- simple_med
+mod <-
 "
-f1 =~ x1 + x2 + a*x3
-f2 =~ x4 + a*x5 + equal('f1=~x2')*x6
-f1 ~~ 0*f2
-asq := a^2
+m ~ a*x
+y ~ b*m
+ab:= a*b
+ainvb := a/b
 "
-fit <- sem(mod, cfa_two_factors)
+fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+ptable <- lavaan::parameterTable(fit_med)
+ptable
+
+out <- lapply(1:7, find_dependent,
+                   sem_out = fit_med,
+                   standardized = FALSE)
+#' Correctly identified that ab depends on a and b
+ptable[out[[6]], ]
+
+out_std <- lapply(c(1,2, 3, 4, 6, 7), find_dependent,
+                   sem_out = fit_med,
+                   standardized = TRUE)
+#' Correclty identified that the standardized ab depends on
+#' all free parameters
+ptable[out_std[[6]], ]
+}
+}
+\seealso{
+\code{\link[=ci_bound_nmi_i]{ci_bound_nmi_i()}}
 }

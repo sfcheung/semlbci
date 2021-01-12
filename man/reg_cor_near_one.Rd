@@ -25,10 +25,10 @@ between x4 and x5 close to one.
 \examples{
 \dontrun{
 
- library(lavaan)
  out <- lm(y ~ x1 + x2 + x3 + x4 + x5, reg_cor_near_one)
- sumamry(out)
- cor(x4, x5)
+ summary(out)
+ cor(reg_cor_near_one[, c("x4", "x5")])
+
 }
 
 }
