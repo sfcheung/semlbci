@@ -60,7 +60,7 @@ table and then call \code{\link[=ci_i]{ci_i()}} once for each of them. Please se
 the functions it call to find a confidence limit (currently
 \code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}} and \code{\link[=ci_bound_i]{ci_bound_i()}}) for the technical details.
 
-The SEM output will first checked by \code{\link[=check_sme_out]{check_sme_out()}} to see whether the
+The SEM output will first checked by \code{\link[=check_sem_out]{check_sem_out()}} to see whether the
 model and the estimation method are supported.
 
 Currently supports \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.

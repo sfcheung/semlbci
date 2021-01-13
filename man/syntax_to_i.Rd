@@ -2,7 +2,7 @@
 % Please edit documentation in R/syntax_to_i.R
 \name{syntax_to_i}
 \alias{syntax_to_i}
-\title{Convert lavaan syntax to positions in the fit object parameter table}
+\title{Convert lavaan syntax strings to parameter positions}
 \usage{
 syntax_to_i(syntax, sem_out)
 }
@@ -15,20 +15,48 @@ syntax_to_i(syntax, sem_out)
 A vector of positions in the parameter table.
 }
 \description{
-Convert lavaan syntax to positions in the fit object parameter table
+Convert lavaan syntax to positions in the fit object
+parameter table
 }
 \details{
-Currently supports \code{lavaan} output only.
+Convert a vector of strings to positions in the parameter table of
+a \link[lavaan:lavaan-class]{lavaan::lavaan} fit object.
+
+Each element in the vector
+should have left hand side (\code{lhs}), operator (\code{op}),
+and right hand side (\code{rhs}). For example, "m ~ x" denotes
+the coefficient of the path from \code{x} to \code{m}. "y ~~ x" denotes
+the covariance between \code{y} and \code{x}. For user defined parameters,
+only \code{lhs} and \code{op} will be interpreted. For example, to specify
+the user parameter \code{ab}, "ab := x" will do. The right hadn side will be
+ignored.
+
+Elements that cannot be converted to a parameter in the parameter table will
+be ignored.
+
+Currently supports \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.
 }
 \examples{
+
 library(lavaan)
-data(cfa_two_factors)
-mod <- 
+data(simple_med)
+mod <-
 "
-f1 =~ x1 + x2 + a*x3
-f2 =~ x4 + a*x5 + equal('f1=~x2')*x6
-f1 ~~ 0*f2
-asq := a^2
+m ~ a*x
+y ~ b*m
+ab:= a*b
+asq:= a^2
 "
-fit <- sem(mod, cfa_two_factors)
+fit_med <- sem(mod, simple_med, fixed.x = FALSE)
+p_table <- parameterTable(fit_med)
+
+pars <- c("m ~ x",
+          "y ~ m",
+          "asq := 1",
+          "ab  := 2",
+          "not in table")
+out <- syntax_to_i(pars, fit_med)
+out
+p_table[out, ]
+
 }

@@ -2,26 +2,39 @@
 % Please edit documentation in R/set_constraint.R
 \name{set_constraint}
 \alias{set_constraint}
-\title{Set the constraint for finding the LBCI}
+\title{Set the constraint for finding the LBCI by the Wu-Neale-2012 approach}
 \usage{
 set_constraint(sem_out, ciperc = 0.95)
 }
 \arguments{
-\item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
+\item{sem_out}{The SEM output. Currently  \link[lavaan:lavaan-class]{lavaan::lavaan} outputs
+only.}
 
-\item{ciperc}{The proportion of coverage for the confidence interval. Default
-is .95.}
+\item{ciperc}{The proportion of coverage for the confidence interval.
+Default is .95.}
 }
 \value{
-A constraint function for nloptr.
+A constraint function for \link{nloptr}.
 }
 \description{
-Set the constraint for finding the LBCI
+Set the constraint for finding the LBCI by the
+Wu-Neale-2012 approach
 }
 \details{
-Currently supports \code{lavaan} output only.
+The Wu-Neale-2012 approach use a simple objective function that is opitmized
+with a constraint. This function generate the constraint function used by
+\code{\link[=ci_bound_i]{ci_bound_i()}}.
+
+This approach is easy to implement but turns out to be slow
+in optimization. The Neale-Meale-2007 approach is now the preferred approach.
+
+This function is still in this package, in case we decide to improve the
+implementation of the Wu-Neale-2012 approach.
+
+Currently supports  \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.
 }
 \examples{
+\dontrun{
 library(lavaan)
 data(cfa_two_factors)
 mod <-
@@ -38,4 +51,5 @@ fit <- sem(mod, cfa_two_factors)
 #fn1(runif(length(coef(sem_out))), .9, 1.1) * coef(sem_out))
 #fn1(coef(sem_out) + 2)
 #fn1(coef(sem_out) - .12)
+}
 }

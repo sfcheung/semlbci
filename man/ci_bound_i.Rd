@@ -93,7 +93,7 @@ confidence interval (LBCI) for one parameter
 
 This function is no longer the default function used by \code{\link[=semlbci]{semlbci()}}.
 This function works, but has not been updated. The default and preferred
-function is \code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}}, which uses the approacy by Neale and Miller
+function is \code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}}, which uses the approach by Neale and Miller
 (1997).
 }
 

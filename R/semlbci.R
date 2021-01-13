@@ -10,7 +10,7 @@
 #' the functions it call to find a confidence limit (currently
 #' [ci_bound_nm_i()] and [ci_bound_i()]) for the technical details.
 #'
-#' The SEM output will first checked by [check_sme_out()] to see whether the
+#' The SEM output will first checked by [check_sem_out()] to see whether the
 #' model and the estimation method are supported.
 #'
 #' Currently supports [lavaan::lavaan-class] outputs only.

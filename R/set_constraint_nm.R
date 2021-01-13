@@ -1,12 +1,15 @@
-#'@title Set the constraint for finding the LBCI by the Neale-Miller-1997 approach
+#' @title Set the constraint for finding the LBCI by the Neale-Miller-1997 approach
 #'
-#'@description Set the constraint for finding the LBCI by the Neale-Miller-1997 approach
+#' @description Set the constraint for finding the LBCI by the Neale-Miller-1997 approach
 #'
-#'@details
+#' @details
+#'
+#' This function is no longer needed and so is not exported.
 #'
 #' Currently supports \code{lavaan} output only.
 #'
-#'@return
+#'
+#' @return
 #' A constraint function for nloptr.
 #'
 #' @param i The position of the target parameters as in the parameter table of lavaan.
@@ -15,7 +18,7 @@
 #'               is .95.
 #' @param envir The enviroment to stroe the state. Default is NULL
 #'
-#'@examples
+#' @examples
 #' library(lavaan)
 #' data(cfa_two_factors)
 #' mod <-
@@ -32,7 +35,7 @@
 #' #fn1(runif(length(coef(sem_out))), .9, 1.1) * coef(sem_out))
 #' #fn1(coef(sem_out) + 2)
 #' #fn1(coef(sem_out) - .12)
-#'@export
+#' @keywords internal
 
 set_constraint_nm <- function(i, sem_out, ciperc = .95, envir = NULL, get_fit_from_envir = FALSE) {
 #    force(sem_out)
