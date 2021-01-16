@@ -251,7 +251,7 @@ ci_bound_i <- function(i = NULL,
       }
     fit_lb <- rep(-Inf, npar)
     fit_lb[find_variance_in_free(sem_out)] <- lb_var
-    opts_final <- modifyList(list("algorithm" = "NLOPT_LD_SLSQP",
+    opts_final <- utils::modifyList(list("algorithm" = "NLOPT_LD_SLSQP",
                         "xtol_rel" = 1.0e-10,
                         "maxeval" = 1000,
                         "print_level" = 0),

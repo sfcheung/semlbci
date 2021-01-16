@@ -24,7 +24,8 @@ Imports:
     lavaan,
     nloptr,
     numDeriv,
-    stats
+    stats,
+    utils
 VignetteBuilder: knitr
 Config/testthat/parallel: true
 Config/testthat/edition: 3

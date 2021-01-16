@@ -36,6 +36,7 @@
 #' #fn1(coef(sem_out) + 2)
 #' #fn1(coef(sem_out) - .12)
 #' @keywords internal
+utils::globalVariables("f_i_free_shared")
 
 set_constraint_nm <- function(i, sem_out, ciperc = .95, envir = NULL, get_fit_from_envir = FALSE) {
 #    force(sem_out)
