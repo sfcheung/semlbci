@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check find_depednent")
+# context("Check find_depednent")
 
 data(simple_med)
 dat <- simple_med

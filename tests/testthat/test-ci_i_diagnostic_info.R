@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check ci_i: Check diagnostic info")
+# context("Check ci_i: Check diagnostic info")
 
 data(simple_med)
 dat <- simple_med

@@ -1,3 +1,6 @@
+# Used by ci_bound_nm_i. Enforce equality constraints when
+# when the target parameter is so constrained.
+
 enforce_eq_by_label <- function(i_depend, p_table) {
     j_no_label <- p_table$label == ""
     p_table[j_no_label, "label"] <- 

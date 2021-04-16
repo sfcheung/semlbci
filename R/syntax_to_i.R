@@ -1,10 +1,26 @@
-#'@title Convert lavaan syntax to positions in the fit object parameter table
+#' @title Convert lavaan syntax strings to parameter positions
 #'
-#'@description Convert lavaan syntax to positions in the fit object parameter table
+#' @description Convert lavaan syntax to positions in the fit object
+#'             parameter table
 #'
-#'@details 
+#' @details
 #' 
-#' Currently supports \code{lavaan} output only.
+#' Convert a vector of strings to positions in the parameter table of
+#' a [lavaan::lavaan-class] fit object.
+#' 
+#' Each element in the vector
+#' should have left hand side (`lhs`), operator (`op`),
+#' and right hand side (`rhs`). For example, "m ~ x" denotes
+#' the coefficient of the path from `x` to `m`. "y ~~ x" denotes
+#' the covariance between `y` and `x`. For user defined parameters,
+#' only `lhs` and `op` will be interpreted. For example, to specify
+#' the user parameter `ab`, "ab := x" will do. The right hadn side will be 
+#' ignored.
+#' 
+#' Elements that cannot be converted to a parameter in the parameter table will
+#' be ignored.
+#' 
+#' Currently supports [lavaan::lavaan-class] outputs only.
 #'
 #'@return
 #' A vector of positions in the parameter table.
@@ -13,16 +29,28 @@
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.
 #'
 #'@examples
+#'
 #' library(lavaan)
-#' data(cfa_two_factors)
-#' mod <- 
+#' data(simple_med)
+#' mod <-
 #' "
-#' f1 =~ x1 + x2 + a*x3
-#' f2 =~ x4 + a*x5 + equal('f1=~x2')*x6
-#' f1 ~~ 0*f2
-#' asq := a^2
+#' m ~ a*x
+#' y ~ b*m
+#' ab:= a*b
+#' asq:= a^2
 #' "
-#' fit <- sem(mod, cfa_two_factors)
+#' fit_med <- sem(mod, simple_med, fixed.x = FALSE)
+#' p_table <- parameterTable(fit_med)
+#'
+#' pars <- c("m ~ x",
+#'           "y ~ m",
+#'           "asq := 1",
+#'           "ab  := 2",
+#'           "not in table")
+#' out <- syntax_to_i(pars, fit_med)
+#' out
+#' p_table[out, ]
+#'
 #'@export
 
 syntax_to_i <- function(syntax,

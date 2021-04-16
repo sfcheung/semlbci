@@ -1,21 +1,24 @@
-#'@title Find the free parameters from an SEM output
+#' @title Find the free parameters from an SEM output
 #'
-#'@description Compute the standardized moderation effect given the \code{lm} output.
+#' @description Compute the standardized moderation effect given the \code{lm} output.
 #'
-#'@details 
+#' @details 
 #' 
-#' Currently supports \code{lavaan} output only.
+#' Currently supports [lavaan::lavaan-class] outputs only.
 #'
-#'@return
+#' @return
 #' A boolean vector of the same length as the number of rows of the \code{lavaan}.
-#' parameter tables. A position is \code{TRUE} if the corresponding parameter 
+#' parameter tables. A position is `TRUE` if the corresponding parameter 
 #' is free.
 #' 
-#'@param sem_out The SEM output. Currently \code{lavaan} output only.
+#' @param sem_out The SEM output. Currently supports [lavaan::lavaan-class] outputs only.
+#' 
+#' @examples
+#' \dontrun{
 #'
-#'@examples
-#' library(lavaan)
 #' data(cfa_two_factors)
+#' library(lavaan)
+#'
 #' mod <- 
 #' "
 #' f1 =~ x1 + x2 + a*x3
@@ -23,8 +26,13 @@
 #' f1 ~~ 0*f2
 #' asq := a^2
 #' "
+#'
 #' fit <- sem(mod, cfa_two_factors)
-#'@export
+#' parameterTable(fit)
+#' find_free(fit)
+#'
+#' }
+#' @keywords internal
 
 find_free <- function(sem_out) {
     if (!inherits(sem_out, "lavaan")) {

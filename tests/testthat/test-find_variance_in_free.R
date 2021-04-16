@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-context("Check find_variance_in_free")
+# context("Check find_variance_in_free")
 
 dat <- cfa_two_factors
 
@@ -20,8 +20,9 @@ p_var <- (ptable$lhs == ptable$rhs) & ptable$op == "~~"
 id_free_var <- ptable[(ptable$free > 0) & (p_var), "id"]
 
 test_that("Correct variance parameters", {
-    expect_equivalent(
-        find_variance_in_free(fit), id_free %in% id_free_var
+    expect_equal(
+        find_variance_in_free(fit), id_free %in% id_free_var,
+        ignore_attr = TRUE
       )
   })
 

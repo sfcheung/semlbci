@@ -1,12 +1,12 @@
-#'@title Set the starting values for optimization
+#' @title Set the starting values for optimization
 #'
-#'@description Set the starting values for optimization
+#' @description Set the starting values for optimization
 #'
-#'@details 
+#' @details 
 #' 
 #' Currently supports \code{lavaan} output only.
 #'
-#'@return
+#' @return
 #' A lavaan parameter table, with parameters estimated with target fixed to its 
 #'  lower or upper Wald confidence limit.
 #' 
@@ -15,18 +15,7 @@
 #' @param which Whether the lower bound or the upper bound is to be found. Must be "lbound" or "ubound".
 #' @param standardized If TRUE, the LBCI is for the standardized estimate. 
 #'
-#'@examples
-#' library(lavaan)
-#' data(cfa_two_factors)
-#' mod <- 
-#' "
-#' f1 =~ x1 + x2 + a*x3
-#' f2 =~ x4 + a*x5 + equal('f1=~x2')*x6
-#' f1 ~~ 0*f2
-#' asq := a^2
-#' "
-#' fit <- sem(mod, cfa_two_factors)
-#'@export
+#' @keywords internal
 
 set_start <- function(i = NULL,
                       sem_out = NULL,

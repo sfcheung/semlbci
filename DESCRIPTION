@@ -1,6 +1,6 @@
 Package: semlbci
 Title: Likelihood Based Confidence Interval for SEM
-Version: 0.0.0.7
+Version: 0.0.0.8
 Authors@R: 
     person(given = "Shu Fai",
            family = "Cheung",
@@ -14,7 +14,7 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
-    testthat,
+    testthat (>= 3.0.0),
     OpenMx,
     knitr,
     rmarkdown
@@ -24,5 +24,9 @@ Imports:
     lavaan,
     nloptr,
     numDeriv,
-    stats
+    stats,
+    utils
 VignetteBuilder: knitr
+Config/testthat/parallel: true
+Config/testthat/edition: 3
+Config/testthat/start-first: ci_bound_i_standardized_*, ci_bound_i_standardized_derived_pars_*

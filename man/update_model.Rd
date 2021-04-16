@@ -7,30 +7,19 @@
 update_model(model, est)
 }
 \arguments{
-\item{model}{A lavModel object to be updated.}
+\item{model}{A \code{lavModel} object to be updated.}
 
 \item{est}{User supplied parameter estimates, as in the parameter table.}
 }
 \value{
-An updated lavModel object.
+An updated \code{lavModel} object.
 }
 \description{
 Update a \code{lavaan} model using user-supplied estimates
 }
 \details{
-Modified from lav_model_set_parameters in lavaan.
+Modified from the internal function \code{lav_model_set_parameters} in \code{lavaan}.
 
 Obviously, supports \code{lavaan} output only.
 }
-\examples{
-library(lavaan)
-data(cfa_two_factors)
-mod <- 
-"
-f1 =~ x1 + x2 + a*x3
-f2 =~ x4 + a*x5 + equal('f1=~x2')*x6
-f1 ~~ 0*f2
-asq := a^2
-"
-fit <- sem(mod, cfa_two_factors)
-}
+\keyword{internal}

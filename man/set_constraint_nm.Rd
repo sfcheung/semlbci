@@ -29,6 +29,8 @@ A constraint function for nloptr.
 Set the constraint for finding the LBCI by the Neale-Miller-1997 approach
 }
 \details{
+This function is no longer needed and so is not exported.
+
 Currently supports \code{lavaan} output only.
 }
 \examples{
@@ -49,3 +51,4 @@ fit <- sem(mod, cfa_two_factors)
 #fn1(coef(sem_out) + 2)
 #fn1(coef(sem_out) - .12)
 }
+\keyword{internal}

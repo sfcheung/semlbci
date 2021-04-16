@@ -1,19 +1,32 @@
-#'@title Set the constraint for finding the LBCI
+#' @title Set the constraint for finding the LBCI by the Wu-Neale-2012 approach
 #'
-#'@description Set the constraint for finding the LBCI
+#' @description Set the constraint for finding the LBCI by the
+#'              Wu-Neale-2012 approach
 #'
-#'@details
+#' @details
 #'
-#' Currently supports \code{lavaan} output only.
+#' The Wu-Neale-2012 approach use a simple objective function that is opitmized
+#' with a constraint. This function generate the constraint function used by
+#' [ci_bound_i()].
 #'
-#'@return
-#' A constraint function for nloptr.
+#' This approach is easy to implement but turns out to be slow
+#' in optimization. The Neale-Meale-2007 approach is now the preferred approach.
+#' 
+#' This function is still in this package, in case we decide to improve the
+#' implementation of the Wu-Neale-2012 approach.
 #'
-#' @param sem_out The SEM output. Currently \code{lavaan} output only.
-#' @param ciperc The proportion of coverage for the confidence interval. Default
-#'               is .95.
+#' Currently supports  [lavaan::lavaan-class] outputs only.
+#'
+#' @return
+#' A constraint function for [nloptr].
+#'
+#' @param sem_out The SEM output. Currently  [lavaan::lavaan-class] outputs
+#'                 only.
+#' @param ciperc The proportion of coverage for the confidence interval. 
+#'               Default is .95.
 #'
 #'@examples
+#' \dontrun{
 #' library(lavaan)
 #' data(cfa_two_factors)
 #' mod <-
@@ -30,6 +43,7 @@
 #' #fn1(runif(length(coef(sem_out))), .9, 1.1) * coef(sem_out))
 #' #fn1(coef(sem_out) + 2)
 #' #fn1(coef(sem_out) - .12)
+#' }
 #'@export
 
 set_constraint <- function(sem_out, ciperc = .95) {

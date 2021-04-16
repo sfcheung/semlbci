@@ -1,10 +1,7 @@
-# WARNING!
-# WIP. Not ready. semlbci not yet works for the CFA model.
-
 library(testthat)
 library(semlbci)
 
-context("Check semlbci: LBCI for derived parameters")
+# context("Check semlbci: LBCI for derived parameters")
 
 data(simple_med)
 dat <- simple_med
@@ -46,10 +43,11 @@ ci_OpenMx <- summary(fit_med_OpenMx)$CI
 lbci_med <- semlbci(fit_med, pars = 6, method = "wn") 
 
 test_that("Equal to OpenMx LBCI", {
-    expect_equivalent(
+    expect_equal(
         as.numeric(lbci_med[6, c("lbci_lb", "est", "lbci_ub")]), 
         as.numeric(ci_OpenMx[3, 1:3]),
-        tolerance = 1e-5
+        tolerance = 1e-5,
+        ignore_attr = TRUE
       )
   })
 

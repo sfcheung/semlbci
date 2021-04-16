@@ -2,12 +2,12 @@
 % Please edit documentation in R/find_variance_in_free.R
 \name{find_variance_in_free}
 \alias{find_variance_in_free}
-\title{Find free parameters which are variances from an SEM output}
+\title{Find free variances in an SEM output}
 \usage{
 find_variance_in_free(sem_out)
 }
 \arguments{
-\item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
+\item{sem_out}{The SEM output. Currently \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.}
 }
 \value{
 A boolean vector of the same length as the number of free parameters.
@@ -15,20 +15,24 @@ A position is \code{TRUE} if the corresponding free parameter
 is a variance (op == "~~").
 }
 \description{
-Compute the standardized moderation effect given the \code{lm} output.
+Find free variances in an SEM output
 }
 \details{
-Currently supports \code{lavaan} output only.
+Currently supports \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.
 }
 \examples{
-library(lavaan)
-data(cfa_two_factors)
+\dontrun{
+cfa_two_factors
+
 mod <- 
 "
-f1 =~ x1 + x2 + a*x3
-f2 =~ x4 + a*x5 + equal('f1=~x2')*x6
-f1 ~~ 0*f2
-asq := a^2
+f1 =~ x1 + x2 + x3
+f2 =~ x4 + x5 + x6
 "
-fit <- sem(mod, cfa_two_factors)
+
+fit <- lavaan::sem(mod, cfa_two_factors)
+out <- find_variance_in_free(fit)
+coef(fit)[out]
 }
+}
+\keyword{internal}

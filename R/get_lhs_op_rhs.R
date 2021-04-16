@@ -1,18 +1,18 @@
-#'@title Get lhs, op, and rhs of a parameter from an SEM output
+#' @title Get lhs, op, and rhs of a parameter from an SEM output
 #'
-#'@description Get lhs, op, and rhs of a parameter from an SEM output
+#' @description Get lhs, op, and rhs of a parameter from an SEM output
 #'
-#'@details 
+#' @details 
 #' 
 #' Currently supports \code{lavaan} output only.
 #'
-#'@return
+#' @return
 #' A one row data frame of lhs, op, and rhs of the parameter in the parameter table.
 #' 
 #' @param i The position of the target parameters as in the parameter table of lavaan.
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.
 #'
-#'@examples
+#' @examples
 #' library(lavaan)
 #' data(cfa_two_factors)
 #' mod <- 
@@ -23,7 +23,7 @@
 #' asq := a^2
 #' "
 #' fit <- sem(mod, cfa_two_factors)
-#'@export
+#' @keywords internal
 
 get_lhs_op_rhs <- function(i, sem_out) {
     if (!inherits(sem_out, "lavaan")) {
