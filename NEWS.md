@@ -1,3 +1,8 @@
+# semlbci 0.0.0.9
+
+- WIP: Initialize version 0.0.0.9.
+
+
 # semlbci 0.0.0.8
 
 - Updated the vignette.
