@@ -1,6 +1,6 @@
 # semlbci 0.0.0.8
 
-- WIP
+- Updated the vignette.
 
 # semlbci 0.0.0.7
 
