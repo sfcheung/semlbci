@@ -293,8 +293,10 @@ ci_bound_nm_i <- function(i = NULL,
                 start3[match(k2, k1), "est"] <- p_table2$est[k2 %in% k1]
                 sem_out2@ParTable <- as.list(start3)
                 sem_model <- sem_out2@Model
-                sem_model <- update_model(sem_model, 
-                                          start3[start3$free > 0, "est"] )
+                # sem_model <- update_model(sem_model, 
+                #                           start3[start3$free > 0, "est"] )
+                sem_model <- lavaan::lav_model_set_parameters(sem_model,
+                                          start3[start3$free > 0, "est"])
                 sem_out2@Model <- sem_model
                 std0 <- lavaan::standardizedSolution(sem_out2,
                                                 type = "std.all",
