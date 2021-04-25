@@ -182,8 +182,10 @@ ci_bound_i <- function(i = NULL,
             sem_out2 <- sem_out
             sem_out2@ParTable <- as.list(start1)
             sem_model <- sem_out2@Model
-            sem_model <- update_model(sem_model, 
-                                      start1[start1$free > 0, "est"] )
+            # sem_model <- update_model(sem_model,
+            #                           start1[start1$free > 0, "est"])
+            sem_model <- lavaan::lav_model_set_parameters(sem_model,
+                                      start1[start1$free > 0, "est"])
             sem_out2@Model <- sem_model
             std0 <- lavaan::standardizedSolution(sem_out2,
                                             type = "std.all",
