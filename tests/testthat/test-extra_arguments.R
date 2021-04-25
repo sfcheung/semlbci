@@ -33,6 +33,10 @@ mod_mx <- mxModel("Mediation", type = "RAM",
                        interval = .95, type = "both"),
     mxData(observed = cov_dat, type = "cov", numObs = n)
   )
+
+# To replicate OpenMx 2.18.1 with SLSQP
+mod_mx <- mxOption(mod_mx, "Feasibility tolerance", "1e-6")
+
 fit_med_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
 ci_OpenMx <- summary(fit_med_OpenMx)$CI
 ci_OpenMx_target <- unlist(ci_OpenMx[c("a"), c("lbound", "ubound")])
