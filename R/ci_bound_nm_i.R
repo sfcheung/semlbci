@@ -166,22 +166,6 @@ ci_bound_nm_i <- function(i = NULL,
         i_org_ci_lower <- p_est[i, "ci.lower"]
         i_org_ci_upper <- p_est[i, "ci.upper"]
       }
-    if (wald_ci_start) {
-        if (i_op == ":=") {
-              xstart <- set_start(i, sem_out, which)
-              xstart <- xstart[xstart$free > 0, "est"]
-            } else {
-              if (standardized) {
-                  xstart <- set_start(i, sem_out, which, standardized)
-                  xstart <- xstart[xstart$free > 0, "est"]
-                } else {
-                  xstart <- set_start(i, sem_out, which)
-                  xstart <- xstart[xstart$free > 0, "est"]
-                }
-            } 
-      } else {
-        xstart <- perturbation_factor * lavaan::coef(sem_out)
-      }
     if (test_generic) {
         # Find the label if the targe parameter is a user defined parameter
         if (i_op == ":=") {
