@@ -176,6 +176,12 @@ ci_bound_nm_i <- function(i = NULL,
         # Find dependent parameters
         i_depend <- find_dependent(i, sem_out = sem_out,
                                    standardized = standardized)
+        p_free <- p_table$free > 0
+        i_free <- which(p_free)
+        id_free <- p_table$id[i_free]
+        #i_depend_free <- which(id_free == i_depend)
+        i_depend_free <- id_free[match(i_depend, id_free)]
+
         # Check if the model has any linear equality constraints
         if (sem_out@Model@eq.constraints) {
             eq_K  <- sem_out@Model@eq.constraints.K
@@ -183,14 +189,16 @@ ci_bound_nm_i <- function(i = NULL,
             i_in_eq <- apply(eq_K, 1, function(x) any(sort(unique(x)) != c(0, 1)))
             i_in_eq_label <- p_table[which(i_in_eq), "plabel"]
             npar_reduced <- ncol(eq_K)
-            i_depend_reduced <- which(apply(eq_K[i_depend, seq_len(npar_reduced), drop = FALSE] != 0, 2, any))
+#            i_depend_reduced <- which(apply(eq_K[i_depend, seq_len(npar_reduced), drop = FALSE] != 0, 2, any))
+            i_depend_reduced <- which(apply(eq_K[i_depend_free, seq_len(npar_reduced), drop = FALSE] != 0, 2, any))
           } else {
             eq_K  <- NULL
             eq_k0 <- NULL
             i_in_eq <- NULL
             i_in_eq_label <- NULL
             npar_reduced <- npar
-            i_depend_reduced <- i_depend
+#            i_depend_reduced <- i_depend
+            i_depend_reduced <- i_depend_free
           }
         # Set starting value
         i_depend_signed <- find_dependent(i, sem_out = sem_out,
@@ -236,9 +244,11 @@ ci_bound_nm_i <- function(i = NULL,
             force(eq_K)
             force(i_in_eq_label)
             force(i_exp)
+            force(i_depend_free)
             i_exp_target <- i_exp$i_exp_target
             i_exp_source <- i_exp$i_exp_source
-            param_i[i_depend] <- param_depend
+            # param_i[i_depend] <- param_depend
+            param_i[i_depend_free] <- param_depend
             param_i[i_exp_target] <- param_i[i_exp_source]
 
             # Enforce linear equality constraints
@@ -246,7 +256,7 @@ ci_bound_nm_i <- function(i = NULL,
                 param_i_reduced <- rep(0, npar_reduced)
                 param_i_reduced[i_depend_reduced] <- param_depend
                 param_i <- as.numeric(eq_K %*% matrix(param_i_reduced, npar_reduced, 1) + eq_k0)
-                param_depend <- param_i[i_depend]
+                param_depend <- param_i[i_depend_free]
               }
                 
             if (is.null(attr(param_depend, "refit"))) {
@@ -310,6 +320,7 @@ ci_bound_nm_i <- function(i = NULL,
             force(i_depend)
             force(envir0)
             force(target)
+            force(i_depend_free)
             f_obj <- target
             fit2 <- envir0$f_i_shared
             f_obj <- lavaan::lavTech(fit2, "optim")$fx - target
@@ -321,7 +332,8 @@ ci_bound_nm_i <- function(i = NULL,
             # Update
             fit3 <- sem_out
             fit3@Model@GLIST <- fit2@Model@GLIST
-            f_jac <- rbind(lavaan::lavTech(fit3, "gradient")[i_depend])
+            # f_jac <- rbind(lavaan::lavTech(fit3, "gradient")[i_depend])
+            f_jac <- rbind(lavaan::lavTech(fit3, "gradient")[i_depend_free])
 
             g3_tmp <- lavaan::lavTech(fit3, "gradient")
             if (!is.null(eq_K)) {
@@ -341,9 +353,12 @@ ci_bound_nm_i <- function(i = NULL,
                                     lav_warn = lav_warn)
           }
         # Setup bound
-        fit_lb <- rep(-Inf, length(i_depend))
-        fit_ub <- rep( Inf, length(i_depend))
-        fit_lb[find_variance_in_free(sem_out)[i_depend]] <- lb_var
+        # fit_lb <- rep(-Inf, length(i_depend))
+        # fit_ub <- rep( Inf, length(i_depend))
+        # fit_lb[find_variance_in_free(sem_out)[i_depend]] <- lb_var
+        fit_lb <- rep(-Inf, length(i_depend_free))
+        fit_ub <- rep( Inf, length(i_depend_free))
+        fit_lb[find_variance_in_free(sem_out)[i_depend_free]] <- lb_var
         xstart <-  xstart[i_depend_reduced]
       }
 
