@@ -120,36 +120,32 @@ semlbci <- function(sem_out,
       } else {
         f_constr <- NULL
       }
-    if (parallel) {
-        message("Parallel processing is currently disabled.")
-      }
-    if (FALSE) {        
-        # cl <- parallel::makeCluster(ncpu)
-        # pkgs <- .packages()
-        # pkgs <- rev(pkgs)
-        # parallel::clusterExport(cl, "pkgs", envir = environment())
-        # parallel::clusterEvalQ(cl, {sapply(pkgs, 
-        #                 function(x) library(x, character.only = TRUE))
-        #               })
-        # parallel::clusterExport(cl, "f_constr")
-        # parallel::clusterExport(cl, "npar")
-        # out <- parallel::parLapply(cl,
-        #                  pars,
-        #                   function(x, ...) tryCatch(
-        #                     semlbci::ci_i(x,
-        #                       npar = npar,
-        #                       sem_out = sem_out,
-        #                       debug = FALSE,
-        #                       f_constr = f_constr),
-        #                       error = function(e) e
-        #                   ),
-        #                   ...
-        #                  )
-        # parallel::stopCluster(cl)
-        # out_error <- sapply(out, inherits, what = "error")
-        # if (any(out_error)) {
-        #     stop("Error occured in parallel mode. Try setting parallel = FALSE")
-        #   }
+    # if (parallel) {
+    #     message("Parallel processing is currently disabled.")
+    #   }
+    if (parallel) {        
+        cl <- parallel::makeCluster(ncpu)
+        pkgs <- .packages()
+        pkgs <- rev(pkgs)
+        parallel::clusterExport(cl, "pkgs", envir = environment())
+        parallel::clusterEvalQ(cl, {sapply(pkgs, 
+                        function(x) library(x, character.only = TRUE))
+                      })
+        parallel::clusterExport(cl, ls(envir = parent.frame()),
+                                       envir = environment())
+        out_raw <- parallel::parLapply(cl,
+                         pars,
+                            semlbci::ci_i,
+                            npar = npar,
+                            sem_out = sem_out,
+                            standardized = standardized,
+                            debug = FALSE,
+                            f_constr = f_constr,
+                            method = method,
+                            ciperc = ciperc,
+                            ...
+                         )
+        parallel::stopCluster(cl)
       } else {
         out_raw <- lapply(pars, ci_i, 
                       npar = npar,
