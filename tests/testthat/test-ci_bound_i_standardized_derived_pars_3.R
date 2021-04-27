@@ -19,8 +19,8 @@ fn_constr0 <- set_constraint(fit_med)
 # system.time(out1u <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE))
 # system.time(out2l <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = TRUE))
 # system.time(out2u <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE))
-system.time(out1ul <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = FALSE))
-system.time(out1uu <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = FALSE))
+system.time(out1ul <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = FALSE, method = "wn"))
+system.time(out1uu <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = FALSE, method = "wn"))
 
 
 library(OpenMx)
