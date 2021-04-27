@@ -180,7 +180,7 @@ ci_bound_nm_i <- function(i = NULL,
         i_free <- which(p_free)
         id_free <- p_table$id[i_free]
         #i_depend_free <- which(id_free == i_depend)
-        i_depend_free <- id_free[match(i_depend, id_free)]
+        i_depend_free <- match(i_depend, id_free)
 
         # Check if the model has any linear equality constraints
         if (sem_out@Model@eq.constraints) {
