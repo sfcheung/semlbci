@@ -1,6 +1,10 @@
+# semlbci 0.0.0.10
+
+- Initilize v0.0.0.10
+
 # semlbci 0.0.0.9
 
-- Updated tests due to a change in OpenM 2.19.x.
+- Updated tests due to a change in OpenMx 2.19.x.
 
 # semlbci 0.0.0.8
 
