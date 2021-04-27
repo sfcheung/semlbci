@@ -330,14 +330,35 @@ ci_bound_nm_i <- function(i = NULL,
         fmin <- lavaan::lavTech(sem_out, "optim")$fx
         n <- lavaan::lavTech(sem_out, "nobs")
         target <- fmin + qcrit / (2 * n)
+        test_robust <- any(
+                            c("satorra.bentler",
+                              "yuan.bentler",
+                              "yuan.bentler.mplus",
+                              "mean.var.adjusted",
+                              "scaled.shifted") %in% 
+                            names(sem_out@test)
+                          )
         f_constr <- function(param_depend, sem_out, debug, lav_warn) {
             force(i_depend)
             force(envir0)
             force(target)
             force(i_depend_free)
+            force(test_robust)
+            force(ciperc)
+            force(n)
+            force(qcrit)
             f_obj <- target
             fit2 <- envir0$f_i_shared
-            f_obj <- lavaan::lavTech(fit2, "optim")$fx - target
+            # DRAFT:
+            #   Experimental. Not yet tested. To be revised
+            #   For now, semlbci will stop when robust test statistic is detected.
+            # if (FALSE) {
+            #     lrt_out <- lavaan::lavTestLRT(sem_out, fit2)
+            #     diff_from_p <- qchisq(lrt_out[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
+            #     f_obj <- diff_from_p / (2 * n) - qcrit / (2 * n)
+            #   } else {
+                f_obj <- lavaan::lavTech(fit2, "optim")$fx - target
+              # }
 
             # Pre-modification fx and grad
             fx_tmp <- lavaan::lavTech(fit2, "optim")$fx 
