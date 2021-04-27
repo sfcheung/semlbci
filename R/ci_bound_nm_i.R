@@ -174,13 +174,27 @@ ci_bound_nm_i <- function(i = NULL,
             i_name <- NA
           }
         # Find dependent parameters
+        # TO-FIX:
+        # For unstandardized solution, i_depend is the position in the parameter table.
+        # For standardized soluton, i_dpeend is the position in the free paraemter vector.
+        # This problem was overlooed because they happened to be the same in some models.
+        # Need to solve this inconsistency.
         i_depend <- find_dependent(i, sem_out = sem_out,
                                    standardized = standardized)
-        p_free <- p_table$free > 0
-        i_free <- which(p_free)
-        id_free <- p_table$id[i_free]
-        #i_depend_free <- which(id_free == i_depend)
-        i_depend_free <- match(i_depend, id_free)
+        if (standardized) {
+            i_depend_free <- i_depend
+            p_free <- p_table$free > 0
+            i_free <- which(p_free)
+            id_free <- p_table$id[i_free]
+            #i_depend_free <- which(id_free == i_depend)
+            i_depend <- match(i_depend_free, p_table$free)
+          } else {
+            p_free <- p_table$free > 0
+            i_free <- which(p_free)
+            id_free <- p_table$id[i_free]
+            #i_depend_free <- which(id_free == i_depend)
+            i_depend_free <- match(i_depend, id_free)
+          }
 
         # Check if the model has any linear equality constraints
         if (sem_out@Model@eq.constraints) {
