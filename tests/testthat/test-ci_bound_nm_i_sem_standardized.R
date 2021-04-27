@@ -105,5 +105,5 @@ opts0 <- list(ftol_abs = 1e-5,
               tol_constraints_eq = 1e-4
               )
 ci_cfa_lavaan <- semlbci(fit, pars = c(2, 3, 5, 6, 10, 11), opts = opts0)
-ci_cfa_lavaan[c(2, 3, 5, 6), 1:7]
+ci_cfa_lavaan[c(2, 3, 5, 6, 10, 11), ]
 ci_cfa_OpenMx[1:4, c(1, 2, 3)]
