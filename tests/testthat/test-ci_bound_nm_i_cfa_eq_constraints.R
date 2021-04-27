@@ -34,9 +34,9 @@ system.time(out6u <- ci_bound_nm_i(6, sem_out = fit_cfa, which = "ubound", opts 
 # TO-DO: Ensure CFA results in lavaan and OpenMx are the same first
 
 library(lavaan)
-HS.model <- ' visual  =~ x1 + x2 + x3
-              textual =~ x4 + x5 + x6
-              speed   =~ x7 + x8 + x9 '
+HS.model <- ' visual  =~ x1 + a*x2 + x3
+              textual =~ x4 + a*x5 + x6
+              speed   =~ x7 + a*x8 + x9 '
 
 fit <- cfa(HS.model, data = HolzingerSwineford1939)
 parameterEstimates(fit)
@@ -103,10 +103,10 @@ opts0 <- list(ftol_abs = 1e-5,
               xtol_rel = 1e-5,
               tol_constraints_eq = 1e-4
               )
-ci_cfa_lavaan <- semlbci(fit, pars = c(2, 3, 5, 6), opts = opts0, standardized = TRUE)
-system.time(out2l <- ci_bound_nm_i(2, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
-system.time(out3l <- ci_bound_nm_i(3, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
-system.time(out5l <- ci_bound_nm_i(5, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
-system.time(out6l <- ci_bound_nm_i(6, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
+ci_cfa_lavaan <- semlbci(fit, pars = c(2, 3, 5, 6), opts = opts0)
+system.time(out2l <- ci_bound_nm_i(2, sem_out = fit, which = "lbound", opts = opts0))
+system.time(out3l <- ci_bound_nm_i(3, sem_out = fit, which = "lbound", opts = opts0))
+system.time(out5l <- ci_bound_nm_i(5, sem_out = fit, which = "lbound", opts = opts0))
+system.time(out6l <- ci_bound_nm_i(6, sem_out = fit, which = "lbound", opts = opts0))
 ci_cfa_lavaan[c(2, 3, 5, 6), 1:7]
 ci_cfa_OpenMx[1:4, c(1, 2, 3)]
