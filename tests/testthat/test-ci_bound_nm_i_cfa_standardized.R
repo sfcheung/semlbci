@@ -83,6 +83,10 @@ mod_mx <- mxModel("CFA", type = "RAM",
     mxData(observed = cov_dat, type = "cov", numObs = n)
   )
 
+
+# To replicate OpenMx 2.18.1 with SLSQP
+mod_mx <- mxOption(mod_mx, "Feasibility tolerance", "1e-6")
+
 fit_cfa_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
 ci_cfa_OpenMx <- summary(fit_cfa_OpenMx)$CI
 
@@ -106,3 +110,6 @@ opts0 <- list(ftol_abs = 1e-5,
 ci_cfa_lavaan <- semlbci(fit, pars = c(2, 3, 5, 6), opts = opts0)
 ci_cfa_lavaan[c(2, 3, 5, 6), 1:7]
 ci_cfa_OpenMx[1:4, c(1, 2, 3)]
+
+ci_cfa_lavaan[c(2, 3, 5, 6), ]
+summary(fit_cfa_OpenMx, verbose = TRUE)$CIdetail[1:4, ]
