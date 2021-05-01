@@ -10,7 +10,7 @@ mod <- "
   speed   =~ x7 + x8 + x9
 "
 
-fit_lavaan <- cfa(mod, dat)
+fit_lavaan <- cfa(mod, dat, do.fit = FALSE)
 
 out1 <- get_lhs_op_rhs(i = 6, fit_lavaan)
 out2 <- get_lhs_op_rhs(i = 6, fit_lavaan, more = TRUE)
@@ -27,11 +27,7 @@ test_that("Check output in one-group CFA", {
       )
   })
 
-fit_lavaan_gp <- cfa(mod, dat, group = "school")
-
-
-summary(fit)
-
+fit_lavaan_gp <- cfa(mod, dat, group = "school", do.fit = FALSE)
 
 out1gp <- get_lhs_op_rhs(i = 58, fit_lavaan_gp)
 out2gp <- get_lhs_op_rhs(i = 58, fit_lavaan_gp, more = TRUE)
