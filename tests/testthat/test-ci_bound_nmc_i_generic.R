@@ -2,6 +2,7 @@ skip("WIP")
 
 library(testthat)
 library(semlbci)
+library(lavaan)
 
 # context("Check ci_bound_nmc_i: No equality constraints)
 

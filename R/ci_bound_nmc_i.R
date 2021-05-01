@@ -278,7 +278,7 @@ ci_bound_nmc_i <- function(i = NULL,
     # Check p-value
     fit_final <- f_constr1(out$objective, more_options = list(fit = TRUE))
     fit_org   <- lavaan::update(sem_out, model = p_table_fit)
-    anova(fit_final, fit_org)
+    lavaan::anova(fit_final, fit_org)
 
     # Initialize the status code
     status <- 0

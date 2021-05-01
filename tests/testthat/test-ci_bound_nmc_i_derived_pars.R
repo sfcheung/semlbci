@@ -2,6 +2,7 @@ skip("WIP")
 
 library(testthat)
 library(semlbci)
+library(lavaan)
 
 # context("Check ci_bound_nm_i: Derived parameters")
 
@@ -27,15 +28,27 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_rel = 1e-7,
               tol_constraints_eq = 1e-7
               )
-system.time(out0l <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "lbound", opts =opts0, history = TRUE))
-system.time(out0u <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "ubound", opts =opts0, history = TRUE))
-c(out0l, out0u)
-system.time(out1l <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "lbound", opts =opts0, history = TRUE))
-system.time(out1u <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "ubound", opts =opts0, history = TRUE))
-c(out1l, out1u)
-system.time(out2l <- ci_bound_nm_i(7, 5, sem_out = fit_med, which = "lbound", opts =opts0, history = TRUE))
-system.time(out2u <- ci_bound_nm_i(7, 5, sem_out = fit_med, which = "ubound", opts =opts0, history = TRUE))
-c(out2l, out2u)
+# system.time(out6l0 <-  ci_bound_nm_i(6, 5, sem_out = fit_med, which = "lbound", opts = opts0, history = TRUE), gcFirst = FALSE)
+system.time(out6lc <- ci_bound_nmc_i(6, sem_out = fit_med, which = "lbound", opts = opts0, history = TRUE), gcFirst = FALSE)
+# system.time(out6u0 <-  ci_bound_nm_i(6, 5, sem_out = fit_med, which = "ubound", opts = opts0, history = TRUE), gcFirst = FALSE)
+system.time(out6uc <- ci_bound_nmc_i(6, sem_out = fit_med, which = "ubound", opts = opts0, history = TRUE), gcFirst = FALSE)
+
+
+modc0 <- 
+"
+m ~ a*x
+y ~ b*m
+ab:= a*b
+asq:= a^2
+abc:= ab*asq
+am:= mean(c(ab, asq, abc))
+"
+modc <- paste(modc0, "\nab == ", out6lc)
+fit_medc <- lavaan::sem(modc, simple_med, fixed.x = FALSE)
+anova(fit_medc, fit_med)
+modc <- paste(modc0, "\nab == ", out6uc)
+fit_medc <- lavaan::sem(modc, simple_med, fixed.x = FALSE)
+anova(fit_medc, fit_med)
 
 library(OpenMx)
 cov_dat <- cov(dat)
@@ -64,15 +77,15 @@ mod_mx <- mxModel("Mediation", type = "RAM",
 mod_mx <- mxOption(mod_mx, "Feasibility tolerance", "1e-6")
 
 fit_med_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
-ci_OpenMx <- summary(fit_med_OpenMx)$CI
+ci_OpenMx <- summary(fit_med_OpenMx)$CI[3, ]
 
-ci_semlbci <- c(out1l, out2l, out1u, out2u)
+ci_semlbci <- c(out6lc, out6uc)
 
 test_that("Equal to OpenMx LBCI", {
     expect_equal(
         ci_semlbci, 
-        unlist(ci_OpenMx[c(3, 4), c("lbound", "ubound")]),
-        tolerance = 1e-3,
+        unlist(ci_OpenMx[, c("lbound", "ubound")]),
+        tolerance = 1e-5,
         ignore_attr = TRUE
       )
   })
