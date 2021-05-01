@@ -178,7 +178,87 @@ ci_bound_nmc_i <- function(i = NULL,
     # Unstandardized
     # Check if labelled
     if (standardized) {
+        i_label <- gen_unique_name(get_names_from_ptable(p_table_fit))
 
+        lbci_b_f <- function(x) {
+            # force(i_est)
+            # k * x - i_est
+            x
+          }
+
+        lbci_b_grad <- function(x) {
+            1
+          }
+
+        gen_fct <- function(fit, i) {
+            force(fit)
+            force(i)
+            fit_pt <- lavaan::parameterTable(fit)
+            tmpfct <- function(...) {
+                force(fit)
+                force(i)
+                force(fit_pt)
+                .x. <- get(".x.", envir = parent.frame())
+                fit@Model <- lavaan::lav_model_set_parameters(
+                                  fit@Model, .x.
+                                )
+                fit_pt2 <- fit_pt
+                fit_pt2[fit_pt$free > 0, "est"] <- .x.
+                fit@ParTable <- as.list(fit_pt2)
+                std <- lavaan::standardizedSolution(
+                                  fit,
+                                  se = FALSE)
+                std[i, "est.std"]
+              }
+            return(tmpfct)
+          }
+        geteststd <<- gen_fct(fit = sem_out, i = i)
+
+        n <- as.numeric(lavaan::fitMeasures(sem_out, "chisq") /
+              (2 * lavaan::lavTech(sem_out, "optim")$fx))
+        qcrit <- stats::qchisq(ciperc, 1)
+        target <- lavaan::lavTech(sem_out, "optim")$fx + qcrit / (2 * n)
+        fit0 <- lavaan::update(sem_out,
+                               add = c(paste0(i_label, " := geteststd()"),
+                                       paste0(i_label, " == ", i_est - k * i_se)),
+                               do.fit = FALSE,
+                               baseline = FALSE,
+                               h1 = FALSE)
+        p_table0 <- lavaan::parameterTable(fit0)
+        i_constr <- which(p_table0$lhs == i_label & p_table0$op == "==")
+
+        f_constr1 <- function(x, more_options = list()) {
+            force(p_table0)
+            force(target)
+            force(fit0)
+            force(i_constr)
+            force(i_est)
+            force(k)
+            force(geteststd)
+            p_table0[i_constr, "rhs"] <- i_est + k * x
+            fit <- lavaan::update(fit0, p_table0,
+                                  baseline = FALSE,
+                                  h1 = FALSE,
+                                  se = "none",
+                                  # implied = FALSE,
+                                  do.fit = TRUE,
+                                  verbose = FALSE)
+            if (isTRUE(more_options$fit)) {
+                return(fit)
+              }
+            lavaan::lavTech(fit, "optim")$fx - target
+          }
+
+        f_constr2 <- function(x) {
+            lavaan::lav_func_gradient_simple(f_constr1, x)
+          }
+
+        f_constr <- function(x) {
+            list(
+                constraints = rbind(f_constr1(x)),
+                jacobian = rbind(f_constr2(x))
+              )
+          }
       } else {
         if (!i_labelled) {
             i_label <- gen_unique_name(get_names_from_ptable(p_table_fit))
@@ -186,7 +266,7 @@ ci_bound_nmc_i <- function(i = NULL,
           } else {
             i_label <- p_table_fit[i, "label"]
           }
-        
+
         lbci_b_f <- function(x) {
             # force(i_est)
             # k * x - i_est
@@ -202,6 +282,7 @@ ci_bound_nmc_i <- function(i = NULL,
         qcrit <- stats::qchisq(ciperc, 1)
         target <- lavaan::lavTech(sem_out, "optim")$fx + qcrit / (2 * n)
         # This should work for both free parameters and user-defined parameters
+        # TODO: Consider this function: lav_partable_add
         fit0 <- lavaan::update(sem_out, model = p_table_fit,
                                add = paste0(i_label, " == ", i_est - k * i_se),
                                do.fit = FALSE,
@@ -225,7 +306,8 @@ ci_bound_nmc_i <- function(i = NULL,
                                   h1 = FALSE,
                                   se = "none",
                                   # implied = FALSE,
-                                  do.fit = TRUE)
+                                  do.fit = TRUE,
+                                  verbose = FALSE)
             if (isTRUE(more_options$fit)) {
                 return(fit)
               }
@@ -234,7 +316,6 @@ ci_bound_nmc_i <- function(i = NULL,
 
         f_constr2 <- function(x) {
             lavaan::lav_func_gradient_simple(f_constr1, x)
-            # numDeriv::grad(f_constr1, x)
           }
 
         f_constr <- function(x) {
@@ -248,21 +329,30 @@ ci_bound_nmc_i <- function(i = NULL,
 
     # Set starting values
     if (wald_ci_start) {
-        xstart <- -1 * i_se
+        xstart <- -1 * switch(which,
+                          lbound = i_est - i_org_ci_lower,
+                          ubound = i_org_ci_upper - i_est)
       } else {
-        xstart <- perturbation_factor * i_est  
+        xstart <- perturbation_factor * i_est
       }
 
     # Set the boundaries
     fit_lb <- -Inf
-    fit_ub <- Inf
-    if (i_op == "~~") fit_lb <- lb_var
+    fit_ub <- 0
 
     opts_final <- utils::modifyList(list("algorithm" = "NLOPT_LD_SLSQP",
                         "xtol_rel" = 1.0e-10,
                         "maxeval" = 1000,
-                        "print_level" = 0),
-                        opts)    
+                        "print_level" = 3),
+                        opts)
+    # out <- nloptr::slsqp(
+    #              x0 = xstart,
+    #              fn = lbci_b_f,
+    #              gr = lbci_b_grad,
+    #              upper = fit_ub,
+    #              heq = f_constr1,
+    #              nl.info = TRUE,
+    #              control = opts)
     out <- nloptr::nloptr(
                         x0 = xstart, 
                         eval_f = lbci_b_f, 
