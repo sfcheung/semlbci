@@ -1,7 +1,9 @@
+skip("WIP")
+
 library(testthat)
 library(semlbci)
 
-# context("Check ci_bound_nm_i: With equality constraints, test_generic = TRUE")
+# context("Check ci_bound_nm_i: With equality constraints")
 
 data(simple_med)
 dat <- simple_med
@@ -22,15 +24,15 @@ opts0 <- list(ftol_abs = 1e-7,
               tol_constraints_eq = 1e-10,
               print_level = 0
               )
-system.time(out1l <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "lbound", opts = opts0, test_generic = TRUE, history = FALSE))
-system.time(out1u <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "ubound", opts = opts0, test_generic = TRUE, history = TRUE))
-system.time(out2l <- ci_bound_nm_i(2, 5, sem_out = fit_med, which = "lbound", opts = opts0, test_generic = TRUE))
-system.time(out2u <- ci_bound_nm_i(2, 5, sem_out = fit_med, which = "ubound", opts = opts0, test_generic = TRUE))
-system.time(out3l <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "lbound", opts = opts0, test_generic = TRUE))
-system.time(out3u <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "ubound", opts = opts0, test_generic = TRUE))
+system.time(out1l <- ci_bound_nmc_i(1, sem_out = fit_med, which = "lbound", opts = opts0))
+system.time(out1u <- ci_bound_nmc_i(1, sem_out = fit_med, which = "ubound", opts = opts0))
+system.time(out2l <- ci_bound_nmc_i(2, sem_out = fit_med, which = "lbound", opts = opts0))
+system.time(out2u <- ci_bound_nmc_i(2, sem_out = fit_med, which = "ubound", opts = opts0))
+system.time(out3l <- ci_bound_nmc_i(6, sem_out = fit_med, which = "lbound", opts = opts0))
+system.time(out3u <- ci_bound_nmc_i(6, sem_out = fit_med, which = "ubound", opts = opts0))
 
-# system.time(out1sl <- ci_bound_nm_i(3, 5, sem_out = fit_med, which = "lbound", opts = opts0, test_generic = TRUE, history = TRUE, standardized = TRUE))
-# system.time(out1su <- ci_bound_nm_i(3, 5, sem_out = fit_med, which = "ubound", opts = opts0, test_generic = TRUE, history = TRUE, standardized = TRUE))
+# system.time(out1sl <- ci_bound_nm_i(3, 5, sem_out = fit_med, which = "lbound", opts = opts0, history = TRUE, standardized = TRUE))
+# system.time(out1su <- ci_bound_nm_i(3, 5, sem_out = fit_med, which = "ubound", opts = opts0, history = TRUE, standardized = TRUE))
 
 # (ci_semlbci <- c(out1l, out2l, out1u, out2u)) -
 #   unlist(ci_OpenMx[c("a", "b"), c("lbound", "ubound")])
