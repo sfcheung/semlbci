@@ -123,14 +123,14 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_rel = 1e-7,
               tol_constraints_eq = 1e-10
               )
-system.time(out02l <- ci_bound_i(2, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0, method = "wn"))
-#system.time(out02u <- ci_bound_i(2, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0, method = "wn"))
-system.time(out06l <- ci_bound_i(6, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0, method = "wn"))
-#system.time(out06u <- ci_bound_i(6, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0, method = "wn"))
-#system.time(out19l <- ci_bound_i(19, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0, method = "wn"))
-#system.time(out19u <- ci_bound_i(19, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0, method = "wn"))
-#system.time(out23l <- ci_bound_i(23, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0, method = "wn"))
-#system.time(out23u <- ci_bound_i(23, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0, method = "wn"))
+system.time(out02l <- ci_bound_wn_i(2, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0))
+#system.time(out02u <- ci_bound_wn_i(2, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0))
+system.time(out06l <- ci_bound_wn_i(6, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0))
+#system.time(out06u <- ci_bound_wn_i(6, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0))
+#system.time(out19l <- ci_bound_wn_i(19, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0))
+#system.time(out19u <- ci_bound_wn_i(19, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0))
+#system.time(out23l <- ci_bound_wn_i(23, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0))
+#system.time(out23u <- ci_bound_wn_i(23, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0))
 
 # ci_lavaan <- semlbci(fit_lavaan, pars = c(2, 6, 19, 23), opts = opts0)
 # ci_lavaan[c(2, 6, 19, 23), ]
@@ -145,7 +145,7 @@ ci_lavaan[c(2, 6, 19, 23), c("lbci_lb", "lbci_ub")]
 ci_lavaan <- semlbci(fit_lavaan, pars = c(2, 3, 5, 6, 8, 9, 19:24), opts = opts0)
 ci_lavaan
 
-ci_lavaan <- semlbci(fit_lavaan, pars = c(6), opts = opts0, method = "wn")
+ci_lavaan <- semlbci(fit_lavaan, pars = c(6), opts = opts0)
 
 
 
@@ -169,14 +169,14 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_rel = 1e-7,
               tol_constraints_eq = 1e-7
               )
-system.time(out2l <- ci_bound_i(2, sem_out = fit_cfa, which = "lbound", opts = opts0))
-system.time(out2u <- ci_bound_i(2, sem_out = fit_cfa, which = "ubound", opts = opts0))
-system.time(out3l <- ci_bound_i(3, sem_out = fit_cfa, which = "lbound", opts = opts0))
-system.time(out3u <- ci_bound_i(3, sem_out = fit_cfa, which = "ubound", opts = opts0))
-system.time(out5l <- ci_bound_i(5, sem_out = fit_cfa, which = "lbound", opts = opts0))
-system.time(out5u <- ci_bound_i(5, sem_out = fit_cfa, which = "ubound", opts = opts0))
-system.time(out6l <- ci_bound_i(6, sem_out = fit_cfa, which = "lbound", opts = opts0))
-system.time(out6u <- ci_bound_i(6, sem_out = fit_cfa, which = "ubound", opts = opts0))
+system.time(out2l <- ci_bound_wn_i(2, sem_out = fit_cfa, which = "lbound", opts = opts0))
+system.time(out2u <- ci_bound_wn_i(2, sem_out = fit_cfa, which = "ubound", opts = opts0))
+system.time(out3l <- ci_bound_wn_i(3, sem_out = fit_cfa, which = "lbound", opts = opts0))
+system.time(out3u <- ci_bound_wn_i(3, sem_out = fit_cfa, which = "ubound", opts = opts0))
+system.time(out5l <- ci_bound_wn_i(5, sem_out = fit_cfa, which = "lbound", opts = opts0))
+system.time(out5u <- ci_bound_wn_i(5, sem_out = fit_cfa, which = "ubound", opts = opts0))
+system.time(out6l <- ci_bound_wn_i(6, sem_out = fit_cfa, which = "lbound", opts = opts0))
+system.time(out6u <- ci_bound_wn_i(6, sem_out = fit_cfa, which = "ubound", opts = opts0))
 
 # TO-DO: Ensure CFA results in lavaan and OpenMx are the same first
 
@@ -251,9 +251,9 @@ opts0 <- list(ftol_abs = 1e-5,
               tol_constraints_eq = 1e-4
               )
 ci_cfa_lavaan <- semlbci(fit, pars = c(2, 3, 5, 6), opts = opts0, standardized = TRUE)
-system.time(out2l <- ci_bound_i(2, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
-system.time(out3l <- ci_bound_i(3, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
-system.time(out5l <- ci_bound_i(5, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
-system.time(out6l <- ci_bound_i(6, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
+system.time(out2l <- ci_bound_wn_i(2, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
+system.time(out3l <- ci_bound_wn_i(3, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
+system.time(out5l <- ci_bound_wn_i(5, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
+system.time(out6l <- ci_bound_wn_i(6, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
 ci_cfa_lavaan[c(2, 3, 5, 6), 1:7]
 ci_cfa_OpenMx[1:4, c(1, 2, 3)]

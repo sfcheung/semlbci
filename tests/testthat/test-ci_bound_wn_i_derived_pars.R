@@ -1,32 +1,26 @@
 library(testthat)
 library(semlbci)
 
-# context("Check ci_bound_i: Standardized, No equality constraints")
+# context("Check ci_bound_wn_i: Derived parameters")
 
 data(simple_med)
 dat <- simple_med
 mod <- 
 "
-m ~ x
-y ~ m
+m ~ a*x
+y ~ b*m
+ab:= a*b
+asq:= a^2
 "
 fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+lavaan::parameterTable(fit_med)
 
 fn_constr0 <- set_constraint(fit_med)
 
-# opts0 <- list(print_level = 3)
-opts0 <- list()
-opts0 <- list(ftol_abs = 1e-7,
-              ftol_rel = 1e-7
-              # xtol_abs = 1e-3,
-              # xtol_rel = 1e-3,
-              # tol_constraints_eq = 1e-3
-              )
-#system.time(out1l <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = TRUE, opts = opts0))
-#system.time(out1u <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE, opts = opts0))
-system.time(out2l <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = TRUE, opts = opts0, method = "wn"))
-system.time(out2u <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE, opts = opts0, method = "wn"))
-
+system.time(out1l <- ci_bound_wn_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", method = "wn"))
+system.time(out1u <- ci_bound_wn_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", method = "wn"))
+system.time(out2l <- ci_bound_wn_i(7, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", method = "wn"))
+system.time(out2u <- ci_bound_wn_i(7, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", method = "wn"))
 
 library(OpenMx)
 cov_dat <- cov(dat)
@@ -45,11 +39,8 @@ mod_mx <- mxModel("Mediation", type = "RAM",
     mxPath(from = "y", arrows = 2, free = TRUE, values = 1,
                   labels = "evar_y"),
     mxAlgebra(a * b , name = "ab"),
-    mxAlgebra((a^2) * var_x + evar_m, name = "var_m"),
-    mxAlgebra((b^2) * var_m + evar_y, name = "var_y"),
-    mxAlgebra(a * sqrt(var_x) / sqrt(var_m), name = "a_std"),
-    mxAlgebra(b * sqrt(var_m) / sqrt(var_y) , name = "b_std"),
-    mxCI(reference = c("a", "b", "ab", "a_std", "b_std"), 
+    mxAlgebra(a ^ 2 , name = "asq"),
+    mxCI(reference = c("a", "b", "ab", "asq"), 
                        interval = .95, type = "both"),
     mxData(observed = cov_dat, type = "cov", numObs = n)
   )
@@ -60,13 +51,12 @@ mod_mx <- mxOption(mod_mx, "Feasibility tolerance", "1e-6")
 fit_med_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
 ci_OpenMx <- summary(fit_med_OpenMx)$CI
 
-#ci_semlbci <- c(out1l, out2l, out1u, out2u)
-ci_semlbci <- c(out2l, out2u)
+ci_semlbci <- c(out1l, out2l, out1u, out2u)
 
 test_that("Equal to OpenMx LBCI", {
     expect_equal(
         ci_semlbci, 
-        unlist(ci_OpenMx[c(5), c("lbound", "ubound")]),
+        unlist(ci_OpenMx[c(3, 4), c("lbound", "ubound")]),
         tolerance = 1e-6,
         ignore_attr = TRUE
       )

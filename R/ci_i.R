@@ -33,12 +33,12 @@
 #'               future. The main function, [semlbci()],
 #'               which calls this function, already 
 #'                use "nm" as the default.)
-#' @param ... Arguments to be passed to [ci_bound_i()], 
+#' @param ... Arguments to be passed to [ci_bound_wn_i()], 
 #'            [ci_bound_nm_i()], or similar funtions to be 
 #'            developed.
 #' 
 #' @seealso
-#' [semlbci()], [ci_bound_i()], [ci_bound_nm_i()]
+#' [semlbci()], [ci_bound_wn_i()], [ci_bound_nm_i()]
 #'
 #'
 #'@examples
@@ -63,8 +63,8 @@
 
 ci_i <- function(i, method = "wn", ...) {
     if (method == "wn") {
-        lb_time <- system.time(lb <- ci_bound_i(i, which = "lbound", ...))
-        ub_time <- system.time(ub <- ci_bound_i(i, which = "ubound", ...))
+        lb_time <- system.time(lb <- ci_bound_wn_i(i, which = "lbound", ...))
+        ub_time <- system.time(ub <- ci_bound_wn_i(i, which = "ubound", ...))
       }
     if (method == "nm") {
         lb_time <- system.time(lb <- ci_bound_nm_i(i, which = "lbound", ...))

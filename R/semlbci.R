@@ -8,7 +8,7 @@
 #' This function finds the positions of the selected parameters in the parameter
 #' table and then call [ci_i()] once for each of them. Please see [ci_i()] and
 #' the functions it call to find a confidence limit (currently
-#' [ci_bound_nm_i()] and [ci_bound_i()]) for the technical details.
+#' [ci_bound_nm_i()] and [ci_bound_wn_i()]) for the technical details.
 #'
 #' The SEM output will first checked by [check_sem_out()] to see whether the
 #' model and the estimation method are supported.
@@ -36,7 +36,7 @@
 #' @param method The approach to be used to search for the confidence limits.
 #'               Can be "wn" (Wu-Neale-2012) or "nm" (Neale-Miller-1997).
 #'               Default is "nm".
-#' @param ... Arguments to be passed to [ci_bound_i()].
+#' @param ... Arguments to be passed to [ci_bound_wn_i()].
 #' @param parallel If `TRUE`, will use [parallel]. Currently disabled and
 #'                  so this argument will be ignored.
 #' @param ncpu The number of workers, if `parallel` is `TRUE`. Currently

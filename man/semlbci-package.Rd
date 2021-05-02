@@ -11,7 +11,7 @@ confidence intervals (LBCIs) for parameters in structural equation modeling.
 The main function is \code{\link[=semlbci]{semlbci()}}, which receives an SEM output and
 finds the LBCIs for selected parameters.
 
-The function \code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}} and \code{\link[=ci_bound_i]{ci_bound_i()}} are the workhorses, which
+The function \code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}} and \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} are the workhorses, which
 find the confidence limit of one parameter.
 
 Currently, the preferred and default approach is the one proposed by

@@ -2,20 +2,26 @@
 % Please edit documentation in R/get_lhs_op_rhs.R
 \name{get_lhs_op_rhs}
 \alias{get_lhs_op_rhs}
-\title{Get lhs, op, and rhs of a parameter from an SEM output}
+\title{Get lhs, op, rhs, and other info of a parameter from an SEM output}
 \usage{
-get_lhs_op_rhs(i, sem_out)
+get_lhs_op_rhs(i, sem_out, more = FALSE)
 }
 \arguments{
 \item{i}{The position of the target parameters as in the parameter table of lavaan.}
 
 \item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
+
+\item{more}{If \code{TRUE}, block and group are also returned. Default is \code{FALSE}.}
 }
 \value{
-A one row data frame of lhs, op, and rhs of the parameter in the parameter table.
+A one row data frame of lhs, op, rhs, block, and group of the parameter in
+the parameter table.
+
+By default, only return lhs, op, and rhs.
 }
 \description{
-Get lhs, op, and rhs of a parameter from an SEM output
+Get lhs, op, rhs and other information necessary for
+uniquely identifying a parameter from an SEM output
 }
 \details{
 Currently supports \code{lavaan} output only.

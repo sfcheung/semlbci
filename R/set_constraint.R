@@ -7,7 +7,7 @@
 #'
 #' The Wu-Neale-2012 approach use a simple objective function that is opitmized
 #' with a constraint. This function generate the constraint function used by
-#' [ci_bound_i()].
+#' [ci_bound_wn_i()].
 #'
 #' This approach is easy to implement but turns out to be slow
 #' in optimization. The Neale-Meale-2007 approach is now the preferred approach.

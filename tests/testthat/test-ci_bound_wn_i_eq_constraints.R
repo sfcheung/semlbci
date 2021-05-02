@@ -3,7 +3,7 @@ skip("WIP")
 library(testthat)
 library(semlbci)
 
-# context("Check ci_bound_i: With equality constraints")
+# context("Check ci_bound_wn_i: With equality constraints")
 
 data(simple_med)
 dat <- simple_med
@@ -26,12 +26,12 @@ opts0 <- list(ftol_abs = 1e-7,
               tol_constraints_eq = c(1e-10, 1e-10),
               print_level = 0
               )
-system.time(out1l <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0, method = "wn"))
-system.time(out1u <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0, method = "wn"))
-system.time(out2l <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0, method = "wn"))
-system.time(out2u <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0, method = "wn"))
-system.time(out3l <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0, method = "wn"))
-system.time(out3u <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0, method = "wn"))
+system.time(out1l <- ci_bound_wn_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0))
+system.time(out1u <- ci_bound_wn_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0))
+system.time(out2l <- ci_bound_wn_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0))
+system.time(out2u <- ci_bound_wn_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0))
+system.time(out3l <- ci_bound_wn_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0))
+system.time(out3u <- ci_bound_wn_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0))
 
 # system.time(out1sl <- ci_bound_nm_i(3, 5, sem_out = fit_med, which = "lbound", opts = opts0, history = TRUE, standardized = TRUE))
 # system.time(out1su <- ci_bound_nm_i(3, 5, sem_out = fit_med, which = "ubound", opts = opts0, history = TRUE, standardized = TRUE))

@@ -20,7 +20,7 @@ future. The main function, \code{\link[=semlbci]{semlbci()}},
 which calls this function, already
 use "nm" as the default.)}
 
-\item{...}{Arguments to be passed to \code{\link[=ci_bound_i]{ci_bound_i()}},
+\item{...}{Arguments to be passed to \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}},
 \code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}}, or similar funtions to be
 developed.}
 }
@@ -66,5 +66,5 @@ out[1:2]
 
 }
 \seealso{
-\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_bound_i]{ci_bound_i()}}, \code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}}
+\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}, \code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}}
 }

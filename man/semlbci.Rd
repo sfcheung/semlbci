@@ -37,7 +37,7 @@ is .95, requesting a 95 percent confidence interval.}
 Can be "wn" (Wu-Neale-2012) or "nm" (Neale-Miller-1997).
 Default is "nm".}
 
-\item{...}{Arguments to be passed to \code{\link[=ci_bound_i]{ci_bound_i()}}.}
+\item{...}{Arguments to be passed to \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.}
 
 \item{parallel}{If \code{TRUE}, will use \link{parallel}. Currently disabled and
 so this argument will be ignored.}
@@ -58,7 +58,7 @@ selected free parameters in an SEM output
 This function finds the positions of the selected parameters in the parameter
 table and then call \code{\link[=ci_i]{ci_i()}} once for each of them. Please see \code{\link[=ci_i]{ci_i()}} and
 the functions it call to find a confidence limit (currently
-\code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}} and \code{\link[=ci_bound_i]{ci_bound_i()}}) for the technical details.
+\code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}} and \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}) for the technical details.
 
 The SEM output will first checked by \code{\link[=check_sem_out]{check_sem_out()}} to see whether the
 model and the estimation method are supported.

@@ -24,8 +24,8 @@ opts0 <- list(ftol_abs = 1e-7,
               )
 system.time(out1 <- ci_i(1, npar = 5, sem_out = fit_med, method = "wn", f_constr = fn_constr0, opts = opts0, verbose = TRUE))
 system.time(out1_nm <- ci_i(1, 5, sem_out = fit_med, method = "nm", opts = opts0, verbose = TRUE))
-# system.time(out1ls <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0, standardized = TRUE, verbose = TRUE))
-# system.time(out1us <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0, standardized = TRUE, verbose = TRUE))
+# system.time(out1ls <- ci_bound_wn_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0, standardized = TRUE, verbose = TRUE))
+# system.time(out1us <- ci_bound_wn_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0, standardized = TRUE, verbose = TRUE))
 
 out1_lb_diag <- attr(out1, "lb_diag")
 out1_ub_diag <- attr(out1, "ub_diag")

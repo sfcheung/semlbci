@@ -164,7 +164,7 @@ The confidence intervals computed by `lavaan`. These are the same confidence int
 
 ## `ratio_lb` and `ratio_ub`
 
-The ratio of the distance from a LBCI bound to the point estimates to that from the corresponding `lavaan` confidence bound to the same point estimates, sign ignored. This ratio is not expected to be zero. However, if the ratio is too large or too small, users should decide whether it is usual based on the nature of the parameters. The optional argument `ci_limit_ratio_tol` in `semlbci()` (documented in `ci_bound_nm_i()` and `ci_bound_i()`) sets the threshold for alerting the users. If the ratio is larger than this threshold (defualt 1.5), the status code will be set to a non-zero value.
+The ratio of the distance from a LBCI bound to the point estimates to that from the corresponding `lavaan` confidence bound to the same point estimates, sign ignored. This ratio is not expected to be zero. However, if the ratio is too large or too small, users should decide whether it is usual based on the nature of the parameters. The optional argument `ci_limit_ratio_tol` in `semlbci()` (documented in `ci_bound_nm_i()` and `ci_bound_wn_i()`) sets the threshold for alerting the users. If the ratio is larger than this threshold (defualt 1.5), the status code will be set to a non-zero value.
 
 ## `post_check_lb` and `post_check_ub`
 

@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-# context("Check ci_bound_i: Standardized user defined parameters. No constraints.")
+# context("Check ci_bound_wn_i: Standardized user defined parameters. No constraints.")
 
 data(simple_med)
 dat <- simple_med
@@ -15,12 +15,12 @@ fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
 fn_constr0 <- set_constraint(fit_med)
 
-# system.time(out1l <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = TRUE))
-# system.time(out1u <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE))
-# system.time(out2l <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = TRUE))
-# system.time(out2u <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE))
-system.time(out1ul <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = FALSE, method = "wn"))
-system.time(out1uu <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = FALSE, method = "wn"))
+# system.time(out1l <- ci_bound_wn_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = TRUE))
+# system.time(out1u <- ci_bound_wn_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE))
+# system.time(out2l <- ci_bound_wn_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = TRUE))
+# system.time(out2u <- ci_bound_wn_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = TRUE))
+system.time(out1ul <- ci_bound_wn_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", standardized = FALSE))
+system.time(out1uu <- ci_bound_wn_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", standardized = FALSE))
 
 
 library(OpenMx)

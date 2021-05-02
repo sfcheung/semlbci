@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-# context("Check ci_bound_i: Check diagnostic info")
+# context("Check ci_bound_wn_i: Check diagnostic info")
 
 data(simple_med)
 dat <- simple_med
@@ -22,10 +22,10 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_rel = 1e-7,
               tol_constraints_eq = 1e-7
               )
-system.time(out1l <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, method = "wn"))
-system.time(out1u <- ci_bound_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, method = "wn"))
-# system.time(out1ls <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0, standardized = TRUE, verbose = TRUE))
-# system.time(out1us <- ci_bound_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0, standardized = TRUE, verbose = TRUE))
+system.time(out1l <- ci_bound_wn_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE))
+system.time(out1u <- ci_bound_wn_i(1, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE))
+# system.time(out1ls <- ci_bound_wn_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0, standardized = TRUE, verbose = TRUE))
+# system.time(out1us <- ci_bound_wn_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0, standardized = TRUE, verbose = TRUE))
 
 out1l_diag <- attr(out1l, "diag")
 # out1ls_diag <- attr(out1ls, "diag")
