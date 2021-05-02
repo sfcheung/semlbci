@@ -180,13 +180,13 @@ ci_bound_nmc_i <- function(i = NULL,
     if (standardized) {
         i_label <- gen_unique_name(get_names_from_ptable(p_table_fit))
 
-        lbci_b_f <- function(x) {
+        lbci_b_f <- function(x, debug = FALSE) {
             # force(i_est)
             # k * x - i_est
             x
           }
 
-        lbci_b_grad <- function(x) {
+        lbci_b_grad <- function(x, debug = FALSE) {
             1
           }
 
@@ -227,7 +227,7 @@ ci_bound_nmc_i <- function(i = NULL,
         p_table0 <- lavaan::parameterTable(fit0)
         i_constr <- which(p_table0$lhs == i_label & p_table0$op == "==")
 
-        f_constr1 <- function(x, more_options = list()) {
+        f_constr1 <- function(x, more_options = list(), debug = FALSE) {
             force(p_table0)
             force(target)
             force(fit0)
@@ -242,21 +242,23 @@ ci_bound_nmc_i <- function(i = NULL,
                                   se = "none",
                                   # implied = FALSE,
                                   do.fit = TRUE,
-                                  verbose = FALSE)
+                                  verbose = debug)
             if (isTRUE(more_options$fit)) {
                 return(fit)
               }
             lavaan::lavTech(fit, "optim")$fx - target
           }
 
-        f_constr2 <- function(x) {
-            lavaan::lav_func_gradient_simple(f_constr1, x)
+        f_constr2 <- function(x, debug = FALSE) {
+            out <- lavaan::lav_func_gradient_simple(f_constr1, x)
+            if (debug) cat(paste0("\nConstraint gradient: ", out, "\n"))
+            out
           }
 
-        f_constr <- function(x) {
+        f_constr <- function(x, debug = FALSE) {
             list(
-                constraints = rbind(f_constr1(x)),
-                jacobian = rbind(f_constr2(x))
+                constraints = rbind(f_constr1(x), debug = debug),
+                jacobian = rbind(f_constr2(x), debug = debug)
               )
           }
       } else {
@@ -267,13 +269,13 @@ ci_bound_nmc_i <- function(i = NULL,
             i_label <- p_table_fit[i, "label"]
           }
 
-        lbci_b_f <- function(x) {
+        lbci_b_f <- function(x, debug = FALSE) {
             # force(i_est)
             # k * x - i_est
             x
           }
 
-        lbci_b_grad <- function(x) {
+        lbci_b_grad <- function(x, debug = FALSE) {
             1
           }
 
@@ -293,7 +295,7 @@ ci_bound_nmc_i <- function(i = NULL,
         p_table0[p_table0$lhs == i_label, "free"] <- 0
         i_constr <- which(p_table0$lhs == i_label & p_table0$op == "==")
 
-        f_constr1 <- function(x, more_options = list()) {
+        f_constr1 <- function(x, more_options = list(), debug = FALSE) {
             force(p_table0)
             force(target)
             force(fit0)
@@ -307,21 +309,23 @@ ci_bound_nmc_i <- function(i = NULL,
                                   se = "none",
                                   # implied = FALSE,
                                   do.fit = TRUE,
-                                  verbose = FALSE)
+                                  verbose = debug)
             if (isTRUE(more_options$fit)) {
                 return(fit)
               }
             lavaan::lavTech(fit, "optim")$fx - target
           }
 
-        f_constr2 <- function(x) {
-            lavaan::lav_func_gradient_simple(f_constr1, x)
+        f_constr2 <- function(x, debug = FALSE) {
+            out <- lavaan::lav_func_gradient_simple(f_constr1, x)
+            if (debug) cat(paste0("\nConstraint gradient: ", out, "\n"))
+            out
           }
 
-        f_constr <- function(x) {
+        f_constr <- function(x, debug = FALSE) {
             list(
-                constraints = rbind(f_constr1(x)),
-                jacobian = rbind(f_constr2(x))
+                constraints = rbind(f_constr1(x, debug = debug)),
+                jacobian = rbind(f_constr2(x, debug = debug))
               )
           }
 
@@ -343,7 +347,7 @@ ci_bound_nmc_i <- function(i = NULL,
     opts_final <- utils::modifyList(list("algorithm" = "NLOPT_LD_SLSQP",
                         "xtol_rel" = 1.0e-10,
                         "maxeval" = 1000,
-                        "print_level" = 3),
+                        "print_level" = 0),
                         opts)
     # out <- nloptr::slsqp(
     #              x0 = xstart,
@@ -360,7 +364,8 @@ ci_bound_nmc_i <- function(i = NULL,
                         ub = fit_ub,
                         eval_grad_f = lbci_b_grad,
                         eval_g_eq = f_constr,
-                        opts = opts_final
+                        opts = opts_final,
+                        debug = TRUE
                     )
     bound <- i_est + k * out$objective
     bound_unchecked <- bound
