@@ -207,7 +207,15 @@ ci_bound_nmc_i <- function(i = NULL,
                 fit@ParTable <- as.list(fit_pt2)
                 std <- lavaan::standardizedSolution(
                                   fit,
-                                  se = FALSE)
+                                  se = FALSE,
+                                  zstat = FALSE,
+                                  pvalue = FALSE,
+                                  ci = FALSE,
+                                  cov.std = FALSE,
+                                  remove.eq = FALSE,
+                                  remove.ineq = FALSE,
+                                  remove.def = FALSE,
+                                  )
                 std[i, "est.std"]
               }
             return(tmpfct)
@@ -220,12 +228,24 @@ ci_bound_nmc_i <- function(i = NULL,
         target <- lavaan::lavTech(sem_out, "optim")$fx + qcrit / (2 * n)
         fit0 <- lavaan::update(sem_out,
                                add = c(paste0(i_label, " := geteststd()"),
-                                       paste0(i_label, " == ", i_est - k * i_se)),
+                                       paste0(i_label, " == ", i_est - k * i_se),
+                                       paste0("0 < 1")),
                                do.fit = FALSE,
                                baseline = FALSE,
                                h1 = FALSE)
         p_table0 <- lavaan::parameterTable(fit0)
         i_constr <- which(p_table0$lhs == i_label & p_table0$op == "==")
+        p_table0[p_table0$free > 0, "start"] <- p_table[p_table0$free > 0, "est"]
+        p_table0[p_table0$free > 0, "est"] <- p_table[p_table0$free > 0, "est"]
+        fit0 <- lavaan::update(fit0, model = p_table0,
+                              do.fit = FALSE,
+                              baseline = FALSE,
+                              h1 = FALSE)
+
+        # Setup the shared environment
+        envir0 <- new.env()
+        assign("f_i_shared", fit0, envir = envir0)
+        assign("f_i_free_shared", fit0, envir = envir0)
 
         f_constr1 <- function(x, more_options = list(), debug = FALSE) {
             force(p_table0)
@@ -235,6 +255,7 @@ ci_bound_nmc_i <- function(i = NULL,
             force(i_est)
             force(k)
             force(geteststd)
+            force(envir0)
             p_table0[i_constr, "rhs"] <- i_est + k * x
             fit <- lavaan::update(fit0, p_table0,
                                   baseline = FALSE,
@@ -243,6 +264,11 @@ ci_bound_nmc_i <- function(i = NULL,
                                   # implied = FALSE,
                                   do.fit = TRUE,
                                   verbose = debug)
+            assign("f_i_shared", fit, envir0)
+            if (debug) {
+                cat("\n\n*** Parameter Estimates:\n")
+                print(coef(fit))
+              }
             if (isTRUE(more_options$fit)) {
                 return(fit)
               }
@@ -251,14 +277,14 @@ ci_bound_nmc_i <- function(i = NULL,
 
         f_constr2 <- function(x, debug = FALSE) {
             out <- lavaan::lav_func_gradient_simple(f_constr1, x)
-            if (debug) cat(paste0("\nConstraint gradient: ", out, "\n"))
+            if (debug) cat(paste0("\n\n*** Constraint gradient: ", out, "\n"))
             out
           }
 
         f_constr <- function(x, debug = FALSE) {
             list(
-                constraints = rbind(f_constr1(x), debug = debug),
-                jacobian = rbind(f_constr2(x), debug = debug)
+                constraints = rbind(f_constr1(x, debug = debug)),
+                jacobian = rbind(f_constr2(x, debug = debug))
               )
           }
       } else {
@@ -294,6 +320,15 @@ ci_bound_nmc_i <- function(i = NULL,
         # Not sure why we have to manually set this constraint to free
         p_table0[p_table0$lhs == i_label, "free"] <- 0
         i_constr <- which(p_table0$lhs == i_label & p_table0$op == "==")
+        fit0 <- lavaan::update(fit0, model = p_table0,
+                              do.fit = FALSE,
+                              baseline = FALSE,
+                              h1 = FALSE)
+                
+        # Setup the shared environment
+        envir0 <- new.env()
+        assign("f_i_shared", fit0, envir = envir0)
+        assign("f_i_free_shared", fit0, envir = envir0)
 
         f_constr1 <- function(x, more_options = list(), debug = FALSE) {
             force(p_table0)
@@ -302,6 +337,7 @@ ci_bound_nmc_i <- function(i = NULL,
             force(i_constr)
             force(i_est)
             force(k)
+            force(envir0)
             p_table0[i_constr, "rhs"] <- i_est + k * x
             fit <- lavaan::update(fit0, p_table0,
                                   baseline = FALSE,
@@ -310,19 +346,48 @@ ci_bound_nmc_i <- function(i = NULL,
                                   # implied = FALSE,
                                   do.fit = TRUE,
                                   verbose = debug)
+            assign("f_i_shared", fit, envir0)
             if (isTRUE(more_options$fit)) {
                 return(fit)
               }
             lavaan::lavTech(fit, "optim")$fx - target
           }
 
+        # TO DELETE: Does not work
+        # f_x_from_fit <- function(xs) {
+        #     force(envir0)
+        #     force(i)
+        #     force(fit0)
+        #     force(p_table0)
+        #     pt0 <- p_table0
+        #     pt0[pt0$free > 0, "est"] <- xs
+        #     fitx <- lavaan::update(
+        #                 fit0, 
+        #                 pt0,
+        #                 baseline = FALSE,
+        #                 h1 = FALSE,
+        #                 se = "none",
+        #                 # implied = FALSE,
+        #                 do.fit = FALSE)
+        #     lavaan::parameterTable(fitx)[i, "est"]
+        #   }
+
         f_constr2 <- function(x, debug = FALSE) {
+            # TO DELETE: Does not work
+            # force(envir0)
+            # force(gd_x)
+            # gd_x <- lavaan::lav_func_gradient_simple(f_x_from_fit,
+            #                             coef(envir0$f_i_shared))
+            # gd_coef <- lavaan::lavTech(envir0$f_i_shared, "gradient")
+            # out <- sum(gd_coef^2) / sum(gd_x^2) 
             out <- lavaan::lav_func_gradient_simple(f_constr1, x)
-            if (debug) cat(paste0("\nConstraint gradient: ", out, "\n"))
+            if (debug) cat(paste0("\n\n*** Constraint gradient: ", out, "\n"))
             out
           }
 
         f_constr <- function(x, debug = FALSE) {
+            force(f_constr1)
+            force(f_constr2)
             list(
                 constraints = rbind(f_constr1(x, debug = debug)),
                 jacobian = rbind(f_constr2(x, debug = debug))
@@ -340,23 +405,22 @@ ci_bound_nmc_i <- function(i = NULL,
         xstart <- perturbation_factor * i_est
       }
 
+    # Starting values of standardized solution
+    # i_depend <- find_dependent(i, sem_out = sem_out,
+    #                             standardized = standardized)
+
+
     # Set the boundaries
     fit_lb <- -Inf
     fit_ub <- 0
+
+      browser()
 
     opts_final <- utils::modifyList(list("algorithm" = "NLOPT_LD_SLSQP",
                         "xtol_rel" = 1.0e-10,
                         "maxeval" = 1000,
                         "print_level" = 0),
                         opts)
-    # out <- nloptr::slsqp(
-    #              x0 = xstart,
-    #              fn = lbci_b_f,
-    #              gr = lbci_b_grad,
-    #              upper = fit_ub,
-    #              heq = f_constr1,
-    #              nl.info = TRUE,
-    #              control = opts)
     out <- nloptr::nloptr(
                         x0 = xstart, 
                         eval_f = lbci_b_f, 
@@ -371,7 +435,8 @@ ci_bound_nmc_i <- function(i = NULL,
     bound_unchecked <- bound
 
     # Check p-value
-    fit_final <- f_constr1(out$objective, more_options = list(fit = TRUE))
+    fit_final <- f_constr1(out$objective, more_options = list(fit = TRUE,
+                                                              debug = FALSE))
     fit_org   <- lavaan::update(sem_out, model = p_table_fit)
     lavaan::anova(fit_final, fit_org)
 
