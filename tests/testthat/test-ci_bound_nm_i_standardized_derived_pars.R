@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-# context("Check ci_bound_nm_i: Standardized user defined parameters. No constraints.")
+# context("Check ci_bound_nm_i: Standardized user defined parameters. No constraints")
 
 data(simple_med)
 dat <- simple_med
@@ -21,7 +21,9 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_rel = 1e-7,
               tol_constraints_eq = 1e-7
               )
-system.time(out1l <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "lbound", standardized = TRUE, opts = opts0))
+system.time(out0l <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "lbound", standardized = FALSE, opts = opts0, history = FALSE))
+system.time(out0u <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "ubound", standardized = FALSE, opts = opts0, history = FALSE))
+system.time(out1l <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "lbound", standardized = TRUE, opts = opts0, history = TRUE))
 system.time(out1u <- ci_bound_nm_i(6, 5, sem_out = fit_med, which = "ubound", standardized = TRUE, opts = opts0))
 system.time(out2l <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "lbound", standardized = TRUE, opts = opts0))
 system.time(out2u <- ci_bound_nm_i(1, 5, sem_out = fit_med, which = "ubound", standardized = TRUE, opts = opts0))
@@ -69,7 +71,7 @@ test_that("Equal to OpenMx LBCI", {
     expect_equal(
         ci_semlbci, 
         unlist(ci_OpenMx[c(6, 4, 3), c("lbound", "ubound")]),
-        tolerance = 1e-3,
+        tolerance = 1e-6,
         ignore_attr = TRUE
       )
   })

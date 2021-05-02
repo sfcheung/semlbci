@@ -64,9 +64,9 @@ ci_semlbci <- c(out1l, out2l, out1u, out2u)
 
 test_that("Equal to OpenMx LBCI", {
     expect_equal(
-        ci_semlbci,
+        ci_semlbci, 
         unlist(ci_OpenMx[c(4, 5), c("lbound", "ubound")]),
-        tolerance = 1e-3,
+        tolerance = 1e-6,
         ignore_attr = TRUE
       )
   })
