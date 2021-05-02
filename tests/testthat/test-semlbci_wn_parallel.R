@@ -42,7 +42,7 @@ mod_mx <- mxOption(mod_mx, "Feasibility tolerance", "1e-6")
 fit_med_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
 ci_OpenMx <- summary(fit_med_OpenMx)$CI
 
-lbci_med <- semlbci(fit_med, method = "nm", parallel = TRUE, ncpus = 5)
+lbci_med <- semlbci(fit_med, method = "wn", parallel = TRUE, ncpus = 5)
 
 test_that("Equal to OpenMx LBCIs for free parameters", {
     expect_equal(
@@ -53,7 +53,7 @@ test_that("Equal to OpenMx LBCIs for free parameters", {
       )
   })
 
-lbci_med2 <- semlbci(fit_med, pars = c(1, 3), method = "nm", parallel = TRUE, ncpus = 5)
+lbci_med2 <- semlbci(fit_med, pars = c(1, 3), method = "wn", parallel = TRUE, ncpus = 5)
 
 test_that("Check whether only selectd parameters were processed", {
     expect_equal(
