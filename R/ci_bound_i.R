@@ -201,8 +201,12 @@ ci_bound_i <- function(i = NULL,
           }
         # The gradient of the function to be minimized
         lbci_b_grad <- function(param, sem_out, debug, lav_warn) {
-            numDeriv::grad(lbci_b_f, param, sem_out = sem_out, 
-                                    debug = debug, lav_warn = lav_warn)
+            # numDeriv::grad(lbci_b_f, param, sem_out = sem_out, 
+            #                         debug = debug, lav_warn = lav_warn)
+            lavaan::lav_func_gradient_complex(
+                                      lbci_b_f, param, sem_out = sem_out,
+                                      debug = debug, lav_warn = lav_warn
+                                    )
           }
       }
     if (i_op == ":=") {
@@ -216,8 +220,12 @@ ci_bound_i <- function(i = NULL,
               }
             # The gradient of the function to be minimized
             lbci_b_grad <- function(param, sem_out, debug, lav_warn) {
-                numDeriv::grad(lbci_b_f, param, sem_out = sem_out, 
-                                        debug = debug, lav_warn = lav_warn)
+                # numDeriv::grad(lbci_b_f, param, sem_out = sem_out, 
+                #                         debug = debug, lav_warn = lav_warn)
+                lavaan::lav_func_gradient_complex(
+                                          lbci_b_f, param, sem_out = sem_out,
+                                          debug = debug, lav_warn = lav_warn
+                                        )
               }            
           }
       } else {

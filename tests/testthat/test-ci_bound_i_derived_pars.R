@@ -22,7 +22,6 @@ system.time(out1u <- ci_bound_i(6, 5, sem_out = fit_med, f_constr = fn_constr0, 
 system.time(out2l <- ci_bound_i(7, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", method = "wn"))
 system.time(out2u <- ci_bound_i(7, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", method = "wn"))
 
-
 library(OpenMx)
 cov_dat <- cov(dat)
 n <- nrow(dat)
@@ -58,7 +57,7 @@ test_that("Equal to OpenMx LBCI", {
     expect_equal(
         ci_semlbci, 
         unlist(ci_OpenMx[c(3, 4), c("lbound", "ubound")]),
-        tolerance = 1e-4,
+        tolerance = 1e-6,
         ignore_attr = TRUE
       )
   })

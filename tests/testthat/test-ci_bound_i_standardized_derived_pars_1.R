@@ -69,7 +69,7 @@ test_that("Equal to OpenMx LBCI", {
     expect_equal(
         ci_semlbci * c(10, 1), 
         unlist(ci_OpenMx[c(6), c("lbound", "ubound")]) * c(10, 1),
-        tolerance = 1e-2,
+        tolerance = 1e-5,
         ignore_attr = TRUE
       )
   })
