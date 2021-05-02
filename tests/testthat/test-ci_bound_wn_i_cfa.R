@@ -1,10 +1,69 @@
-skip("WIP: Tests not passed or tests not ready. To fix")
 
 library(testthat)
 library(semlbci)
 
 library(lavaan)
 
+data(cfa_two_factors)
+dat <- cfa_two_factors
+mod <- 
+"
+f1 =~ x1 + x2 + x3
+f2 =~ x4 + x5 + x6
+"
+fit_cfa <- lavaan::cfa(mod, dat)
+ptable <- parameterTable(fit_cfa)
+ptable
+
+fn_constr0 <- set_constraint(fit_cfa)
+
+# opts0 <- list(print_level = 3)
+opts0 <- list()
+opts0 <- list(ftol_abs = 1e-7,
+              ftol_rel = 1e-7,
+              xtol_abs = 1e-7,
+              xtol_rel = 1e-7,
+              tol_constraints_eq = 1e-10
+              )
+system.time(out02l <- ci_bound_wn_i(2, 13, sem_out = fit_cfa, which = "lbound", opts = opts0, f_constr = fn_constr0))
+system.time(out06u <- ci_bound_wn_i(6, 13, sem_out = fit_cfa, which = "ubound", opts = opts0, f_constr = fn_constr0))
+
+modc0 <- 
+"
+f1 =~ x1 + b*x2 + c*x3
+f2 =~ x4 + d*x5 + e*x6
+"
+
+modc <- paste(modc0, "\nb == ", out02l)
+fit_cfac <- lavaan::cfa(modc, dat)
+anova(fit_cfac, fit_cfa)
+
+test_that("Check p-value for the chi-square difference test", {
+    expect_equal(
+        anova(fit_cfac, fit_cfa)[2, "Pr(>Chisq)"], 
+        .05,
+        tolerance = 1e-6,
+        ignore_attr = TRUE
+      )
+  })
+
+modc <- paste(modc0, "\ne == ", out06u)
+fit_cfac <- lavaan::cfa(modc, dat)
+anova(fit_cfac, fit_cfa)
+
+test_that("Check p-value for the chi-square difference test", {
+    expect_equal(
+        anova(fit_cfac, fit_cfa)[2, "Pr(>Chisq)"], 
+        .05,
+        tolerance = 1e-6,
+        ignore_attr = TRUE
+      )
+  })
+
+
+
+#
+ 
 dat <- HolzingerSwineford1939
 mod <- "
   visual  =~ 1 * x1 + l2 * x2 + l3 * x3 
@@ -124,136 +183,62 @@ opts0 <- list(ftol_abs = 1e-7,
               tol_constraints_eq = 1e-10
               )
 system.time(out02l <- ci_bound_wn_i(2, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0))
-#system.time(out02u <- ci_bound_wn_i(2, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0))
+system.time(out02u <- ci_bound_wn_i(2, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0))
 system.time(out06l <- ci_bound_wn_i(6, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0))
-#system.time(out06u <- ci_bound_wn_i(6, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0))
-#system.time(out19l <- ci_bound_wn_i(19, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0))
-#system.time(out19u <- ci_bound_wn_i(19, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0))
-#system.time(out23l <- ci_bound_wn_i(23, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0))
-#system.time(out23u <- ci_bound_wn_i(23, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0))
+system.time(out06u <- ci_bound_wn_i(6, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0))
+system.time(out19l <- ci_bound_wn_i(19, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0))
+system.time(out19u <- ci_bound_wn_i(19, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0))
+system.time(out23l <- ci_bound_wn_i(23, 21, sem_out = fit_lavaan, which = "lbound", opts = opts0, f_constr = fn_constr0))
+system.time(out23u <- ci_bound_wn_i(23, 21, sem_out = fit_lavaan, which = "ubound", opts = opts0, f_constr = fn_constr0))
 
-# ci_lavaan <- semlbci(fit_lavaan, pars = c(2, 6, 19, 23), opts = opts0)
-# ci_lavaan[c(2, 6, 19, 23), ]
-#summary(fit_OpenMx, verbose = TRUE)
 ci_OpenMx <- summary(fit_OpenMx)$CI
-# ci_lavaan <- c(out02l, out06l, out19l, out23l,
-#                out02u, out06u, out19u, out23u)
-
+ci_lavaan <- matrix(
+              c(out02l, out06l, out19l, out23l,
+                out02u, out06u, out19u, out23u),
+              4, 2)
 ci_OpenMx[, c(1, 3)]
-ci_lavaan[c(2, 6, 19, 23), c("lbci_lb", "lbci_ub")]
+# OpenMx could not find one of the limit.
 
-ci_lavaan <- semlbci(fit_lavaan, pars = c(2, 3, 5, 6, 8, 9, 19:24), opts = opts0)
-ci_lavaan
+test_that("Equal to OpenMx LBCI", {
+    expect_equal(
+        as.vector(ci_lavaan)[-7], 
+        unlist(ci_OpenMx[, c("lbound", "ubound")])[-7],
+        tolerance = 1e-6,
+        ignore_attr = TRUE
+      )
+  })
 
-ci_lavaan <- semlbci(fit_lavaan, pars = c(6), opts = opts0)
-
-
-
-
-# Do CFA later. Too slow for lavaan
-
-data(cfa_two_factors)
-dat <- cfa_two_factors
-mod <- 
+modc0 <- "
+  visual  =~ 1 * x1 + l2 * x2 + l3 * x3 
+  textual =~ 1 * x4 + l5 * x5 + l6 * x6
+  speed   =~ 1 * x7 + l8 * x8 + l9 * x9
+  x1 ~~ p1 * x1
+  x2 ~~ p2 * x2
+  x3 ~~ p3 * x3
+  x4 ~~ p4 * x4
+  x5 ~~ p5 * x5
+  x6 ~~ p6 * x6
+  x7 ~~ p7 * x7
+  x8 ~~ p8 * x8
+  x9 ~~ p9 * x9
+  visual  ~~ f11 * visual
+  visual  ~~ f12 * textual
+  visual  ~~ f13 * speed
+  textual ~~ f22 * textual
+  textual ~~ f23 * speed
+  speed   ~~ f33 * speed
 "
-f1 =~ x1 + x2 + x3
-f2 =~ x4 + x5 + x6
-"
-fit_cfa <- lavaan::sem(mod, dat)
 
-# opts0 <- list(print_level = 3)
-opts0 <- list()
-opts0 <- list(ftol_abs = 1e-7,
-              ftol_rel = 1e-7,
-              xtol_abs = 1e-7,
-              xtol_rel = 1e-7,
-              tol_constraints_eq = 1e-7
-              )
-system.time(out2l <- ci_bound_wn_i(2, sem_out = fit_cfa, which = "lbound", opts = opts0))
-system.time(out2u <- ci_bound_wn_i(2, sem_out = fit_cfa, which = "ubound", opts = opts0))
-system.time(out3l <- ci_bound_wn_i(3, sem_out = fit_cfa, which = "lbound", opts = opts0))
-system.time(out3u <- ci_bound_wn_i(3, sem_out = fit_cfa, which = "ubound", opts = opts0))
-system.time(out5l <- ci_bound_wn_i(5, sem_out = fit_cfa, which = "lbound", opts = opts0))
-system.time(out5u <- ci_bound_wn_i(5, sem_out = fit_cfa, which = "ubound", opts = opts0))
-system.time(out6l <- ci_bound_wn_i(6, sem_out = fit_cfa, which = "lbound", opts = opts0))
-system.time(out6u <- ci_bound_wn_i(6, sem_out = fit_cfa, which = "ubound", opts = opts0))
+modc <- paste(modc0, "\nf11 == ", out19l)
+fit_cfac <- lavaan::cfa(modc, dat)
+anova(fit_cfac, fit_lavaan)
 
-# TO-DO: Ensure CFA results in lavaan and OpenMx are the same first
+test_that("Check p-value for the chi-square difference test", {
+    expect_equal(
+        anova(fit_cfac, fit_lavaan)[2, "Pr(>Chisq)"], 
+        .05,
+        tolerance = 1e-6,
+        ignore_attr = TRUE
+      )
+  })
 
-library(lavaan)
-HS.model <- ' visual  =~ x1 + x2 + x3
-              textual =~ x4 + x5 + x6
-              speed   =~ x7 + x8 + x9 '
-
-fit <- cfa(HS.model, data = HolzingerSwineford1939)
-parameterEstimates(fit)
-
-library(OpenMx)
-cov_dat <- cov(HolzingerSwineford1939[, paste0("x", 1:9)])
-n <- nrow(HolzingerSwineford1939)
-manifest_vars <- paste0("x", 1:9)
-latent_vars   <- c("visual", "textual", "speed")
-mod_mx <- mxModel("CFA", type = "RAM", 
-    manifestVars = manifest_vars, latentVars = latent_vars,
-    mxPath(from = manifest_vars, arrows = 2, free = TRUE, values = 1,
-                  labels = paste0("e", 1:9)),
-    mxPath(from = "visual", arrows = 2, free = TRUE, values = 1,
-                  labels = "phi11"),
-    mxPath(from = "textual", arrows = 2, free = TRUE, values = 1,
-                  labels = "phi22"),
-    mxPath(from = "speed", arrows = 2, free = TRUE, values = 1,
-                  labels = "phi33"),
-    mxPath(from = "visual", to = "textual", arrows = 2, 
-                  free = TRUE, values = 0,
-                  labels = "phi12"),
-    mxPath(from = "visual", to = "speed", arrows = 2, 
-                  free = TRUE, values = 0,
-                  labels = "phi13"),
-    mxPath(from = "textual", to = "speed", arrows = 2, 
-                  free = TRUE, values = 0,
-                  labels = "phi23"),
-    mxPath(from = "visual", to = manifest_vars[1:3], arrows = 1,
-          free = c(FALSE, TRUE, TRUE), values = 1,
-          labels = c("lambda11", "lambda21", "lambda31")),
-    mxPath(from = "textual", to = manifest_vars[4:6], arrows = 1,
-          free = c(FALSE, TRUE, TRUE), values = 1,
-          labels = c("lambda42", "lambda52", "lambda62")),
-    mxPath(from = "speed", to = manifest_vars[7:9], arrows = 1,
-          free = c(FALSE, TRUE, TRUE), values = 1,
-          labels = c("lambda73", "lambda83", "lambda93")),
-    mxCI(reference = c("lambda21", "lambda31",
-                       "lambda52", "lambda62",
-                       "lambda83", "lambda93",
-                       "phi11", "phi22", "phi33",
-                       "phi12", "phi13", "phi23"), 
-                       interval = .95, type = "both"),
-    mxData(observed = cov_dat, type = "cov", numObs = n)
-  )
-
-fit_cfa_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
-ci_cfa_OpenMx <- summary(fit_cfa_OpenMx)$CI
-
-ci_cfa_OpenMx
-parameterEstimates(fit, remove.nonfree = TRUE)
-
-ci_cfa_lavaan <- rbind(
-  c(out2l, out2u),
-  c(out3l, out3u),
-  c(out5l, out5u),
-  c(out6l, out6u))
-
-
-opts0 <- list()
-opts0 <- list(ftol_abs = 1e-5,
-              ftol_rel = 1e-5,
-              xtol_abs = 1e-5,
-              xtol_rel = 1e-5,
-              tol_constraints_eq = 1e-4
-              )
-ci_cfa_lavaan <- semlbci(fit, pars = c(2, 3, 5, 6), opts = opts0, standardized = TRUE)
-system.time(out2l <- ci_bound_wn_i(2, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
-system.time(out3l <- ci_bound_wn_i(3, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
-system.time(out5l <- ci_bound_wn_i(5, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
-system.time(out6l <- ci_bound_wn_i(6, sem_out = fit_cfa, which = "lbound", opts = opts0, standardized = TRUE))
-ci_cfa_lavaan[c(2, 3, 5, 6), 1:7]
-ci_cfa_OpenMx[1:4, c(1, 2, 3)]

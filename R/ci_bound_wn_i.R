@@ -132,6 +132,10 @@ ci_bound_wn_i <- function(i = NULL,
     # Check if the parameter is a user-defined parameter
     p_table <- lavaan::parameterTable(sem_out) 
     i_op <- p_table[i, "op"]
+    # This should be fixed at package level. There are 
+    # two ids for a parametr, the id in the parameter table,
+    # and the id in the vector of free parameters.
+    i_in_free <- p_table[i, "free"]
 
     # Get original point estiamte and CI
     if (standardized) {
@@ -233,11 +237,13 @@ ci_bound_wn_i <- function(i = NULL,
           } else {
             # The function to be minimized.
             lbci_b_f <- function(param, sem_out, debug, lav_warn) {
-                k * param[i]
+                force(k)
+                force(i_in_free)
+                k * param[i_in_free]
               }
             # The gradient of the function to be minimized
             grad_c <- rep(0, npar)
-            grad_c[i] <- k
+            grad_c[i_in_free] <- k
             lbci_b_grad <- function(param, sem_out, debug, lav_warn) {
                     grad_c
               }
