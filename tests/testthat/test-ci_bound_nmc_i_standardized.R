@@ -1,4 +1,4 @@
-skip("WIP")
+skip("WIP: Tests not passed or tests not ready. To fix")
 
 library(testthat)
 library(semlbci)

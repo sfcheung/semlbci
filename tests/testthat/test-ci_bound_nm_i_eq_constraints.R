@@ -1,5 +1,3 @@
-skip("WIP")
-
 library(testthat)
 library(semlbci)
 library(lavaan)
@@ -67,7 +65,7 @@ test_that("Equal to OpenMx LBCI", {
     expect_equal(
         ci_semlbci, 
          unlist(ci_OpenMx[, c("lbound", "ubound")]),
-        tolerance = 1e-2,
+        tolerance = 1e-6,
         ignore_attr = TRUE
       )
   })

@@ -1,4 +1,4 @@
-skip("WIP")
+skip("Test parallel processing: Test on in interactive sections")
 
 library(testthat)
 library(semlbci)
@@ -73,7 +73,7 @@ test_that("Equal to OpenMx LBCI", {
     expect_equal(
         ci_semlbci, 
         unlist(ci_OpenMx[c(4, 5), c("lbound", "ubound")]),
-        tolerance = 1e-3,
+        tolerance = 1e-5,
         ignore_attr = TRUE
       )
   })

@@ -1,4 +1,4 @@
-skip("WIP")
+skip("WIP: Tests not passed or tests not ready. To fix")
 
 library(testthat)
 library(semlbci)
@@ -111,8 +111,16 @@ mod_OpenMx <- mxOption(mod_OpenMx, "Feasibility tolerance", "1e-6")
 fit_OpenMx <- mxRun(mod_OpenMx, silent = TRUE, intervals = TRUE)
 coef_OpenMx <- coef(fit_OpenMx)
 coef_OpenMx <- coef_OpenMx[names(coef_lavaan)]
-coef_lavaan - coef_OpenMx
 
+
+test_that("lavaan and OpenMx estimates are equal", {
+    expect_equal(
+        coef_lavaan,
+        coef_OpenMx,
+        tolerance = 1e-5,
+        ignore_attr = TRUE
+      )
+  })
 
 # opts0 <- list(print_level = 3)
 opts0 <- list()
@@ -132,20 +140,16 @@ system.time(out23l <- ci_bound_nm_i(23, sem_out = fit_lavaan, which = "lbound", 
 system.time(out23u <- ci_bound_nm_i(23, sem_out = fit_lavaan, which = "ubound", opts = opts0))
 
 ci_lavaan <- semlbci(fit_lavaan, pars = c(2, 6, 19, 23), opts = opts0)
-ci_lavaan[c(2, 6, 19, 23), ]
 #summary(fit_OpenMx, verbose = TRUE)
 ci_OpenMx <- summary(fit_OpenMx)$CI
-# ci_lavaan <- c(out02l, out06l, out19l, out23l,
-#                out02u, out06u, out19u, out23u)
+ci_lavaan <- c(out02l, out06l, out19l, out23l,
+               out02u, out06u, out19u, out23u)
 
 ci_OpenMx[, c(1, 3)]
 ci_lavaan[c(2, 6, 19, 23), c("lbci_lb", "lbci_ub")]
 
 ci_lavaan <- semlbci(fit_lavaan, pars = c(2, 3, 5, 6, 8, 9, 19:24), opts = opts0)
 ci_lavaan
-
-ci_lavaan <- semlbci(fit_lavaan, pars = c(6), opts = opts0, method = "wn")
-
 
 
 

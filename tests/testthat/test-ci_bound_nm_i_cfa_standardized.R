@@ -1,37 +1,7 @@
-skip("WIP")
+skip("WIP: Tests not passed or tests not ready. To fix")
 
 library(testthat)
 library(semlbci)
-
-# Do CFA later. Too slow for lavaan
-
-data(cfa_two_factors)
-dat <- cfa_two_factors
-mod <- 
-"
-f1 =~ x1 + x2 + x3
-f2 =~ x4 + x5 + x6
-"
-fit_cfa <- lavaan::sem(mod, dat)
-
-# opts0 <- list(print_level = 3)
-opts0 <- list()
-opts0 <- list(ftol_abs = 1e-7,
-              ftol_rel = 1e-7,
-              xtol_abs = 1e-7,
-              xtol_rel = 1e-7,
-              tol_constraints_eq = 1e-7
-              )
-system.time(out2l <- ci_bound_nm_i(2, sem_out = fit_cfa, which = "lbound", opts = opts0))
-system.time(out2u <- ci_bound_nm_i(2, sem_out = fit_cfa, which = "ubound", opts = opts0))
-system.time(out3l <- ci_bound_nm_i(3, sem_out = fit_cfa, which = "lbound", opts = opts0))
-system.time(out3u <- ci_bound_nm_i(3, sem_out = fit_cfa, which = "ubound", opts = opts0))
-system.time(out5l <- ci_bound_nm_i(5, sem_out = fit_cfa, which = "lbound", opts = opts0))
-system.time(out5u <- ci_bound_nm_i(5, sem_out = fit_cfa, which = "ubound", opts = opts0))
-system.time(out6l <- ci_bound_nm_i(6, sem_out = fit_cfa, which = "lbound", opts = opts0))
-system.time(out6u <- ci_bound_nm_i(6, sem_out = fit_cfa, which = "ubound", opts = opts0))
-
-# TO-DO: Ensure CFA results in lavaan and OpenMx are the same first
 
 library(lavaan)
 HS.model <- ' visual  =~ x1 + x2 + x3
@@ -90,15 +60,28 @@ mod_mx <- mxOption(mod_mx, "Feasibility tolerance", "1e-6")
 fit_cfa_OpenMx <- mxRun(mod_mx, silent = TRUE, intervals = TRUE)
 ci_cfa_OpenMx <- summary(fit_cfa_OpenMx)$CI
 
-ci_cfa_OpenMx
-parameterEstimates(fit, remove.nonfree = TRUE)
+# Compare results
+
+test_that("lavaan and OpenMx estimates are equal", {
+    expect_equal(
+        coef(fit_cfa_OpenMx)[1:9], 
+        coef(fit)[1:9],
+        tolerance = 1e-5,
+        ignore_attr = TRUE
+      )
+    expect_equal(
+        coef(fit_cfa_OpenMx)[c(16, 18, 21, 17, 19, 20)], 
+        coef(fit)[16:21],
+        tolerance = 1e-5,
+        ignore_attr = TRUE
+      )
+  })
 
 ci_cfa_lavaan <- rbind(
   c(out2l, out2u),
   c(out3l, out3u),
   c(out5l, out5u),
   c(out6l, out6u))
-
 
 opts0 <- list()
 opts0 <- list(ftol_abs = 1e-5,

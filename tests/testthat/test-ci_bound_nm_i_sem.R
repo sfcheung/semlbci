@@ -1,4 +1,4 @@
-skip("WIP")
+skip("WIP: Tests not passed or tests not ready. To fix")
 
 library(testthat)
 library(semlbci)
@@ -89,6 +89,7 @@ ci_cfa_OpenMx <- summary(fit_cfa_OpenMx)$CI
 
 ci_cfa_OpenMx
 parameterEstimates(fit, remove.nonfree = TRUE)
+coef(fit_cfa_OpenMx)
 
 ci_cfa_lavaan <- rbind(
   c(out2l, out2u),
