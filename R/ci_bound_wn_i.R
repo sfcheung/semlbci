@@ -66,6 +66,8 @@
 #' @param standardized If `TRUE`, the LBCI is for the requested estimate in the
 #'                      standardized solution. Default is `FALSE`.
 #' @param opts Options to be passed to [nloptr::nloptr()]. Default is `list()`
+#' @param ciperc The proportion of coverage for the confidence interval. Default
+#'               is .95.
 #' @param ci_limit_ratio_tol The tolerance for the ratio of `a` to `b`,
 #'                            where `a` is
 #'                            the distance between an LBCI limit and the
@@ -123,6 +125,7 @@ ci_bound_wn_i <- function(i = NULL,
                        wald_ci_start = TRUE,
                        standardized = FALSE,
                        opts = list(),
+                       ciperc = .95,
                        ci_limit_ratio_tol = 1.5,
                        verbose = FALSE,
                        ...) {
