@@ -36,7 +36,7 @@ test_limit <- out1l
 modc <- paste(modc0, "\nab == ", test_limit)
 fit_medc <- lavaan::sem(modc, dat, do.fit = FALSE, fixed.x = FALSE)
 ptable <- parameterTable(fit_medc)
-ptable[ptable$free > 0, "start"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
 ptable
 fit_medc <- update(fit_medc, start = ptable, do.fit = TRUE)
 anova(fit_medc, fit_med)
@@ -55,7 +55,7 @@ test_limit <- out1u
 modc <- paste(modc0, "\nab == ", test_limit)
 fit_medc <- lavaan::sem(modc, dat, do.fit = FALSE, fixed.x = FALSE)
 ptable <- parameterTable(fit_medc)
-ptable[ptable$free > 0, "start"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
 ptable
 fit_medc <- update(fit_medc, start = ptable, do.fit = TRUE)
 anova(fit_medc, fit_med)
@@ -74,7 +74,7 @@ test_limit <- out2l
 modc <- paste(modc0, "\nasq == ", test_limit)
 fit_medc <- lavaan::sem(modc, dat, do.fit = FALSE, fixed.x = FALSE)
 ptable <- parameterTable(fit_medc)
-ptable[ptable$free > 0, "start"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
 ptable
 fit_medc <- update(fit_medc, start = ptable, do.fit = TRUE)
 anova(fit_medc, fit_med)
@@ -93,7 +93,7 @@ test_limit <- out2u
 modc <- paste(modc0, "\nasq == ", test_limit)
 fit_medc <- lavaan::sem(modc, dat, do.fit = FALSE, fixed.x = FALSE)
 ptable <- parameterTable(fit_medc)
-ptable[ptable$free > 0, "start"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
 ptable
 fit_medc <- update(fit_medc, start = ptable, do.fit = TRUE)
 anova(fit_medc, fit_med)

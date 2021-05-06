@@ -1,3 +1,5 @@
+skip("Redundant. To be deleted")
+
 library(testthat)
 library(semlbci)
 
