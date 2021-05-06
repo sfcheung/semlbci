@@ -90,7 +90,7 @@ test_that("Check p-value for the chi-square difference test", {
     expect_equal(
         anova(fit_semc, fit_sem)[2, "Pr(>Chisq)"], 
         .05,
-        tolerance = 1e-5,
+        tolerance = 1e-4,
         ignore_attr = TRUE
       )
   })
