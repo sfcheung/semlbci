@@ -78,7 +78,9 @@ ptable <- parameterTable(fit_medc)
 ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
 ptable
 # fit_medc <- update(fit_medc, start = ptable, do.fit = TRUE, optim.force.converged = TRUE, control = list(iterations = 2, control.outer = list(itmax = 2)))
-fit_medc <- update(fit_medc, start = ptable, do.fit = TRUE, verbose = FALSE, control = list(control.outer = list(tol = 1e-03)))
+fit_medc <- update(fit_medc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
+                   verbose = FALSE, optim.force.converged = TRUE,
+                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 parameterTable(fit_medc)
 parameterTable(fit_med)
 anova(fit_medc, fit_med)
@@ -100,7 +102,9 @@ ptable <- parameterTable(fit_medc)
 ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
 ptable
 # fit_medc <- update(fit_medc, start = ptable, do.fit = TRUE, optim.force.converged = TRUE, control = list(iterations = 2, control.outer = list(itmax = 2)))
-fit_medc <- update(fit_medc, start = ptable, do.fit = TRUE, verbose = FALSE, control = list(control.outer = list(tol = 1e-03)))
+fit_medc <- update(fit_medc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
+                   verbose = FALSE, optim.force.converged = TRUE,
+                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 parameterTable(fit_medc)
 parameterTable(fit_med)
 anova(fit_medc, fit_med)
