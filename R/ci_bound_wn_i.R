@@ -249,19 +249,24 @@ ci_bound_wn_i <- function(i = NULL,
               }
           }
       }
-    if (wald_ci_start & !sem_out@Model@eq.constraints) {
-        if (i_op == ":=") {
-              xstart <- set_start(i, sem_out, which)
-              xstart <- xstart[xstart$free > 0, "est"]
-            } else {
-              if (standardized) {
-                  xstart <- set_start(i, sem_out, which, standardized)
-                  xstart <- xstart[xstart$free > 0, "est"]
-                } else {
-                  xstart <- set_start(i, sem_out, which)
-                  xstart <- xstart[xstart$free > 0, "est"]
-                }
-            } 
+    if (wald_ci_start) {
+        xstart <- set_start_wn(i, sem_out, 
+                               which = which, 
+                               standardized = standardized,
+                               ciperc = ciperc)
+        xstart <- xstart[xstart$free > 0, "est"]
+        # if (i_op == ":=") {
+        #       xstart <- set_start_wn(i, sem_out, which, ciperc = ciperc)
+        #       xstart <- xstart[xstart$free > 0, "est"]
+        #     } else {
+        #       if (standardized) {
+        #           xstart <- set_start_wn(i, sem_out, which, standardized, ciperc = ciperc)
+        #           xstart <- xstart[xstart$free > 0, "est"]
+        #         } else {
+        #           xstart <- set_start_wn(i, sem_out, which, ciperc = ciperc)
+        #           xstart <- xstart[xstart$free > 0, "est"]
+        #         }
+        #     } 
       } else {
         xstart <- perturbation_factor * lavaan::coef(sem_out)
       }
