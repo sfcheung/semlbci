@@ -1,4 +1,3 @@
-
 library(testthat)
 library(semlbci)
 
@@ -10,10 +9,12 @@ data(cfa_two_factors)
 dat <- cfa_two_factors
 mod <- 
 "
-f1 =~ x1 + x2 + x3
-f2 =~ x4 + x5 + x6
-f1 ~ f2
+f1 =~ x1 + b*x2 + c*x3
+f2 =~ x4 + d*x5 + e*x6
+f1 ~ g*f2
+b == d
 "
+
 fit <- lavaan::sem(mod, dat)
 
 # Find the LBCIs
@@ -27,12 +28,11 @@ opts0 <- list()
 opts0 <- list(ftol_abs = 1e-7,
               ftol_rel = 1e-7,
               xtol_abs = 1e-7,
-              xtol_rel = 1e-7,
-              tol_constraints_eq = 1e-10
+              xtol_rel = 1e-7
               )
 time1l <- system.time(out1l <- ci_bound_wn_i(2, 13, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
-time1u <- system.time(out1u <- ci_bound_wn_i(2, 13, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
-time2l <- system.time(out2l <- ci_bound_wn_i(7, 13, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
+time1u <- system.time(out1u <- ci_bound_wn_i(2, 13, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
+time2l <- system.time(out2l <- ci_bound_wn_i(7, 13, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
 time2u <- system.time(out2u <- ci_bound_wn_i(7, 13, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
 
 timexx <- rbind(time1l, time1u, time2l, time2u)
@@ -45,6 +45,7 @@ modc0 <-
 f1 =~ x1 + b*x2 + c*x3
 f2 =~ x4 + d*x5 + e*x6
 f1 ~ g*f2
+b == d
 "
 
 test_out1l <- test_constr(fit = fit, dat = dat, ciperc = ciperc, parc = "b == ", modc0 = modc0, ci_out = out1l, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE)
