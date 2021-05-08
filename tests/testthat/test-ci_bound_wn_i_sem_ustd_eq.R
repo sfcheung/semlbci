@@ -48,10 +48,10 @@ f1 ~ g*f2
 b == d
 "
 
-test_out1l <- test_constr(fit = fit, dat = dat, ciperc = ciperc, parc = "b == ", modc0 = modc0, ci_out = out1l, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE)
-test_out1u <- test_constr(fit = fit, dat = dat, ciperc = ciperc, parc = "b == ", modc0 = modc0, ci_out = out1u, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE)
-test_out2l <- test_constr(fit = fit, dat = dat, ciperc = ciperc, parc = "g == ", modc0 = modc0, ci_out = out2l, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE)
-test_out2u <- test_constr(fit = fit, dat = dat, ciperc = ciperc, parc = "g == ", modc0 = modc0, ci_out = out2u, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE)
+test_out1l <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "b == ", modc0 = modc0, ci_out = out1l, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE)
+test_out1u <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "b == ", modc0 = modc0, ci_out = out1u, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE)
+test_out2l <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "g == ", modc0 = modc0, ci_out = out2l, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE)
+test_out2u <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "g == ", modc0 = modc0, ci_out = out2u, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE)
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_out1l)

@@ -61,12 +61,12 @@ f2 =~ x4 + d*x5 + e*x6
 b == d
 "
 
-test_out1l <- test_constr(fit = fit, dat = dat, ciperc = ciperc, parc = "c == ", modc0 = modc0, ci_out = out1l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
-test_out1u <- test_constr(fit = fit, dat = dat, ciperc = ciperc, parc = "c == ", modc0 = modc0, ci_out = out1u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
-test_out2l <- test_constr(fit = fit, dat = dat, ciperc = ciperc, parc = "d == ", modc0 = modc0, ci_out = out2l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
-test_out2u <- test_constr(fit = fit, dat = dat, ciperc = ciperc, parc = "d == ", modc0 = modc0, ci_out = out2u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
-test_out3l <- test_constr(fit = fit, dat = dat, ciperc = ciperc, parc = "e == ", modc0 = modc0, ci_out = out3l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
-test_out3u <- test_constr(fit = fit, dat = dat, ciperc = ciperc, parc = "e == ", modc0 = modc0, ci_out = out3u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
+test_out1l <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "c == ", modc0 = modc0, ci_out = out1l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
+test_out1u <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "c == ", modc0 = modc0, ci_out = out1u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
+test_out2l <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "d == ", modc0 = modc0, ci_out = out2l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
+test_out2u <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "d == ", modc0 = modc0, ci_out = out2u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
+test_out3l <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "e == ", modc0 = modc0, ci_out = out3l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
+test_out3u <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "e == ", modc0 = modc0, ci_out = out3u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
 
 modc0 <- 
 "
@@ -76,8 +76,8 @@ f1 ~~ fr*f2
 b == d
 "
 
-test_out4l <- test_constr(fit = fit, dat = dat, ciperc = ciperc, parc = "fr == ", modc0 = modc0, ci_out = out4l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
-test_out4u <- test_constr(fit = fit, dat = dat, ciperc = ciperc, parc = "fr == ", modc0 = modc0, ci_out = out4u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
+test_out4l <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "fr == ", modc0 = modc0, ci_out = out4l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
+test_out4u <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "fr == ", modc0 = modc0, ci_out = out4u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_out1l)

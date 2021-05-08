@@ -59,7 +59,7 @@ astd := geteststd()
 
 test_limit <- out1l
 modc <- paste(modc0, "\nastd == ", test_limit, "\n0 < 1")
-fitc <- lavaan::sem(modc, dat, do.fit = FALSE)
+fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE)
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
@@ -69,7 +69,7 @@ fitc_out1l <- fitc
 
 test_limit <- out1u
 modc <- paste(modc0, "\nastd == ", test_limit, "\n0 < 1")
-fitc <- lavaan::sem(modc, dat, do.fit = FALSE)
+fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE)
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
@@ -88,7 +88,7 @@ dstd := geteststd()
 
 test_limit <- out2l
 modc <- paste(modc0, "\ndstd == ", test_limit, "\n0 < 1")
-fitc <- lavaan::sem(modc, dat, do.fit = FALSE)
+fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE)
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
@@ -98,7 +98,7 @@ fitc_out2l <- fitc
 
 test_limit <- out2u
 modc <- paste(modc0, "\ndstd == ", test_limit, "\n0 < 1")
-fitc <- lavaan::sem(modc, dat, do.fit = FALSE)
+fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE)
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
@@ -119,7 +119,7 @@ dstd := geteststd()
 
 test_limit <- out3l
 modc <- paste(modc0, "\ndstd == ", test_limit, "\n0 < 1")
-fitc <- lavaan::sem(modc, dat, do.fit = FALSE)
+fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE)
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
@@ -129,7 +129,7 @@ fitc_out3l <- fitc
 
 test_limit <- out3u
 modc <- paste(modc0, "\ndstd == ", test_limit, "\n0 < 1")
-fitc <- lavaan::sem(modc, dat, do.fit = FALSE)
+fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE)
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
