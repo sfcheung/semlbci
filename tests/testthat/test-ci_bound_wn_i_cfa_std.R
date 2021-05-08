@@ -1,3 +1,5 @@
+skip("To be tested in interactive sessions only due to scoping issues")
+
 library(testthat)
 library(semlbci)
 
@@ -12,7 +14,7 @@ mod <-
 f1 =~ x1 + x2 + x3
 f2 =~ x4 + x5 + x6
 "
-fit <- lavaan::cfa(mod, dat)
+fit <- lavaan::cfa(mod, cfa_two_factors)
 ptable <- parameterTable(fit)
 ptable
 
