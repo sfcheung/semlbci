@@ -326,13 +326,34 @@ ci_bound_wn_i <- function(i = NULL,
         # The warning should be raised by the calling function, not this one
         # warning("Optimization converged but the final solution is not admissible.")
       }
+    
+    # Achieved level of confidence
+    nobs <- lavaan::lavTech(sem_out, "nobs")
+    fmin_org <- lavaan::lavTech(sem_out, "optim")$fx
+    fmin_final <- lavaan::lavTech(fit_final, "optim")$fx
+    chisq_diff <- (fmin_final - fmin_org) * 2 * nobs
+    ciperc_final <- pchisq(chisq_diff, 1)
+
     diag <- list(status = status,
                  est_org = i_est,
                  ci_org_limit = i_org_ci_limit,
                  ci_limit_ratio = ci_limit_ratio,
                  fit_post_check = fit_post_check,
                  start_values = xstart,
-                 bound_unchecked = bound_unchecked
+                 bound_unchecked = bound_unchecked,
+                 org_values = coef(sem_out),
+                 final_values = coef(fit_final),
+                 ciperc = ciperc,
+                 ciperc_final = ciperc_final,
+                 i = i,
+                 i_lor = get_lhs_op_rhs(i, sem_out, more =  TRUE),
+                 optim_message = out$message,
+                 optim_iterations = out$iterations,
+                 optim_status = out$status,
+                 optim_termination_conditions = out$termination_conditions,
+                 method = "wn",
+                 which = which,
+                 standardized = standardized
                  )
     if (verbose) {
         diag$history <- out
@@ -346,5 +367,7 @@ ci_bound_wn_i <- function(i = NULL,
         diag$history <- out        
       }
     attr(bound, "diag") <- diag
+    attr(bound, "call") <- match.call()
+    class(bound) <- c("cibound", class(bound))
     bound
   }
