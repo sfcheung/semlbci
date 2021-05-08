@@ -34,8 +34,10 @@ time1l <- system.time(out1l <- ci_bound_wn_i(2, 13, sem_out = fit, f_constr = fn
 time1u <- system.time(out1u <- ci_bound_wn_i(2, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
 time2l <- system.time(out2l <- ci_bound_wn_i(6, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
 time2u <- system.time(out2u <- ci_bound_wn_i(6, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
+time3l <- system.time(out3l <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
+time3u <- system.time(out3u <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
 
-timexx <- rbind(time1l, time1u, time2l, time2u)
+timexx <- rbind(time1l, time1u, time2l, time2u, time3l, time3u)
 timexx
 
 # Not yet have a way to find how to make test_constr work in standardized solution
@@ -102,9 +104,43 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out2u <- fitc
 
+
+
+geteststd <- get_std_genfct(fit = fit, i = 15)
+
+modc0 <- 
+"
+f1 =~ x1 + a*x2 + b*x3
+f2 =~ x4 + c*x5 + d*x6
+dstd := geteststd()
+"
+
+test_limit <- out3l
+modc <- paste(modc0, "\ndstd == ", test_limit, "\n0 < 1")
+fitc <- lavaan::sem(modc, dat, do.fit = FALSE)
+ptable <- parameterTable(fitc)
+ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
+fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
+                   verbose = FALSE, optim.force.converged = TRUE,
+                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
+fitc_out3l <- fitc
+
+test_limit <- out3u
+modc <- paste(modc0, "\ndstd == ", test_limit, "\n0 < 1")
+fitc <- lavaan::sem(modc, dat, do.fit = FALSE)
+ptable <- parameterTable(fitc)
+ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
+fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
+                   verbose = FALSE, optim.force.converged = TRUE,
+                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
+fitc_out3u <- fitc
+
+
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))
     expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-4))
     expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-4))
     expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-4))
+    expect_true(test_p(fitc_out3l, fit, ciperc = ciperc, tol = 1e-4))
+    expect_true(test_p(fitc_out3u, fit, ciperc = ciperc, tol = 1e-4))
   })
