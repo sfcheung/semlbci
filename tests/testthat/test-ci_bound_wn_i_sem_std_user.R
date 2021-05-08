@@ -1,3 +1,4 @@
+skip("To be tested in interactive sessions only due to scoping issues")
 
 library(testthat)
 library(semlbci)
