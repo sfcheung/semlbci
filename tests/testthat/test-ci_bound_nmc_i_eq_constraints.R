@@ -1,3 +1,5 @@
+skip("WIP: ci_bound_nmc_i on hold")
+
 library(testthat)
 library(semlbci)
 

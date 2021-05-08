@@ -1,3 +1,5 @@
+skip("WIP: ci_bound_nm_i on hold")
+
 skip("WIP: Tests not passed or tests not ready. To fix")
 
 library(testthat)
