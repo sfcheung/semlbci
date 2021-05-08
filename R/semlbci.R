@@ -34,8 +34,7 @@
 #'               is .95, requesting a 95 percent confidence interval.
 #' @param standardized If `TRUE`, the LBCI is for the standardized estimates.
 #' @param method The approach to be used to search for the confidence limits.
-#'               Can be "wn" (Wu-Neale-2012) or "nm" (Neale-Miller-1997).
-#'               Default is "nm".
+#'               Currently only "wn" (Wu-Neale-2012) is supported.
 #' @param ... Arguments to be passed to [ci_bound_wn_i()].
 #' @param parallel If `TRUE`, will use [parallel]. Currently disabled and
 #'                  so this argument will be ignored.
@@ -69,7 +68,7 @@
 #'                     pars = c("m ~ x",
 #'                              "y ~ m",
 #'                              "ab :="),
-#'                     method = "nm")
+#'                     method = "wn")
 #' lbci_med
 #' }
 #' @export
@@ -78,7 +77,7 @@ semlbci <- function(sem_out,
                     pars = NULL,
                     ciperc = .95,
                     standardized = FALSE,
-                    method = "nm",
+                    method = "wn",
                     ...,
                     parallel = FALSE,
                     ncpu = 2) {

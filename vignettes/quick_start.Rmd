@@ -144,7 +144,7 @@ By default, the LBCIs for the unstandardized solution will be formed. If the LBC
 
 ## `method`: Method to be used for computing the LBCIs
 
-The method by Neale and Miller (1997) is used to search for the bounds. The method proposed by Wu and Neale (2012), though available if `method` is set to `"wn"`, should not be used because it is not fully tested. It was kept in the function as an experimental method.
+The method used to search a bound. Currently only support `"wn"` (the method proposed by Wu & Neale, 2012).
 
 ## Other arguments
 
@@ -176,7 +176,7 @@ The time, in second, used to search for each bound. It can serve as an estimate 
 
 ## `method`
 
-The method used to search a bound. It should only have the value `"nm"`, the Neale-Miller-1997 method (see the limitation below on method).
+The method used to search a bound. Currently only support `"wn"` (the method proposed by Wu & Neale, 2012).
 
 # Limitations
 
@@ -192,9 +192,7 @@ Officially, this package currently supports single group models with continuous 
 
 ## Methods
  
-The current and preferred method is the one proposed by Neale and Miller (1997). The current implementation in `semlbci()` does not check whether a parameter is near its boundary. The more advanced methods by Pritikin, Rappaport, and Neale (2017) will be considered in future development.
-
-The method proposed by Wu and Neale (2012, see also Pek and Wu, 2015) was the first method we tried in developing `semlbci()`. This method is very easy to implement but turned out to be much lower than the Neale-Miller-1997 method for unknown reasons. Moreover, prelminary tests also found that our implementation of this method failed when the population value of a parameter is close to its boundary (e.g., a correlation close to one). Therefore, the Neale-Miller-1997 method, though more difficult to implement, is now the default. The Wu-Neale-2012 method remained in the code for experimental purpose and may be revised in future development.
+The current and preferred method is the one proposed by Wu and Neale (2012). The current implementation in `semlbci()` does not check whether a parameter is near its boundary. The more advanced methods by Pritikin, Rappaport, and Neale (2017) will be considered in future development. The method by Neale and Miller (1997, `"nm"` `semlbci()`) was also attempted but only tested in a few simple scenarios.
 
 # References
 

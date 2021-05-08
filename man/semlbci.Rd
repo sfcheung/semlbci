@@ -9,7 +9,7 @@ semlbci(
   pars = NULL,
   ciperc = 0.95,
   standardized = FALSE,
-  method = "nm",
+  method = "wn",
   ...,
   parallel = FALSE,
   ncpu = 2
@@ -34,8 +34,7 @@ is .95, requesting a 95 percent confidence interval.}
 \item{standardized}{If \code{TRUE}, the LBCI is for the standardized estimates.}
 
 \item{method}{The approach to be used to search for the confidence limits.
-Can be "wn" (Wu-Neale-2012) or "nm" (Neale-Miller-1997).
-Default is "nm".}
+Currently only "wn" (Wu-Neale-2012) is supported.}
 
 \item{...}{Arguments to be passed to \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.}
 
@@ -81,7 +80,7 @@ lbci_med <- semlbci(fit_med,
                     pars = c("m ~ x",
                              "y ~ m",
                              "ab :="),
-                    method = "nm")
+                    method = "wn")
 lbci_med
 }
 }

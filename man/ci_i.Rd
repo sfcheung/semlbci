@@ -13,12 +13,7 @@ appeared in the parameter table of the
 
 \item{method}{The approach to be used. Can be "wn"
 (Wu-Neale-2012) or "nm"
-(Neale-Miller-1997). Default is "wn".
-(This default will be changed to
-"nm" in the
-future. The main function, \code{\link[=semlbci]{semlbci()}},
-which calls this function, already
-use "nm" as the default.)}
+(Neale-Miller-1997). Default is "wn".}
 
 \item{...}{Arguments to be passed to \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}},
 \code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}}, or similar funtions to be
@@ -61,7 +56,7 @@ fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 parameterTable(fit_med)
 
 # Find the LBCI for the first parameter
-out <- ci_i(1, npar = 5, sem_out = fit_med, method = "nm")
+out <- ci_i(1, npar = 5, sem_out = fit_med, method = "wn")
 out[1:2]
 
 }
