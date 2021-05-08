@@ -16,6 +16,7 @@ ci_bound_wn_i(
   wald_ci_start = TRUE,
   standardized = FALSE,
   opts = list(),
+  ciperc = 0.95,
   ci_limit_ratio_tol = 1.5,
   verbose = FALSE,
   ...
@@ -61,6 +62,9 @@ if it is not a userd-defined paramter.}
 standardized solution. Default is \code{FALSE}.}
 
 \item{opts}{Options to be passed to \code{\link[nloptr:nloptr]{nloptr::nloptr()}}. Default is \code{list()}}
+
+\item{ciperc}{The proportion of coverage for the confidence interval. Default
+is .95.}
 
 \item{ci_limit_ratio_tol}{The tolerance for the ratio of \code{a} to \code{b},
 where \code{a} is
