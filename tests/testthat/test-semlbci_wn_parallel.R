@@ -1,4 +1,4 @@
-skip("Test parallel processing: Test on in interactive sections")
+skip("Test parallel processing: Test in interactive sections")
 
 library(testthat)
 library(semlbci)
