@@ -1,4 +1,4 @@
-skip("WIP. Not yet ready")
+skip("WIP: Not yet ready")
 
 library(testthat)
 library(semlbci)
