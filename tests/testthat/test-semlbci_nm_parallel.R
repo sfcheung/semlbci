@@ -1,3 +1,5 @@
+skip("WIP: ci_bound_nm_i on hold")
+
 skip("Test parallel processing: Test on in interactive sections")
 
 library(testthat)
