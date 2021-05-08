@@ -27,7 +27,7 @@ test_constr <- function(fit, dat, ciperc = .95, parc, parc2 = "", modc0, ci_out,
     ptable <- lavaan::parameterTable(fitc)
     ptable[ptable$free > 0, "est"] <-  attr(ci_out, "diag")$history$solution
     update_args_final <- modifyList(
-                          list(object = fitc, start = ptable, do.fit = TRUE),
+                          list(object = fitc, data = dat, start = ptable, do.fit = TRUE),
                           update_args)
     # fitc <- update(fitc, start = ptable, do.fit = TRUE, ...)
     fitc <- do.call(update, update_args_final)
