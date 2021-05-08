@@ -58,6 +58,7 @@ set_constraint <- function(sem_out, ciperc = .95) {
     # Check if there are any equality constraints
     if (sem_out@Model@eq.constraints) {
         fn_constraint <- function(param, sem_out = NULL, debug = FALSE, lav_warn = FALSE) {
+            force(sem_out)
             if (debug) {
                 cat(ls())
                 cat(ls(globalenv()))
@@ -87,6 +88,7 @@ set_constraint <- function(sem_out, ciperc = .95) {
           }
       } else {
         fn_constraint <- function(param, sem_out = NULL, debug = FALSE, lav_warn = FALSE) {
+            force(sem_out)
             if (debug) {
                 cat(ls())
                 cat(ls(globalenv()))
