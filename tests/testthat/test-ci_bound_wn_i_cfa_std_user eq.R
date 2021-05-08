@@ -16,7 +16,7 @@ f2 =~ x4 + b*x5 + d*x6
 ad := a * d
 a == d
 "
-fit <- lavaan::cfa(mod, dat)
+fit <- lavaan::cfa(mod, cfa_two_factors)
 ptable <- parameterTable(fit)
 ptable
 stable <- standardizedSolution(fit)

@@ -13,7 +13,7 @@ mod <-
 f1 =~ x1 + x2 + x3
 f2 =~ x4 + x5 + x6
 "
-fit <- lavaan::cfa(mod, dat)
+fit <- lavaan::cfa(mod, cfa_two_factors)
 
 # Find the LBCIs
 

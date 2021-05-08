@@ -16,7 +16,7 @@ f2 =~ x4 + c*x5 + d*x6
 ad := a * d
 bc := b * c
 "
-fit <- lavaan::cfa(mod, dat)
+fit <- lavaan::cfa(mod, cfa_two_factors)
 ptable <- parameterTable(fit)
 ptable
 

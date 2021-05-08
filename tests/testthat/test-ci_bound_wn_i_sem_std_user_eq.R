@@ -16,7 +16,7 @@ f1 ~ f2
 ab := a * b
 c == d
 "
-fit <- lavaan::sem(mod, dat)
+fit <- lavaan::sem(mod, cfa_two_factors)
 
 # Find the LBCIs
 

@@ -12,7 +12,7 @@ f1 =~ x1 + b*x2 + c*x3
 f2 =~ x4 + d*x5 + e*x6
 b == d
 "
-fit <- lavaan::sem(mod, dat)
+fit <- lavaan::sem(mod, cfa_two_factors)
 
 # Find the LBCIs
 
