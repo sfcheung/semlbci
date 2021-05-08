@@ -7,13 +7,6 @@
 #'
 #' ## NOTE 1
 #'
-#' This function is no longer the default function used by [semlbci()].
-#' This function works, but has not been updated. The default and preferred
-#' function is [ci_bound_nm_i()], which uses the approach by Neale and Miller
-#' (1997).
-#'
-#' ## NOTE 2
-#'
 #' This function is not supposed to be used directly by users. It is
 #' exported such that interested users can examine how a confidence bound is
 #' found.
