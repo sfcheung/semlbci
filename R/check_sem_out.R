@@ -170,10 +170,10 @@ check_sem_out <- function(sem_out) {
           msg <- c(msg, paste("Missing handling method", sem_estimator, "is not yet supported."))
         }
 
-    if (!se_ok) {
-          out <- ifelse(out >= 0, -1, out - 1)
-          msg <- c(msg, paste("Standard error method", sem_se, "is not yet supported."))
-        }
+    # if (!se_ok) {
+    #       out <- ifelse(out >= 0, -1, out - 1)
+    #       msg <- c(msg, paste("Standard error method", sem_se, "is not yet supported."))
+    #     }
 
     if (!test_ok) {
           out <- ifelse(out >= 0, -1, out - 1)

@@ -22,8 +22,9 @@ fit01 <- lavaan::sem(mod, dat)
 fit02 <- lavaan::sem(mod, dat, estimator = "MLR")
 (out_02 <- check_sem_out(fit02))
 
-fit03 <- lavaan::sem(mod, dat, estimator = "ML", se = "robust")
-(out_03 <- check_sem_out(fit03))
+# No need to check SE method. SEs are not used.
+# fit03 <- lavaan::sem(mod, dat, estimator = "ML", se = "robust")
+# (out_03 <- check_sem_out(fit03))
 
 fit04<- lavaan::sem(mod, dat, estimator = "DWLS")
 (out_04 <- check_sem_out(fit04))
@@ -43,11 +44,11 @@ test_that("Check against the flags", {
       )
   })
 
-test_that("Check against the flags", {
-    expect_true(
-        out_03 == -1
-      )
-  })
+# test_that("Check against the flags", {
+#     expect_true(
+#         out_03 == -1
+#       )
+#   })
 
 test_that("Check against the flags", {
     expect_true(
