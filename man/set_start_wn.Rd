@@ -13,11 +13,13 @@ set_start_wn(
 )
 }
 \arguments{
-\item{i}{The position of the target parameters as in the parameter table of lavaan.}
+\item{i}{The position of the target parameters as in the parameter table of
+lavaan.}
 
 \item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
 
-\item{which}{Whether the lower bound or the upper bound is to be found. Must be "lbound" or "ubound".}
+\item{which}{Whether the lower bound or the upper bound is to be found.
+Must be "lbound" or "ubound".}
 
 \item{standardized}{If TRUE, the LBCI is for the standardized estimate.}
 

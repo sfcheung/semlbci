@@ -24,7 +24,7 @@ Currently supports \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.
 \dontrun{
 cfa_two_factors
 
-mod <- 
+mod <-
 "
 f1 =~ x1 + x2 + x3
 f2 =~ x4 + x5 + x6

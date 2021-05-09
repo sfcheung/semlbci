@@ -46,7 +46,7 @@ found.
 data(simple_med)
 
 library(lavaan)
-mod <- 
+mod <-
 "
 m ~ x
 y ~ m

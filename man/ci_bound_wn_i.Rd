@@ -19,6 +19,7 @@ ci_bound_wn_i(
   ciperc = 0.95,
   ci_limit_ratio_tol = 1.5,
   verbose = FALSE,
+  sf = 1,
   ...
 )
 }
@@ -79,6 +80,8 @@ Default is 1.5.}
 \item{verbose}{If \code{TRUE}, the function will store more diagnostic information
 in the attribute \code{diag}.
 Default is \code{FALSE}.}
+
+\item{sf}{Scaling factor. Use for robust confidence limits. Default is 1.}
 
 \item{...}{Optional arguments. Not used.}
 }

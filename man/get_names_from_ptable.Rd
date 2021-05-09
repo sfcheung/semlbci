@@ -22,7 +22,7 @@ These columns will be extracted: \code{lhs}, \code{rhs}, \code{label}, and \code
 \examples{
 
 library(lavaan)
-mod <- 
+mod <-
 "
 y ~ x + m
 z ~ a * y + m

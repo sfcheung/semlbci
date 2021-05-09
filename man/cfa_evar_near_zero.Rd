@@ -19,11 +19,12 @@ A data frame with 100 rows and six variables:
 cfa_evar_near_zero
 }
 \description{
-Generated from a two-factor model, with one standardized error variacne close to zero.
+Generated from a two-factor model, with one standardized error variacne
+close to zero.
 }
 \examples{
 \dontrun{
- # If fitted by the following model, the standardized 
+ # If fitted by the following model, the standardized
  # error variance of `x3` is close to zero.
  # Consequnently, the R-square of `x3` is close to one:
 

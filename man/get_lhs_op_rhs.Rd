@@ -7,7 +7,8 @@
 get_lhs_op_rhs(i, sem_out, more = FALSE)
 }
 \arguments{
-\item{i}{The position of the target parameters as in the parameter table of lavaan.}
+\item{i}{The position of the target parameters as in the parameter table of
+lavaan.}
 
 \item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
 
@@ -29,7 +30,7 @@ Currently supports \code{lavaan} output only.
 \examples{
 library(lavaan)
 data(cfa_two_factors)
-mod <- 
+mod <-
 "
 f1 =~ x1 + x2 + a*x3
 f2 =~ x4 + a*x5 + equal('f1=~x2')*x6
