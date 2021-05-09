@@ -7,7 +7,7 @@ library(semlbci)
 library(lavaan)
 data(simple_med)
 dat <- simple_med
-mod <- 
+mod <-
 "
 m ~ x
 y ~ m
@@ -66,7 +66,7 @@ get_scaling_factor <- function(lrt_out) {
   }
 
 
-modc0 <- 
+modc0 <-
 "
 m ~ a*x
 y ~ b*m

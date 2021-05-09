@@ -8,7 +8,7 @@ library(lavaan)
 
 data(cfa_two_factors)
 dat <- cfa_two_factors
-mod <- 
+mod <-
 "
 f1 =~ x1 + x2 + x3
 f2 =~ x4 + x5 + x6
@@ -31,7 +31,7 @@ get_scaling_factor <- function(lrt_out) {
     chisq_diff_c <- chisq_1 - chisq_0
     chisq_diff_p <- qchisq(lrt_out[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
     chisq_diff_r <- lrt_out[2, "Chisq diff"]
-    out <- 
+    out <-
       data.frame(chisq_1 = chisq_1,
         chisq_0 = chisq_0,
         chisq_diff_c = chisq_diff_c,
@@ -42,7 +42,7 @@ get_scaling_factor <- function(lrt_out) {
     out
   }
 
-modc0 <- 
+modc0 <-
 "
 f1 =~ x1 + a*x2 + b*x3
 f2 =~ x4 + c*x5 + d*x6
