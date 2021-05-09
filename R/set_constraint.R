@@ -57,8 +57,12 @@ set_constraint <- function(sem_out, ciperc = .95) {
     target <- fmin + qcrit / (2 * n)
     # Check if there are any equality constraints
     if (sem_out@Model@eq.constraints) {
-        fn_constraint <- function(param, sem_out = NULL, debug = FALSE, lav_warn = FALSE) {
+        fn_constraint <- function(param, sem_out = NULL, debug = FALSE, lav_warn = FALSE, sf = 1) {
             force(sem_out)
+            force(fmin)
+            force(qcrit)
+            force(n)
+            target <- fmin + sf * qcrit / (2 * n)
             if (debug) {
                 cat(ls())
                 cat(ls(globalenv()))
@@ -87,8 +91,12 @@ set_constraint <- function(sem_out, ciperc = .95) {
                   parameterTable = lavaan::parameterTable(fit2))
           }
       } else {
-        fn_constraint <- function(param, sem_out = NULL, debug = FALSE, lav_warn = FALSE) {
+        fn_constraint <- function(param, sem_out = NULL, debug = FALSE, lav_warn = FALSE, sf = 1) {
             force(sem_out)
+            force(fmin)
+            force(qcrit)
+            force(n)
+            target <- fmin + sf * qcrit / (2 * n)
             if (debug) {
                 cat(ls())
                 cat(ls(globalenv()))
