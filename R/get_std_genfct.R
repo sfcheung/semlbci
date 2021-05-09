@@ -1,10 +1,10 @@
-#' @title Generate a function to get the standardized estiamte of a parameter 
+#' @title Generate a function to get the standardized estiamte of a parameter
 #'
 #' @description Generate a function to get the standardized estiamte of a parameter 
 #'
 #' @return
 #' A function to be used in a lavaan model.
-#' 
+#'
 #' @param fit The source fit object.
 #' @param i The position of the standardized parameter in the parameter table.
 #'

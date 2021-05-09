@@ -9,11 +9,11 @@
 #' depends on another parameter is determined by the graident of the function
 #' with the target parameter as the output other parameters as the control
 #' variables of this function.
-#' 
+#'
 #' This function is particularly important when the target parameter is one
 #' in the standardized solution. In this case, the dependency among parameters
 #' can be very complicated.
-#' 
+#'
 #' This function is currently used by [ci_bound_nm_i()].
 #'
 #' Currently supports a [lavaan::lavaan-class] output only.
@@ -24,7 +24,7 @@
 #' @return
 #' A numeric vector of the positions of the free parameters in the
 #' [lavaan::lavaan-class] parameter table.
-#' 
+#'
 #' @param i The position of the target parameter as in the parameter table of
 #'          lavaan.
 #' @param sem_out The SEM output. Currently support [lavaan::lavaan-class]
@@ -75,7 +75,8 @@ find_dependent <- function(i = NULL,
     npar <- sum(p_free)
     if (standardized) {
         # If standardized solution is requested
-        # If standardized, both free and user defined parameters are handled in the same way
+        # If standardized, both free and user defined parameters are
+        # handled in the same way
         p_std_check <- lavaan::standardizedSolution(sem_out,
                                               type = "std.all",
                                               se = TRUE,
@@ -87,7 +88,9 @@ find_dependent <- function(i = NULL,
                                               remove.def = FALSE,
                                               output = "data.frame")
         if (is.na(p_std_check[i, "z"])) {
-            stop("The requested parameter is fixed in the standardized solution.")
+            stop(
+               "The requested parameter is fixed in the standardized solution."
+              )
           }
         p_std <- lavaan::standardizedSolution(sem_out,
                                               type = "std.all",
@@ -109,8 +112,6 @@ find_dependent <- function(i = NULL,
             sem_out2 <- sem_out
             sem_out2@ParTable <- as.list(start1)
             sem_model <- sem_out2@Model
-            # sem_model <- update_model(sem_model,
-            #                           start1[start1$free > 0, "est"])
             sem_model <- lavaan::lav_model_set_parameters(sem_model,
                                       start1[start1$free > 0, "est"])
             sem_out2@Model <- sem_model
@@ -126,8 +127,8 @@ find_dependent <- function(i = NULL,
                                             output = "data.frame")
             std0[i_std, "est.std"]
           }
-        g_i0 <- lavaan::lav_func_gradient_simple(tmp_fct, 
-                              x = lavaan::coef(sem_out), 
+        g_i0 <- lavaan::lav_func_gradient_simple(tmp_fct,
+                              x = lavaan::coef(sem_out),
                               sem_out = sem_out)
         g_i0 <- round(g_i0, 5)
         g_i  <- (g_i0 != 0)
@@ -145,8 +146,8 @@ find_dependent <- function(i = NULL,
         tmp_fct <- function(param, sem_out) {
             sem_out@Model@def.function(param)[i_name]
           }
-        g_i0 <- lavaan::lav_func_gradient_simple(tmp_fct, 
-                              x = lavaan::coef(sem_out), 
+        g_i0 <- lavaan::lav_func_gradient_simple(tmp_fct,
+                              x = lavaan::coef(sem_out),
                               sem_out = sem_out)
         g_i0 <- round(g_i0, 5)
         g_i  <- (g_i0 != 0)
@@ -167,4 +168,4 @@ find_dependent <- function(i = NULL,
           }
       }
     npar
-  }  
+  }

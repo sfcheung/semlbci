@@ -17,21 +17,21 @@
 #' @return
 #' A numeric vector of two elements. The first element is the
 #' lower bound, and the second element is the upper bound.
-#' 
+#'
 #' The diagnostic information from the function called in finding the
 #' lower and upper founds are stored in the
 #' attributes `lb_diag` and `ub_diag`, respectively.
 #'
 #' @param i The position of the target parameters as
-#'          appeared in the parameter table of the 
+#'          appeared in the parameter table of the
 #'          [lavaan::lavaan-class] object.
-#' @param method The approach to be used. Can be "wn" 
+#' @param method The approach to be used. Can be "wn"
 #'              (Wu-Neale-2012) or "nm"
-#'               (Neale-Miller-1997). Default is "wn". 
-#' @param ... Arguments to be passed to [ci_bound_wn_i()], 
-#'            [ci_bound_nm_i()], or similar funtions to be 
+#'               (Neale-Miller-1997). Default is "wn".
+#' @param ... Arguments to be passed to [ci_bound_wn_i()],
+#'            [ci_bound_nm_i()], or similar funtions to be
 #'            developed.
-#' 
+#'
 #' @seealso
 #' [semlbci()], [ci_bound_wn_i()], [ci_bound_nm_i()]
 #'
@@ -41,7 +41,7 @@
 #' data(simple_med)
 #'
 #' library(lavaan)
-#' mod <- 
+#' mod <-
 #' "
 #' m ~ x
 #' y ~ m
@@ -53,7 +53,7 @@
 #' # Find the LBCI for the first parameter
 #' out <- ci_i(1, npar = 5, sem_out = fit_med, method = "wn")
 #' out[1:2]
-#' 
+#'
 #' @export
 
 ci_i <- function(i, method = "wn", ...) {

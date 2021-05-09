@@ -11,7 +11,7 @@
 #'
 #'@examples
 #' # TODO
-#' 
+#'
 #' @export
 
 ci_bound_diag <- function(out, digits = 5, ...) {
@@ -35,15 +35,18 @@ ci_bound_diag <- function(out, digits = 5, ...) {
     cat(paste0("\nConfidence Level:\t", out_diag$ciperc))
     cat(paste0("\nAchieved Level:\t\t", out_diag$ciperc_final))
     cat(paste0("\nStandardized:\t\t", std))
-    cat(paste0("\nLikelihood-Based Limit:\t", ifelse(is.na(out), "Not valid", round(as.numeric(out), digits))))
+    cat(paste0("\nLikelihood-Based Limit:\t", ifelse(is.na(out), "Not valid",
+                  round(as.numeric(out), digits))))
     cat(paste0("\nWald limit:\t\t", round(out_diag$ci_org_limit, digits)))
     cat(paste0("\nPoint Estimate:\t\t", round(out_diag$est_org, digits)))
-    cat(paste0("\nRatio to Wald limit:\t", ifelse(is.na(out), "Not valid", round(out_diag$ci_limit_ratio, digits))))
-    # cat("\n\t(Distance from the point estiamte)")
+    cat(paste0("\nRatio to Wald limit:\t", ifelse(is.na(out), "Not valid",
+                  round(out_diag$ci_limit_ratio, digits))))
     cat(paste0("\n\n-- Check --"))
     ciperc_diff <- abs(out_diag$ciperc - out_diag$ciperc_final)
-    cat(paste0("\nLevel achieved?\t\t", ifelse(ciperc_diff < 1e-5, "Yes", "No"), " (", ciperc_diff, ")"))
-    cat(paste0("\nSolution admissible?\t", ifelse(out_diag$fit_post_check, "Yes", "No")))
+    cat(paste0("\nLevel achieved?\t\t",
+            ifelse(ciperc_diff < 1e-5, "Yes", "No"), " (", ciperc_diff, ")"))
+    cat(paste0("\nSolution admissible?\t",
+            ifelse(out_diag$fit_post_check, "Yes", "No")))
     if (is.na(out)) {
         direct_valid <- "Not valid"
       } else {
@@ -66,7 +69,6 @@ ci_bound_diag <- function(out, digits = 5, ...) {
     cat("\nTermination Conditions:\n")
     cat(tmp)
     coef_final <- out_diag$final_values
-    coef_names <- names(coef_final)
     coef_c <- rbind(out_diag$start_values,
                     coef_final,
                     coef_final - out_diag$start_values)
@@ -75,8 +77,9 @@ ci_bound_diag <- function(out, digits = 5, ...) {
     cat("\n")
     cat("\n-- Parameter Estimates --\n")
     print(coef_c)
-        
-    cat(paste0("\nLimit before check:\t", round(out_diag$bound_unchecked, digits)))
+
+    cat(paste0("\nLimit before check:\t",
+                round(out_diag$bound_unchecked, digits)))
     cat(paste0("\nStatus Code:\t\t", out_diag$status))
     cat("\nCall: ")
     print(call_org)

@@ -2,17 +2,19 @@
 #'
 #' @description Set the starting values for optimization
 #'
-#' @details 
-#' 
+#' @details
+#'
 #' Currently supports \code{lavaan} output only.
 #'
 #' @return
-#' A lavaan parameter table, with parameters estimated with target fixed to its 
+#' A lavaan parameter table, with parameters estimated with target fixed to its
 #'  lower or upper Wald confidence limit.
-#' 
-#' @param i The position of the target parameters as in the parameter table of lavaan.
+#'
+#' @param i The position of the target parameters as in the parameter table of
+#'          lavaan.
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.
-#' @param which Whether the lower bound or the upper bound is to be found. Must be "lbound" or "ubound".
+#' @param which Whether the lower bound or the upper bound is to be found.
+#'              Must be "lbound" or "ubound".
 #' @param standardized If TRUE, the LBCI is for the standardized estimate.
 #' @param ciperc The level of confidence for the confidence interval.
 #'
@@ -83,7 +85,10 @@ set_start_wn <- function(i = NULL,
                                                  sem_out = sem_out)
         start_free <- rep(NA, npar)
         for (j in seq_len(npar)) {
-            start_free[j] <- get_fix2(ptable, id_free[j], qcrit, ratio = g_i0[j])
+            start_free[j] <- get_fix2(ptable,
+                                      id_free[j],
+                                      qcrit,
+                                      ratio = g_i0[j])
           }
         tmp_fct(start_free, sem_out = sem_out)
         ptable2_final <- ptable
@@ -105,10 +110,11 @@ set_start_wn <- function(i = NULL,
                                       do.fit = TRUE,
                                       baseline = FALSE,
                                       h1 = FALSE,
-                                      se = "none"), 
+                                      se = "none"),
                                       error = function(e) e,
                                       warning = function(e) e)
-            if (!inherits(sem_out2, "warning") && !inherits(sem_out2, "error")) {
+            if (!inherits(sem_out2, "warning") &&
+                !inherits(sem_out2, "error")) {
                 break
               }
           }
@@ -124,4 +130,4 @@ set_start_wn <- function(i = NULL,
         return(ptable2_final)
       }
     ptable
-  }  
+  }

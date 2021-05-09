@@ -68,7 +68,7 @@
 #'
 #' @seealso 
 #' [semlbci()], [ci_i()]
-#' 
+#'
 #' @examples
 #' library(lavaan)
 #' data(cfa_two_factors)
@@ -97,7 +97,7 @@ check_sem_out <- function(sem_out) {
     sem_estimator <- sem_options$estimator
     sem_se <- sem_options$se
     sem_test <- sem_options$test
-    sem_missing   <- sem_options$missing 
+    sem_missing   <- sem_options$missing
     sem_converged <- lavaan::lavInspect(sem_out, "converged")
     sem_post_check <- lavaan::lavInspect(sem_out, "post.check")
     sem_lavaan_ver <- lavaan::lavInspect(sem_out, "version")
@@ -162,17 +162,20 @@ check_sem_out <- function(sem_out) {
 
     if (!estimator_ok) {
           out <- ifelse(out >= 0, -1, out - 1)
-          msg <- c(msg, paste("Estimator", sem_estimator, "is not yet supported."))
+          msg <- c(msg, paste("Estimator", sem_estimator,
+                                "is not yet supported."))
         }
 
     if (!missing_ok) {
           out <- ifelse(out >= 0, -1, out - 1)
-          msg <- c(msg, paste("Missing handling method", sem_estimator, "is not yet supported."))
+          msg <- c(msg, paste("Missing handling method", sem_estimator,
+                                "is not yet supported."))
         }
 
     # if (!se_ok) {
     #       out <- ifelse(out >= 0, -1, out - 1)
-    #       msg <- c(msg, paste("Standard error method", sem_se, "is not yet supported."))
+    #       msg <- c(msg, paste("Standard error method", sem_se,
+    #                             "is not yet supported."))
     #     }
 
     if (!test_ok) {
@@ -182,7 +185,8 @@ check_sem_out <- function(sem_out) {
 
     if (model_formative_factor) {
           out <- ifelse(out >= 0, -1, out - 1)
-          msg <- c(msg, "Models with formative factor(s) are not yet supported.")
+          msg <- c(msg, 
+                    "Models with formative factor(s) are not yet supported.")
         }
 
     if (model_multilevel) {
@@ -202,17 +206,22 @@ check_sem_out <- function(sem_out) {
 
     if (model_ordered) {
           out <- ifelse(out >= 0, out + 1, out)
-          msg <- c(msg, "Not fully tested on models with ordered variables. Use the function at your own risk.")
+          msg <- c(msg,
+                    paste("Not fully tested on models with ordered variables.",
+                           "Use the function at your own risk."))
         }
 
     if (!optim_converged) {
           out <- ifelse(out >= 0, -1, out - 1)
-          msg <- c(msg, "The estimation has not converged. Fix the estimation first.")
+          msg <- c(msg,
+                  "The estimation has not converged. Fix the estimation first.")
         }
 
     if (!optim_admissible) {
           out <- ifelse(out >= 0, -1, out - 1)
-          msg <- c(msg, "The solution is not admissible by lavaan post.check. Check the SEM results first.")
+          msg <- c(msg,
+                paste("The solution is not admissible by lavaan post.check.",
+                        "Check the SEM results first."))
         }
 
     attr(out, "info") <- msg

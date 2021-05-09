@@ -11,7 +11,7 @@
 #'
 #' This approach is easy to implement but turns out to be slow
 #' in optimization. The Neale-Meale-2007 approach is now the preferred approach.
-#' 
+#'
 #' This function is still in this package, in case we decide to improve the
 #' implementation of the Wu-Neale-2012 approach.
 #'
@@ -22,7 +22,7 @@
 #'
 #' @param sem_out The SEM output. Currently  [lavaan::lavaan-class] outputs
 #'                 only.
-#' @param ciperc The proportion of coverage for the confidence interval. 
+#' @param ciperc The proportion of coverage for the confidence interval.
 #'               Default is .95.
 #'
 #'@examples
@@ -48,7 +48,6 @@
 
 set_constraint <- function(sem_out, ciperc = .95) {
 #    force(sem_out)
-    # sem_out2 <- eval(sem_out)
     p_free <- find_free(sem_out)
     qcrit <- stats::qchisq(ciperc, 1)
     fmin <- lavaan::lavTech(sem_out, "optim")$fx
@@ -57,7 +56,11 @@ set_constraint <- function(sem_out, ciperc = .95) {
     target <- fmin + qcrit / (2 * n)
     # Check if there are any equality constraints
     if (sem_out@Model@eq.constraints) {
-        fn_constraint <- function(param, sem_out = NULL, debug = FALSE, lav_warn = FALSE, sf = 1) {
+        fn_constraint <- function(param,
+                                  sem_out = NULL,
+                                  debug = FALSE,
+                                  lav_warn = FALSE,
+                                  sf = 1) {
             force(sem_out)
             force(fmin)
             force(qcrit)
@@ -72,26 +75,39 @@ set_constraint <- function(sem_out, ciperc = .95) {
             eq_out <- sem_out@Model@ceq.function(param)
             eq_jac <- sem_out@Model@con.jac
             if (lav_warn) {
-                    fit2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE)
+                    fit2 <- lavaan::update(sem_out,
+                                           start = start0,
+                                           do.fit = FALSE)
                 } else {
-                    suppressWarnings(fit2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE))                    
+                    suppressWarnings(fit2 <- lavaan::update(sem_out,
+                                                            start = start0,
+                                                            do.fit = FALSE))
                 }
             if (lav_warn) {
                     fit2_gradient <- rbind(lavaan::lavTech(fit2, "gradient"))
-                    fit2_jacobian <- rbind(eq_jac, lavaan::lavTech(fit2, "gradient"))
+                    fit2_jacobian <- rbind(eq_jac, 
+                                           lavaan::lavTech(fit2, "gradient"))
                 } else {
-                    suppressWarnings(fit2_gradient <- rbind(lavaan::lavTech(fit2, "gradient")))
-                    suppressWarnings(fit2_jacobian <- rbind(eq_jac, lavaan::lavTech(fit2, "gradient")))
+                    suppressWarnings(fit2_gradient <-
+                                    rbind(lavaan::lavTech(fit2, "gradient")))
+                    suppressWarnings(fit2_jacobian <-
+                                    rbind(eq_jac,
+                                          lavaan::lavTech(fit2, "gradient")))
                 }
             list(
                   objective = lavaan::lavTech(fit2, "optim")$fx,
                   gradient = fit2_gradient,
-                  constraints = rbind(t(t(eq_out)), lavaan::lavTech(fit2, "optim")$fx - target),
+                  constraints = rbind(t(t(eq_out)),
+                                   lavaan::lavTech(fit2, "optim")$fx - target),
                   jacobian = fit2_jacobian,
                   parameterTable = lavaan::parameterTable(fit2))
           }
       } else {
-        fn_constraint <- function(param, sem_out = NULL, debug = FALSE, lav_warn = FALSE, sf = 1) {
+        fn_constraint <- function(param,
+                                  sem_out = NULL,
+                                  debug = FALSE,
+                                  lav_warn = FALSE,
+                                  sf = 1) {
             force(sem_out)
             force(fmin)
             force(qcrit)
@@ -104,16 +120,22 @@ set_constraint <- function(sem_out, ciperc = .95) {
             start0 <- lavaan::parameterTable(sem_out)
             start0[p_free, "est"] <- param
             if (lav_warn) {
-                    fit2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE)
+                    fit2 <- lavaan::update(sem_out,
+                                           start = start0,
+                                           do.fit = FALSE)
                 } else {
-                    suppressWarnings(fit2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE))                    
+                    suppressWarnings(fit2 <- lavaan::update(sem_out,
+                                                            start = start0,
+                                                            do.fit = FALSE))
                 }
             if (lav_warn) {
                     fit2_gradient <- rbind(lavaan::lavTech(fit2, "gradient"))
                     fit2_jacobian <- rbind(lavaan::lavTech(fit2, "gradient"))
                 } else {
-                    suppressWarnings(fit2_gradient <- rbind(lavaan::lavTech(fit2, "gradient")))
-                    suppressWarnings(fit2_jacobian <- rbind(lavaan::lavTech(fit2, "gradient")))
+                    suppressWarnings(fit2_gradient <-
+                                    rbind(lavaan::lavTech(fit2, "gradient")))
+                    suppressWarnings(fit2_jacobian <-
+                                    rbind(lavaan::lavTech(fit2, "gradient")))
                 }
             list(
                   objective = lavaan::lavTech(fit2, "optim")$fx,

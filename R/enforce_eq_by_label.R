@@ -3,9 +3,9 @@
 
 enforce_eq_by_label <- function(i_depend, p_table) {
     j_no_label <- p_table$label == ""
-    p_table[j_no_label, "label"] <- 
+    p_table[j_no_label, "label"] <-
         paste0("@@", p_table[j_no_label, "id"], "@@")
-    labels <- p_table[p_table$free > 0,"label"]
+    labels <- p_table[p_table$free > 0, "label"]
     labels <- unique(labels[labels != ""])
     fct <- function(x) {
         which(p_table$label == p_table$label[x])

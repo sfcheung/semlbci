@@ -1,26 +1,27 @@
 #' @title Get lhs, op, rhs, and other info of a parameter from an SEM output
 #'
-#' @description Get lhs, op, rhs and other information necessary for 
+#' @description Get lhs, op, rhs and other information necessary for
 #'              uniquely identifying a parameter from an SEM output
 #'
-#' @details 
-#' 
+#' @details
+#'
 #' Currently supports \code{lavaan} output only.
 #'
 #' @return
-#' A one row data frame of lhs, op, rhs, block, and group of the parameter in 
+#' A one row data frame of lhs, op, rhs, block, and group of the parameter in
 #' the parameter table.
-#' 
+#'
 #' By default, only return lhs, op, and rhs.
-#' 
-#' @param i The position of the target parameters as in the parameter table of lavaan.
+#'
+#' @param i The position of the target parameters as in the parameter table of 
+#'          lavaan.
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.
 #' @param more If `TRUE`, block and group are also returned. Default is `FALSE`.
 #'
 #' @examples
 #' library(lavaan)
 #' data(cfa_two_factors)
-#' mod <- 
+#' mod <-
 #' "
 #' f1 =~ x1 + x2 + a*x3
 #' f2 =~ x4 + a*x5 + equal('f1=~x2')*x6

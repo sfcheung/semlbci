@@ -64,7 +64,7 @@
 #' fit_med <- sem(mod, simple_med, fixed.x = FALSE)
 #' p_table <- parameterTable(fit_med)
 #' p_table
-#' lbci_med <- semlbci(fit_med, 
+#' lbci_med <- semlbci(fit_med,
 #'                     pars = c("m ~ x",
 #'                              "y ~ m",
 #'                              "ab :="),
@@ -84,7 +84,7 @@ semlbci <- function(sem_out,
     if (!inherits(sem_out, "lavaan")) {
         stop("sem_out is not a supported object.")
       }
-      
+
     # Check sem_out
     sem_out_check <- check_sem_out(sem_out)
     if (sem_out_check > 0) {
@@ -95,9 +95,9 @@ semlbci <- function(sem_out,
         msg <- paste0(paste(attr(sem_out_check, "info"), collapse = "\n"), "\n")
         stop(msg)
       }
-    
+
     ptable <- as.data.frame(lavaan::parameterTable(sem_out))
-    # Do not check for 
+    # Do not check for
     i <- ptable$free > 0
     #i_id <- ptable$id[i]
     i_id <- ptable$id
@@ -112,17 +112,14 @@ semlbci <- function(sem_out,
         i_selected <- i_id[pars]
       }
     npar <- sum(i)
-    # environment(set_constraint) <- parent.frame()
+    # KEEP for reference: environment(set_constraint) <- parent.frame()
     if (method == "wn") {
         f_constr <- eval(set_constraint(sem_out = sem_out, ciperc = ciperc),
                         envir = parent.frame())
       } else {
         f_constr <- NULL
       }
-    # if (parallel) {
-    #     message("Parallel processing is currently disabled.")
-    #   }
-    if (parallel) {        
+    if (parallel) {
         cl <- parallel::makeCluster(ncpu)
         pkgs <- .packages()
         pkgs <- rev(pkgs)
@@ -146,7 +143,7 @@ semlbci <- function(sem_out,
                          )
         parallel::stopCluster(cl)
       } else {
-        out_raw <- lapply(pars, ci_i, 
+        out_raw <- lapply(pars, ci_i,
                       npar = npar,
                       sem_out = sem_out,
                       standardized = standardized,
@@ -161,13 +158,13 @@ semlbci <- function(sem_out,
     out_p$lbci_lb <- NA
     if (standardized) {
         pstd <- lavaan::standardizedSolution(sem_out)
-        out_p <- merge(out_p, pstd[, c("lhs", "op", "rhs", "est.std")], 
+        out_p <- merge(out_p, pstd[, c("lhs", "op", "rhs", "est.std")],
                 by = c("lhs", "op", "rhs"), all.x = TRUE, sort = FALSE)
       } else {
-        out_p$est <- ptable[, c("est")]        
+        out_p$est <- ptable[, c("est")]
       }
     out_p$lbci_ub <- NA
-    
+
     out_p[i_selected, "lbci_lb"] <- out[, 1]
     out_p[i_selected, "lbci_ub"] <- out[, 2]
 
@@ -179,7 +176,7 @@ semlbci <- function(sem_out,
     ub_time <- sapply(out_raw, attr, which = "ub_time")
     ci_method <- sapply(out_raw, attr, which = "method")
     p_names <- mapply(paste0, out_p[pars, "lhs"],
-                              out_p[pars, "op" ],
+                              out_p[pars, "op"],
                               out_p[pars, "rhs"],
                       USE.NAMES = FALSE)
     names(lb_diag) <- p_names
@@ -187,7 +184,7 @@ semlbci <- function(sem_out,
     names(lb_time) <- p_names
     names(ub_time) <- p_names
     names(ci_method) <- p_names
-    
+
     attr(out_p, "lb_diag") <- lb_diag
     attr(out_p, "ub_diag") <- ub_diag
     attr(out_p, "lb_time") <- lb_time
@@ -202,8 +199,10 @@ semlbci <- function(sem_out,
     out_p[pars, "ci_org_ub"] <- sapply(ub_diag, function(x) x$ci_org_limit)
     out_p[pars, "ratio_lb"] <- sapply(lb_diag, function(x) x$ci_limit_ratio)
     out_p[pars, "ratio_ub"] <- sapply(ub_diag, function(x) x$ci_limit_ratio)
-    out_p[pars, "post_check_lb"] <- sapply(lb_diag, function(x) x$fit_post_check)
-    out_p[pars, "post_check_ub"] <- sapply(ub_diag, function(x) x$fit_post_check)
+    out_p[pars, "post_check_lb"] <-
+                            sapply(lb_diag, function(x) x$fit_post_check)
+    out_p[pars, "post_check_ub"] <-
+                            sapply(ub_diag, function(x) x$fit_post_check)
     out_p[pars, "time_lb"] <- as.numeric(lb_time)
     out_p[pars, "time_ub"] <- as.numeric(ub_time)
     out_p[pars, "method"] <- ci_method

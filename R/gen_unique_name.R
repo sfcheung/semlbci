@@ -3,24 +3,24 @@
 #' @description Generate a unique name that does not duplicate with elements
 #'              in a vector of strings.
 #'
-#' @details 
-#' 
+#' @details
+#'
 #' User supplies a vector of strings and then a name is generated that does
 #' not duplicate with elements in this vector.
-#' 
+#'
 #' A helper function for generating names for new parameters.
 #'
 #' @return
 #' A string
-#' 
+#'
 #' @param source_names A vector of strings
 #'
 #' @examples
-#' 
+#'
 #' x <- c("A", "b", "xyz")
-#' 
+#'
 #' gen_unique_name(x)
-#' 
+#'
 #' @keywords internal
 
 gen_unique_name <- function(source_names) {

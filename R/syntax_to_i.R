@@ -74,9 +74,7 @@ syntax_to_i <- function(syntax,
     if (length(syntax_def) > 0) {
         l_def <- strsplit(syntax_def, ":=")
         l_def <- sapply(l_def, function(x) trimws(x[1]))
-        # i_def <- match(l_def, p_out$label)
         i_def <- match(l_def, ptable$label)
-        # p_out[i_def, "req"] <- TRUE
       } else {
         i_def <- NULL
       }

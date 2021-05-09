@@ -4,7 +4,7 @@
 #'
 #' @return
 #' The anova results
-#' 
+#'
 #' @param fit The source fit object.
 #' @param dat The test data.
 #' @param ciperc The level of confidence of the limit.
@@ -20,16 +20,27 @@
 #'
 #' @keywords internal
 
-test_constr <- function(fit, dat, ciperc = .95, parc, parc2 = "", modc0, ci_out, 
-                        semfct, tol = 1e-4, update_args = list(), ...) {
+test_constr <- function(fit,
+                        dat,
+                        ciperc = .95,
+                        parc,
+                        parc2 = "",
+                        modc0,
+                        ci_out,
+                        semfct,
+                        tol = 1e-4,
+                        update_args = list(),
+                        ...) {
     modc <- paste(modc0, "\n", parc, as.numeric(ci_out), "\n", parc2 = "")
     fitc <- semfct(model = modc, data = dat, do.fit = FALSE, ...)
     ptable <- lavaan::parameterTable(fitc)
     ptable[ptable$free > 0, "est"] <-  attr(ci_out, "diag")$history$solution
     update_args_final <- modifyList(
-                          list(object = fitc, data = dat, start = ptable, do.fit = TRUE),
+                          list(object = fitc,
+                               data = dat,
+                               start = ptable,
+                               do.fit = TRUE),
                           update_args)
-    # fitc <- update(fitc, start = ptable, do.fit = TRUE, ...)
     fitc <- do.call(update, update_args_final)
     anova_out <- anova(fitc, fit)
     anova_p <- anova_out["fitc", "Pr(>Chisq)"]

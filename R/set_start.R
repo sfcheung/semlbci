@@ -7,13 +7,15 @@
 #' Currently supports \code{lavaan} output only.
 #'
 #' @return
-#' A lavaan parameter table, with parameters estimated with target fixed to its 
+#' A lavaan parameter table, with parameters estimated with target fixed to its
 #'  lower or upper Wald confidence limit.
 #' 
-#' @param i The position of the target parameters as in the parameter table of lavaan.
+#' @param i The position of the target parameters as in the parameter table of
+#'          lavaan.
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.
-#' @param which Whether the lower bound or the upper bound is to be found. Must be "lbound" or "ubound".
-#' @param standardized If TRUE, the LBCI is for the standardized estimate. 
+#' @param which Whether the lower bound or the upper bound is to be found.
+#'              Must be "lbound" or "ubound".
+#' @param standardized If TRUE, the LBCI is for the standardized estimate.
 #'
 #' @keywords internal
 
@@ -56,8 +58,6 @@ set_start <- function(i = NULL,
             sem_out2 <- sem_out
             sem_out2@ParTable <- as.list(start1)
             sem_model <- sem_out2@Model
-            # sem_model <- update_model(sem_model,
-            #                           start1[start1$free > 0, "est"])
             sem_model <- lavaan::lav_model_set_parameters(sem_model,
                                       start1[start1$free > 0, "est"])
             sem_out2@Model <- sem_model
@@ -95,10 +95,11 @@ set_start <- function(i = NULL,
         ptable2_def <- ptable2[ptable2$op == ":=", ]
         ptable2 <- ptable2[ptable2$op != ":=", ]
         sem_out2 <- lavaan::update(sem_out, model = ptable2, start = ptable2)
-        ptable2_out <- as.data.frame(sem_out2@ParTable, stringsAsFactors = FALSE)
+        ptable2_out <- as.data.frame(sem_out2@ParTable,
+                                     stringsAsFactors = FALSE)
         ptable2_final <- rbind(ptable2_out, ptable2_def)
         ptable2_final[id_g, "ustart"] <- NA
-        ptable2_final[id_g, "free"]  <- max(ptable2_final$free) + 
+        ptable2_final[id_g, "free"]  <- max(ptable2_final$free) +
                                             seq_len(length(id_g))
         return(ptable2_final)
       }
@@ -114,7 +115,8 @@ set_start <- function(i = NULL,
         ptable2_def <- ptable2[ptable2$op == ":=", ]
         ptable2 <- ptable2[ptable2$op != ":=", ]
         sem_out2 <- lavaan::update(sem_out, model = ptable2, start = ptable2)
-        ptable2_out <- as.data.frame(sem_out2@ParTable, stringsAsFactors = FALSE)
+        ptable2_out <- as.data.frame(sem_out2@ParTable,
+                                     stringsAsFactors = FALSE)
         ptable2_final <- rbind(ptable2_out, ptable2_def)
         ptable2_final[i, "ustart"] <- NA
         ptable2_final[i, "free"]  <- max(ptable2_final$free) + 1
@@ -129,8 +131,8 @@ set_start <- function(i = NULL,
         tmp_fct <- function(param, sem_out) {
             k * sem_out@Model@def.function(param)[i_name]
           }
-        g_i0 <- numDeriv::grad(tmp_fct, 
-                              x = lavaan::coef(sem_out), 
+        g_i0 <- numDeriv::grad(tmp_fct,
+                              x = lavaan::coef(sem_out),
                               sem_out = sem_out)
         g_i0 <- round(g_i0, 5)
         g_i  <- (g_i0 != 0)
@@ -151,12 +153,13 @@ set_start <- function(i = NULL,
         ptable2_def <- ptable2[ptable2$op == ":=", ]
         ptable2 <- ptable2[ptable2$op != ":=", ]
         sem_out2 <- lavaan::update(sem_out, model = ptable2, start = ptable2)
-        ptable2_out <- as.data.frame(sem_out2@ParTable, stringsAsFactors = FALSE)
+        ptable2_out <- as.data.frame(sem_out2@ParTable,
+                                     stringsAsFactors = FALSE)
         ptable2_final <- rbind(ptable2_out, ptable2_def)
         ptable2_final[id_g, "ustart"] <- NA
-        ptable2_final[id_g, "free"]  <- max(ptable2_final$free) + 
+        ptable2_final[id_g, "free"]  <- max(ptable2_final$free) +
                                             seq_len(length(id_g))
         return(ptable2_final)
       }
     ptable
-  }  
+  }

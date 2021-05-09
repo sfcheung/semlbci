@@ -3,12 +3,12 @@
 #' @description Get the row number of a parameter in a parameter table
 #'              from lhs, op, rhs, block, and group
 #'
-#' @details 
+#' @details
 #' These columns will be extracted: `lhs`, `rhs`, `label`, and `plabel`.
-#' 
+#'
 #' @return
 #' A vector of unique characters
-#' 
+#'
 #' @param ptable A lavaan parameter table (e.g., an object returned by
 #'                [lavaan::parameterTable()])
 #' @param lor A one row data frame with these columns, lhs, op, rhs, block, and
@@ -24,9 +24,9 @@
 #' @param group  A number. The `group` in the parameter table. Optional
 #'
 #' @examples
-#' 
+#'
 #' library(lavaan)
-#' 
+#'
 #' @keywords internal
 
 get_i_from_lor <- function(ptable,
