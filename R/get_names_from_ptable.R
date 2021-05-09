@@ -13,6 +13,7 @@
 #'
 #' @examples
 #'
+#' \dontrun{
 #' library(lavaan)
 #' mod <-
 #' "
@@ -21,7 +22,7 @@
 #' "
 #' ptable <- lavaanify(mod)
 #' get_names_from_ptable(ptable)
-#'
+#' }
 #' @keywords internal
 
 get_names_from_ptable <- function(ptable) {

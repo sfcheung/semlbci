@@ -120,7 +120,7 @@ function implements
 a version of the algorithm presented in Neale and Miller (1997) that
 use an equality constraint (see Pritikin, Rappaport, & Miller, 2017).
 
-This function is different from \code{\link[=ci_bound_nmc]{ci_bound_nmc()}}. It modified the input
+This function is different from \code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}}. It modified the input
 model by adding one or more constraints.
 }
 

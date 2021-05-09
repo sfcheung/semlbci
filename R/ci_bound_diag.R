@@ -1,20 +1,22 @@
-#'@title Print diagnotic informantion of a confidence limit
+#' @title Print diagnotic informantion of a confidence limit
 #'
-#'@description Print diagnotic informantion of a confidence limit
+#' @description Print diagnotic informantion of a confidence limit
 #'
-#'@details Print diagnotic informantion of a confidence limit
+#' @details Print diagnotic informantion of a confidence limit
 #'
-#'@return
+#' @return
 #'  Nothing
 #'
-#'@param out The output of ci_bound_xx_i function.
+#' @param out The output of ci_bound_xx_i function.
+#' @param digits The number of digits after decimal point. To be passed to
+#'                [round()]. Default is 5.
 #'
-#'@examples
+#' @examples
 #' # TODO
 #'
 #' @export
 
-ci_bound_diag <- function(out, digits = 5, ...) {
+ci_bound_diag <- function(out, digits = 5) {
     call_org <- attr(out, "call")
     out_diag <- attr(out, "diag")
     ci_method <- switch(out_diag$method, wn = "Wu-Neale-2012")

@@ -23,10 +23,12 @@ not duplicate with elements in this vector.
 A helper function for generating names for new parameters.
 }
 \examples{
+\dontrun{
 
 x <- c("A", "b", "xyz")
 
 gen_unique_name(x)
 
+}
 }
 \keyword{internal}

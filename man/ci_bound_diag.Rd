@@ -4,10 +4,13 @@
 \alias{ci_bound_diag}
 \title{Print diagnotic informantion of a confidence limit}
 \usage{
-ci_bound_diag(out, digits = 5, ...)
+ci_bound_diag(out, digits = 5)
 }
 \arguments{
 \item{out}{The output of ci_bound_xx_i function.}
+
+\item{digits}{The number of digits after decimal point. To be passed to
+\code{\link[=round]{round()}}. Default is 5.}
 }
 \value{
 Nothing

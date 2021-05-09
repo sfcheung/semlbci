@@ -16,11 +16,13 @@
 #' @param source_names A vector of strings
 #'
 #' @examples
+#' \dontrun{
 #'
 #' x <- c("A", "b", "xyz")
 #'
 #' gen_unique_name(x)
 #'
+#' }
 #' @keywords internal
 
 gen_unique_name <- function(source_names) {

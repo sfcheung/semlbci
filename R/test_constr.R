@@ -16,7 +16,7 @@
 #' @param ... Other arguments to be passed to the sem function
 #'
 #' @examples
-#' # To
+#' # TODO
 #'
 #' @keywords internal
 
@@ -35,14 +35,14 @@ test_constr <- function(fit,
     fitc <- semfct(model = modc, data = dat, do.fit = FALSE, ...)
     ptable <- lavaan::parameterTable(fitc)
     ptable[ptable$free > 0, "est"] <-  attr(ci_out, "diag")$history$solution
-    update_args_final <- modifyList(
+    update_args_final <- utils::modifyList(
                           list(object = fitc,
                                data = dat,
                                start = ptable,
                                do.fit = TRUE),
                           update_args)
-    fitc <- do.call(update, update_args_final)
-    anova_out <- anova(fitc, fit)
+    fitc <- do.call(lavaan::update, update_args_final)
+    anova_out <- lavaan::anova(fitc, fit)
     anova_p <- anova_out["fitc", "Pr(>Chisq)"]
     test_p <- (abs(anova_p - (1 - ciperc)) < tol)
     out <- test_p

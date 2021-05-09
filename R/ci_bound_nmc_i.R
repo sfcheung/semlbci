@@ -21,7 +21,7 @@
 #' a version of the algorithm presented in Neale and Miller (1997) that
 #' use an equality constraint (see Pritikin, Rappaport, & Miller, 2017).
 #'
-#' This function is different from [ci_bound_nmc()]. It modified the input
+#' This function is different from [ci_bound_nm_i()]. It modified the input
 #' model by adding one or more constraints.
 #'
 #' ## Limitation(s)
@@ -269,7 +269,7 @@ ci_bound_nmc_i <- function(i = NULL,
             assign("f_i_shared", fit, envir0)
             if (debug) {
                 cat("\n\n*** Parameter Estimates:\n")
-                print(coef(fit))
+                print(lavaan::coef(fit))
               }
             if (isTRUE(more_options$fit)) {
                 return(fit)

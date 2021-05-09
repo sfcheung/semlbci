@@ -2,14 +2,14 @@
 #'
 #' @description Set the starting values for optimization
 #'
-#' @details 
-#' 
+#' @details
+#'
 #' Currently supports \code{lavaan} output only.
 #'
 #' @return
 #' A lavaan parameter table, with parameters estimated with target fixed to its
 #'  lower or upper Wald confidence limit.
-#' 
+#'
 #' @param i The position of the target parameters as in the parameter table of
 #'          lavaan.
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.

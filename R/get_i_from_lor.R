@@ -25,7 +25,7 @@
 #'
 #' @examples
 #'
-#' library(lavaan)
+#' # TODO
 #'
 #' @keywords internal
 

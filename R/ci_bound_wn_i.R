@@ -320,7 +320,7 @@ ci_bound_wn_i <- function(i = NULL,
     fmin_org <- lavaan::lavTech(sem_out, "optim")$fx
     fmin_final <- lavaan::lavTech(fit_final, "optim")$fx
     chisq_diff <- (fmin_final - fmin_org) * 2 * nobs
-    ciperc_final <- pchisq(chisq_diff, 1)
+    ciperc_final <- stats::pchisq(chisq_diff, 1)
 
     diag <- list(status = status,
                  est_org = i_est,
@@ -329,8 +329,8 @@ ci_bound_wn_i <- function(i = NULL,
                  fit_post_check = fit_post_check,
                  start_values = xstart,
                  bound_unchecked = bound_unchecked,
-                 org_values = coef(sem_out),
-                 final_values = coef(fit_final),
+                 org_values = lavaan::coef(sem_out),
+                 final_values = lavaan::coef(fit_final),
                  ciperc = ciperc,
                  ciperc_final = ciperc_final,
                  i = i,

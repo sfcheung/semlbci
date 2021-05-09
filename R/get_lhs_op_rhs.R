@@ -19,16 +19,9 @@
 #' @param more If `TRUE`, block and group are also returned. Default is `FALSE`.
 #'
 #' @examples
-#' library(lavaan)
-#' data(cfa_two_factors)
-#' mod <-
-#' "
-#' f1 =~ x1 + x2 + a*x3
-#' f2 =~ x4 + a*x5 + equal('f1=~x2')*x6
-#' f1 ~~ 0*f2
-#' asq := a^2
-#' "
-#' fit <- sem(mod, cfa_two_factors)
+#'
+#' # TODO
+#'
 #' @keywords internal
 
 get_lhs_op_rhs <- function(i, sem_out, more = FALSE) {

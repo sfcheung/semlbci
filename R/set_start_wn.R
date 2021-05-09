@@ -31,7 +31,7 @@ set_start_wn <- function(i = NULL,
     i_free <- which(p_free)
     id_free <- ptable$id[i_free]
     npar <- sum(p_free)
-    qcrit <- qnorm(1 - (1 - ciperc) / 2, 0, 1)
+    qcrit <- stats::qnorm(1 - (1 - ciperc) / 2, 0, 1)
     get_fix2 <- function(ptable, i, qcrit, ratio = 1) {
         switch(which,
               lbound = ptable[i, "est"] - qcrit * ratio * ptable[i, "se"],

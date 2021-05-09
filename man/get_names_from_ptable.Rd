@@ -21,6 +21,7 @@ These columns will be extracted: \code{lhs}, \code{rhs}, \code{label}, and \code
 }
 \examples{
 
+\dontrun{
 library(lavaan)
 mod <-
 "
@@ -29,6 +30,6 @@ z ~ a * y + m
 "
 ptable <- lavaanify(mod)
 get_names_from_ptable(ptable)
-
+}
 }
 \keyword{internal}
