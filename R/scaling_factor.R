@@ -83,7 +83,8 @@ scaling_factor <- function(sem_out,
                                   fit@Model, .x.
                                 )
                 fit_pt2 <- fit_pt
-                fit_pt2[fit_pt$free > 0, "est"] <- .x.
+                nfree <- sum(fit_pt$free > 0)
+                fit_pt2[fit_pt$free > 0, "est"] <- .x.[seq_len(nfree)]
                 fit@ParTable <- as.list(fit_pt2)
                 std <- lavaan::standardizedSolution(
                                   fit,
@@ -105,19 +106,28 @@ scaling_factor <- function(sem_out,
         # environment, we should use that solution rather than `<<-`.
         geteststd <<- gen_fct(fit = sem_out, i = i)
         fit0 <- lavaan::update(sem_out,
-                               add = c(
-                                  paste0(i_label, " := geteststd()"),
-                                  paste0(i_label, " == ",
-                                         i_est * pertubation_factor),
-                                  paste0("0 < 1")
-                                 ),
+                               model = p_table_fit,
+                               add = paste0(i_label, " := geteststd()"),
                                do.fit = FALSE,
                                baseline = FALSE,
                                h1 = FALSE,
                                se = "none",
                                test = "satorra.bentler")
+        fit0 <- lavaan::update(fit0,
+                               add = paste0(i_label, " == ",
+                                            i_est * pertubation_factor),
+                               do.fit = FALSE)
+        fit0 <- lavaan::update(fit0,
+                               add = "0 < 1",
+                               do.fit = FALSE)
         p_table0 <- lavaan::parameterTable(fit0)
+        i_std <- which(p_table0$lhs == i_label & p_table0$op == ":=")
         i_constr <- which(p_table0$lhs == i_label & p_table0$op == "==")
+        i_extra <- which(p_table0$lhs == "0" & p_table0$rhs == "1")
+        # Not sure why we have to manually set this constraint to free
+        p_table0[i_std, "free"] <- 0
+        p_table0[i_constr, "free"] <- 0
+        p_table0[i_extra, "free"] <- 0
         p_table0[p_table0$free > 0, "start"] <-
                                           p_table[p_table0$free > 0, "est"]
         p_table0[p_table0$free > 0, "est"] <-

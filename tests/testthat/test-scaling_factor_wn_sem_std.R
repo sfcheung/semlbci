@@ -55,7 +55,7 @@ geteststd <- semlbci:::get_std_genfct(fit = fit, i = 2)
 i <- 2
 est_i <- standardizedSolution(fit)[i, "est.std"]
 modc <- paste(modc0, "\ntstd == ", est_i * .98, "\n0 < 1")
-fitc <- lavaan::sem(modc, dat, do.fit = FALSE, test = "satorra.bentler")
+fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- coef(fit)
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
@@ -80,7 +80,7 @@ sc1l
 i <- 2
 est_i <- standardizedSolution(fit)[i, "est.std"]
 modc <- paste(modc0, "\ntstd == ", est_i * 1.02, "\n0 < 1")
-fitc <- lavaan::sem(modc, dat, do.fit = FALSE, test = "satorra.bentler")
+fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- coef(fit)
 fitc <- update(fitc, start = ptable, do.fit = TRUE,

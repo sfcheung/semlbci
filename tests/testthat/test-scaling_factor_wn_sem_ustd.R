@@ -52,7 +52,7 @@ f1 ~ g*f2
 i <- 2
 est_i <- parameterTable(fit)[2, "est"]
 modc <- paste(modc0, "\na == ", est_i * .98)
-fitc <- lavaan::sem(modc, dat, do.fit = FALSE, test = "satorra.bentler")
+fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- coef(fit)
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
@@ -76,7 +76,7 @@ sc1l
 
 est_i <- parameterTable(fit)[2, "est"]
 modc <- paste(modc0, "\na == ", est_i * 1.02)
-fitc <- lavaan::sem(modc, dat, do.fit = FALSE, test = "satorra.bentler")
+fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- coef(fit)
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
