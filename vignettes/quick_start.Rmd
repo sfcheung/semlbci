@@ -35,13 +35,14 @@ data(simple_med)
 dat <- simple_med
 head(dat)
 library(lavaan)
-mod <- 
+mod <-
 "
 m ~ a*x
 y ~ b*m
 ab := a * b
 "
-# We set fixed.x = FALSE because we will also find the LBCIs for standardized solution
+# We set fixed.x = FALSE because we will also find the LBCIs for
+# standardized solution
 fit <- sem(mod, simple_med, fixed.x = FALSE)
 ```
 
