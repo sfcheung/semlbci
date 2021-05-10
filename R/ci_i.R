@@ -5,9 +5,9 @@
 #'
 #' @details
 #'
-#' This function calls a function to find a bound ([ci_bound_nm_i()] by default)
+#' This function calls a function to find a bound ([ci_bound_wn_i()] by default)
 #' twice to find the two bounds for a confidence interval. The default method
-#' is the Neale-Miller-1997 method. Please refer to [ci_bound_nm_i() for further
+#' is the Wu-Neale-2012 method. Please refer to [ci_bound_wn_i() for further
 #' information.
 #'
 #' This function is not supposed to be used directly by users. It is
@@ -25,15 +25,13 @@
 #' @param i The position of the target parameters as
 #'          appeared in the parameter table of the
 #'          [lavaan::lavaan-class] object.
-#' @param method The approach to be used. Can be "wn"
-#'              (Wu-Neale-2012) or "nm"
-#'               (Neale-Miller-1997). Default is "wn".
-#' @param ... Arguments to be passed to [ci_bound_wn_i()],
-#'            [ci_bound_nm_i()], or similar funtions to be
-#'            developed.
+#' @param method The approach to be used. Default is "wn" (Wu-Neale-2012
+#'                Method). The other methods are disabled for now.
+#' @param ... Arguments to be passed to the funtion corresponded to
+#'            the requested method ([ci_bound_wn_i()] for "wn").
 #'
 #' @seealso
-#' [semlbci()], [ci_bound_wn_i()], [ci_bound_nm_i()]
+#' [semlbci()], [ci_bound_wn_i()]
 #'
 #'
 #'@examples
@@ -62,6 +60,7 @@ ci_i <- function(i, method = "wn", ...) {
         ub_time <- system.time(ub <- ci_bound_wn_i(i, which = "ubound", ...))
       }
     if (method == "nm") {
+        stop("The method 'nm' is no longer supported.")
         lb_time <- system.time(lb <- ci_bound_nm_i(i, which = "lbound", ...))
         ub_time <- system.time(ub <- ci_bound_nm_i(i, which = "ubound", ...))
       }

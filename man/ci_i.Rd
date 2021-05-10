@@ -11,13 +11,11 @@ ci_i(i, method = "wn", ...)
 appeared in the parameter table of the
 \link[lavaan:lavaan-class]{lavaan::lavaan} object.}
 
-\item{method}{The approach to be used. Can be "wn"
-(Wu-Neale-2012) or "nm"
-(Neale-Miller-1997). Default is "wn".}
+\item{method}{The approach to be used. Default is "wn" (Wu-Neale-2012
+Method). The other methods are disabled for now.}
 
-\item{...}{Arguments to be passed to \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}},
-\code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}}, or similar funtions to be
-developed.}
+\item{...}{Arguments to be passed to the funtion corresponded to
+the requested method (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} for "wn").}
 }
 \value{
 A numeric vector of two elements. The first element is the
@@ -32,9 +30,9 @@ Find the likelihood-based confidence interval (LBCI)
 for one parameter.
 }
 \details{
-This function calls a function to find a bound (\code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}} by default)
+This function calls a function to find a bound (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} by default)
 twice to find the two bounds for a confidence interval. The default method
-is the Neale-Miller-1997 method. Please refer to [ci_bound_nm_i() for further
+is the Wu-Neale-2012 method. Please refer to [ci_bound_wn_i() for further
 information.
 
 This function is not supposed to be used directly by users. It is
@@ -61,5 +59,5 @@ out[1:2]
 
 }
 \seealso{
-\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}, \code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}}
+\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}
 }
