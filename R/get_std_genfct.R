@@ -15,10 +15,8 @@
 
 get_std_genfct <- function(fit, i) {
     fit_pt <- lavaan::parameterTable(fit)
+    force(i)
     tmpfct <- function(...) {
-        force(fit)
-        force(i)
-        force(fit_pt)
         .x. <- get(".x.", envir = parent.frame())
         fit@Model <- lavaan::lav_model_set_parameters(
                           fit@Model, .x.
