@@ -1,4 +1,3 @@
-skip("WIP: Not yet ready")
 
 library(testthat)
 library(semlbci)
@@ -33,13 +32,21 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_abs = 1e-7,
               xtol_rel = 1e-7
               )
-time1l <- system.time(out1l <- ci_bound_wn_i(1, 5, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r))
-time1u <- system.time(out1u <- ci_bound_wn_i(1, 5, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r))
-time2l <- system.time(out2l <- ci_bound_wn_i(2, 5, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r))
-time2u <- system.time(out2u <- ci_bound_wn_i(2, 5, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r))
+time1x <- system.time(out1x <- ci_i(1, npar = 5, sem_out = fit, f_constr = fn_constr0, method = "wn", opts = opts0, verbose = TRUE, ciperc = ciperc, robust = "satorra.2000"))
+time2x <- system.time(out2x <- ci_i(2, npar = 5, sem_out = fit, f_constr = fn_constr0, method = "wn", opts = opts0, verbose = TRUE, ciperc = ciperc, robust = "satorra.2000"))
 
-timexx <- rbind(time1l, time1u, time2l, time2u)
+timexx <- rbind(time1x, time2x)
 timexx
+
+out1l <- out1x[1]
+out1u <- out1x[2]
+out2l <- out2x[1]
+out2u <- out2x[2]
+
+attr(out1l, "diag") <- attr(out1x, "lb_diag")
+attr(out1u, "diag") <- attr(out1x, "ub_diag")
+attr(out2l, "diag") <- attr(out2x, "lb_diag")
+attr(out2u, "diag") <- attr(out2x, "ub_diag")
 
 # Check the results
 
@@ -47,25 +54,6 @@ test_p <- function(fit0, fit1, ciperc, tol) {
     out <- lavTestLRT(fit0, fit1, method = "satorra.2000", A.method = "exact")
     abs(out[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
   }
-
-get_scaling_factor <- function(lrt_out) {
-    diff_from_p <- qchisq(lrt_out[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
-    chisq_1 <- lrt_out[2, "Chisq"]
-    chisq_0 <- lrt_out[1, "Chisq"]
-    chisq_diff_c <- chisq_1 - chisq_0
-    chisq_diff_p <- qchisq(lrt_out[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
-    chisq_diff_r <- lrt_out[2, "Chisq diff"]
-    out <- 
-      data.frame(chisq_1 = chisq_1,
-        chisq_0 = chisq_0,
-        chisq_diff_c = chisq_diff_c,
-        chisq_diff_r = chisq_diff_r,
-        chisq_diff_p = chisq_diff_p,
-        c_p = chisq_diff_c / chisq_diff_p,
-        c_r = chisq_diff_c / chisq_diff_r)
-    out
-  }
-
 
 modc0 <-
 "
@@ -161,3 +149,15 @@ test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-4))
   })
 
+fit_ml <- update(fit, test = "standard")
+test_out1l <- test_constr(fit = fit_ml, dat = simple_med, ciperc = ciperc, parc = "a == ", modc0 = modc0, ci_out = out1l, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE)
+test_out1u <- test_constr(fit = fit_ml, dat = simple_med, ciperc = ciperc, parc = "a == ", modc0 = modc0, ci_out = out1u, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE)
+test_out2l <- test_constr(fit = fit_ml, dat = simple_med, ciperc = ciperc, parc = "b == ", modc0 = modc0, ci_out = out2l, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE)
+test_out2u <- test_constr(fit = fit_ml, dat = simple_med, ciperc = ciperc, parc = "b == ", modc0 = modc0, ci_out = out2u, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE)
+
+test_that("The limit should be different from those using ML", {
+    expect_false(test_out1l)
+    expect_false(test_out1u)
+    expect_false(test_out2l)
+    expect_false(test_out2u)
+  })

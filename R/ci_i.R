@@ -25,8 +25,16 @@
 #' @param i The position of the target parameters as
 #'          appeared in the parameter table of the
 #'          [lavaan::lavaan-class] object.
+#' @param sem_out The SEM output. Currently supports [lavaan::lavaan-class]
+#'                outputs only.
 #' @param method The approach to be used. Default is "wn" (Wu-Neale-2012
 #'                Method). The other methods are disabled for now.
+#' @param standardized Boolean. Whether the LBCI for the standardized solutiion
+#'                      is to be searched. Default is `FALSE`.
+#' @param robust Whether the LBCI based on robust likelihood ratio test is to
+#'                be found. Only "satorra.2000" in [lavaan] is supported for
+#'                now. If "none", the default, then likelihood ratio test based
+#'                on maximum likelihood estimation will be used.
 #' @param ... Arguments to be passed to the funtion corresponded to
 #'            the requested method ([ci_bound_wn_i()] for "wn").
 #'
@@ -54,10 +62,34 @@
 #'
 #' @export
 
-ci_i <- function(i, method = "wn", ...) {
+ci_i <- function(i,
+                 sem_out,
+                 method = "wn",
+                 standardized = FALSE,
+                 robust = "none",
+                 ...) {
+    # It should be the job of the calling function to check whether it is 
+    # appropriate to use the robust method.
+    if (tolower(robust) == "satorra.2000") {
+        sf_full <- scaling_factor(sem_out, i)
+        sf <- sf_full$c_r
+      } else {
+        sf_full <- NA
+        sf <- 1
+      }
     if (method == "wn") {
-        lb_time <- system.time(lb <- ci_bound_wn_i(i, which = "lbound", ...))
-        ub_time <- system.time(ub <- ci_bound_wn_i(i, which = "ubound", ...))
+        lb_time <- system.time(lb <- ci_bound_wn_i(i,
+                                                   sem_out = sem_out,
+                                                   which = "lbound",
+                                                   standardized = standardized,
+                                                   sf = sf,
+                                                    ...))
+        ub_time <- system.time(ub <- ci_bound_wn_i(i,
+                                                   sem_out = sem_out,
+                                                   which = "ubound",
+                                                   standardized = standardized,
+                                                   sf = sf,
+                                                    ...))
       }
     if (method == "nm") {
         stop("The method 'nm' is no longer supported.")
@@ -70,5 +102,6 @@ ci_i <- function(i, method = "wn", ...) {
     attr(out, "method") <- method
     attr(out, "lb_time") <- lb_time[3]
     attr(out, "ub_time") <- ub_time[3]
+    attr(out, "sf_full") <- sf_full
     out
   }
