@@ -30,7 +30,6 @@ Depends:
 Imports: 
     lavaan,
     nloptr,
-    numDeriv,
     stats,
     utils
 VignetteBuilder: knitr
