@@ -47,7 +47,6 @@
 #'@export
 
 set_constraint <- function(sem_out, ciperc = .95) {
-#    force(sem_out)
     p_free <- find_free(sem_out)
     qcrit <- stats::qchisq(ciperc, 1)
     fmin <- lavaan::lavTech(sem_out, "optim")$fx
@@ -61,10 +60,6 @@ set_constraint <- function(sem_out, ciperc = .95) {
                                   debug = FALSE,
                                   lav_warn = FALSE,
                                   sf = 1) {
-            force(sem_out)
-            force(fmin)
-            force(qcrit)
-            force(n)
             target <- fmin + sf * qcrit / (2 * n)
             if (debug) {
                 cat(ls())
@@ -108,10 +103,6 @@ set_constraint <- function(sem_out, ciperc = .95) {
                                   debug = FALSE,
                                   lav_warn = FALSE,
                                   sf = 1) {
-            force(sem_out)
-            force(fmin)
-            force(qcrit)
-            force(n)
             target <- fmin + sf * qcrit / (2 * n)
             if (debug) {
                 cat(ls())
