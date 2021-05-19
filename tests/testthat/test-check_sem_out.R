@@ -32,6 +32,12 @@ fit04<- lavaan::sem(mod, dat, estimator = "DWLS")
 suppressWarnings(fit05 <- lavaan::sem(mod, dat, group = "gp"))
 (out_05 <- check_sem_out(fit05))
 
+fit06<- lavaan::sem(mod, dat, estimator = "MLR")
+(out_06 <- check_sem_out(fit06, robust = "satorra.2000"))
+
+fit07<- lavaan::sem(mod, dat, estimator = "ML")
+(out_07 <- check_sem_out(fit07, robust = "satorra.2000"))
+
 test_that("Check against the flags", {
     expect_true(
         out_01 == 0
@@ -63,6 +69,18 @@ test_that("Check against the flags", {
   })
 
 test_that("Check against the flags", {
+    expect_true(
+        out_06 == 0
+      )
+  })
+
+test_that("Check against the flags", {
+    expect_true(
+        out_07 == -1
+      )
+  })
+
+test_that("Check against the flags", {
     expect_error(
         semlbci(fit02)
       )
@@ -83,6 +101,18 @@ test_that("Check against the flags", {
 test_that("Check against the flags", {
     expect_error(
         semlbci(fit05)
+      )
+  })
+
+test_that("Check against the flags", {
+    expect_error(
+        semlbci(fit06)
+      )
+  })
+
+test_that("Check against the flags", {
+    expect_error(
+        semlbci(fit07, robust = "satorra.2000")
       )
   })
 

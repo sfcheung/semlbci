@@ -65,6 +65,10 @@
 #'
 #' @param sem_out The output from an SEM analysis. Currently only
 #'                supports a [lavaan::lavaan-class] object.
+#' @param robust Whether the LBCI based on robust likelihood ratio test is to
+#'                be found. Only "satorra.2000" in [lavaan] is supported for
+#'                now. If "none", the default, then likelihood ratio test based
+#'                on maximum likelihood estimation will be used.
 #'
 #' @seealso 
 #' [semlbci()], [ci_i()]
@@ -90,7 +94,7 @@
 #'
 #' @export
 
-check_sem_out <- function(sem_out) {
+check_sem_out <- function(sem_out, robust = "none") {
     p_table <- lavaan::parameterTable(sem_out)
 
     sem_options <- lavaan::lavInspect(sem_out, "options")
@@ -146,7 +150,27 @@ check_sem_out <- function(sem_out) {
     estimator_ok <- (tolower(sem_estimator) %in% tolower(estimators_supported))
     missing_ok <- (tolower(sem_missing) %in% tolower(missing_supported))
     se_ok <- (tolower(sem_se) %in% tolower(se_supported))
-    test_ok <- (tolower(sem_test) %in% tolower(test_supported))
+
+    scaled <- any(names(sem_out@test) %in%
+                        c("satorra.bentler",
+                          "yuan.bentler",
+                          "yuan.bentler.mplus",
+                          "mean.var.adjusted",
+                          "scaled.shifted"))
+
+    if (robust == "satorra.2000") {
+        if (scaled) {
+          robust_ok <- TRUE
+          test_ok <- TRUE
+        } else {
+          robust_ok <- FALSE
+          test_ok <- FALSE
+        }
+      } else {
+        robust_ok <- NA
+        test_ok <- (tolower(sem_test) %in% tolower(test_supported))
+      }
+
 
     model_formative_factor <- "<~" %in% p_table$op
     model_multilevel <- (sem_nlevels > 1)
@@ -178,10 +202,19 @@ check_sem_out <- function(sem_out) {
     #                             "is not yet supported."))
     #     }
 
-    if (!test_ok) {
-          out <- ifelse(out >= 0, -1, out - 1)
-          msg <- c(msg, paste("Test method", sem_test, "is not yet supported."))
-        }
+    if (robust == "satorra.2000") {
+        if (!test_ok) {
+            out <- ifelse(out >= 0, -1, out - 1)
+            msg <- c(msg, paste("Robust LBCIs are requested.",
+                                "However, test method", sem_test,
+                                "is not yet supported."))
+            }
+      } else {
+        if (!test_ok) {
+            out <- ifelse(out >= 0, -1, out - 1)
+            msg <- c(msg, paste("Test method", sem_test, "is not yet supported."))
+            }
+      }
 
     if (model_formative_factor) {
           out <- ifelse(out >= 0, -1, out - 1)
