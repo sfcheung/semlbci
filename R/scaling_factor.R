@@ -71,14 +71,10 @@ scaling_factor <- function(sem_out,
 
         # Need to define this function here to prevent possible scoping issues
         gen_fct <- function(fit, i) {
-            #
             force(fit)
             force(i)
             fit_pt <- lavaan::parameterTable(fit)
             tmpfct <- function(...) {
-                force(fit)
-                force(i)
-                force(fit_pt)
                 .x. <- get(".x.", envir = parent.frame())
                 fit@Model <- lavaan::lav_model_set_parameters(
                                   fit@Model, .x.
@@ -106,14 +102,28 @@ scaling_factor <- function(sem_out,
         # Using `<<-` is not a desired approach. If we found a solution using
         # environment, we should use that solution rather than `<<-`.
         # geteststd <- gen_fct(fit = sem_out, i = i)
-        geteststd_name <- gen_unique_name(ls(pos = .GlobalEnv))
+        # browser()
+        # geteststd_name <- gen_unique_name(ls(pos = .GlobalEnv))
+        # update_env <- new.env(parent = .GlobalEnv)
+        # assign(geteststd_name, gen_fct(fit = sem_out, i = i),
+        #        pos = update_env)
+        # browser()
+        update_env <- .GlobalEnv
+        geteststd_name <- "geteststd"
+        while (geteststd_name %in% names(update_env)) {
+            geteststd_name <- paste(geteststd_name, sample(letters, 1))
+          }
         assign(geteststd_name, gen_fct(fit = sem_out, i = i),
-               pos = .GlobalEnv)
+               pos = update_env)
         fit0 <- lavaan::update(sem_out,
                                model = p_table_fit,
-                               add = paste0(i_label, " := ", 
-                                            geteststd_name, "()"),
-                              #  add = paste0(i_label, " := geteststd()"),
+                              #  add = paste0(i_label, " := ",
+                              #               "get_std_i(i = ",
+                              #               i,
+                              #               ")"),
+                              #  add = paste0(i_label, " := ",
+                              #               geteststd_name, "()"),
+                               add = paste0(i_label, " := geteststd()"),
                                do.fit = FALSE,
                                baseline = FALSE,
                                h1 = FALSE,
@@ -215,10 +225,11 @@ scaling_factor <- function(sem_out,
 
     if (standardized) {
         # Try to make sure that only the function created above is removed
-        tmp <- get(geteststd_name, pos = .GlobalEnv)
-        if (identical(as.character(as.list(body(tmp))[[4]]),
-                      c("force", "fit_pt"))) {
-            rm(list = geteststd_name, pos = .GlobalEnv)
+        tmp <- get(geteststd_name, pos = update_env)
+        tmpl <- as.list(body(tmp))
+        if (identical(as.character(tmpl[[length(tmpl)]]),
+                      c("[", "std", "i", "est.std"))) {
+            rm(list = geteststd_name, pos = update_env)
           }
       }
 
