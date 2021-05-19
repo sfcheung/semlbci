@@ -1,7 +1,3 @@
-skip_if(Sys.getenv("SEMLBCI_TEST_SLOW") == "",
-        "Skip due to speed or other issues")
-# To be tested in interactive sessions only due to scoping or speed issues
-
 library(testthat)
 library(semlbci)
 
@@ -82,16 +78,16 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE,
-                   optim.force.converged = TRUE,
-                   optim.dx.tol = .01,
-                   warn = FALSE,
-                   control = list(
-                      eval.max = 2,
-                      iterations = 1,
-                      control.outer = list(tol = 1e-02,
-                                           itmax = 1)
-                  )
+                   verbose = FALSE
+                  #  optim.force.converged = TRUE,
+                  #  optim.dx.tol = .01,
+                  #  warn = FALSE,
+                  #  control = list(
+                  #     eval.max = 2,
+                  #     iterations = 1,
+                  #     control.outer = list(tol = 1e-02,
+                  #                          itmax = 1)
+                  # )
                 )
 fitc_out1l <- fitc
 
@@ -102,16 +98,16 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE,
-                   optim.force.converged = TRUE,
-                   optim.dx.tol = .01,
-                   warn = FALSE,
-                   control = list(
-                      eval.max = 2,
-                      iterations = 1,
-                      control.outer = list(tol = 1e-02,
-                                           itmax = 1)
-                  )
+                   verbose = FALSE
+                  #  optim.force.converged = TRUE,
+                  #  optim.dx.tol = .01,
+                  #  warn = FALSE,
+                  #  control = list(
+                  #     eval.max = 2,
+                  #     iterations = 1,
+                  #     control.outer = list(tol = 1e-02,
+                  #                          itmax = 1)
+                  # )
                 )
 fitc_out1u <- fitc
 
@@ -123,16 +119,16 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE,
-                   optim.force.converged = TRUE,
-                   optim.dx.tol = .01,
-                   warn = FALSE,
-                   control = list(
-                      eval.max = 2,
-                      iterations = 1,
-                      control.outer = list(tol = 1e-02,
-                                           itmax = 1)
-                  )
+                   verbose = FALSE
+                  #  optim.force.converged = TRUE,
+                  #  optim.dx.tol = .01,
+                  #  warn = FALSE,
+                  #  control = list(
+                  #     eval.max = 2,
+                  #     iterations = 1,
+                  #     control.outer = list(tol = 1e-02,
+                  #                          itmax = 1)
+                  # )
                 )
 fitc_out2l <- fitc
 
@@ -143,16 +139,16 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE,
-                   optim.force.converged = TRUE,
-                   optim.dx.tol = .01,
-                   warn = FALSE,
-                   control = list(
-                      eval.max = 2,
-                      iterations = 1,
-                      control.outer = list(tol = 1e-02,
-                                           itmax = 1)
-                  )
+                   verbose = FALSE
+                  #  optim.force.converged = TRUE,
+                  #  optim.dx.tol = .01,
+                  #  warn = FALSE,
+                  #  control = list(
+                  #     eval.max = 2,
+                  #     iterations = 1,
+                  #     control.outer = list(tol = 1e-02,
+                  #                          itmax = 1)
+                  # )
                 )
 fitc_out2u <- fitc
 
