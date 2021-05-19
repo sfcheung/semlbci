@@ -10,6 +10,7 @@ semlbci(
   ciperc = 0.95,
   standardized = FALSE,
   method = "wn",
+  robust = "none",
   ...,
   parallel = FALSE,
   ncpu = 2
@@ -35,6 +36,11 @@ is .95, requesting a 95 percent confidence interval.}
 
 \item{method}{The approach to be used to search for the confidence limits.
 Currently only "wn" (Wu-Neale-2012) is supported.}
+
+\item{robust}{Whether the LBCI based on robust likelihood ratio test is to
+be found. Only "satorra.2000" in \link{lavaan} is supported for
+now. If "none", the default, then likelihood ratio test based
+on maximum likelihood estimation will be used.}
 
 \item{...}{Arguments to be passed to \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.}
 

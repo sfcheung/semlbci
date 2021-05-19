@@ -4,11 +4,16 @@
 \alias{check_sem_out}
 \title{Check the SEM output in semlbci}
 \usage{
-check_sem_out(sem_out)
+check_sem_out(sem_out, robust = "none")
 }
 \arguments{
 \item{sem_out}{The output from an SEM analysis. Currently only
 supports a \link[lavaan:lavaan-class]{lavaan::lavaan} object.}
+
+\item{robust}{Whether the LBCI based on robust likelihood ratio test is to
+be found. Only "satorra.2000" in \link{lavaan} is supported for
+now. If "none", the default, then likelihood ratio test based
+on maximum likelihood estimation will be used.}
 }
 \value{
 A numeric vector of one element. If 0, the model and

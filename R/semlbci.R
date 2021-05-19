@@ -35,6 +35,10 @@
 #' @param standardized If `TRUE`, the LBCI is for the standardized estimates.
 #' @param method The approach to be used to search for the confidence limits.
 #'               Currently only "wn" (Wu-Neale-2012) is supported.
+#' @param robust Whether the LBCI based on robust likelihood ratio test is to
+#'                be found. Only "satorra.2000" in [lavaan] is supported for
+#'                now. If "none", the default, then likelihood ratio test based
+#'                on maximum likelihood estimation will be used.
 #' @param ... Arguments to be passed to [ci_bound_wn_i()].
 #' @param parallel If `TRUE`, will use [parallel]. Currently disabled and
 #'                  so this argument will be ignored.
@@ -78,6 +82,7 @@ semlbci <- function(sem_out,
                     ciperc = .95,
                     standardized = FALSE,
                     method = "wn",
+                    robust = "none",
                     ...,
                     parallel = FALSE,
                     ncpu = 2) {
@@ -86,7 +91,7 @@ semlbci <- function(sem_out,
       }
 
     # Check sem_out
-    sem_out_check <- check_sem_out(sem_out)
+    sem_out_check <- check_sem_out(sem_out = sem_out, robust = robust)
     if (sem_out_check > 0) {
         msg <- paste0(paste(attr(sem_out_check, "info"), collapse = "\n"), "\n")
         warning(msg, immediate. = TRUE)
@@ -139,6 +144,7 @@ semlbci <- function(sem_out,
                             f_constr = f_constr,
                             method = method,
                             ciperc = ciperc,
+                            robust = robust,
                             ...
                          )
         parallel::stopCluster(cl)
@@ -151,6 +157,7 @@ semlbci <- function(sem_out,
                       f_constr = f_constr,
                       method = method,
                       ciperc = ciperc,
+                      robust = robust,
                       ...)
       }
     out <- do.call(rbind, lapply(out_raw, function(x) x$bounds))
