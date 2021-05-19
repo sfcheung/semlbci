@@ -4,15 +4,26 @@
 \alias{ci_i}
 \title{Find the LBCI for one parameter}
 \usage{
-ci_i(i, method = "wn", ...)
+ci_i(i, sem_out, method = "wn", standardized = FALSE, robust = "none", ...)
 }
 \arguments{
 \item{i}{The position of the target parameters as
 appeared in the parameter table of the
 \link[lavaan:lavaan-class]{lavaan::lavaan} object.}
 
+\item{sem_out}{The SEM output. Currently supports \link[lavaan:lavaan-class]{lavaan::lavaan}
+outputs only.}
+
 \item{method}{The approach to be used. Default is "wn" (Wu-Neale-2012
 Method). The other methods are disabled for now.}
+
+\item{standardized}{Boolean. Whether the LBCI for the standardized solutiion
+is to be searched. Default is \code{FALSE}.}
+
+\item{robust}{Whether the LBCI based on robust likelihood ratio test is to
+be found. Only "satorra.2000" in \link{lavaan} is supported for
+now. If "none", the default, then likelihood ratio test based
+on maximum likelihood estimation will be used.}
 
 \item{...}{Arguments to be passed to the funtion corresponded to
 the requested method (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} for "wn").}
