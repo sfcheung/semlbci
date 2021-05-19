@@ -7,18 +7,19 @@
 #' @return
 #'  Nothing
 #'
-#' @param out The output of ci_bound_xx_i function.
+#' @param x The output of ci_bound_xx_i function.
 #' @param digits The number of digits after decimal point. To be passed to
 #'                [round()]. Default is 5.
+#' @param ... Other arguments. They will be ignored.
 #'
 #' @examples
 #' # TODO
 #'
 #' @export
 
-ci_bound_diag <- function(out, digits = 5) {
-    call_org <- attr(out, "call")
-    out_diag <- attr(out, "diag")
+print.cibound <- function(x, digits = 5, ...) {
+    call_org <- x$call
+    out_diag <- x$diag
     ci_method <- switch(out_diag$method, wn = "Wu-Neale-2012")
         if (is.null(out_diag$standardized)) {
             std <- "No"
@@ -30,18 +31,20 @@ ci_bound_diag <- function(out, digits = 5) {
                    lor$group, ", block = ", lor$block, ")")
     cat(paste0("Target Parameter:\t", lor2))
     cat(paste0("\nPosition:\t\t", out_diag$i))
-    cat(paste0("\nWhich limit:\t\t", switch(out_diag$which, 
+    cat(paste0("\nWhich limit:\t\t", switch(out_diag$which,
                                                   lbound = "Lower limit",
                                                   ubound = "Upper limit")))
     cat(paste0("\nMethod:\t\t\t", ci_method))
     cat(paste0("\nConfidence Level:\t", out_diag$ciperc))
     cat(paste0("\nAchieved Level:\t\t", out_diag$ciperc_final))
     cat(paste0("\nStandardized:\t\t", std))
-    cat(paste0("\nLikelihood-Based Limit:\t", ifelse(is.na(out), "Not valid",
-                  round(as.numeric(out), digits))))
+    cat(paste0("\nLikelihood-Based Limit:\t",
+                  ifelse(is.na(x$bound),
+                         "Not valid",
+                         round(x$bound, digits))))
     cat(paste0("\nWald limit:\t\t", round(out_diag$ci_org_limit, digits)))
     cat(paste0("\nPoint Estimate:\t\t", round(out_diag$est_org, digits)))
-    cat(paste0("\nRatio to Wald limit:\t", ifelse(is.na(out), "Not valid",
+    cat(paste0("\nRatio to Wald limit:\t", ifelse(is.na(x$bound), "Not valid",
                   round(out_diag$ci_limit_ratio, digits))))
     cat(paste0("\n\n-- Check --"))
     ciperc_diff <- abs(out_diag$ciperc - out_diag$ciperc_final)
@@ -49,12 +52,14 @@ ci_bound_diag <- function(out, digits = 5) {
             ifelse(ciperc_diff < 1e-5, "Yes", "No"), " (", ciperc_diff, ")"))
     cat(paste0("\nSolution admissible?\t",
             ifelse(out_diag$fit_post_check, "Yes", "No")))
-    if (is.na(out)) {
+    if (is.na(x$bound)) {
         direct_valid <- "Not valid"
       } else {
         direct_valid <- switch(out_diag$which,
-                          lbound = ifelse(out < out_diag$est_org, "Yes", "No"),
-                          ubound = ifelse(out > out_diag$est_org, "Yes", "No")
+                          lbound = ifelse(x$bound < out_diag$est_org,
+                                          "Yes", "No"),
+                          ubound = ifelse(x$bound > out_diag$est_org,
+                                          "Yes", "No")
                         )
       }
     cat(paste0("\nDirection valid?\t", direct_valid))

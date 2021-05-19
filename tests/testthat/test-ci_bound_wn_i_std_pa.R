@@ -57,20 +57,20 @@ astd := geteststd()
 "
 
 test_limit <- out1l
-modc <- paste(modc0, "\nastd == ", test_limit, "\n0 < 1")
+modc <- paste(modc0, "\nastd == ", test_limit$bound, "\n0 < 1")
 fitc <- lavaan::sem(modc, simple_med, do.fit = FALSE, fixed.x = FALSE)
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE, optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out1l <- fitc
 
 test_limit <- out1u
-modc <- paste(modc0, "\nastd == ", test_limit, "\n0 < 1")
+modc <- paste(modc0, "\nastd == ", test_limit$bound, "\n0 < 1")
 fitc <- lavaan::sem(modc, simple_med, do.fit = FALSE, fixed.x = FALSE)
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE, optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
@@ -86,20 +86,20 @@ bstd := geteststd()
 "
 
 test_limit <- out2l
-modc <- paste(modc0, "\nbstd == ", test_limit, "\n0 < 1")
+modc <- paste(modc0, "\nbstd == ", test_limit$bound, "\n0 < 1")
 fitc <- lavaan::sem(modc, simple_med, do.fit = FALSE, fixed.x = FALSE)
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE, optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out2l <- fitc
 
 test_limit <- out2u
-modc <- paste(modc0, "\nbstd == ", test_limit, "\n0 < 1")
+modc <- paste(modc0, "\nbstd == ", test_limit$bound, "\n0 < 1")
 fitc <- lavaan::sem(modc, simple_med, do.fit = FALSE, fixed.x = FALSE)
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE, optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))

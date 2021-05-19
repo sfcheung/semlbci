@@ -53,7 +53,7 @@ test_p <- function(fit0, fit1, ciperc, tol) {
     abs(anova(fit0, fit1)[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
   }
 
-modc0 <- 
+modc0 <-
 "
 f1 =~ x1 + a*x2 + b*x3
 f2 =~ x4 + b*x5 + d*x6
@@ -65,20 +65,20 @@ tstd := geteststd()
 geteststd <- get_std_genfct(fit = fit, i = 16)
 
 test_limit <- out1l
-modc <- paste(modc0, "\ntstd == ", test_limit, "\n0 < 1")
+modc <- paste(modc0, "\ntstd == ", test_limit$bound, "\n0 < 1")
 fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE)
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE, optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out1l <- fitc
 
 test_limit <- out1u
-modc <- paste(modc0, "\ntstd == ", test_limit, "\n0 < 1")
+modc <- paste(modc0, "\ntstd == ", test_limit$bound, "\n0 < 1")
 fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE)
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE, optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
@@ -88,20 +88,20 @@ fitc_out1u <- fitc
 geteststd <- get_std_genfct(fit = fit, i = 2)
 
 test_limit <- out2l
-modc <- paste(modc0, "\ntstd == ", test_limit, "\n0 < 1")
+modc <- paste(modc0, "\ntstd == ", test_limit$bound, "\n0 < 1")
 fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE)
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE, optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out2l <- fitc
 
 test_limit <- out2u
-modc <- paste(modc0, "\ntstd == ", test_limit, "\n0 < 1")
+modc <- paste(modc0, "\ntstd == ", test_limit$bound, "\n0 < 1")
 fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE)
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE, optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
@@ -111,20 +111,20 @@ fitc_out2u <- fitc
 geteststd <- get_std_genfct(fit = fit, i = 15)
 
 test_limit <- out3l
-modc <- paste(modc0, "\ntstd == ", test_limit, "\n0 < 1")
+modc <- paste(modc0, "\ntstd == ", test_limit$bound, "\n0 < 1")
 fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE)
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE, optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out3l <- fitc
 
 test_limit <- out3u
-modc <- paste(modc0, "\ntstd == ", test_limit, "\n0 < 1")
+modc <- paste(modc0, "\ntstd == ", test_limit$bound, "\n0 < 1")
 fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE)
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <-  attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE, optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))

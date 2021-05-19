@@ -54,22 +54,22 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(lavaan)
-#' mod <-
-#' "
-#' m ~ a*x
-#' y ~ b*m
-#' ab := a * b
-#' "
-#' fit_med <- sem(mod, simple_med, fixed.x = FALSE)
-#' p_table <- parameterTable(fit_med)
-#' p_table
-#' lbci_med <- semlbci(fit_med,
-#'                     pars = c("m ~ x",
-#'                              "y ~ m",
-#'                              "ab :="),
-#'                     method = "wn")
-#' lbci_med
+#' #library(lavaan)
+#' #mod <-
+#' #"
+#' #m ~ a*x
+#' #y ~ b*m
+#' #ab := a * b
+#' #"
+#' #fit_med <- sem(mod, simple_med, fixed.x = FALSE)
+#' #p_table <- parameterTable(fit_med)
+#' #p_table
+#' #lbci_med <- semlbci(fit_med,
+#' #                    pars = c("m ~ x",
+#' #                             "y ~ m",
+#' #                             "ab :="),
+#' #                    method = "wn")
+#' #lbci_med
 #' }
 #' @export
 
@@ -153,7 +153,8 @@ semlbci <- function(sem_out,
                       ciperc = ciperc,
                       ...)
       }
-    out <- do.call(rbind, out_raw)
+    out <- do.call(rbind, lapply(out_raw, function(x) x$bounds))
+    # out <- do.call(rbind, out_raw)
     out_p <- ptable[, c("id", "lhs", "op", "rhs")]
     out_p$lbci_lb <- NA
     if (standardized) {
@@ -170,11 +171,11 @@ semlbci <- function(sem_out,
 
     # Collect diagnostic info
 
-    lb_diag <- lapply(out_raw, attr, which = "lb_diag")
-    ub_diag <- lapply(out_raw, attr, which = "ub_diag")
-    lb_time <- sapply(out_raw, attr, which = "lb_time")
-    ub_time <- sapply(out_raw, attr, which = "ub_time")
-    ci_method <- sapply(out_raw, attr, which = "method")
+    lb_diag <- lapply(out_raw, function(x) x$diags$lb_diag)
+    ub_diag <- lapply(out_raw, function(x) x$diags$ub_diag)
+    lb_time <- sapply(out_raw, function(x) x$times$lb_time)
+    ub_time <- sapply(out_raw, function(x) x$times$ub_time)
+    ci_method <- sapply(out_raw, function(x) x$method)
     p_names <- mapply(paste0, out_p[pars, "lhs"],
                               out_p[pars, "op"],
                               out_p[pars, "rhs"],

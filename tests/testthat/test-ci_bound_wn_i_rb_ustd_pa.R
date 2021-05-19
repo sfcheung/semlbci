@@ -73,10 +73,10 @@ y ~ b*m
 "
 
 test_limit <- out1l
-modc <- paste(modc0, "\na == ", as.numeric(test_limit))
+modc <- paste(modc0, "\na == ", test_limit$bound)
 fitc <- lavaan::sem(modc, simple_med, fixed.x = FALSE, do.fit = FALSE, test = "satorra.bentler")
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <- attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE,
@@ -93,10 +93,10 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE,
 fitc_out1l <- fitc
 
 test_limit <- out1u
-modc <- paste(modc0, "\na == ", as.numeric(test_limit))
+modc <- paste(modc0, "\na == ", test_limit$bound)
 fitc <- lavaan::sem(modc, simple_med, fixed.x = FALSE, do.fit = FALSE, test = "satorra.bentler")
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <- attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE,
@@ -114,10 +114,10 @@ fitc_out1u <- fitc
 
 
 test_limit <- out2l
-modc <- paste(modc0, "\nb == ", as.numeric(test_limit))
+modc <- paste(modc0, "\nb == ", test_limit$bound)
 fitc <- lavaan::sem(modc, simple_med, fixed.x = FALSE, do.fit = FALSE, test = "satorra.bentler")
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <- attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE,
@@ -134,10 +134,10 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE,
 fitc_out2l <- fitc
 
 test_limit <- out2u
-modc <- paste(modc0, "\nb == ", as.numeric(test_limit))
+modc <- paste(modc0, "\nb == ", test_limit$bound)
 fitc <- lavaan::sem(modc, simple_med, fixed.x = FALSE, do.fit = FALSE, test = "satorra.bentler")
 ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <- attr(test_limit, "diag")$history$solution
+ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE,

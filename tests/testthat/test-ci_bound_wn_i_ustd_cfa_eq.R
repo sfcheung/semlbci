@@ -76,8 +76,8 @@ f1 ~~ fr*f2
 b == d
 "
 
-test_out4l <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "fr == ", modc0 = modc0, ci_out = out4l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
-test_out4u <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "fr == ", modc0 = modc0, ci_out = out4u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
+test_out4l <- suppressWarnings(test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "fr == ", modc0 = modc0, ci_out = out4l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE))
+test_out4u <- suppressWarnings(test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "fr == ", modc0 = modc0, ci_out = out4u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE))
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_out1l)

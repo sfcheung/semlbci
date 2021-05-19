@@ -44,6 +44,7 @@
 #'
 #'@examples
 #'
+#' \dontrun{
 #' data(simple_med)
 #'
 #' library(lavaan)
@@ -59,7 +60,7 @@
 #' # Find the LBCI for the first parameter
 #' out <- ci_i(1, npar = 5, sem_out = fit_med, method = "wn")
 #' out[1:2]
-#'
+#' }
 #' @export
 
 ci_i <- function(i,
@@ -96,12 +97,10 @@ ci_i <- function(i,
         lb_time <- system.time(lb <- ci_bound_nm_i(i, which = "lbound", ...))
         ub_time <- system.time(ub <- ci_bound_nm_i(i, which = "ubound", ...))
       }
-    out <- c(lb, ub)
-    attr(out, "lb_diag") <- attr(lb, "diag")
-    attr(out, "ub_diag") <- attr(ub, "diag")
-    attr(out, "method") <- method
-    attr(out, "lb_time") <- lb_time[3]
-    attr(out, "ub_time") <- ub_time[3]
-    attr(out, "sf_full") <- sf_full
+    out <- list(bounds = c(lbound = lb$bound, ubound = ub$bound),
+                diags = list(lb_diag = lb$diag, ub_diag = ub$diag),
+                method = method,
+                times = list(lb_time = lb_time[3], ub_time = ub_time[3]),
+                sf_full = sf_full)
     out
   }

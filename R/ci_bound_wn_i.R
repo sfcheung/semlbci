@@ -354,8 +354,9 @@ ci_bound_wn_i <- function(i = NULL,
         # If convergence status < 0, override verbose
         diag$history <- out
       }
-    attr(bound, "diag") <- diag
-    attr(bound, "call") <- match.call()
-    class(bound) <- c("cibound", class(bound))
-    bound
+    out <- list(bound = bound,
+                diag = diag,
+                call = match.call())
+    class(out) <- c("cibound", class(out))
+    out
   }

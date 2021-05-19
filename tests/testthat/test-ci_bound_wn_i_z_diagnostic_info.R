@@ -27,7 +27,8 @@ system.time(out1u <- ci_bound_wn_i(1, 5, sem_out = fit_med, f_constr = fn_constr
 # system.time(out1ls <- ci_bound_wn_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "lbound", opts = opts0, standardized = TRUE, verbose = TRUE))
 # system.time(out1us <- ci_bound_wn_i(2, 5, sem_out = fit_med, f_constr = fn_constr0, which = "ubound", opts = opts0, standardized = TRUE, verbose = TRUE))
 
-out1l_diag <- attr(out1l, "diag")
+out1l_diag <- out1l$diag
+# out1l_diag <- attr(out1l, "diag")
 # out1ls_diag <- attr(out1ls, "diag")
 
 test_that("Check diagnostic object: status", {
@@ -52,7 +53,7 @@ test_that("Check diagnostic object: ci_org_limit", {
 test_that("Check diagnostic object: ci_limit_ratio", {
     expect_equal(
         out1l_diag$ci_limit_ratio,
-        abs((out1l - out1l_diag$est_org) / (out1l_diag$ci_org_limit - out1l_diag$est_org)),
+        abs((out1l$bound - out1l_diag$est_org) / (out1l_diag$ci_org_limit - out1l_diag$est_org)),
         ignore_attr = TRUE
       )
   })

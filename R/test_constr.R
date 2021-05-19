@@ -31,10 +31,10 @@ test_constr <- function(fit,
                         tol = 1e-4,
                         update_args = list(),
                         ...) {
-    modc <- paste(modc0, "\n", parc, as.numeric(ci_out), "\n", parc2 = "")
+    modc <- paste(modc0, "\n", parc, ci_out$bound, "\n", parc2 = "")
     fitc <- semfct(model = modc, data = dat, do.fit = FALSE, ...)
     ptable <- lavaan::parameterTable(fitc)
-    ptable[ptable$free > 0, "est"] <-  attr(ci_out, "diag")$history$solution
+    ptable[ptable$free > 0, "est"] <-  ci_out$diag$history$solution
     update_args_final <- utils::modifyList(
                           list(object = fitc,
                                data = dat,
