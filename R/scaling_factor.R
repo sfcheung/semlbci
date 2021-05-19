@@ -99,15 +99,9 @@ scaling_factor <- function(sem_out,
             return(tmpfct)
           }
 
-        # Using `<<-` is not a desired approach. If we found a solution using
-        # environment, we should use that solution rather than `<<-`.
-        # geteststd <- gen_fct(fit = sem_out, i = i)
-        # browser()
-        # geteststd_name <- gen_unique_name(ls(pos = .GlobalEnv))
-        # update_env <- new.env(parent = .GlobalEnv)
-        # assign(geteststd_name, gen_fct(fit = sem_out, i = i),
-        #        pos = update_env)
-        # browser()
+        # Changing the global environment is not a desired approach.
+        # If we found a solution using
+        # environment, we should use that solution.
         update_env <- .GlobalEnv
         geteststd_name <- "geteststd"
         while (geteststd_name %in% names(update_env)) {
@@ -117,12 +111,6 @@ scaling_factor <- function(sem_out,
                pos = update_env)
         fit0 <- lavaan::update(sem_out,
                                model = p_table_fit,
-                              #  add = paste0(i_label, " := ",
-                              #               "get_std_i(i = ",
-                              #               i,
-                              #               ")"),
-                              #  add = paste0(i_label, " := ",
-                              #               geteststd_name, "()"),
                                add = paste0(i_label, " := geteststd()"),
                                do.fit = FALSE,
                                baseline = FALSE,
@@ -182,7 +170,6 @@ scaling_factor <- function(sem_out,
         # # Not sure why we have to manually set this constraint to fixed
         p_table0[p_table0$lhs == i_label, "free"] <- 0
         i_constr <- which(p_table0$lhs == i_label & p_table0$op == "==")
-        # p_table0[p_table0$free > 0, "est"] <- lavaan::coef(sem_out)
         fit1 <- lavaan::update(fit0,
                                model = p_table0,
                                do.fit = TRUE,

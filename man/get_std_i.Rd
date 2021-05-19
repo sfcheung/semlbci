@@ -21,3 +21,4 @@ Get standardized solution within lavaan
 # TODO
 
 }
+\keyword{internal}
