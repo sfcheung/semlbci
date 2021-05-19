@@ -201,6 +201,7 @@ semlbci <- function(sem_out,
     attr(out_p, "ub_time") <- ub_time
     attr(out_p, "ci_method") <- ci_method
     attr(out_p, "scaling_factor") <- scaling_factor
+    attr(out_p, "call") <- match.call()
 
     # Append diagnostic info
 
