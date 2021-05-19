@@ -1,3 +1,7 @@
+skip_if(Sys.getenv("SEMLBCI_TEST_SLOW") == "",
+        "Skip due to speed or other issues")
+# To be tested in interactive sessions only due to scoping or speed issues
+
 library(semlbci)
 library(lavaan)
 options(width = 132)
@@ -16,7 +20,7 @@ f1 ~ f2
 "
 fit <- lavaan::sem(mod, cfa_two_factors, test = "satorra.bentler")
 
-summary(fit)
+# summary(fit)
 
 # Find the scaling factor
 

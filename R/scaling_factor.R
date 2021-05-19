@@ -71,6 +71,7 @@ scaling_factor <- function(sem_out,
 
         # Need to define this function here to prevent possible scoping issues
         gen_fct <- function(fit, i) {
+            #
             force(fit)
             force(i)
             fit_pt <- lavaan::parameterTable(fit)
@@ -104,10 +105,15 @@ scaling_factor <- function(sem_out,
 
         # Using `<<-` is not a desired approach. If we found a solution using
         # environment, we should use that solution rather than `<<-`.
-        geteststd <<- gen_fct(fit = sem_out, i = i)
+        # geteststd <- gen_fct(fit = sem_out, i = i)
+        geteststd_name <- gen_unique_name(ls(pos = .GlobalEnv))
+        assign(geteststd_name, gen_fct(fit = sem_out, i = i),
+               pos = .GlobalEnv)
         fit0 <- lavaan::update(sem_out,
                                model = p_table_fit,
-                               add = paste0(i_label, " := geteststd()"),
+                               add = paste0(i_label, " := ", 
+                                            geteststd_name, "()"),
+                              #  add = paste0(i_label, " := geteststd()"),
                                do.fit = FALSE,
                                baseline = FALSE,
                                h1 = FALSE,
@@ -182,30 +188,39 @@ scaling_factor <- function(sem_out,
                               )
       }
 
-      # Do the LR test
+    # Do the LR test
 
-      lrt_out <- lavaan::lavTestLRT(sem_out,
-                                    fit1,
-                                    method = "satorra.2000",
-                                    A.method = "exact")
-      diff_from_p <- stats::qchisq(lrt_out[2, "Pr(>Chisq)"],
+    lrt_out <- lavaan::lavTestLRT(sem_out,
+                                  fit1,
+                                  method = "satorra.2000",
+                                  A.method = "exact")
+    diff_from_p <- stats::qchisq(lrt_out[2, "Pr(>Chisq)"],
+                                1,
+                                lower.tail = FALSE)
+    chisq_1 <- lrt_out["fit1", "Chisq"]
+    chisq_0 <- lrt_out["sem_out", "Chisq"]
+    chisq_diff_c <- chisq_1 - chisq_0
+    chisq_diff_p <- stats::qchisq(lrt_out[2, "Pr(>Chisq)"],
                                   1,
                                   lower.tail = FALSE)
-      chisq_1 <- lrt_out["fit1", "Chisq"]
-      chisq_0 <- lrt_out["sem_out", "Chisq"]
-      chisq_diff_c <- chisq_1 - chisq_0
-      chisq_diff_p <- stats::qchisq(lrt_out[2, "Pr(>Chisq)"],
-                                    1,
-                                    lower.tail = FALSE)
-      chisq_diff_r <- lrt_out["fit1", "Chisq diff"]
-      out <-
-        data.frame(chisq_1 = chisq_1,
-          chisq_0 = chisq_0,
-          chisq_diff_c = chisq_diff_c,
-          chisq_diff_r = chisq_diff_r,
-          chisq_diff_p = chisq_diff_p,
-          c_p = chisq_diff_c / chisq_diff_p,
-          c_r = chisq_diff_c / chisq_diff_r)
+    chisq_diff_r <- lrt_out["fit1", "Chisq diff"]
+    out <-
+      data.frame(chisq_1 = chisq_1,
+        chisq_0 = chisq_0,
+        chisq_diff_c = chisq_diff_c,
+        chisq_diff_r = chisq_diff_r,
+        chisq_diff_p = chisq_diff_p,
+        c_p = chisq_diff_c / chisq_diff_p,
+        c_r = chisq_diff_c / chisq_diff_r)
 
-      return(out)
+    if (standardized) {
+        # Try to make sure that only the function created above is removed
+        tmp <- get(geteststd_name, pos = .GlobalEnv)
+        if (identical(as.character(as.list(body(tmp))[[4]]),
+                      c("force", "fit_pt"))) {
+            rm(list = geteststd_name, pos = .GlobalEnv)
+          }
+      }
+
+    return(out)
   }
