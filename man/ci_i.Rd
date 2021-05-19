@@ -52,6 +52,7 @@ found.
 }
 \examples{
 
+\dontrun{
 data(simple_med)
 
 library(lavaan)
@@ -67,7 +68,7 @@ parameterTable(fit_med)
 # Find the LBCI for the first parameter
 out <- ci_i(1, npar = 5, sem_out = fit_med, method = "wn")
 out[1:2]
-
+}
 }
 \seealso{
 \code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}

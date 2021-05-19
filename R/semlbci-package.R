@@ -51,3 +51,5 @@
 #' @name semlbci-package
 #'
 NULL
+
+utils::globalVariables("geteststd")

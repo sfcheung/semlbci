@@ -19,8 +19,6 @@
 #'
 #' @keywords internal
 
-utils::globalVariables("geteststd")
-
 scaling_factor <- function(sem_out,
                            i,
                            standardized = FALSE,

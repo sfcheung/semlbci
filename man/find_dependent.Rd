@@ -36,8 +36,6 @@ This function is particularly important when the target parameter is one
 in the standardized solution. In this case, the dependency among parameters
 can be very complicated.
 
-This function is currently used by \code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}}.
-
 Currently supports a \link[lavaan:lavaan-class]{lavaan::lavaan} output only.
 }
 \examples{
@@ -68,8 +66,5 @@ out_std <- lapply(c(1,2, 3, 4, 6, 7), find_dependent,
 #' all free parameters
 ptable[out_std[[6]], ]
 }
-}
-\seealso{
-\code{\link[=ci_bound_nm_i]{ci_bound_nm_i()}}
 }
 \keyword{internal}

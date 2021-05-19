@@ -94,8 +94,6 @@ ci_i <- function(i,
       }
     if (method == "nm") {
         stop("The method 'nm' is no longer supported.")
-        lb_time <- system.time(lb <- ci_bound_nm_i(i, which = "lbound", ...))
-        ub_time <- system.time(ub <- ci_bound_nm_i(i, which = "ubound", ...))
       }
     out <- list(bounds = c(lbound = lb$bound, ubound = ub$bound),
                 diags = list(lb_diag = lb$diag, ub_diag = ub$diag),

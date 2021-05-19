@@ -14,12 +14,7 @@
 #' in the standardized solution. In this case, the dependency among parameters
 #' can be very complicated.
 #'
-#' This function is currently used by [ci_bound_nm_i()].
-#'
 #' Currently supports a [lavaan::lavaan-class] output only.
-#'
-#' @seealso
-#' [ci_bound_nm_i()]
 #'
 #' @return
 #' A numeric vector of the positions of the free parameters in the

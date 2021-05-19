@@ -66,22 +66,22 @@ Currently supports \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.
 }
 \examples{
 \dontrun{
-library(lavaan)
-mod <-
-"
-m ~ a*x
-y ~ b*m
-ab := a * b
-"
-fit_med <- sem(mod, simple_med, fixed.x = FALSE)
-p_table <- parameterTable(fit_med)
-p_table
-lbci_med <- semlbci(fit_med,
-                    pars = c("m ~ x",
-                             "y ~ m",
-                             "ab :="),
-                    method = "wn")
-lbci_med
+#library(lavaan)
+#mod <-
+#"
+#m ~ a*x
+#y ~ b*m
+#ab := a * b
+#"
+#fit_med <- sem(mod, simple_med, fixed.x = FALSE)
+#p_table <- parameterTable(fit_med)
+#p_table
+#lbci_med <- semlbci(fit_med,
+#                    pars = c("m ~ x",
+#                             "y ~ m",
+#                             "ab :="),
+#                    method = "wn")
+#lbci_med
 }
 }
 \references{
