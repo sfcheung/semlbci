@@ -183,6 +183,7 @@ semlbci <- function(sem_out,
     lb_time <- sapply(out_raw, function(x) x$times$lb_time)
     ub_time <- sapply(out_raw, function(x) x$times$ub_time)
     ci_method <- sapply(out_raw, function(x) x$method)
+    scaling_factor <- lapply(out_raw, function(x) x$sf_full)
     p_names <- mapply(paste0, out_p[pars, "lhs"],
                               out_p[pars, "op"],
                               out_p[pars, "rhs"],
@@ -192,12 +193,14 @@ semlbci <- function(sem_out,
     names(lb_time) <- p_names
     names(ub_time) <- p_names
     names(ci_method) <- p_names
+    names(scaling_factor) <- p_names
 
     attr(out_p, "lb_diag") <- lb_diag
     attr(out_p, "ub_diag") <- ub_diag
     attr(out_p, "lb_time") <- lb_time
     attr(out_p, "ub_time") <- ub_time
     attr(out_p, "ci_method") <- ci_method
+    attr(out_p, "scaling_factor") <- scaling_factor
 
     # Append diagnostic info
 
@@ -214,6 +217,9 @@ semlbci <- function(sem_out,
     out_p[pars, "time_lb"] <- as.numeric(lb_time)
     out_p[pars, "time_ub"] <- as.numeric(ub_time)
     out_p[pars, "method"] <- ci_method
+    if (robust != "none") {
+        out_p[pars, "robust"] <- robust
+      }
 
     class(out_p) <- c("semlbci", class(out_p))
     out_p
