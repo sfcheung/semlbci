@@ -319,7 +319,7 @@ ci_bound_wn_i <- function(i = NULL,
     nobs <- lavaan::lavTech(sem_out, "nobs")
     fmin_org <- lavaan::lavTech(sem_out, "optim")$fx
     fmin_final <- lavaan::lavTech(fit_final, "optim")$fx
-    chisq_diff <- (fmin_final - fmin_org) * 2 * nobs
+    chisq_diff <- (fmin_final - fmin_org) * 2 * nobs / sf
     ciperc_final <- stats::pchisq(chisq_diff, 1)
 
     diag <- list(status = status,
