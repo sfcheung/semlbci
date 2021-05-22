@@ -108,7 +108,7 @@ scaling_factor <- function(sem_out,
         update_env <- .GlobalEnv
         geteststd_name <- "geteststd"
         while (geteststd_name %in% names(update_env)) {
-            geteststd_name <- paste(geteststd_name, sample(letters, 1))
+            geteststd_name <- paste0(geteststd_name, sample(letters, 1))
           }
         assign(geteststd_name, gen_fct(fit = sem_out, i = i),
                pos = update_env)
@@ -203,7 +203,6 @@ scaling_factor <- function(sem_out,
       }
 
     # Do the LR test
-
     lrt_out <- lavaan::lavTestLRT(sem_out,
                                   fit1,
                                   method = "satorra.2000",
