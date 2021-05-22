@@ -16,7 +16,7 @@ mod <-
 "
 m ~ a*x
 y ~ b*m
-0 == a - b
+0 == (a - b)^2
 #asq := a^2
 "
 fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE, test = "satorra.bentler")
@@ -77,6 +77,8 @@ modc0 <-
 "
 m ~ a*x
 y ~ b*m
+0 == (a - b)^2
+#asq := a^2
 "
 
 test_limit <- out1l
@@ -118,7 +120,7 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE,
                   # )
                 )
 fitc_out1u <- fitc
-
+lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact")
 
 test_limit <- out2l
 modc <- paste(modc0, "\nb == ", test_limit$bound)
