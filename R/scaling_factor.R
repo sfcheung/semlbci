@@ -173,15 +173,15 @@ scaling_factor <- function(sem_out,
         fit1 <- lavaan::update(fit0,
                                model = p_table0,
                                do.fit = TRUE,
-                               optim.force.converged = TRUE,
-                               optim.dx.tol = .01,
-                               warn = FALSE,
-                               control = list(
-                                    eval.max = 2,
-                                    iterations = 1,
-                                    control.outer = list(tol = 1e-02,
-                                                         itmax = 1)
-                                )
+                               optim.force.converged = TRUE
+                              #  optim.dx.tol = .01,
+                              #  warn = FALSE,
+                              #  control = list(
+                              #       eval.max = 2,
+                              #       iterations = 1,
+                              #       control.outer = list(tol = 1e-02,
+                              #                            itmax = 1)
+                              #   )
                               )
       }
 
