@@ -13,6 +13,8 @@
 #'                     solution. Default is `FALSE`.
 #' @param pertubation_factor A factor to modify the original estimate. Default
 #'                           is .98.
+#' @param update_args The list of additional arguments to be passed to
+#'                    [lavaan::update]. Default is `list()`.
 #'
 #' @examples
 #' # TODO
@@ -22,7 +24,8 @@
 scaling_factor <- function(sem_out,
                            i,
                            standardized = FALSE,
-                           pertubation_factor = .98
+                           pertubation_factor = .98,
+                           update_args = list()
                            ) {
     # This function will NOT check whether the SEM was done with robust model
     # test. This check should be done before calling this function.
@@ -136,10 +139,17 @@ scaling_factor <- function(sem_out,
                                           p_table[p_table0$free > 0, "est"]
         p_table0[p_table0$free > 0, "est"] <-
                                           p_table[p_table0$free > 0, "est"]
-        fit1 <- lavaan::update(fit0,
-                               model = p_table0,
-                               do.fit = TRUE,
-                               optim.force.converged = TRUE
+        update_args0 <- list(object = fit0,
+                             model = p_table0,
+                             do.fit = TRUE,
+                             optim.force.converged = TRUE)
+        update_args1 <- utils::modifyList(update_args0,
+                                          update_args)
+        fit1 <- do.call(lavaan::update, update_args1)
+        # fit1 <- lavaan::update(fit0,
+        #                        model = p_table0,
+        #                        do.fit = TRUE,
+        #                        optim.force.converged = TRUE
                               #  optim.dx.tol = .01,
                               #  warn = FALSE,
                               #  control = list(
@@ -148,7 +158,7 @@ scaling_factor <- function(sem_out,
                               #       control.outer = list(tol = 1e-02,
                               #                            itmax = 1)
                               #   )
-                              )
+                              # )
       } else {
 
         # Unstandardized. User defined or not does not matter
@@ -170,10 +180,17 @@ scaling_factor <- function(sem_out,
         # # Not sure why we have to manually set this constraint to fixed
         p_table0[p_table0$lhs == i_label, "free"] <- 0
         i_constr <- which(p_table0$lhs == i_label & p_table0$op == "==")
-        fit1 <- lavaan::update(fit0,
-                               model = p_table0,
-                               do.fit = TRUE,
-                               optim.force.converged = TRUE
+        update_args0 <- list(object = fit0,
+                             model = p_table0,
+                             do.fit = TRUE,
+                             optim.force.converged = TRUE)
+        update_args1 <- utils::modifyList(update_args0,
+                                          update_args)
+        fit1 <- do.call(lavaan::update, update_args1)
+        # fit1 <- lavaan::update(fit0,
+        #                        model = p_table0,
+        #                        do.fit = TRUE,
+        #                        optim.force.converged = TRUE
                               #  optim.dx.tol = .01,
                               #  warn = FALSE,
                               #  control = list(
@@ -182,7 +199,7 @@ scaling_factor <- function(sem_out,
                               #       control.outer = list(tol = 1e-02,
                               #                            itmax = 1)
                               #   )
-                              )
+                              # )
       }
 
     # Do the LR test
