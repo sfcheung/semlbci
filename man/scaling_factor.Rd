@@ -4,7 +4,13 @@
 \alias{scaling_factor}
 \title{Find the scaling factor used in satorra-2000 test}
 \usage{
-scaling_factor(sem_out, i, standardized = FALSE, pertubation_factor = 0.98)
+scaling_factor(
+  sem_out,
+  i,
+  standardized = FALSE,
+  pertubation_factor = 0.98,
+  update_args = list()
+)
 }
 \arguments{
 \item{sem_out}{The source fit object.}
@@ -17,6 +23,9 @@ solution. Default is \code{FALSE}.}
 
 \item{pertubation_factor}{A factor to modify the original estimate. Default
 is .98.}
+
+\item{update_args}{The list of additional arguments to be passed to
+\link[lavaan:update]{lavaan::update}. Default is \code{list()}.}
 }
 \value{
 The scaling factor
