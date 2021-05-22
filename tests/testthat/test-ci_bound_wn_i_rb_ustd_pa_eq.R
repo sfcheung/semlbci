@@ -99,6 +99,10 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE,
                   #                          itmax = 1)
                   # )
                 )
+tmp <- lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact")
+tmp
+get_scaling_factor(tmp)
+sf1
 fitc_out1l <- fitc
 
 test_limit <- out1u
@@ -163,9 +167,9 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE,
 fitc_out2u <- fitc
 
 test_that("Check p-value for the chi-square difference test", {
-    expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))
-    expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-4))
-    expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-4))
-    expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-4))
+    expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-3))
+    expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-3))
+    expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-3))
+    expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-3))
   })
 
