@@ -1,5 +1,3 @@
-skip("WIP: Not yet ready")
-
 # Note:
 # A.method = "exact" does not work if there is an 
 # equality constraint. Need to resort "delta".
