@@ -22,7 +22,9 @@ get_std_genfct <- function(fit, i) {
                           fit@Model, .x.
                         )
         fit_pt2 <- fit_pt
-        fit_pt2[fit_pt$free > 0, "est"] <- .x.
+        nfree <- sum(fit_pt$free > 0)
+        fit_pt2[fit_pt$free > 0, "est"]  <- 
+                                      .x.[seq_len(nfree)]
         fit@ParTable <- as.list(fit_pt2)
         std <- lavaan::standardizedSolution(
                           fit,
