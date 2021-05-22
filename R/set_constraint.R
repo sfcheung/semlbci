@@ -54,7 +54,8 @@ set_constraint <- function(sem_out, ciperc = .95) {
     # NOTE: For lavaan, chisq = 2 * n * fmin
     target <- fmin + qcrit / (2 * n)
     # Check if there are any equality constraints
-    if (sem_out@Model@eq.constraints) {
+    if (sem_out@Model@eq.constraints ||
+        !is.null(body(sem_out@Model@ceq.function))) {
         fn_constraint <- function(param,
                                   sem_out = NULL,
                                   debug = FALSE,
