@@ -25,7 +25,7 @@ solution. Default is \code{FALSE}.}
 is .98.}
 
 \item{update_args}{The list of additional arguments to be passed to
-\link[lavaan:update]{lavaan::update}. Default is \code{list()}.}
+\code{lavaan::update}. Default is \code{list()}.}
 }
 \value{
 The scaling factor

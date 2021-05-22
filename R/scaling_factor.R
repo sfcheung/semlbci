@@ -14,7 +14,7 @@
 #' @param pertubation_factor A factor to modify the original estimate. Default
 #'                           is .98.
 #' @param update_args The list of additional arguments to be passed to
-#'                    [lavaan::update]. Default is `list()`.
+#'                    `lavaan::update`. Default is `list()`.
 #'
 #' @examples
 #' # TODO
