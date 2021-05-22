@@ -4,8 +4,7 @@ skip_if(Sys.getenv("SEMLBCI_TEST_SLOW") == "",
 
 # NOTE
 # Can take a long time to find the scaling factor.
-# Scaling factors for 2 and 3 are wrong.
-
+# Cannot find the scaling factor for i = 15
 
 library(testthat)
 library(semlbci)
@@ -27,10 +26,19 @@ ptable <- parameterTable(fit)
 ptable
 
 # Find the scaling factors
+update_args <- list(
+                    optim.dx.tol = .01,
+                    warn = TRUE,
+                    control = list(eval.max = 10,
+                                  iterations = 4,
+                                  control.outer = list(tol = 1e-02,
+                                  itmax = 10)
+                                  )
+                              )
 
-sf1 <- scaling_factor(fit, i = 5, standardized = TRUE)
-sf2 <- scaling_factor(fit, i = 4, standardized = TRUE)
-sf3 <- scaling_factor(fit, i = 15, standardized = TRUE)
+sf1 <- scaling_factor(fit, i =  5, standardized = TRUE, update_args = update_args)
+sf2 <- scaling_factor(fit, i =  4, standardized = TRUE, update_args = update_args)
+# sf3 <- scaling_factor(fit, i = 15, standardized = TRUE, update_args = update_args)
 
 # Find the LBCIs
 
@@ -40,16 +48,21 @@ fn_constr0 <- set_constraint(fit, ciperc = ciperc)
 
 # opts0 <- list(print_level = 3)
 opts0 <- list()
-opts0 <- list(ftol_abs = 1e-10
+opts0 <- list(ftol_abs = 1e-7
               )
 time1l <- system.time(out1l <- ci_bound_wn_i(5, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, sf = sf1$c_r, wald_ci_start = FALSE))
 time1u <- system.time(out1u <- ci_bound_wn_i(5, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, sf = sf1$c_r, wald_ci_start = FALSE))
 time2l <- system.time(out2l <- ci_bound_wn_i(4, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, sf = sf2$c_r, wald_ci_start = FALSE))
 time2u <- system.time(out2u <- ci_bound_wn_i(4, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, sf = sf2$c_r, wald_ci_start = FALSE))
-time3l <- system.time(out3l <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, sf = sf3$c_r, wald_ci_start = FALSE))
-time3u <- system.time(out3u <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, sf = sf3$c_r, wald_ci_start = FALSE))
+# time3l <- system.time(out3l <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, sf = sf3$c_r, wald_ci_start = FALSE))
+# time3u <- system.time(out3u <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, sf = sf3$c_r, wald_ci_start = FALSE))
 
-timexx <- rbind(time1l, time1u, time2l, time2u, time3l, time3u)
+out1l$diag$ciperc_final
+out1u$diag$ciperc_final
+out2l$diag$ciperc_final
+out2u$diag$ciperc_final
+
+timexx <- rbind(time1l, time1u, time2l, time2u)
 timexx
 
 # Check the results
@@ -148,47 +161,47 @@ fitc_out2u <- fitc
 get_scaling_factor(tmp)
 sf2
 
-geteststd3 <- get_std_genfct(fit = fit, i = 15)
+# geteststd3 <- get_std_genfct(fit = fit, i = 15)
 
-modc0 <- 
-"
-f1 =~ x1 + a*x2 + b*x3
-f2 =~ x4 + c*x5 + d*x6
-0 == (c - a)^2
-tstd := geteststd3()
-"
+# modc0 <- 
+# "
+# f1 =~ x1 + a*x2 + b*x3
+# f2 =~ x4 + c*x5 + d*x6
+# 0 == (c - a)^2
+# tstd := geteststd3()
+# "
 
-test_limit <- out3l
-modc <- paste(modc0, "\ntstd == ", test_limit$bound, "\n0 < 1")
-fitc <- lavaan::cfa(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
-ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
-fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE, optim.force.converged = TRUE,
-                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
-fitc_out3l <- fitc
-(tmp <- lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact"))
-get_scaling_factor(tmp)
-sf3
+# test_limit <- out3l
+# modc <- paste(modc0, "\ntstd == ", test_limit$bound, "\n0 < 1")
+# fitc <- lavaan::cfa(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
+# ptable <- parameterTable(fitc)
+# ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
+# fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
+#                    verbose = FALSE, optim.force.converged = TRUE,
+#                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
+# fitc_out3l <- fitc
+# (tmp <- lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact"))
+# get_scaling_factor(tmp)
+# sf3
 
-test_limit <- out3u
-modc <- paste(modc0, "\ntstd == ", test_limit$bound, "\n0 < 1")
-fitc <- lavaan::cfa(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
-ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
-fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE, optim.force.converged = TRUE,
-                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
-fitc_out3u <- fitc
-(tmp <- lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact"))
-get_scaling_factor(tmp)
-sf3
+# test_limit <- out3u
+# modc <- paste(modc0, "\ntstd == ", test_limit$bound, "\n0 < 1")
+# fitc <- lavaan::cfa(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
+# ptable <- parameterTable(fitc)
+# ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
+# fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
+#                    verbose = FALSE, optim.force.converged = TRUE,
+#                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
+# fitc_out3u <- fitc
+# (tmp <- lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact"))
+# get_scaling_factor(tmp)
+# sf3
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-3))
     expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-3))
-    # expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-5))
-    # expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-5))
+    expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-5))
+    expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-5))
     # expect_true(test_p(fitc_out3l, fit, ciperc = ciperc, tol = 1e-5))
     # expect_true(test_p(fitc_out3u, fit, ciperc = ciperc, tol = 1e-5))
   })
