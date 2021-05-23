@@ -15,6 +15,8 @@
 #'                           is .98.
 #' @param update_args The list of additional arguments to be passed to
 #'                    `lavaan::update`. Default is `list()`.
+#' @param force_converged Whether the constrained model will be forced to have
+#'                        converged, without udpate. Default is `TRUE`.
 #'
 #' @examples
 #' # TODO
@@ -25,7 +27,8 @@ scaling_factor <- function(sem_out,
                            i,
                            standardized = FALSE,
                            pertubation_factor = .98,
-                           update_args = list()
+                           update_args = list(),
+                           force_converged = TRUE
                            ) {
     # This function will NOT check whether the SEM was done with robust model
     # test. This check should be done before calling this function.
@@ -139,26 +142,36 @@ scaling_factor <- function(sem_out,
                                           p_table[p_table0$free > 0, "est"]
         p_table0[p_table0$free > 0, "est"] <-
                                           p_table[p_table0$free > 0, "est"]
-        update_args0 <- list(object = fit0,
-                             model = p_table0,
-                             do.fit = TRUE,
-                             optim.force.converged = TRUE)
-        update_args1 <- utils::modifyList(update_args0,
-                                          update_args)
-        fit1 <- do.call(lavaan::update, update_args1)
-        # fit1 <- lavaan::update(fit0,
-        #                        model = p_table0,
-        #                        do.fit = TRUE,
-        #                        optim.force.converged = TRUE
-                              #  optim.dx.tol = .01,
-                              #  warn = FALSE,
-                              #  control = list(
-                              #       eval.max = 2,
-                              #       iterations = 1,
-                              #       control.outer = list(tol = 1e-02,
-                              #                            itmax = 1)
-                              #   )
-                              # )
+        if (force_converged) {
+            fit1 <- suppressWarnings(
+                        update(fit0, start = p_table0, do.fit = FALSE,
+                              baseline = FALSE, h1 = FALSE, se = "none",
+                              optim.force.converged = TRUE)
+                      )
+            fit1@test[[1]]$stat <- sem_out@test[[1]]$stat * 10
+            fit1@test[[1]]$df <- sem_out@test[[1]]$df + 1
+          } else {
+            update_args0 <- list(object = fit0,
+                                model = p_table0,
+                                do.fit = TRUE,
+                                optim.force.converged = TRUE)
+            update_args1 <- utils::modifyList(update_args0,
+                                              update_args)
+            fit1 <- do.call(lavaan::update, update_args1)
+            # fit1 <- lavaan::update(fit0,
+            #                        model = p_table0,
+            #                        do.fit = TRUE,
+            #                        optim.force.converged = TRUE
+                                  #  optim.dx.tol = .01,
+                                  #  warn = FALSE,
+                                  #  control = list(
+                                  #       eval.max = 2,
+                                  #       iterations = 1,
+                                  #       control.outer = list(tol = 1e-02,
+                                  #                            itmax = 1)
+                                  #   )
+                                  # )
+          }
       } else {
 
         # Unstandardized. User defined or not does not matter
@@ -180,28 +193,37 @@ scaling_factor <- function(sem_out,
         # # Not sure why we have to manually set this constraint to fixed
         p_table0[p_table0$lhs == i_label, "free"] <- 0
         i_constr <- which(p_table0$lhs == i_label & p_table0$op == "==")
-        update_args0 <- list(object = fit0,
-                             model = p_table0,
-                             do.fit = TRUE,
-                             optim.force.converged = TRUE)
-        update_args1 <- utils::modifyList(update_args0,
-                                          update_args)
-        fit1 <- do.call(lavaan::update, update_args1)
-        # fit1 <- lavaan::update(fit0,
-        #                        model = p_table0,
-        #                        do.fit = TRUE,
-        #                        optim.force.converged = TRUE
-                              #  optim.dx.tol = .01,
-                              #  warn = FALSE,
-                              #  control = list(
-                              #       eval.max = 2,
-                              #       iterations = 1,
-                              #       control.outer = list(tol = 1e-02,
-                              #                            itmax = 1)
-                              #   )
-                              # )
-      }
-
+        if (force_converged) {
+            fit1 <- suppressWarnings(
+                        update(fit0, start = p_table0, do.fit = FALSE,
+                              baseline = FALSE, h1 = FALSE, se = "none",
+                              optim.force.converged = TRUE)
+                      )
+            fit1@test[[1]]$stat <- sem_out@test[[1]]$stat * 10
+            fit1@test[[1]]$df <- sem_out@test[[1]]$df + 1
+          } else {
+            update_args0 <- list(object = fit0,
+                                model = p_table0,
+                                do.fit = TRUE,
+                                optim.force.converged = TRUE)
+            update_args1 <- utils::modifyList(update_args0,
+                                              update_args)
+            fit1 <- do.call(lavaan::update, update_args1)
+            # fit1 <- lavaan::update(fit0,
+            #                        model = p_table0,
+            #                        do.fit = TRUE,
+            #                        optim.force.converged = TRUE
+                                  #  optim.dx.tol = .01,
+                                  #  warn = FALSE,
+                                  #  control = list(
+                                  #       eval.max = 2,
+                                  #       iterations = 1,
+                                  #       control.outer = list(tol = 1e-02,
+                                  #                            itmax = 1)
+                                  #   )
+                                  # )
+          }
+          }
     # Do the LR test
     lrt_out <- lavaan::lavTestLRT(sem_out,
                                   fit1,

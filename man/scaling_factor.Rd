@@ -9,7 +9,8 @@ scaling_factor(
   i,
   standardized = FALSE,
   pertubation_factor = 0.98,
-  update_args = list()
+  update_args = list(),
+  force_converged = TRUE
 )
 }
 \arguments{
@@ -26,6 +27,9 @@ is .98.}
 
 \item{update_args}{The list of additional arguments to be passed to
 \code{lavaan::update}. Default is \code{list()}.}
+
+\item{force_converged}{Whether the constrained model will be forced to have
+converged, without udpate. Default is \code{TRUE}.}
 }
 \value{
 The scaling factor
