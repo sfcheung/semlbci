@@ -111,13 +111,14 @@ scaling_factor <- function(sem_out,
         update_env <- .GlobalEnv
         geteststd_name <- "geteststd"
         while (geteststd_name %in% names(update_env)) {
-            geteststd_name <- paste0(geteststd_name, sample(letters, 1))
+            geteststd_name <- paste0(geteststd_name, "_", sample(letters, 5))
           }
         assign(geteststd_name, gen_fct(fit = sem_out, i = i),
                pos = update_env)
         fit0 <- lavaan::update(sem_out,
                                model = p_table_fit,
-                               add = paste0(i_label, " := geteststd()"),
+                               add = paste0(i_label, " := ",
+                                            geteststd_name, "()"),
                                do.fit = FALSE,
                                baseline = FALSE,
                                h1 = FALSE,
@@ -144,7 +145,7 @@ scaling_factor <- function(sem_out,
                                           p_table[p_table0$free > 0, "est"]
         if (force_converged) {
             fit1 <- suppressWarnings(
-                        update(fit0, start = p_table0, do.fit = FALSE,
+                        lavaan::update(fit0, start = p_table0, do.fit = FALSE,
                               baseline = FALSE, h1 = FALSE, se = "none",
                               optim.force.converged = TRUE)
                       )
@@ -195,7 +196,7 @@ scaling_factor <- function(sem_out,
         i_constr <- which(p_table0$lhs == i_label & p_table0$op == "==")
         if (force_converged) {
             fit1 <- suppressWarnings(
-                        update(fit0, start = p_table0, do.fit = FALSE,
+                        lavaan::update(fit0, start = p_table0, do.fit = FALSE,
                               baseline = FALSE, h1 = FALSE, se = "none",
                               optim.force.converged = TRUE)
                       )
