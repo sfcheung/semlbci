@@ -74,6 +74,11 @@
 #'                 in the attribute `diag`.
 #'                Default is `FALSE`.
 #' @param sf Scaling factor. Use for robust confidence limits. Default is 1.
+#' @param p_tol Tolerance for checking the achieved level of confidence. If 
+#'              the absolute difference between the achieved level and 
+#'              and `ciperc` is greater than this amount, a warning is set 
+#'              in the status code and the bound is set to `NA`. Default
+#'              is 1e-3.
 #' @param ... Optional arguments. Not used.
 #'
 #' @references
@@ -123,6 +128,7 @@ ci_bound_wn_i <- function(i = NULL,
                        ci_limit_ratio_tol = 1.5,
                        verbose = FALSE,
                        sf = 1,
+                       p_tol = 1e-3,
                        ...) {
     k <- switch(which,
                 lbound = 1,
@@ -321,6 +327,10 @@ ci_bound_wn_i <- function(i = NULL,
     fmin_final <- lavaan::lavTech(fit_final, "optim")$fx
     chisq_diff <- (fmin_final - fmin_org) * 2 * nobs / sf
     ciperc_final <- stats::pchisq(chisq_diff, 1)
+    if (abs(ciperc_final - ciperc) > p_tol) {
+        status <- 0
+        bound <- NA
+      }
 
     diag <- list(status = status,
                  est_org = i_est,
