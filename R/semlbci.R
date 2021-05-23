@@ -217,6 +217,8 @@ semlbci <- function(sem_out,
                             sapply(ub_diag, function(x) x$fit_post_check)
     out_p[pars, "time_lb"] <- as.numeric(lb_time)
     out_p[pars, "time_ub"] <- as.numeric(ub_time)
+    out_p[pars, "cl_lb"] <- sapply(lb_diag, function(x) x$ciperc_final)
+    out_p[pars, "cl_ub"] <- sapply(ub_diag, function(x) x$ciperc_final)
     out_p[pars, "method"] <- ci_method
     if (robust != "none") {
         out_p[pars, "robust"] <- robust

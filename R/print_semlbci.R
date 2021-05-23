@@ -42,6 +42,8 @@ print.semlbci <- function(x,
     out$ci_org_ub <- round(out$ci_org_ub, digits)
     out$ratio_lb <- round(out$ratio_lb, digits)
     out$ratio_ub <- round(out$ratio_ub, digits)
+    out$cl_lb <- round(out$cl_lb, digits)
+    out$cl_ub <- round(out$cl_ub, digits)
     call_org <- attr(out, "call")
     if (drop_no_lbci) {
         out <- out[!is.na(out$status_lb), ]
@@ -126,6 +128,11 @@ print.semlbci <- function(x,
               paste0("* wald_l, wald_u: ",
               "The lower and upper Wald limits,",
                    " extracted from the original lavaan output."))
+        msg <- c(msg,
+              paste0("* cl_lb, cl_ub: ",
+              "The achieved level of confidence of the bound,",
+                   " computed from the chi-square difference test.",
+                   " Should be close to the requested level of confidence."))
         if (ratio_note) {
           msg <- c(msg,
               paste0("* ratio_l, ratio_u: ",
