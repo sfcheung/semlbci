@@ -1,6 +1,9 @@
 library(testthat)
 library(semlbci)
 
+# Note
+# ci_bound_wn_i(7, 13) ubound needs special handling.
+
 # Fit the model
 
 library(lavaan)
@@ -29,15 +32,15 @@ fn_constr0 <- set_constraint(fit, ciperc = ciperc)
 
 # opts0 <- list(print_level = 3)
 opts0 <- list()
-opts0 <- list(ftol_abs = 1e-7,
-              ftol_rel = 1e-7,
-              xtol_abs = 1e-7,
-              xtol_rel = 1e-7
-              )
-time1l <- system.time(out1l <- ci_bound_wn_i(2, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r))
-time1u <- system.time(out1u <- ci_bound_wn_i(2, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r))
-time2l <- system.time(out2l <- ci_bound_wn_i(7, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r))
-time2u <- system.time(out2u <- ci_bound_wn_i(7, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r))
+opts0 <- list(ftol_abs = 1e-12)
+              # ftol_rel = 1e-7,
+              # xtol_abs = 1e-7,
+              # xtol_rel = 1e-7
+              # )
+time1l <- system.time(out1l <- ci_bound_wn_i(2, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-07), verbose = TRUE, ciperc = ciperc, sf = sf1$c_r))
+time1u <- system.time(out1u <- ci_bound_wn_i(2, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-07), verbose = TRUE, ciperc = ciperc, sf = sf1$c_r))
+time2l <- system.time(out2l <- ci_bound_wn_i(7, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-07), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r))
+time2u <- system.time(out2u <- ci_bound_wn_i(7, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-07), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, wald_ci_start = FALSE))
 
 timexx <- rbind(time1l, time1u, time2l, time2u)
 timexx

@@ -2,7 +2,7 @@ library(testthat)
 library(semlbci)
 
 # NOTE
-# Difficult to solve for ci_bound_wn_i(16, 13) lbound.
+# Difficult to solve for ci_bound_wn_i(16, 13) ubound.
 
 # Fit the model
 
@@ -38,10 +38,10 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_abs = 1e-7,
               xtol_rel = 1e-7
               )
-time1l <- system.time(out1l <- ci_bound_wn_i(16, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r))
-time1u <- system.time(out1u <- ci_bound_wn_i(16, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r))
-time2l <- system.time(out2l <- ci_bound_wn_i( 5, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r))
-time2u <- system.time(out2u <- ci_bound_wn_i( 5, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r))
+time1l <- system.time(out1l <- ci_bound_wn_i(16, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf1$c_r))
+time1u <- system.time(out1u <- ci_bound_wn_i(16, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-12), verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, wald_ci_start = FALSE))
+time2l <- system.time(out2l <- ci_bound_wn_i( 5, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r))
+time2u <- system.time(out2u <- ci_bound_wn_i( 5, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r))
 
 timexx <- rbind(time1l, time1u, time2l, time2u)
 timexx
@@ -167,7 +167,7 @@ print(lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact"))
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-3))
-    # expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-3))
+    expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-3))
     expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-3))
     expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-3))
   })
