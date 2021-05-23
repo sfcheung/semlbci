@@ -40,10 +40,12 @@
 #'                now. If "none", the default, then likelihood ratio test based
 #'                on maximum likelihood estimation will be used.
 #' @param ... Arguments to be passed to [ci_bound_wn_i()].
-#' @param parallel If `TRUE`, will use [parallel]. Currently disabled and
-#'                  so this argument will be ignored.
-#' @param ncpus The number of workers, if `parallel` is `TRUE`. Currently
-#'              ignored.
+#' @param parallel If `TRUE`, will use [parallel] to parallelize the search.
+#' @param ncpus The number of workers, if `parallel` is `TRUE`. Default is 2.
+#' @param use_pbapply If `TRUE`, `parallel` is `TRUE`, and `pbapply` is
+#'                    installed, `pbapply` will be used
+#'                    to display a progress bar when finding the intervals.
+#'                    Default is `TRUE`. Ignored if `parallel` is `FALSE`.
 #'
 #' @references
 #'
@@ -85,7 +87,8 @@ semlbci <- function(sem_out,
                     robust = "none",
                     ...,
                     parallel = FALSE,
-                    ncpus = 2) {
+                    ncpus = 2,
+                    use_pbapply = TRUE) {
     if (!inherits(sem_out, "lavaan")) {
         stop("sem_out is not a supported object.")
       }
@@ -134,19 +137,36 @@ semlbci <- function(sem_out,
                       })
         parallel::clusterExport(cl, ls(envir = parent.frame()),
                                        envir = environment())
-        out_raw <- parallel::parLapply(cl,
-                         pars,
-                            semlbci::ci_i,
-                            npar = npar,
-                            sem_out = sem_out,
-                            standardized = standardized,
-                            debug = FALSE,
-                            f_constr = f_constr,
-                            method = method,
-                            ciperc = ciperc,
-                            robust = robust,
-                            ...
-                         )
+        if (require("pbapply", quietly = TRUE)) {
+            out_raw <- pbapply::pblapply(
+                                pars,
+                                semlbci::ci_i,
+                                npar = npar,
+                                sem_out = sem_out,
+                                standardized = standardized,
+                                debug = FALSE,
+                                f_constr = f_constr,
+                                method = method,
+                                ciperc = ciperc,
+                                robust = robust,
+                                ...,
+                                cl = cl
+                            )
+          } else {
+            out_raw <- parallel::parLapply(cl,
+                            pars,
+                                semlbci::ci_i,
+                                npar = npar,
+                                sem_out = sem_out,
+                                standardized = standardized,
+                                debug = FALSE,
+                                f_constr = f_constr,
+                                method = method,
+                                ciperc = ciperc,
+                                robust = robust,
+                                ...
+                            )
+          }
         parallel::stopCluster(cl)
       } else {
         out_raw <- lapply(pars, ci_i,
