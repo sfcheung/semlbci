@@ -137,7 +137,7 @@ semlbci <- function(sem_out,
                       })
         parallel::clusterExport(cl, ls(envir = parent.frame()),
                                        envir = environment())
-        if (require("pbapply", quietly = TRUE)) {
+        if (requireNamespace ("pbapply", quietly = TRUE)) {
             out_raw <- pbapply::pblapply(
                                 pars,
                                 semlbci::ci_i,

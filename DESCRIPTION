@@ -24,7 +24,8 @@ Suggests:
     testthat (>= 3.0.0),
     OpenMx,
     knitr,
-    rmarkdown
+    rmarkdown,
+    pbapply
 Depends: 
     R (>= 4.0.0)
 Imports: 
