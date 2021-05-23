@@ -42,7 +42,7 @@
 #' @param ... Arguments to be passed to [ci_bound_wn_i()].
 #' @param parallel If `TRUE`, will use [parallel]. Currently disabled and
 #'                  so this argument will be ignored.
-#' @param ncpu The number of workers, if `parallel` is `TRUE`. Currently
+#' @param ncpus The number of workers, if `parallel` is `TRUE`. Currently
 #'              ignored.
 #'
 #' @references
@@ -85,7 +85,7 @@ semlbci <- function(sem_out,
                     robust = "none",
                     ...,
                     parallel = FALSE,
-                    ncpu = 2) {
+                    ncpus = 2) {
     if (!inherits(sem_out, "lavaan")) {
         stop("sem_out is not a supported object.")
       }
@@ -125,7 +125,7 @@ semlbci <- function(sem_out,
         f_constr <- NULL
       }
     if (parallel) {
-        cl <- parallel::makeCluster(ncpu)
+        cl <- parallel::makeCluster(ncpus)
         pkgs <- .packages()
         pkgs <- rev(pkgs)
         parallel::clusterExport(cl, "pkgs", envir = environment())
