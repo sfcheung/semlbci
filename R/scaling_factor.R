@@ -124,11 +124,13 @@ scaling_factor <- function(sem_out,
                                h1 = FALSE,
                                se = "none",
                                test = "satorra.bentler")
-        fit0 <- lavaan::update(fit0,
+        p_tmp <- parameterTable(fit0)
+        fit0 <- lavaan::update(fit0, model = p_tmp,
                                add = paste0(i_label, " == ",
                                             i_est * pertubation_factor),
                                do.fit = FALSE)
-        fit0 <- lavaan::update(fit0,
+        p_tmp <- parameterTable(fit0)
+        fit0 <- lavaan::update(fit0, model = p_tmp,
                                add = "0 < 1",
                                do.fit = FALSE)
         p_table0 <- lavaan::parameterTable(fit0)
@@ -145,7 +147,7 @@ scaling_factor <- function(sem_out,
                                           p_table[p_table0$free > 0, "est"]
         if (force_converged) {
             fit1 <- suppressWarnings(
-                        lavaan::update(fit0, start = p_table0, do.fit = FALSE,
+                        lavaan::update(fit0, model = p_table0, start = p_table0, do.fit = FALSE,
                               baseline = FALSE, h1 = FALSE, se = "none",
                               optim.force.converged = TRUE)
                       )
@@ -196,7 +198,7 @@ scaling_factor <- function(sem_out,
         i_constr <- which(p_table0$lhs == i_label & p_table0$op == "==")
         if (force_converged) {
             fit1 <- suppressWarnings(
-                        lavaan::update(fit0, start = p_table0, do.fit = FALSE,
+                        lavaan::update(fit0, model = p_table0, start = p_table0, do.fit = FALSE,
                               baseline = FALSE, h1 = FALSE, se = "none",
                               optim.force.converged = TRUE)
                       )
