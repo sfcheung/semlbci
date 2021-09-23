@@ -30,6 +30,7 @@ scaling_factor <- function(sem_out,
                            update_args = list(),
                            force_converged = TRUE
                            ) {
+    sem_out_name <- deparse(substitute(sem_out))
     # This function will NOT check whether the SEM was done with robust model
     # test. This check should be done before calling this function.
     p_table <- lavaan::parameterTable(sem_out)
@@ -74,51 +75,11 @@ scaling_factor <- function(sem_out,
         # Standardized. User defined or free does not matter.
 
         i_label <- gen_unique_name(get_names_from_ptable(p_table_fit))
-
-        # Need to define this function here to prevent possible scoping issues
-        gen_fct <- function(fit, i) {
-            force(fit)
-            force(i)
-            fit_pt <- lavaan::parameterTable(fit)
-            tmpfct <- function(...) {
-                .x. <- get(".x.", envir = parent.frame())
-                fit@Model <- lavaan::lav_model_set_parameters(
-                                  fit@Model, .x.
-                                )
-                fit_pt2 <- fit_pt
-                nfree <- sum(fit_pt$free > 0)
-                fit_pt2[fit_pt$free > 0, "est"] <- .x.[seq_len(nfree)]
-                fit@ParTable <- as.list(fit_pt2)
-                std <- lavaan::standardizedSolution(
-                                  fit,
-                                  se = FALSE,
-                                  zstat = FALSE,
-                                  pvalue = FALSE,
-                                  ci = FALSE,
-                                  cov.std = FALSE,
-                                  remove.eq = FALSE,
-                                  remove.ineq = FALSE,
-                                  remove.def = FALSE,
-                                  )
-                std[i, "est.std"]
-              }
-            return(tmpfct)
-          }
-
-        # Changing the global environment is not a desired approach.
-        # If we found a solution using
-        # environment, we should use that solution.
-        update_env <- .GlobalEnv
-        geteststd_name <- "geteststd"
-        while (geteststd_name %in% names(update_env)) {
-            geteststd_name <- paste0(geteststd_name, "_", sample(letters, 5))
-          }
-        assign(geteststd_name, gen_fct(fit = sem_out, i = i),
-               pos = update_env)
         fit0 <- lavaan::update(sem_out,
                                model = p_table_fit,
                                add = paste0(i_label, " := ",
-                                            geteststd_name, "()"),
+                                            "semlbci::get_std('",
+                                            sem_out_name, "',", i, ")"),
                                do.fit = FALSE,
                                baseline = FALSE,
                                h1 = FALSE,
@@ -161,19 +122,6 @@ scaling_factor <- function(sem_out,
             update_args1 <- utils::modifyList(update_args0,
                                               update_args)
             fit1 <- do.call(lavaan::update, update_args1)
-            # fit1 <- lavaan::update(fit0,
-            #                        model = p_table0,
-            #                        do.fit = TRUE,
-            #                        optim.force.converged = TRUE
-                                  #  optim.dx.tol = .01,
-                                  #  warn = FALSE,
-                                  #  control = list(
-                                  #       eval.max = 2,
-                                  #       iterations = 1,
-                                  #       control.outer = list(tol = 1e-02,
-                                  #                            itmax = 1)
-                                  #   )
-                                  # )
           }
       } else {
 
@@ -186,12 +134,12 @@ scaling_factor <- function(sem_out,
           }
 
         fit0 <- lavaan::update(sem_out, model = p_table_fit,
-                               add = paste0(i_label, " == ",
+                              add = paste0(i_label, " == ",
                                             i_est * pertubation_factor),
-                               do.fit = FALSE,
-                               baseline = FALSE,
-                               h1 = FALSE,
-                               se = "none")
+                              do.fit = FALSE,
+                              baseline = FALSE,
+                              h1 = FALSE,
+                              se = "none")
         p_table0 <- lavaan::parameterTable(fit0)
         # # Not sure why we have to manually set this constraint to fixed
         p_table0[p_table0$lhs == i_label, "free"] <- 0
@@ -212,21 +160,8 @@ scaling_factor <- function(sem_out,
             update_args1 <- utils::modifyList(update_args0,
                                               update_args)
             fit1 <- do.call(lavaan::update, update_args1)
-            # fit1 <- lavaan::update(fit0,
-            #                        model = p_table0,
-            #                        do.fit = TRUE,
-            #                        optim.force.converged = TRUE
-                                  #  optim.dx.tol = .01,
-                                  #  warn = FALSE,
-                                  #  control = list(
-                                  #       eval.max = 2,
-                                  #       iterations = 1,
-                                  #       control.outer = list(tol = 1e-02,
-                                  #                            itmax = 1)
-                                  #   )
-                                  # )
           }
-          }
+      }
     # Do the LR test
     lrt_out <- lavaan::lavTestLRT(sem_out,
                                   fit1,
@@ -251,15 +186,6 @@ scaling_factor <- function(sem_out,
         c_p = chisq_diff_c / chisq_diff_p,
         c_r = chisq_diff_c / chisq_diff_r)
 
-    if (standardized) {
-        # Try to make sure that only the function created above is removed
-        tmp <- get(geteststd_name, pos = update_env)
-        tmpl <- as.list(body(tmp))
-        if (identical(as.character(tmpl[[length(tmpl)]]),
-                      c("[", "std", "i", "est.std"))) {
-            rm(list = geteststd_name, pos = update_env)
-          }
-      }
-
     return(out)
   }
+
