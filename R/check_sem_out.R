@@ -1,17 +1,15 @@
-#' @title Check the SEM output in semlbci
+#' @title Pre-analysis Check For semlbci
 #'
-#' @description Check whether the model and the estimation method in the
-#'             `sem_out`
-#'             object passed to [semlbci()]
-#'              are supported by the current version of
-#'              [semlbci()].
+#' @description Checks the output passed to semlbci
 #'
-#' @details
-#' This function is to be used by [semlbci()] but is exported such that
-#' the compatibility of an SEM output can be checked independently.
+#' @details Checks whether the model and the estimation method in the
+#'  `sem_out` object passed to [semlbci()] are supported by the
+#'  current version of [semlbci()]. This function is to be used by
+#'  [semlbci()] but is exported such that the compatibility of an SEM
+#'  output can be checked independently.
 #'
-#' Estimation methods (`estimator` in
-#'     [lavaan::lavaan()]) currently supported:
+#' Estimation methods (`estimator` in [lavaan::lavaan()]) currently
+#'     supported:
 #'
 #'    - Maximum likelihood (`ML`)
 #'
@@ -19,8 +17,13 @@
 #'
 #'    - Generalized least squares (`GLS`)
 #'
-#'    - Weighted least squares (a.k.a.
-#'         asymptotically distribution free) (`WLS`)
+#'    - Weighted least squares (a.k.a. asymptotically distribution
+#'         free) (`WLS`)
+#'
+#'    - Estimation done with robust test statistics is supported if `robust`
+#'        set to "satorra.2000":
+#'
+#'        - `MLR`, `MLMVS`, `MLM`, `MLMV`
 #'
 #' Estimation methods not yet supported:
 #'
@@ -31,13 +34,13 @@
 #'    - Variants with robust standard errors and/or robust
 #'      test statistics:
 #'
-#'       - `MLM`, `MLMV`, `MLMVS`, `MLF`, and `MLR`.
+#'       - `MLF`.
 #'
-#'        - `WLSM`, `WLSMV`.
+#'       - `WLSM`, `WLSMV`.
 #'
-#'        - `ULSM`, `ULSMV`.
+#'       - `ULSM`, `ULSMV`.
 #'
-#' Currently supported models:
+#' Models supported:
 #'
 #'    - Single group models with continuous variables.
 #'
@@ -49,26 +52,26 @@
 #'
 #'    - Multigroup models.
 #'
-#'    - Models with formative factors
+#'    - Models with formative factors.
 #'
 #'    - Multilevel models
 #'
-#' @return
-#' A numeric vector of one element. If 0, the model and
-#' estimation method are officially supported. If larger than zero,
-#' then the model and method are not officially supported. If less
-#' than zero, then the model and/or the method are officially
-#' not supported.
+#' @return A numeric vector of one element. If 0, the model and
+#'  estimation method are officially supported. If larger than zero,
+#'  then the model and method are not officially supported but users
+#'  can still try to use [semlbci()] on it at their own risks. If less
+#'  than zero, then the model and/or the method are officially not
+#'  supported.
 #'
-#' The attributes `info` contains the reason for a value other
-#' than zero.
+#' The attributes `info` contains the reason for a value other than
+#' zero.
 #'
 #' @param sem_out The output from an SEM analysis. Currently only
-#'                supports a [lavaan::lavaan-class] object.
-#' @param robust Whether the LBCI based on robust likelihood ratio test is to
-#'                be found. Only "satorra.2000" in [lavaan] is supported for
-#'                now. If "none", the default, then likelihood ratio test based
-#'                on maximum likelihood estimation will be used.
+#'  supports a [lavaan::lavaan-class] object.
+#' @param robust Whether the LBCI based on robust likelihood ratio
+#'  test is to be found. Only "satorra.2000" in [lavaan] is supported
+#'  for now. If `"none"`, the default, then likelihood ratio test based
+#'  on maximum likelihood estimation will be used.
 #'
 #' @seealso 
 #' [semlbci()], [ci_i()]
@@ -87,10 +90,19 @@
 #' # Should be 0
 #' check_sem_out(fit)
 #'
-#' fit2 <- sem(mod, cfa_two_factors, estimator = "MLR")
+#' fit2 <- sem(mod, cfa_two_factors, estimator = "DWLS")
 #'
-#' # Should be negative because MLR is officially not supported
+#' # Should be negative because DWLS is officially not supported
 #' check_sem_out(fit2)
+#'
+#' fit3 <- sem(mod, cfa_two_factors, estimator = "MLR")
+#'
+#' # Should be negative because MLR is supported only if 
+#' # robust is set to "satorra.2000"
+#'
+#' check_sem_out(fit3, robust = "satorra.2000")
+#' 
+#' # Should be zero because robust is set to "satorra.2000"
 #'
 #' @export
 
