@@ -2,54 +2,48 @@
 % Please edit documentation in R/set_constraint.R
 \name{set_constraint}
 \alias{set_constraint}
-\title{Set the constraint for finding the LBCI by the Wu-Neale-2012 approach}
+\title{Constraint for Finding the LBCI by the Wu-Neale-2012 Approach}
 \usage{
 set_constraint(sem_out, ciperc = 0.95)
 }
 \arguments{
-\item{sem_out}{The SEM output. Currently  \link[lavaan:lavaan-class]{lavaan::lavaan} outputs
-only.}
+\item{sem_out}{The SEM output. Currently supports
+\link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.}
 
-\item{ciperc}{The proportion of coverage for the confidence interval.
-Default is .95.}
+\item{ciperc}{The probability of coverage for the confidence
+interval. Default is .95.}
 }
 \value{
 A constraint function for \link{nloptr}.
 }
 \description{
-Set the constraint for finding the LBCI by the
-Wu-Neale-2012 approach
+Sets the constraint for finding the likelihood-based
+confidence interval by the Wu-Neale-2012 approach.
 }
 \details{
-The Wu-Neale-2012 approach use a simple objective function that is opitmized
-with a constraint. This function generate the constraint function used by
-\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.
+The Wu-Neale-2012 approach uses a simple objective function that is
+optimized with a constraint. \link{set_constraint} generates the
+constraint function used by \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.
 
-This approach is easy to implement but turns out to be slow
-in optimization. The Neale-Meale-2007 approach is now the preferred approach.
+Currently supports \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.
 
-This function is still in this package, in case we decide to improve the
-implementation of the Wu-Neale-2012 approach.
-
-Currently supports  \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.
+This function is not to be used by normal users.
 }
 \examples{
-\dontrun{
+
 library(lavaan)
-data(cfa_two_factors)
+data(simple_med)
+dat <- simple_med
 mod <-
 "
-f1 =~ x1 + x2 + a*x3
-f2 =~ x4 + a*x5 + equal('f1=~x2')*x6
-f1 ~~ 0*f2
-asq := a^2
+m ~ x
+y ~ m
 "
-fit <- sem(mod, cfa_two_factors)
-#fn1 <- set_constraint(sem_out)
+fit_med <- sem(mod, simple_med, fixed.x = FALSE)
 
-#fn1(coef(sem_out))
-#fn1(runif(length(coef(sem_out))), .9, 1.1) * coef(sem_out))
-#fn1(coef(sem_out) + 2)
-#fn1(coef(sem_out) - .12)
-}
+fn_constr0 <- set_constraint(fit_med)
+out <- fn_constr0(coef(fit_med), sem_out = fit_med)
+out
+lavTech(fit_med, "optim")$fx
+
 }
