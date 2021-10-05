@@ -3,7 +3,7 @@
 \docType{data}
 \name{reg_cor_near_one}
 \alias{reg_cor_near_one}
-\title{Dataset: Five-predictor regression model with one correlation close to one}
+\title{Dataset (Six Variables, One Correlation Close to One)}
 \format{
 A data frame with 100 rows and six variables:
 \describe{
@@ -19,17 +19,13 @@ A data frame with 100 rows and six variables:
 reg_cor_near_one
 }
 \description{
-Generated from a regression model six variables, with correlation
-between x4 and x5 close to one.
+Generated from a regression model six variables,
+x4~~x5 correlation close to one.
 }
-\examples{
-\dontrun{
-
- out <- lm(y ~ x1 + x2 + x3 + x4 + x5, reg_cor_near_one)
- summary(out)
- cor(reg_cor_near_one[, c("x4", "x5")])
-
+\details{
+Supposed to be tested using this example:\preformatted{out <- lm(y ~ x1 + x2 + x3 + x4 + x5, reg_cor_near_one)
+summary(out)
+cor(reg_cor_near_one[, c("x4", "x5")])
 }
-
 }
 \keyword{datasets}
