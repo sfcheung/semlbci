@@ -68,6 +68,7 @@
 #'
 #' @param sem_out The output from an SEM analysis. Currently only
 #'  supports a [lavaan::lavaan-class] object.
+#'
 #' @param robust Whether the LBCI based on robust likelihood ratio
 #'  test is to be found. Only "satorra.2000" in [lavaan] is supported
 #'  for now. If `"none"`, the default, then likelihood ratio test based
