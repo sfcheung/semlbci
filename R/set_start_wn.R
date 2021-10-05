@@ -1,24 +1,26 @@
-#' @title Set the starting values for optimization
+#' @title Starting Values for Optimization
 #'
-#' @description Set the starting values for optimization
+#' @description Sets the starting values for optimization
 #'
-#' @details
+#' @details Currently supports \code{lavaan} output only.
 #'
-#' Currently supports \code{lavaan} output only.
+#' @return A lavaan parameter table in which parameters estimated with
+#'  target fixed to its lower or upper Wald confidence limit.
 #'
-#' @return
-#' A lavaan parameter table, with parameters estimated with target fixed to its
-#'  lower or upper Wald confidence limit.
+#' @param i The position of the target parameters as in the parameter
+#'  table of lavaan.
 #'
-#' @param i The position of the target parameters as in the parameter table of
-#'          lavaan.
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.
-#' @param which Whether the lower bound or the upper bound is to be found.
-#'              Must be "lbound" or "ubound".
-#' @param standardized If TRUE, the LBCI is for the standardized estimate.
+#'
+#' @param which Whether the lower bound or the upper bound is to be
+#'  found. Must be "lbound" or "ubound".
+#'
+#' @param standardized If TRUE, the LBCI is for the standardized
+#'  estimate.
+#'
 #' @param ciperc The level of confidence for the confidence interval.
 #'
-#' @keywords internal
+#' @noRd
 
 set_start_wn <- function(i = NULL,
                       sem_out = NULL,
