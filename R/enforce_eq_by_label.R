@@ -1,5 +1,7 @@
-# Used by ci_bound_nm_i. Enforce equality constraints when
+# Used by ci_bound_nm_i. Enforce equality constraints
 # when the target parameter is so constrained.
+# This function is no longer used by other functions.
+# Kept here in case future functions need it.
 
 enforce_eq_by_label <- function(i_depend, p_table) {
     j_no_label <- p_table$label == ""
