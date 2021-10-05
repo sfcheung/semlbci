@@ -2,30 +2,29 @@
 % Please edit documentation in R/ci_i.R
 \name{ci_i}
 \alias{ci_i}
-\title{Find the LBCI for one parameter}
+\title{LBCI for One Parameter}
 \usage{
 ci_i(i, sem_out, method = "wn", standardized = FALSE, robust = "none", ...)
 }
 \arguments{
-\item{i}{The position of the target parameters as
-appeared in the parameter table of the
-\link[lavaan:lavaan-class]{lavaan::lavaan} object.}
+\item{i}{The position of the target parameters as appeared in the
+parameter table of the \link[lavaan:lavaan-class]{lavaan::lavaan} object.}
 
-\item{sem_out}{The SEM output. Currently supports \link[lavaan:lavaan-class]{lavaan::lavaan}
-outputs only.}
+\item{sem_out}{The SEM output. Currently supports
+\link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.}
 
-\item{method}{The approach to be used. Default is "wn" (Wu-Neale-2012
-Method). The other methods are disabled for now.}
+\item{method}{The approach to be used. Default is "wn"
+(Wu-Neale-2012 Method). The other methods are disabled for now.}
 
-\item{standardized}{Boolean. Whether the LBCI for the standardized solutiion
-is to be searched. Default is \code{FALSE}.}
+\item{standardized}{Boolean. Whether the LBCI for the standardized
+solution is to be searched. Default is \code{FALSE}.}
 
-\item{robust}{Whether the LBCI based on robust likelihood ratio test is to
-be found. Only "satorra.2000" in \link{lavaan} is supported for
-now. If "none", the default, then likelihood ratio test based
+\item{robust}{Whether the LBCI based on robust likelihood ratio
+test is to be found. Only "satorra.2000" in \link{lavaan} is supported
+for now. If `"none"``, the default, then likelihood ratio test based
 on maximum likelihood estimation will be used.}
 
-\item{...}{Arguments to be passed to the funtion corresponded to
+\item{...}{Arguments to be passed to the function corresponds to
 the requested method (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} for "wn").}
 }
 \value{
@@ -33,26 +32,25 @@ A numeric vector of two elements. The first element is the
 lower bound, and the second element is the upper bound.
 
 The diagnostic information from the function called in finding the
-lower and upper founds are stored in the
-attributes \code{lb_diag} and \code{ub_diag}, respectively.
+lower and upper founds are stored in the attributes \code{lb_diag} and
+\code{ub_diag}, for the lower bound and the upper bound, respectively.
 }
 \description{
-Find the likelihood-based confidence interval (LBCI)
+Finds the likelihood-based confidence interval (LBCI)
 for one parameter.
 }
 \details{
-This function calls a function to find a bound (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} by default)
-twice to find the two bounds for a confidence interval. The default method
-is the Wu-Neale-2012 method. Please refer to [ci_bound_wn_i() for further
-information.
+\code{\link[=ci_i]{ci_i()}} calls a function (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} by default)
+twice to find the two bounds (limits) for a confidence interval.
+The default method is the Wu-Neale-2012 method. Please refer to
+\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} for further information.
 
 This function is not supposed to be used directly by users. It is
-exported such that interested users can examine how a confidence bound is
+exported such that interested users can examine how a confidence bound it
 found.
 }
 \examples{
 
-\dontrun{
 data(simple_med)
 
 library(lavaan)
@@ -66,9 +64,13 @@ fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 parameterTable(fit_med)
 
 # Find the LBCI for the first parameter
-out <- ci_i(1, npar = 5, sem_out = fit_med, method = "wn")
-out[1:2]
-}
+# THe method "wn" need the constraint function:
+fn_constr0 <- set_constraint(fit_med)
+# Call ci_i to find the bounds
+out <- ci_i(1, npar = 5, sem_out = fit_med, method = "wn",
+            f_constr = fn_constr0)
+out$bounds
+
 }
 \seealso{
 \code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}
