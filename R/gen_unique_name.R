@@ -1,17 +1,14 @@
-#' @title Generate a unique name
+#' @title Unique Name
 #'
-#' @description Generate a unique name that does not duplicate with elements
-#'              in a vector of strings.
+#' @description Generates a unique name that does not duplicate with
+#'  elements in a vector of strings.
 #'
-#' @details
-#'
-#' User supplies a vector of strings and then a name is generated that does
-#' not duplicate with elements in this vector.
+#' @details User supplies a vector of strings and then a name is
+#'  generated that does not duplicate with elements in this vector.
 #'
 #' A helper function for generating names for new parameters.
 #'
-#' @return
-#' A string
+#' @return A string
 #'
 #' @param source_names A vector of strings
 #'
@@ -23,7 +20,7 @@
 #' gen_unique_name(x)
 #'
 #' }
-#' @keywords internal
+#' @noRd
 
 gen_unique_name <- function(source_names) {
     if (!is.character(source_names)) {
