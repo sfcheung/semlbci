@@ -1,14 +1,13 @@
-#' @title Find the free parameters on which a parameter depends on
+#' @title Free Parameters a Parameter Depends On
 #'
-#' @description Find the free parameters on which a parameter depends on
+#' @description Finds the free parameters on which a parameter depends on
 #'
-#' @details
-#'
-#' Ideally, this should be done analytically. However, it is not easy to
-#' implement this for a wide variety of models. Therefore, whether a parameter
-#' depends on another parameter is determined by the graident of the function
-#' with the target parameter as the output other parameters as the control
-#' variables of this function.
+#' @details Ideally, this task should be done analytically. However,
+#'  it is not easy to implement this for a wide variety of models.
+#'  Therefore, whether a parameter depends on another parameter is
+#'  determined by the gradient of the function with the target
+#'  parameter as the output other parameters as the control variables
+#'  of this function.
 #'
 #' This function is particularly important when the target parameter is one
 #' in the standardized solution. In this case, the dependency among parameters
@@ -16,17 +15,22 @@
 #'
 #' Currently supports a [lavaan::lavaan-class] output only.
 #'
-#' @return
-#' A numeric vector of the positions of the free parameters in the
-#' [lavaan::lavaan-class] parameter table.
+#' This function is no longer used by other functions.
+#' Kept here in case future functions need it.
 #'
-#' @param i The position of the target parameter as in the parameter table of
-#'          lavaan.
-#' @param sem_out The SEM output. Currently support [lavaan::lavaan-class]
-#'                outputs only.
+#' @return A numeric vector of the positions of the free parameters in
+#'  the [lavaan::lavaan-class] parameter table.
+#'
+#' @param i The position of the target parameter as in the parameter
+#'  table of lavaan.
+#'
+#' @param sem_out The SEM output. Currently support
+#'   [lavaan::lavaan-class] outputs only.
+#'
 #' @param standardized If `TRUE`, the LBCI is for the standardized estimate.
+#'
 #' @param signed If `TRUE`, return a vector of 1 or -1 to indicate the
-#'                direction of the dependence. Default is [`FALSE`].
+#'  direction of the dependence. Default is [`FALSE`].
 #'
 #' @examples
 #' \dontrun{
@@ -56,7 +60,7 @@
 #' #' all free parameters
 #' ptable[out_std[[6]], ]
 #' }
-#' @keywords internal
+#' @noRd
 
 find_dependent <- function(i = NULL,
                       sem_out = NULL,
