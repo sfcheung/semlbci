@@ -1,28 +1,48 @@
-#' @title Print the results of semlbci
+#' @title Print Method of a semlbci Object
 #'
-#' @description Print the results of semlbci
+#' @description Prints the results of a `semlbci` object, the output
+#'  of [semlbci()].
 #'
-#' @details Print the results of semlbci
+#' @details Prints the results of [semlbci()] as a table.
 #'
-#' @return
-#'  Nothing
+#' @return Nothing. Its side effect is used (printing the results).
 #'
 #' @param x The output of [semlbci()].
-#' @param digits The number of digits after decimal point. To be passed to
-#'                [round()]. Default is 3.
-#' @param time If `TRUE`, print the time spent on each limit. Default is
-#'             `FALSE`.
+#'
+#' @param digits The number of digits after decimal point. To be
+#'  passed to [round()]. Default is 3.
+#'
+#' @param time If `TRUE`, print the time spent on each limit. Default
+#'  is `FALSE`.
+#'
 #' @param annotation If `TRUE`, print table notes. Default is `TRUE`.
-#' @param verbose_if_needed If `TRUE`, additional diagnostic information will
-#'                          be printed if necessary. If `FALSE`, additional
-#'                          diagnostic information will always be printed.
-#'                          Default is `TRUE`.
-#' @param drop_no_lbci If `TRUE`, parameters not included in the search will
-#'                     be removed. Default is `TRUE`.
+#'
+#' @param verbose_if_needed If `TRUE`, additional diagnostic
+#'  information will be printed if necessary. If `FALSE`, additional
+#'  diagnostic information will always be printed. Default is `TRUE`.
+#'
+#' @param drop_no_lbci If `TRUE`, parameters not included in the
+#'  search will be removed. Default is `TRUE`.
+#'
 #' @param ... Other arguments. They will be ignored.
 #'
 #' @examples
-#' # TODO
+#'
+#' library(lavaan)
+#' mod <-
+#' "
+#' m ~ a*x
+#' y ~ b*m
+#' ab := a * b
+#' "
+#' fit_med <- sem(mod, simple_med, fixed.x = FALSE)
+#' p_table <- parameterTable(fit_med)
+#' p_table
+#' lbci_med <- semlbci(fit_med,
+#'                     pars = c("ab :="))
+#' lbci_med
+#'
+#' print(lbci_med, verbose_if_needed = FALSE)
 #'
 #' @export
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/print_semlbci.R
 \name{print.semlbci}
 \alias{print.semlbci}
-\title{Print the results of semlbci}
+\title{Print Method of a semlbci Object}
 \usage{
 \method{print}{semlbci}(
   x,
@@ -17,34 +17,49 @@
 \arguments{
 \item{x}{The output of \code{\link[=semlbci]{semlbci()}}.}
 
-\item{digits}{The number of digits after decimal point. To be passed to
-\code{\link[=round]{round()}}. Default is 3.}
+\item{digits}{The number of digits after decimal point. To be
+passed to \code{\link[=round]{round()}}. Default is 3.}
 
 \item{annotation}{If \code{TRUE}, print table notes. Default is \code{TRUE}.}
 
-\item{time}{If \code{TRUE}, print the time spent on each limit. Default is
-\code{FALSE}.}
+\item{time}{If \code{TRUE}, print the time spent on each limit. Default
+is \code{FALSE}.}
 
-\item{verbose_if_needed}{If \code{TRUE}, additional diagnostic information will
-be printed if necessary. If \code{FALSE}, additional
-diagnostic information will always be printed.
-Default is \code{TRUE}.}
+\item{verbose_if_needed}{If \code{TRUE}, additional diagnostic
+information will be printed if necessary. If \code{FALSE}, additional
+diagnostic information will always be printed. Default is \code{TRUE}.}
 
-\item{drop_no_lbci}{If \code{TRUE}, parameters not included in the search will
-be removed. Default is \code{TRUE}.}
+\item{drop_no_lbci}{If \code{TRUE}, parameters not included in the
+search will be removed. Default is \code{TRUE}.}
 
 \item{...}{Other arguments. They will be ignored.}
 }
 \value{
-Nothing
+Nothing. Its side effect is used (printing the results).
 }
 \description{
-Print the results of semlbci
+Prints the results of a \code{semlbci} object, the output
+of \code{\link[=semlbci]{semlbci()}}.
 }
 \details{
-Print the results of semlbci
+Prints the results of \code{\link[=semlbci]{semlbci()}} as a table.
 }
 \examples{
-# TODO
+
+library(lavaan)
+mod <-
+"
+m ~ a*x
+y ~ b*m
+ab := a * b
+"
+fit_med <- sem(mod, simple_med, fixed.x = FALSE)
+p_table <- parameterTable(fit_med)
+p_table
+lbci_med <- semlbci(fit_med,
+                    pars = c("ab :="))
+lbci_med
+
+print(lbci_med, verbose_if_needed = FALSE)
 
 }
