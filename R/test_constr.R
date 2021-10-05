@@ -1,24 +1,29 @@
-#' @title Test a limit using a constrained model
+#' @title Test a Limit Using a Constrained Model
 #'
-#' @description Test a limit using a constrained model
+#' @description Tests a limit using a constrained model
 #'
-#' @return
-#' The anova results
+#' @return The anova results
 #'
 #' @param fit The source fit object.
+#'
 #' @param dat The test data.
+#'
 #' @param ciperc The level of confidence of the limit.
+#'
 #' @param parc The character for the constraint(s).
+#'
 #' @param parc2 The character for the additional constraint(s).
+#'
 #' @param modc0 The base model to be constrained.
+#'
 #' @param ci_out The output from the ci_bound_*_i function.
+#'
 #' @param semfct The sem function to be used.
+#'
 #' @param ... Other arguments to be passed to the sem function
 #'
-#' @examples
-#' # TODO
 #'
-#' @keywords internal
+#' @noRd
 
 test_constr <- function(fit,
                         dat,
