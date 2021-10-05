@@ -1,8 +1,9 @@
 #' @title Standardized Estimate Function
 #'
 #' @description This function is to be used to define user-defined
-#'  parameters in `lavaan`. Exported to be used by [scaling_factor()].
-#'  Not to be used by normal users.
+#'  parameters in `lavaan`. Exported to be used by [ci_i()] to find
+#'  the scaling factor for robust LBCI. Not to be used by normal
+#'  users.
 #'
 #' @return The standardized estimate of the *i* parameter.
 #'

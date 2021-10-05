@@ -22,9 +22,9 @@
 #' This package is for users who are using [lavaan] to do SEM and want
 #' to find the LBCIs for selected parameters (e.g., the indirect
 #' effect of a variable on another variable), but do not plan to
-#' migrate to [OpenMx::OpenMx]. The present package is slower than [OpenMx], but
-#' should be sufficient for this purpose when the cost to learn
-#' another package does not justify the benefit.
+#' migrate to [OpenMx::OpenMx]. The present package is slower than
+#' [OpenMx::OpenMx], but should be sufficient for this purpose when
+#' the cost to learn another package does not justify the benefit.
 #'
 #' @references
 #'

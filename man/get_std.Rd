@@ -16,8 +16,9 @@ The standardized estimate of the \emph{i} parameter.
 }
 \description{
 This function is to be used to define user-defined
-parameters in \code{lavaan}. Exported to be used by \code{\link[=scaling_factor]{scaling_factor()}}.
-Not to be used by normal users.
+parameters in \code{lavaan}. Exported to be used by \code{\link[=ci_i]{ci_i()}} to find
+the scaling factor for robust LBCI. Not to be used by normal
+users.
 }
 \examples{
 data(simple_med)
