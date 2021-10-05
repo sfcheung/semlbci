@@ -2,7 +2,7 @@
 % Please edit documentation in R/syntax_to_i.R
 \name{syntax_to_i}
 \alias{syntax_to_i}
-\title{Convert lavaan syntax strings to parameter positions}
+\title{Parameter Positions From lavaan Syntax}
 \usage{
 syntax_to_i(syntax, sem_out)
 }
@@ -15,21 +15,20 @@ syntax_to_i(syntax, sem_out)
 A vector of positions in the parameter table.
 }
 \description{
-Convert lavaan syntax to positions in the fit object
+Converts lavaan syntax to positions in the fit object
 parameter table
 }
 \details{
-Convert a vector of strings to positions in the parameter table of
-a \link[lavaan:lavaan-class]{lavaan::lavaan} fit object.
+\code{\link[=syntax_to_i]{syntax_to_i()}} converts a vector of strings, in lavaan syntax, to the
+positions in the parameter table of a \link[lavaan:lavaan-class]{lavaan::lavaan} fit object.
 
-Each element in the vector
-should have left hand side (\code{lhs}), operator (\code{op}),
-and right hand side (\code{rhs}). For example, "m ~ x" denotes
-the coefficient of the path from \code{x} to \code{m}. "y ~~ x" denotes
-the covariance between \code{y} and \code{x}. For user defined parameters,
-only \code{lhs} and \code{op} will be interpreted. For example, to specify
-the user parameter \code{ab}, "ab := x" will do. The right hadn side will be
-ignored.
+Each element in the vector should have left hand side (\code{lhs}),
+operator (\code{op}), and right hand side (\code{rhs}). For example, "m ~ x"
+denotes the coefficient of the path from \code{x} to \code{m}. "y ~~ x"
+denotes the covariance between \code{y} and \code{x}. For user-defined
+parameters, only \code{lhs} and \code{op} will be interpreted. For example,
+to specify the user parameter \code{ab}, "ab := x" will do. The right
+hand side will be ignored.
 
 Elements that cannot be converted to a parameter in the parameter table will
 be ignored.

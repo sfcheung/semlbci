@@ -1,34 +1,33 @@
-#' @title Convert lavaan syntax strings to parameter positions
+#' @title Parameter Positions From lavaan Syntax
 #'
-#' @description Convert lavaan syntax to positions in the fit object
-#'             parameter table
+#' @description Converts lavaan syntax to positions in the fit object
+#'  parameter table
 #'
 #' @details
-#' 
-#' Convert a vector of strings to positions in the parameter table of
-#' a [lavaan::lavaan-class] fit object.
-#' 
-#' Each element in the vector
-#' should have left hand side (`lhs`), operator (`op`),
-#' and right hand side (`rhs`). For example, "m ~ x" denotes
-#' the coefficient of the path from `x` to `m`. "y ~~ x" denotes
-#' the covariance between `y` and `x`. For user defined parameters,
-#' only `lhs` and `op` will be interpreted. For example, to specify
-#' the user parameter `ab`, "ab := x" will do. The right hadn side will be 
-#' ignored.
-#' 
+#'
+#' [syntax_to_i()] converts a vector of strings, in lavaan syntax, to the
+#' positions in the parameter table of a [lavaan::lavaan-class] fit object.
+#'
+#' Each element in the vector should have left hand side (`lhs`),
+#' operator (`op`), and right hand side (`rhs`). For example, "m ~ x"
+#' denotes the coefficient of the path from `x` to `m`. "y ~~ x"
+#' denotes the covariance between `y` and `x`. For user-defined
+#' parameters, only `lhs` and `op` will be interpreted. For example,
+#' to specify the user parameter `ab`, "ab := x" will do. The right
+#' hand side will be ignored.
+#'
 #' Elements that cannot be converted to a parameter in the parameter table will
 #' be ignored.
-#' 
+#'
 #' Currently supports [lavaan::lavaan-class] outputs only.
 #'
-#'@return
-#' A vector of positions in the parameter table.
-#' 
+#' @return A vector of positions in the parameter table.
+#'
 #' @param syntax A vector of parameters, defined as in lavaan.
+#'
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.
 #'
-#'@examples
+#' @examples
 #'
 #' library(lavaan)
 #' data(simple_med)
@@ -51,7 +50,7 @@
 #' out
 #' p_table[out, ]
 #'
-#'@export
+#' @export
 
 syntax_to_i <- function(syntax,
                         sem_out) {
