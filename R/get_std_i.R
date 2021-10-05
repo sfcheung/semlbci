@@ -1,17 +1,22 @@
-#' @title Get standardized solution within lavaan
+#' @title Standardized Estimate
 #'
-#' @description Get standardized solution within lavaan
+#' @description Get the standardized solution as a user-defined
+#'  parameter.
 #'
-#' @return
-#' The estimatate in the standardized solution.
+#' @details
 #'
-#' @param i The positon of the parameter as in the parameter table.
+#' This function is no longer used by other functions.
+#' Kept here in case future functions need it.
+#'
+#' @return The estimate in the standardized solution.
+#'
+#' @param i The position of the parameter as in the parameter table.
 #' @param ... Optional arguments. Not used.
-#' 
+#'
 #' @examples
 #' # TODO
 #'
-#' @keywords internal
+#' @noRd
 
 get_std_i <- function(i, ...) {
     .x. <- get(".x.", envir = parent.frame())
