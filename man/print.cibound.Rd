@@ -2,28 +2,46 @@
 % Please edit documentation in R/print_cibound.R
 \name{print.cibound}
 \alias{print.cibound}
-\title{Print diagnotic informantion of a confidence limit}
+\title{Print Method of a cibound Object}
 \usage{
 \method{print}{cibound}(x, digits = 5, ...)
 }
 \arguments{
-\item{x}{The output of ci_bound_xx_i function.}
+\item{x}{The output of a \code{ci_bound_xx_i} function. Currently the only
+such function is \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.}
 
-\item{digits}{The number of digits after decimal point. To be passed to
-\code{\link[=round]{round()}}. Default is 5.}
+\item{digits}{The number of digits after the decimal point. To be
+passed to \code{\link[=round]{round()}}. Default is 5.}
 
 \item{...}{Other arguments. They will be ignored.}
 }
 \value{
-Nothing
+Nothing. It is used for its side effect (printing the information).
 }
 \description{
-Print diagnotic informantion of a confidence limit
+Prints the diagnostic information of a \code{cibound} object.
 }
 \details{
-Print diagnotic informantion of a confidence limit
+This is the print method for the output of
+\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}, a \code{cibound} object. It prints the diagnostic
+information on the bound being found and the search process.
 }
 \examples{
-# TODO
+data(simple_med)
+dat <- simple_med
+
+mod <-
+"
+m ~ x
+y ~ m
+"
+
+fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+
+fn_constr0 <- set_constraint(fit_med)
+
+out1l <- ci_bound_wn_i(1, 5, sem_out = fit_med, f_constr =
+                    fn_constr0, which = "lbound")
+out1l
 
 }

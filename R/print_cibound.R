@@ -1,19 +1,38 @@
-#' @title Print diagnotic informantion of a confidence limit
+#' @title Print Method of a cibound Object
 #'
-#' @description Print diagnotic informantion of a confidence limit
+#' @description Prints the diagnostic information of a `cibound` object.
 #'
-#' @details Print diagnotic informantion of a confidence limit
+#' @details This is the print method for the output of
+#'  [ci_bound_wn_i()], a `cibound` object. It prints the diagnostic
+#'  information on the bound being found and the search process.
 #'
-#' @return
-#'  Nothing
+#' @return Nothing. It is used for its side effect (printing the information).
 #'
-#' @param x The output of ci_bound_xx_i function.
-#' @param digits The number of digits after decimal point. To be passed to
-#'                [round()]. Default is 5.
+#' @param x The output of a `ci_bound_xx_i` function. Currently the only
+#'  such function is [ci_bound_wn_i()].
+#'
+#' @param digits The number of digits after the decimal point. To be
+#'  passed to [round()]. Default is 5.
+#'
 #' @param ... Other arguments. They will be ignored.
 #'
 #' @examples
-#' # TODO
+#' data(simple_med)
+#' dat <- simple_med
+#'
+#' mod <-
+#' "
+#' m ~ x
+#' y ~ m
+#' "
+#'
+#' fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+#'
+#' fn_constr0 <- set_constraint(fit_med)
+#'
+#' out1l <- ci_bound_wn_i(1, 5, sem_out = fit_med, f_constr =
+#'                     fn_constr0, which = "lbound")
+#' out1l
 #'
 #' @export
 
