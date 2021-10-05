@@ -16,7 +16,7 @@
 #'  Default is .98.
 #'
 #' @param update_args The list of additional arguments to be passed to
-#'  [lavaan::update()]. Default is `list()`.
+#'  the update method of a lavaan class object. Default is `list()`.
 #'
 #' @param force_converged Whether the constrained model will be forced
 #'   to have converged, without update. Default is `TRUE`.
