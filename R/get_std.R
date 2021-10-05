@@ -1,17 +1,28 @@
-#' @title Get standardized estimate within lavaan
+#' @title Standardized Estimate Function
 #'
 #' @description This function is to be used to define user-defined
 #'  parameters in `lavaan`. Exported to be used by [scaling_factor()].
 #'  Not to be used by normal users.
 #'
-#' @return
-#' The standardized estimate of the *i* parameter.
+#' @return The standardized estimate of the *i* parameter.
 #'
 #' @param fit_str A one-element character vector. The name of the fit object.
+#'
 #' @param i The position of the parameter in the parameter table.
-#' 
+#'
 #' @examples
-#' # TODO
+#' data(simple_med)
+#'
+#' library(lavaan)
+#' mod <-
+#' "
+#' m ~ x
+#' y ~ m
+#' "
+#' fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+#' standardizedSolution(fit_med)[1, ]
+#' fit_med2 <- update(fit_med, add = "mx_std := semlbci::get_std('fit_med', 1)")
+#' parameterEstimates(fit_med2)[6, ]
 #'
 #' @export
 

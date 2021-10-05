@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_std.R
 \name{get_std}
 \alias{get_std}
-\title{Get standardized estimate within lavaan}
+\title{Standardized Estimate Function}
 \usage{
 get_std(fit_str, i)
 }
@@ -20,6 +20,17 @@ parameters in \code{lavaan}. Exported to be used by \code{\link[=scaling_factor]
 Not to be used by normal users.
 }
 \examples{
-# TODO
+data(simple_med)
+
+library(lavaan)
+mod <-
+"
+m ~ x
+y ~ m
+"
+fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+standardizedSolution(fit_med)[1, ]
+fit_med2 <- update(fit_med, add = "mx_std := semlbci::get_std('fit_med', 1)")
+parameterEstimates(fit_med2)[6, ]
 
 }
