@@ -1,17 +1,21 @@
-#' @title Generate a function to get the standardized estiamte of a parameter
+#' @title Standardized Estimate of a Parameter
 #'
-#' @description Generate a function to get the standardized estiamte of a parameter 
+#' @description Generates a function to get the standardized estiamte
+#'  of a parameter.
 #'
-#' @return
-#' A function to be used in a lavaan model.
+#' @details This function is no longer used by other functions. Kept
+#'  here in case future functions need it.
+#'
+#' @return A function to be used in a lavaan model.
 #'
 #' @param fit The source fit object.
+#'
 #' @param i The position of the standardized parameter in the parameter table.
 #'
 #' @examples
 #' # To Do
 #'
-#' @keywords internal
+#' @noRd
 
 get_std_genfct <- function(fit, i) {
     fit_pt <- lavaan::parameterTable(fit)
