@@ -1,27 +1,27 @@
-#' @title Find the scaling factor used in satorra-2000 test
+#' @title Scaling Factor in Satorra-2000 Test
 #'
-#' @description Find the scaling factor used in satorra-2000
-#'              test.
+#' @description Finds the scaling factor used in the satorra-2000 test.
 #'
-#' @return
-#' The scaling factor
+#' @return The scaling factor
 #'
 #' @param sem_out The source fit object.
-#' @param i The position of the parameter as appeared in the
-#'          parameter table.
-#' @param standardized If `TRUE`, the limit to be foound is for the standardized
-#'                     solution. Default is `FALSE`.
-#' @param pertubation_factor A factor to modify the original estimate. Default
-#'                           is .98.
+#'
+#' @param i The position of the parameter as appeared in the parameter
+#'  table.
+#'
+#' @param standardized If `TRUE`, the limit to be found is for the
+#'  standardized solution. Default is `FALSE`.
+#'
+#' @param pertubation_factor A factor to modify the original estimate.
+#'  Default is .98.
+#'
 #' @param update_args The list of additional arguments to be passed to
-#'                    `lavaan::update`. Default is `list()`.
-#' @param force_converged Whether the constrained model will be forced to have
-#'                        converged, without udpate. Default is `TRUE`.
+#'  [lavaan::update()]. Default is `list()`.
 #'
-#' @examples
-#' # TODO
+#' @param force_converged Whether the constrained model will be forced
+#'   to have converged, without update. Default is `TRUE`.
 #'
-#' @keywords internal
+#' @noRd
 
 scaling_factor <- function(sem_out,
                            i,
