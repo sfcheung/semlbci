@@ -1,15 +1,14 @@
-#' @title Get all the unique names from a parameter table
+#' @title Unique Names in a Parameter Table
 #'
-#' @description Get all the unique names form a [lavaan] parameter table
+#' @description Gets all the unique names form a [lavaan] parameter table.
 #'
-#' @details
-#' These columns will be extracted: `lhs`, `rhs`, `label`, and `plabel`.
+#' @details  These columns will be extracted: `lhs`, `rhs`, `label`,
+#'  and `plabel`.
 #'
-#' @return
-#' A vector of unique characters
+#' @return A vector of unique characters
 #'
 #' @param ptable A lavaan parameter table (e.g., an object returned by
-#'                [lavaan::parameterTable()])
+#'  [lavaan::parameterTable()])
 #'
 #' @examples
 #'
@@ -23,7 +22,7 @@
 #' ptable <- lavaanify(mod)
 #' get_names_from_ptable(ptable)
 #' }
-#' @keywords internal
+#' @noRd
 
 get_names_from_ptable <- function(ptable) {
     if (!is.data.frame(ptable)) {
