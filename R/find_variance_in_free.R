@@ -1,17 +1,15 @@
-#' @title Find free variances in an SEM output
+#' @title Free Variances in an SEM Output
 #'
-#' @description Find free variances in an SEM output
+#' @description Find the free variances in an SEM output
 #'
-#' @details
+#' @details Currently supports [lavaan::lavaan-class] outputs only.
 #'
-#' Currently supports [lavaan::lavaan-class] outputs only.
+#' @return A boolean vector of the same length as the number of free
+#'  parameters. A position is \code{TRUE} if the corresponding free
+#'  parameter is a variance (op == "~~").
 #'
-#' @return
-#' A boolean vector of the same length as the number of free parameters.
-#' A position is \code{TRUE} if the corresponding free parameter
-#' is a variance (op == "~~").
-#'
-#' @param sem_out The SEM output. Currently [lavaan::lavaan-class] outputs only.
+#' @param sem_out The SEM output. Currently [lavaan::lavaan-class]
+#'  outputs only.
 #'
 #' @examples
 #' \dontrun{
@@ -27,7 +25,7 @@
 #' out <- find_variance_in_free(fit)
 #' coef(fit)[out]
 #' }
-#' @keywords internal
+#' @noRd
 
 find_variance_in_free <- function(sem_out) {
     if (!inherits(sem_out, "lavaan")) {
