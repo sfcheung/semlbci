@@ -336,7 +336,11 @@ ci_bound_wn_i <- function(i = NULL,
       }
 
     # Achieved level of confidence
-    nobs <- lavaan::lavTech(sem_out, "nobs")
+    if (lavaan::lavTech(sem_out, "ngroups") > 1) {
+        nobs <- lavaan::lavTech(sem_out, "ntotal")
+      } else {
+        nobs <- lavaan::lavTech(sem_out, "nobs")
+      }
     fmin_org <- lavaan::lavTech(sem_out, "optim")$fx
     fmin_final <- lavaan::lavTech(fit_final, "optim")$fx
     chisq_diff <- (fmin_final - fmin_org) * 2 * nobs / sf
