@@ -194,8 +194,13 @@ ci_bound_wn_i <- function(i = NULL,
                                               remove.def = FALSE,
                                               output = "data.frame")
         p_std$id <- seq_len(nrow(p_std))
-        i_lor <- get_lhs_op_rhs(i, sem_out, more = TRUE)
-        i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs", "group"))$id
+        if (lavaan::lavTech(sem_out, "ngroups") > 1) {
+            i_lor <- get_lhs_op_rhs(i, sem_out, more = TRUE)
+            i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs", "group"))$id
+          } else {
+            i_lor <- get_lhs_op_rhs(i, sem_out)
+            i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
+          }
         start0 <- lavaan::parameterTable(sem_out)
         # The function to be minimized.
         lbci_b_f <- function(param, sem_out, debug, lav_warn, sf) {
