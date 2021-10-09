@@ -102,26 +102,26 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE,
 fitc_out1l <- fitc
 print(lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact"))
 
-test_limit <- out1u
-modc <- paste(modc0, "\nab == ", test_limit$bound)
-fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
-ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
-fitc <- update(fitc, start = ptable, do.fit = TRUE,
-                   baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE
-                  #  optim.force.converged = TRUE,
-                  #  optim.dx.tol = .01,
-                  #  warn = FALSE,
-                  #  control = list(
-                  #     eval.max = 2,
-                  #     iterations = 1,
-                  #     control.outer = list(tol = 1e-02,
-                  #                          itmax = 1)
-                  # )
-                )
-fitc_out1u <- fitc
-print(lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact"))
+# test_limit <- out1u
+# modc <- paste(modc0, "\nab == ", test_limit$bound)
+# fitc <- lavaan::sem(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
+# ptable <- parameterTable(fitc)
+# ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
+# fitc <- update(fitc, start = ptable, do.fit = TRUE,
+#                    baseline = FALSE, h1 = FALSE, se = "none",
+#                    verbose = FALSE
+#                   #  optim.force.converged = TRUE,
+#                   #  optim.dx.tol = .01,
+#                   #  warn = FALSE,
+#                   #  control = list(
+#                   #     eval.max = 2,
+#                   #     iterations = 1,
+#                   #     control.outer = list(tol = 1e-02,
+#                   #                          itmax = 1)
+#                   # )
+#                 )
+# fitc_out1u <- fitc
+# print(lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact"))
 
 test_limit <- out2l
 modc <- paste(modc0, "\nb == ", test_limit$bound)
