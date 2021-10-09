@@ -142,6 +142,7 @@ ci_bound_wn_i <- function(i = NULL,
                        ci_limit_ratio_tol = 1.5,
                        verbose = FALSE,
                        sf = 1,
+                       sf2 = 0,
                        p_tol = 1e-3,
                        ...) {
     k <- switch(which,
@@ -203,7 +204,7 @@ ci_bound_wn_i <- function(i = NULL,
           }
         start0 <- lavaan::parameterTable(sem_out)
         # The function to be minimized.
-        lbci_b_f <- function(param, sem_out, debug, lav_warn, sf) {
+        lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
             start1 <- start0
             start1[start1$free > 0, "est"] <- param
             sem_out2 <- sem_out
@@ -225,11 +226,12 @@ ci_bound_wn_i <- function(i = NULL,
             k * std0[i_std, "est.std"]
           }
         # The gradient of the function to be minimized
-        lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf) {
+        lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2) {
             lavaan::lav_func_gradient_complex(
                                       lbci_b_f, param, sem_out = sem_out,
                                       debug = debug, lav_warn = lav_warn,
-                                      sf = sf
+                                      sf = sf,
+                                      sf2 = sf2
                                     )
           }
       }
@@ -239,15 +241,16 @@ ci_bound_wn_i <- function(i = NULL,
             # Get the name of the defined parameter
             i_name <- p_table[i, "label"]
             # The function to be minimized.
-            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf) {
+            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
                 k * sem_out@Model@def.function(param)[i_name]
               }
             # The gradient of the function to be minimized
-            lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf) {
+            lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2) {
                 lavaan::lav_func_gradient_complex(
                                           lbci_b_f, param, sem_out = sem_out,
                                           debug = debug, lav_warn = lav_warn,
-                                          sf = sf
+                                          sf = sf,
+                                          sf2 = sf2
                                         )
               }
           }
@@ -255,7 +258,7 @@ ci_bound_wn_i <- function(i = NULL,
         if (standardized) {
           } else {
             # The function to be minimized.
-            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf) {
+            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
                 force(k)
                 force(i_in_free)
                 k * param[i_in_free]
@@ -263,7 +266,7 @@ ci_bound_wn_i <- function(i = NULL,
             # The gradient of the function to be minimized
             grad_c <- rep(0, npar)
             grad_c[i_in_free] <- k
-            lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf) {
+            lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2) {
                     grad_c
               }
           }
@@ -295,7 +298,8 @@ ci_bound_wn_i <- function(i = NULL,
                         sem_out = sem_out,
                         lav_warn = FALSE,
                         debug = FALSE,
-                        sf = sf)
+                        sf = sf,
+                        sf2 = sf2)
     bound <- k * out$objective
     bound_unchecked <- bound
 
@@ -348,7 +352,7 @@ ci_bound_wn_i <- function(i = NULL,
       }
     fmin_org <- lavaan::lavTech(sem_out, "optim")$fx
     fmin_final <- lavaan::lavTech(fit_final, "optim")$fx
-    chisq_diff <- (fmin_final - fmin_org) * 2 * nobs / sf
+    chisq_diff <- (fmin_final - fmin_org) * 2 * nobs / sf - sf2
     ciperc_final <- stats::pchisq(chisq_diff, 1)
     if (abs(ciperc_final - ciperc) > p_tol) {
         status <- 0
