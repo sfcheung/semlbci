@@ -87,7 +87,7 @@ scaling_factor2 <- function(sem_out,
                                test = "satorra.bentler")
 
         p_tmp <- lavaan::parameterTable(fit00)
-        fit0 <- lavaan::update(fit0, model = p_tmp,
+        fit0 <- lavaan::update(fit00, model = p_tmp,
                                add = paste0(i_label, " == ",
                                             i_est * pertubation_factor),
                                do.fit = FALSE)
