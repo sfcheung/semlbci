@@ -1,12 +1,10 @@
-skip("WIP")
-
 library(testthat)
 library(semlbci)
 
 # Fit the model
 
 library(lavaan)
-data(simple_med_mg_mg)
+data(simple_med_mg)
 dat <- simple_med_mg
 mod <- 
 "
