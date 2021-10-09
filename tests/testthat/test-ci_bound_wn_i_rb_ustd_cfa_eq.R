@@ -17,10 +17,10 @@ fit <- lavaan::cfa(mod, cfa_two_factors, test = "satorra.bentler")
 
 # Find the scaling factors
 
-sf1 <- scaling_factor(fit, 3)
-sf2 <- scaling_factor(fit, 5)
-sf3 <- scaling_factor(fit, 6)
-sf4 <- scaling_factor(fit, 15)
+sf1 <- scaling_factor2(fit, 3)
+sf2 <- scaling_factor2(fit, 5)
+sf3 <- scaling_factor2(fit, 6)
+sf4 <- scaling_factor2(fit, 15)
 
 # Find the LBCIs
 
@@ -35,14 +35,14 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_abs = 1e-7,
               xtol_rel = 1e-7
               )
-time1l <- system.time(out1l <- ci_bound_wn_i( 3, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf1$c_r))
-time1u <- system.time(out1u <- ci_bound_wn_i( 3, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf1$c_r))
-time2l <- system.time(out2l <- ci_bound_wn_i( 5, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r))
-time2u <- system.time(out2u <- ci_bound_wn_i( 5, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, wald_ci_start = FALSE))
-time3l <- system.time(out3l <- ci_bound_wn_i( 6, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf3$c_r))
-time3u <- system.time(out3u <- ci_bound_wn_i( 6, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf3$c_r))
-time4l <- system.time(out4l <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf4$c_r))
-time4u <- system.time(out4u <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf4$c_r))
+time1l <- system.time(out1l <- ci_bound_wn_i( 3, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
+time1u <- system.time(out1u <- ci_bound_wn_i( 3, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
+time2l <- system.time(out2l <- ci_bound_wn_i( 5, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf1$c_rb))
+time2u <- system.time(out2u <- ci_bound_wn_i( 5, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf1$c_rb, wald_ci_start = FALSE))
+time3l <- system.time(out3l <- ci_bound_wn_i( 6, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf3$c_r, sf2 = sf1$c_rb))
+time3u <- system.time(out3u <- ci_bound_wn_i( 6, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf3$c_r, sf2 = sf1$c_rb))
+time4l <- system.time(out4l <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf4$c_r, sf2 = sf1$c_rb))
+time4u <- system.time(out4u <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf4$c_r, sf2 = sf1$c_rb))
 
 timexx <- rbind(time1l, time1u,
                 time2l, time2u,
