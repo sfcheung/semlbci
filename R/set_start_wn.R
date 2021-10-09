@@ -53,8 +53,13 @@ set_start_wn <- function(i = NULL,
                                               output = "data.frame")
         # TODO: Check how to work with multigroup SEM
         p_std$id <- seq_len(nrow(p_std))
-        i_lor <- get_lhs_op_rhs(i, sem_out)
-        i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
+        if (lavaan::lavTech(sem_out, "ngroups") > 1) {
+            i_lor <- get_lhs_op_rhs(i, sem_out, more = TRUE)
+            i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs", "group"))$id
+          } else {
+            i_lor <- get_lhs_op_rhs(i, sem_out)
+            i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
+          }
         start0 <- lavaan::parameterTable(sem_out)
         # The function to be minimized.
         k <- switch(which,

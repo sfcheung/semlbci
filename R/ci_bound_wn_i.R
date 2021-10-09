@@ -194,8 +194,13 @@ ci_bound_wn_i <- function(i = NULL,
                                               remove.def = FALSE,
                                               output = "data.frame")
         p_std$id <- seq_len(nrow(p_std))
-        i_lor <- get_lhs_op_rhs(i, sem_out)
-        i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
+        if (lavaan::lavTech(sem_out, "ngroups") > 1) {
+            i_lor <- get_lhs_op_rhs(i, sem_out, more = TRUE)
+            i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs", "group"))$id
+          } else {
+            i_lor <- get_lhs_op_rhs(i, sem_out)
+            i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
+          }
         start0 <- lavaan::parameterTable(sem_out)
         # The function to be minimized.
         lbci_b_f <- function(param, sem_out, debug, lav_warn, sf) {
@@ -336,7 +341,11 @@ ci_bound_wn_i <- function(i = NULL,
       }
 
     # Achieved level of confidence
-    nobs <- lavaan::lavTech(sem_out, "nobs")
+    if (lavaan::lavTech(sem_out, "ngroups") > 1) {
+        nobs <- lavaan::lavTech(sem_out, "ntotal")
+      } else {
+        nobs <- lavaan::lavTech(sem_out, "nobs")
+      }
     fmin_org <- lavaan::lavTech(sem_out, "optim")$fx
     fmin_final <- lavaan::lavTech(fit_final, "optim")$fx
     chisq_diff <- (fmin_final - fmin_org) * 2 * nobs / sf
