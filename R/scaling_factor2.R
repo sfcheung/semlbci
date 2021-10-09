@@ -238,7 +238,7 @@ scaling_factor2 <- function(sem_out,
     chisq_2 <- lrt_out2["fit2", "Chisq"]
     chisq_0 <- lrt_out1["sem_out", "Chisq"]
     chisq_diff_c_1 <- chisq_1 - chisq_0
-    chisq_diff_c_1 <- chisq_2 - chisq_0
+    chisq_diff_c_2 <- chisq_2 - chisq_0
     chisq_diff_p_1 <- stats::qchisq(lrt_out1[2, "Pr(>Chisq)"],
                                   1,
                                   lower.tail = FALSE)
