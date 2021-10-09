@@ -58,8 +58,9 @@ set_constraint <- function(sem_out, ciperc = .95) {
                                   sem_out = NULL,
                                   debug = FALSE,
                                   lav_warn = FALSE,
-                                  sf = 1) {
-            target <- fmin + sf * qcrit / (2 * n)
+                                  sf = 1,
+                                  sf2 = 0) {
+            target <- fmin + (sf * qcrit + sf2) / (2 * n)
             if (debug) {
                 cat(ls())
                 cat(ls(globalenv()))
@@ -101,8 +102,9 @@ set_constraint <- function(sem_out, ciperc = .95) {
                                   sem_out = NULL,
                                   debug = FALSE,
                                   lav_warn = FALSE,
-                                  sf = 1) {
-            target <- fmin + sf * qcrit / (2 * n)
+                                  sf = 1,
+                                  sf2 = 0) {
+            target <- fmin + (sf * qcrit + sf2) / (2 * n)
             if (debug) {
                 cat(ls())
                 cat(ls(globalenv()))
