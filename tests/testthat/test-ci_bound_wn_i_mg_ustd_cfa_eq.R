@@ -74,10 +74,10 @@ test_out3u <- test_constr(fit = fit, dat = cfa_two_factors_mg, ciperc = ciperc, 
 
 modc0 <- 
 "
-f1 =~ x1 + b*x2 + c*x3
-f2 =~ x4 + d*x5 + e*x6
-f1 ~~ fr*f2
-b == d
+f1 =~ x1 + c(b1, b2)*x2 + c(c1, c2)*x3
+f2 =~ x4 + c(d1, d2)*x5 + c(e1, e2)*x6
+f1 ~~ c(r1, r2)*f2
+b1 == b2
 "
 
 test_out4l <- suppressWarnings(test_constr(fit = fit, dat = cfa_two_factors_mg, ciperc = ciperc, parc = "c2 == ", modc0 = modc0, ci_out = out4l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE, group = "gp"))
