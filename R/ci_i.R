@@ -76,11 +76,13 @@ ci_i <- function(i,
     # It should be the job of the calling function to check whether it is 
     # appropriate to use the robust method.
     if (tolower(robust) == "satorra.2000") {
-        sf_full <- scaling_factor(sem_out, i)
+        sf_full <- scaling_factor2(sem_out, i)
         sf <- sf_full$c_r
+        sf2 <- sf_full$c_rb
       } else {
         sf_full <- NA
         sf <- 1
+        sf2 <- 0
       }
     if (method == "wn") {
         lb_time <- system.time(lb <- ci_bound_wn_i(i,
@@ -88,12 +90,14 @@ ci_i <- function(i,
                                                    which = "lbound",
                                                    standardized = standardized,
                                                    sf = sf,
+                                                   sf2 = sf2,
                                                     ...))
         ub_time <- system.time(ub <- ci_bound_wn_i(i,
                                                    sem_out = sem_out,
                                                    which = "ubound",
                                                    standardized = standardized,
                                                    sf = sf,
+                                                   sf2 = sf2,
                                                     ...))
       }
     if (method == "nm") {
