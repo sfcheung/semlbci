@@ -1,5 +1,3 @@
-skip("WIP: Not yet working")
-
 library(semlbci)
 library(lavaan)
 options(width = 132)
@@ -172,6 +170,7 @@ f1 ~ f2
 "
 fit1 <- lavaan::sem(mod1, dat, test = "satorra.bentler")
 
+sc2 <- scaling_factor2(fit1, i = 2)
 
 modc01 <-
 "
