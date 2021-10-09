@@ -6,16 +6,15 @@ options(width = 132)
 
 library(lavaan)
 
-data(cfa_two_factors)
-dat <- cfa_two_factors
-dat <- cbind(cfa_two_factors, gp = rep(c("gp1", "gp2"), each = nrow(dat) / 2))
+data(cfa_two_factors_mg)
+dat <- cfa_two_factors_mg
 mod <-
 "
 f1 =~ 1*x1 + c(a1, a2)*x2 + x3
 f2 =~ x4 + x5 + x6
 f1 ~ f2
 "
-fit <- lavaan::sem(mod, dat, test = "satorra.bentler", group = "gp", meanstructure = TRUE)
+fit <- lavaan::sem(mod, cfa_two_factors_mg, test = "satorra.bentler", group = "gp", meanstructure = TRUE)
 
 summary(fit)
 
@@ -85,7 +84,7 @@ f1 ~ f2
 i <- 2
 est_i <- parameterTable(fit)[2, "est"]
 modc <- paste(modc0, "\na1 == ", est_i * .98)
-fitc <- lavaan::sem(modc, dat, do.fit = FALSE, test = "satorra.bentler", group = "gp")
+fitc <- lavaan::sem(modc, cfa_two_factors_mg, do.fit = FALSE, test = "satorra.bentler", group = "gp")
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- coef(fit)
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
@@ -106,7 +105,7 @@ fitc_a <- fitc
 i <- 2
 est_i <- parameterTable(fit)[2, "est"]
 modc <- paste(modc0, "\na1 == ", est_i * .78)
-fitc <- lavaan::sem(modc, dat, do.fit = FALSE, test = "satorra.bentler", group = "gp")
+fitc <- lavaan::sem(modc, cfa_two_factors_mg, do.fit = FALSE, test = "satorra.bentler", group = "gp")
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- coef(fit)
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
@@ -128,7 +127,7 @@ fitc_b <- fitc
 i <- 2
 est_i <- parameterTable(fit)[2, "est"]
 modc <- paste(modc0, "\na1 == ", est_i * .58)
-fitc <- lavaan::sem(modc, dat, do.fit = FALSE, test = "satorra.bentler", group = "gp")
+fitc <- lavaan::sem(modc, cfa_two_factors_mg, do.fit = FALSE, test = "satorra.bentler", group = "gp")
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- coef(fit)
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
@@ -168,7 +167,7 @@ f1 =~ 1*x1 + a*x2 + x3
 f2 =~ x4 + x5 + x6
 f1 ~ f2
 "
-fit1 <- lavaan::sem(mod1, dat, test = "satorra.bentler")
+fit1 <- lavaan::sem(mod1, cfa_two_factors, test = "satorra.bentler")
 
 sc2 <- scaling_factor2(fit1, i = 2)
 
@@ -182,7 +181,7 @@ f1 ~ f2
 i <- 2
 est_i <- parameterTable(fit1)[2, "est"]
 modc1 <- paste(modc01, "\na == ", est_i * .98)
-fitc <- lavaan::sem(modc1, dat, do.fit = FALSE, test = "satorra.bentler")
+fitc <- lavaan::sem(modc1, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- coef(fit1)
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
@@ -203,7 +202,7 @@ fitc_a1 <- fitc
 i <- 2
 est_i <- parameterTable(fit1)[2, "est"]
 modc1 <- paste(modc01, "\na == ", est_i * .78)
-fitc <- lavaan::sem(modc1, dat, do.fit = FALSE, test = "satorra.bentler")
+fitc <- lavaan::sem(modc1, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- coef(fit1)
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
@@ -224,7 +223,7 @@ fitc_b1 <- fitc
 i <- 2
 est_i <- parameterTable(fit1)[2, "est"]
 modc1 <- paste(modc01, "\na == ", est_i * .58)
-fitc <- lavaan::sem(modc1, dat, do.fit = FALSE, test = "satorra.bentler")
+fitc <- lavaan::sem(modc1, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- coef(fit1)
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
