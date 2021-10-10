@@ -205,6 +205,7 @@ semlbci <- function(sem_out,
         if (lavTech(sem_out, "ngroups") == 1) {
             pstd$group <- 1
           }
+        pstd$group[pstd$op == ":="] <- 0
         out_p <- merge(out_p, pstd[, c("lhs", "op", "rhs", "group", "est.std")],
                 by = c("lhs", "op", "rhs", "group"), all.x = TRUE, sort = FALSE)
       } else {
