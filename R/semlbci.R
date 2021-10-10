@@ -198,7 +198,7 @@ semlbci <- function(sem_out,
       }
     out <- do.call(rbind, lapply(out_raw, function(x) x$bounds))
     # out <- do.call(rbind, out_raw)
-    out_p <- ptable[, c("id", "lhs", "op", "group", "rhs")]
+    out_p <- ptable[, c("id", "lhs", "op", "rhs", "group")]
     out_p$lbci_lb <- NA
     if (standardized) {
         pstd <- lavaan::standardizedSolution(sem_out)
