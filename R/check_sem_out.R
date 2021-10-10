@@ -42,15 +42,15 @@
 #'
 #' Models supported:
 #'
-#'    - Single group models with continuous variables.
+#'    - Single-group models with continuous variables.
+#'
+#'    - Multiple-group models with continuous variables.
 #'
 #' Models not tested:
 #'
 #'    - Models with categorical variables.
 #'
 #' Models not yet supported:
-#'
-#'    - Multigroup models.
 #'
 #'    - Models with formative factors.
 #'
@@ -73,6 +73,9 @@
 #'  test is to be found. Only "satorra.2000" in [lavaan] is supported
 #'  for now. If `"none"`, the default, then likelihood ratio test based
 #'  on maximum likelihood estimation will be used.
+#' 
+#' @param multigroup_ok If `TRUE`, will not check whether the model is a
+#'  multiple-group model. Default is `TRUE`.
 #'
 #' @seealso 
 #' [semlbci()], [ci_i()]
@@ -107,7 +110,8 @@
 #'
 #' @export
 
-check_sem_out <- function(sem_out, robust = "none") {
+check_sem_out <- function(sem_out, robust = "none",
+                          multigroup_ok = TRUE) {
     p_table <- lavaan::parameterTable(sem_out)
 
     sem_options <- lavaan::lavInspect(sem_out, "options")
@@ -245,7 +249,7 @@ check_sem_out <- function(sem_out, robust = "none") {
           msg <- c(msg, "Clustered models are not yet supported.")
         }
 
-    if (model_multigroup) {
+    if (model_multigroup && !multigroup_ok) {
           out <- ifelse(out >= 0, -1, out - 1)
           msg <- c(msg, "Multigroup models are not yet supported.")
         }

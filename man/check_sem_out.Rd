@@ -4,7 +4,7 @@
 \alias{check_sem_out}
 \title{Pre-analysis Check For semlbci}
 \usage{
-check_sem_out(sem_out, robust = "none")
+check_sem_out(sem_out, robust = "none", multigroup_ok = TRUE)
 }
 \arguments{
 \item{sem_out}{The output from an SEM analysis. Currently only
@@ -14,6 +14,9 @@ supports a \link[lavaan:lavaan-class]{lavaan::lavaan} object.}
 test is to be found. Only "satorra.2000" in \link{lavaan} is supported
 for now. If \code{"none"}, the default, then likelihood ratio test based
 on maximum likelihood estimation will be used.}
+
+\item{multigroup_ok}{If \code{TRUE}, will not check whether the model is a
+multiple-group model. Default is \code{TRUE}.}
 }
 \value{
 A numeric vector of one element. If 0, the model and
@@ -66,7 +69,8 @@ test statistics:
 
 Models supported:
 \itemize{
-\item Single group models with continuous variables.
+\item Single-group models with continuous variables.
+\item Multiple-group models with continuous variables.
 }
 
 Models not tested:
@@ -76,7 +80,6 @@ Models not tested:
 
 Models not yet supported:
 \itemize{
-\item Multigroup models.
 \item Models with formative factors.
 \item Multilevel models
 }
