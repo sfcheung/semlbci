@@ -20,6 +20,7 @@ ci_bound_wn_i(
   ci_limit_ratio_tol = 1.5,
   verbose = FALSE,
   sf = 1,
+  sf2 = 0,
   p_tol = 0.001,
   ...
 )
