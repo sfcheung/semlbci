@@ -198,12 +198,15 @@ semlbci <- function(sem_out,
       }
     out <- do.call(rbind, lapply(out_raw, function(x) x$bounds))
     # out <- do.call(rbind, out_raw)
-    out_p <- ptable[, c("id", "lhs", "op", "rhs")]
+    out_p <- ptable[, c("id", "lhs", "op", "group", "rhs")]
     out_p$lbci_lb <- NA
     if (standardized) {
         pstd <- lavaan::standardizedSolution(sem_out)
-        out_p <- merge(out_p, pstd[, c("lhs", "op", "rhs", "est.std")],
-                by = c("lhs", "op", "rhs"), all.x = TRUE, sort = FALSE)
+        if (lavTech(sem_out, "ngroups") == 1) {
+            pstd$group <- 1
+          }
+        out_p <- merge(out_p, pstd[, c("lhs", "op", "rhs", "group", "est.std")],
+                by = c("lhs", "op", "rhs", "group"), all.x = TRUE, sort = FALSE)
       } else {
         out_p$est <- ptable[, c("est")]
       }
