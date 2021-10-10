@@ -352,7 +352,7 @@ ci_bound_wn_i <- function(i = NULL,
       }
     fmin_org <- lavaan::lavTech(sem_out, "optim")$fx
     fmin_final <- lavaan::lavTech(fit_final, "optim")$fx
-    chisq_diff <- (fmin_final - fmin_org) * 2 * ntotal / sf - sf2
+    chisq_diff <- (fmin_final - fmin_org) * 2 * ntotal / sf + sf2
     ciperc_final <- stats::pchisq(chisq_diff, 1)
     if (abs(ciperc_final - ciperc) > p_tol) {
         status <- 0
