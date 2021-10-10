@@ -44,7 +44,11 @@ set_constraint <- function(sem_out, ciperc = .95) {
     p_free <- find_free(sem_out)
     qcrit <- stats::qchisq(ciperc, 1)
     fmin <- lavaan::lavTech(sem_out, "optim")$fx
-    n <- lavaan::lavTech(sem_out, "nobs")
+    if (lavaan::lavTech(sem_out, "ngroups") > 1) {
+          n <- lavaan::lavTech(sem_out, "ntotal")
+        } else {
+          n <- lavaan::lavTech(sem_out, "nobs")
+        }
     # NOTE: For lavaan, chisq = 2 * n * fmin
     target <- fmin + qcrit / (2 * n)
     # Check if there are any equality constraints
@@ -54,8 +58,9 @@ set_constraint <- function(sem_out, ciperc = .95) {
                                   sem_out = NULL,
                                   debug = FALSE,
                                   lav_warn = FALSE,
-                                  sf = 1) {
-            target <- fmin + sf * qcrit / (2 * n)
+                                  sf = 1,
+                                  sf2 = 0) {
+            target <- fmin + (sf * qcrit + sf2) / (2 * n)
             if (debug) {
                 cat(ls())
                 cat(ls(globalenv()))
@@ -97,8 +102,9 @@ set_constraint <- function(sem_out, ciperc = .95) {
                                   sem_out = NULL,
                                   debug = FALSE,
                                   lav_warn = FALSE,
-                                  sf = 1) {
-            target <- fmin + sf * qcrit / (2 * n)
+                                  sf = 1,
+                                  sf2 = 0) {
+            target <- fmin + (sf * qcrit + sf2) / (2 * n)
             if (debug) {
                 cat(ls())
                 cat(ls(globalenv()))
