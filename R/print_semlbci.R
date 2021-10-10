@@ -54,6 +54,12 @@ print.semlbci <- function(x,
                           drop_no_lbci = TRUE,
                           ...) {
     out <- x
+    if (max(out$group) == 1) {
+        out$group <- NULL
+      }
+    if (all(out$label == "")) {
+        out$label <- NULL
+      }
     class(out) <- "data.frame"
     out$lbci_lb <- round(out$lbci_lb, digits)
     out$est <- round(out$est, digits)
