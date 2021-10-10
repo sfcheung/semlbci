@@ -23,12 +23,23 @@ parameter table
 positions in the parameter table of a \link[lavaan:lavaan-class]{lavaan::lavaan} fit object.
 
 Each element in the vector should have left hand side (\code{lhs}),
-operator (\code{op}), and right hand side (\code{rhs}). For example, "m ~ x"
+operator (\code{op}), and/or right hand side (\code{rhs}). For example, "m ~ x"
 denotes the coefficient of the path from \code{x} to \code{m}. "y ~~ x"
-denotes the covariance between \code{y} and \code{x}. For user-defined
-parameters, only \code{lhs} and \code{op} will be interpreted. For example,
-to specify the user parameter \code{ab}, "ab := x" will do. The right
-hand side will be ignored.
+denotes the covariance between \code{y} and \code{x}.
+
+For user-defined parameters, only \code{lhs} and \code{op} will be
+interpreted. For example, to specify the user parameter \code{ab}, "ab
+:= x" will do. The right hand side will be ignored.
+
+To denote a labelled parameters, e.g., "y ~ a*x", treat it as a user-defined
+parameters us use \verb{:=}, e.g., "a :=" in this example.
+
+For multiple-group models, if a parameter is specified as in a single-group
+models, then this parameter in all groups will be selected. For example,
+if a model has three groups, "y ~ x" denotes this path parameter in all
+three groups, and it will be converted to three row numbers. To select
+the parameter in a specific group, label the parameter and select it using
+\verb{:=} as described above.
 
 Elements that cannot be converted to a parameter in the parameter table will
 be ignored.

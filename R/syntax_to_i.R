@@ -9,12 +9,23 @@
 #' positions in the parameter table of a [lavaan::lavaan-class] fit object.
 #'
 #' Each element in the vector should have left hand side (`lhs`),
-#' operator (`op`), and right hand side (`rhs`). For example, "m ~ x"
+#' operator (`op`), and/or right hand side (`rhs`). For example, "m ~ x"
 #' denotes the coefficient of the path from `x` to `m`. "y ~~ x"
-#' denotes the covariance between `y` and `x`. For user-defined
-#' parameters, only `lhs` and `op` will be interpreted. For example,
-#' to specify the user parameter `ab`, "ab := x" will do. The right
-#' hand side will be ignored.
+#' denotes the covariance between `y` and `x`.
+#'
+#' For user-defined parameters, only `lhs` and `op` will be
+#' interpreted. For example, to specify the user parameter `ab`, "ab
+#' := x" will do. The right hand side will be ignored.
+#'
+#' To denote a labelled parameters, e.g., "y ~ a*x", treat it as a user-defined
+#' parameters us use `:=`, e.g., "a :=" in this example.
+#'
+#' For multiple-group models, if a parameter is specified as in a single-group
+#' models, then this parameter in all groups will be selected. For example,
+#' if a model has three groups, "y ~ x" denotes this path parameter in all
+#' three groups, and it will be converted to three row numbers. To select
+#' the parameter in a specific group, label the parameter and select it using
+#' `:=` as described above.
 #'
 #' Elements that cannot be converted to a parameter in the parameter table will
 #' be ignored.
@@ -77,5 +88,5 @@ syntax_to_i <- function(syntax,
       } else {
         i_def <- NULL
       }
-    c(i_par, i_def)
+    sort(c(i_par, i_def))
   }
