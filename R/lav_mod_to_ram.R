@@ -48,8 +48,18 @@ lav_mod_to_ram <- function(lav_mod) {
     mA[beta_names, beta_names] <- lav_mod$beta
 
     # Nu to M
-    mM[, rownames(lav_mod$nu)] <- lav_mod$nu
-    mM[, rownames(lav_mod$alpha)] <- lav_mod$alpha
+    if (!is.null(lav_mod$nu)) {
+        mM[, rownames(lav_mod$nu)] <- lav_mod$nu
+      } else {
+        mM[, rownames(lav_mod$nu)] <- NA
+      }
+
+    # Alpha to M
+    if (!is.null(lav_mod$alpha)) {
+        mM[, rownames(lav_mod$alpha)] <- lav_mod$alpha
+      } else {
+        mM[, rownames(lav_mod$alpha)] <- NA
+      }
 
     # Output
     list(A = mA,
