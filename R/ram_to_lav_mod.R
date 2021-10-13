@@ -54,16 +54,20 @@ ram_to_lav_mod <- function(ram, lav_mod) {
     lav_mod$psi <- cov2cor(lav_mod$psi)
     diag(lav_mod$psi) <- tmp
 
-    # M to nu
-    lav_mod$nu[] <- 0
-    nu_names <- rownames(lav_mod$nu)
-    lav_mod$nu[] <- t(ram$M[, nu_names, drop = FALSE])
-    lav_mod$nu[lambda1] <- 0
+    if (!is.null(lav_mod$nu)) {
+        # M to nu
+        lav_mod$nu[] <- 0
+        nu_names <- rownames(lav_mod$nu)
+        lav_mod$nu[] <- t(ram$M[, nu_names, drop = FALSE])
+        lav_mod$nu[lambda1] <- 0
+      }
 
-    # M to alpha
-    lav_mod$alpha[] <- 0
-    alpha_names <- rownames(lav_mod$alpha)
-    lav_mod$alpha[] <- t(ram$M[, alpha_names, drop = FALSE])
+    if (!is.null(lav_mod$alpha)) {
+      # M to alpha
+      lav_mod$alpha[] <- 0
+      alpha_names <- rownames(lav_mod$alpha)
+      lav_mod$alpha[] <- t(ram$M[, alpha_names, drop = FALSE])
+      }
 
     lav_mod
   }
