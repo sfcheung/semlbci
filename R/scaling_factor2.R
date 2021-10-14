@@ -110,10 +110,7 @@ scaling_factor2 <- function(sem_out,
         fit0 <- lavaan::update(fit00, model = p_tmp,
                                add = paste0(i_label, " == ",
                                             i_est * pertubation_factor),
-                               do.fit = FALSE,
-                               baseline = FALSE,
-                               h1 = FALSE,
-                               se = "none")
+                               do.fit = FALSE)
         time_spent <- Sys.time() - time_start
         if (debug) {
             cat("\nfit0 update with eq con: \n",
