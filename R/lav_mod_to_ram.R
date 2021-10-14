@@ -44,8 +44,10 @@ lav_mod_to_ram <- function(lav_mod) {
     mA[lambda_rnames, lambda_cnames] <- lav_mod$lambda
 
     # Beta to A
-    beta_names <- rownames(lav_mod$beta)
-    mA[beta_names, beta_names] <- lav_mod$beta
+    if (!is.null(lav_mod$beta)) {
+        beta_names <- rownames(lav_mod$beta)
+        mA[beta_names, beta_names] <- lav_mod$beta
+      }
 
     # Nu to M
     if (!is.null(lav_mod$nu)) {
