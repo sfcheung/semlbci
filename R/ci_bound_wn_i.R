@@ -90,6 +90,13 @@
 #'  confidence. If the absolute difference between the achieved level
 #'  and and `ciperc` is greater than this amount, a warning is set in
 #'  the status code and the bound is set to `NA`. Default is 1e-3.
+#' 
+#' @param std_method The method used to find the standardized solution.
+#'  If equal to `"lavaan"``, [lavaan::standardizedSolution()] will be used.
+#'  If equal to `"internal"`, an internal function of this package will be used.
+#'  The `"lavaan"` method should work in all situations, but the `"internal"`
+#'  method can be faster. Default is `"lavaan"` for now, but may be changed to
+#'  `"internal"` if it is confirmed to work in all situations tested.
 #'
 #' @param ... Optional arguments. Not used.
 #'
@@ -144,6 +151,7 @@ ci_bound_wn_i <- function(i = NULL,
                        sf = 1,
                        sf2 = 0,
                        p_tol = 1e-3,
+                       std_method = "lavaan",
                        ...) {
     k <- switch(which,
                 lbound = 1,
@@ -172,6 +180,41 @@ ci_bound_wn_i <- function(i = NULL,
         i_est <- p_est[i, "est.std"]
         i_org_ci_lower <- p_est[i, "ci.lower"]
         i_org_ci_upper <- p_est[i, "ci.upper"]
+        if (std_method == "internal") {
+            # Test whether the internal function can reproduce the
+            # solution from lavaan::standardizedSolution().
+            p_est_int <- std_lav(coef(sem_out),
+                                  sem_out)
+            p_est_test <- lavaan::parameterEstimates(
+                                    sem_out,
+                                    standardized = TRUE,
+                                    se = FALSE,
+                                    zstat = FALSE,
+                                    pvalue = FALSE,
+                                    ci = FALSE,
+                                    cov.std = FALSE,
+                                    remove.system.eq = FALSE,
+                                    remove.eq = FALSE,
+                                    remove.ineq = FALSE,
+                                    remove.def = FALSE,
+                                    remove.nonfree = FALSE)
+            if (lavTech(sem_out, "ngroups") > 1) {
+                p_est_test <- p_est_test[, c("lhs", "op", "rhs",
+                                              "group",
+                                              "std.all")]
+              } else {
+                p_est_test <- p_est_test[, c("lhs", "op", "rhs",
+                                              "std.all")]
+              }
+            p_est_int_tmp <- p_est_test
+            p_est_int_tmp$std.all <- p_est_int
+            p_est_test <- p_est_test[!(p_est_test$op %in% c("~1", "==")), ]
+            p_est_int_tmp <- p_est_int_tmp[!(p_est_int_tmp$op %in% c("~1", "==")), ]
+            if (all(p_est_test$std.all != p_est_int_tmp$std.all)) {
+                stop(paste0("The internal method cannot reproduce std.all.\n",
+                            "Please use std_method = ", dQuote("lavaan"), "."))
+              }
+          }
       } else {
         p_est <- lavaan::parameterEstimates(sem_out,
                                             se = TRUE,
@@ -187,46 +230,82 @@ ci_bound_wn_i <- function(i = NULL,
       }
 
     if (standardized && (i_op %in% c("=~", "~", "~~", ":="))) {
-        p_std <- lavaan::standardizedSolution(sem_out,
-                                              type = "std.all",
-                                              se = FALSE,
-                                              zstat = FALSE,
-                                              pvalue = FALSE,
-                                              ci = FALSE,
-                                              remove.eq = FALSE,
-                                              remove.ineq = FALSE,
-                                              remove.def = FALSE,
-                                              output = "data.frame")
-        p_std$id <- seq_len(nrow(p_std))
-        if (lavaan::lavTech(sem_out, "ngroups") > 1) {
-            i_lor <- get_lhs_op_rhs(i, sem_out, more = TRUE)
-            i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs", "group"))$id
-          } else {
-            i_lor <- get_lhs_op_rhs(i, sem_out)
-            i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
+        if (!(std_method %in% c("lavaan", "internal"))) {
+            stop(paste0("std_method must be either ",
+                        dQuote("lavaan"), " or ",
+                        dQuote("internal")))
           }
-        start0 <- lavaan::parameterTable(sem_out)
-        # The function to be minimized.
-        lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
-            start1 <- start0
-            start1[start1$free > 0, "est"] <- param
-            sem_out2 <- sem_out
-            sem_out2@ParTable <- as.list(start1)
-            sem_model <- sem_out2@Model
-            sem_model <- lavaan::lav_model_set_parameters(sem_model,
-                                      start1[start1$free > 0, "est"])
-            sem_out2@Model <- sem_model
-            std0 <- lavaan::standardizedSolution(sem_out2,
-                                            type = "std.all",
-                                            se = FALSE,
-                                            zstat = FALSE,
-                                            pvalue = FALSE,
-                                            ci = FALSE,
-                                            remove.eq = FALSE,
-                                            remove.ineq = FALSE,
-                                            remove.def = FALSE,
-                                            output = "data.frame")
-            k * std0[i_std, "est.std"]
+        if (std_method == "lavaan") {
+            p_std <- lavaan::standardizedSolution(sem_out,
+                                                  type = "std.all",
+                                                  se = FALSE,
+                                                  zstat = FALSE,
+                                                  pvalue = FALSE,
+                                                  ci = FALSE,
+                                                  remove.eq = FALSE,
+                                                  remove.ineq = FALSE,
+                                                  remove.def = FALSE,
+                                                  output = "data.frame")
+            p_std$id <- seq_len(nrow(p_std))
+            if (lavaan::lavTech(sem_out, "ngroups") > 1) {
+                i_lor <- get_lhs_op_rhs(i, sem_out, more = TRUE)
+                i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs", "group"))$id
+              } else {
+                i_lor <- get_lhs_op_rhs(i, sem_out)
+                i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
+              }
+            start0 <- lavaan::parameterTable(sem_out)
+            # The function to be minimized.
+            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
+                start1 <- start0
+                start1[start1$free > 0, "est"] <- param
+                sem_out2 <- sem_out
+                sem_out2@ParTable <- as.list(start1)
+                sem_model <- sem_out2@Model
+                sem_model <- lavaan::lav_model_set_parameters(sem_model,
+                                          start1[start1$free > 0, "est"])
+                sem_out2@Model <- sem_model
+                std0 <- lavaan::standardizedSolution(sem_out2,
+                                                type = "std.all",
+                                                se = FALSE,
+                                                zstat = FALSE,
+                                                pvalue = FALSE,
+                                                ci = FALSE,
+                                                remove.eq = FALSE,
+                                                remove.ineq = FALSE,
+                                                remove.def = FALSE,
+                                                output = "data.frame")
+                k * std0[i_std, "est.std"]
+              }
+          }
+        if (std_method == "internal") {
+            p_std <- lavaan::parameterEstimates(
+                                  sem_out,
+                                  standardized = TRUE,
+                                  se = FALSE,
+                                  zstat = FALSE,
+                                  pvalue = FALSE,
+                                  ci = FALSE,
+                                  cov.std = FALSE,
+                                  remove.system.eq = FALSE,
+                                  remove.eq = FALSE,
+                                  remove.ineq = FALSE,
+                                  remove.def = FALSE,
+                                  remove.nonfree = FALSE)
+            p_std$id <- seq_len(nrow(p_std))
+            if (lavaan::lavTech(sem_out, "ngroups") > 1) {
+                i_lor <- get_lhs_op_rhs(i, sem_out, more = TRUE)
+                i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs", "group"))$id
+              } else {
+                i_lor <- get_lhs_op_rhs(i, sem_out)
+                i_std <- merge(p_std, i_lor, by = c("lhs", "op", "rhs"))$id
+              }
+            start0 <- lavaan::parameterTable(sem_out)
+            # The function to be minimized.
+            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
+                std0 <- std_lav(param, sem_out)
+                k * std0[i_std]
+              }
           }
         # The gradient of the function to be minimized
         lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2) {
