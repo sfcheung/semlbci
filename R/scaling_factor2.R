@@ -86,9 +86,11 @@ scaling_factor2 <- function(sem_out,
         # Standardized. User defined or free does not matter.
 
         i_label <- gen_unique_name(get_names_from_ptable(p_table_fit))
+
+        if (FALSE) {
         time_start <- Sys.time()
         fit00 <- lavaan::update(sem_out,
-                               model = p_table_fit,
+                               model = sem_out@ParTable,
                                add = paste0(i_label, " := ",
                                             "semlbci::get_std('",
                                             sem_out_name, "',", i,
@@ -105,9 +107,9 @@ scaling_factor2 <- function(sem_out,
             cat("\nfit00 update with get_std: \n",
                 time_spent, "\n")
           }
-        p_tmp <- lavaan::parameterTable(fit00)
+        # p_tmp <- lavaan::parameterTable(fit00)
         time_start <- Sys.time()
-        fit0 <- lavaan::update(fit00, model = p_tmp,
+        fit0 <- lavaan::update(fit00, model = fit00@ParTable,
                                add = paste0(i_label, " == ",
                                             i_est * pertubation_factor),
                                do.fit = FALSE)
@@ -116,9 +118,9 @@ scaling_factor2 <- function(sem_out,
             cat("\nfit0 update with eq con: \n",
                 time_spent, "\n")
           }
-        p_tmp <- lavaan::parameterTable(fit0)
+        # p_tmp <- lavaan::parameterTable(fit0)
         time_start <- Sys.time()
-        fit0 <- lavaan::update(fit0, model = p_tmp,
+        fit0 <- lavaan::update(fit0, model = fit0@ParTable,
                                add = "0 < 1",
                                do.fit = FALSE)
         time_spent <- Sys.time() - time_start
@@ -138,40 +140,53 @@ scaling_factor2 <- function(sem_out,
                                           p_table[p_table0$free > 0, "est"]
         p_table0[p_table0$free > 0, "est"] <-
                                           p_table[p_table0$free > 0, "est"]
+        }
 
-        p_tmp <- lavaan::parameterTable(fit00)
+        i_syn <- paste0("semlbci::get_std('",
+                        sem_out_name, "',", i,
+                        ", std_method = ",
+                        sQuote(std_method),
+                        ")")
+        p_table0 <- sem_out@ParTable
+        prow <- length(p_table0$id)
+        p_table0$id <- c(p_table0$id, prow + 1:3)
+        p_table0$block <- c(p_table0$block, rep(0, 3))
+        p_table0$user <- c(p_table0$user, rep(1, 3))
+        p_table0$free <- c(p_table0$free, rep(0, 3))
+        p_table0$ustart <- c(p_table0$ustart, rep(0, 3))
+        p_table0$exo <- c(p_table0$exo, rep(0, 3))
+        p_table0$label <- c(p_table0$label, i_label, "", "")
+        p_table0$plabel <- c(p_table0$plabel, rep("", 3))
+        if (!is.null(p_table0$group)) {
+            p_table0$group <- c(p_table0$group, rep(0, 3))
+          }
+        if (!is.null(p_table0$level)) {
+            p_table0$level <- c(p_table0$level, rep(0, 3))
+          }
+        p_table0$start <- c(p_table0$start, rep(0, 3))
+        p_table0$est <- c(p_table0$est, rep(0, 3))
+        p_table0$se <- c(p_table0$se, rep(NA, 3))
+        p_table0$lhs <- c(p_table0$lhs, i_label, i_label, "0")
+        p_table0$op <- c(p_table0$op, ":=", "==", "<")
+        p_table0$rhs <- c(p_table0$rhs, i_syn,
+                                        as.character(i_est * pertubation_factor),
+                                        "1")
+        p_table0$start[p_table0$free > 0] <- p_table[p_table$free > 0, "est"]
+        p_table0$est[p_table0$free > 0] <- p_table[p_table$free > 0, "est"]
+
         time_start <- Sys.time()
-        fit0b <- lavaan::update(fit00, model = p_tmp,
-                               add = paste0(i_label, " == ",
-                                            i_est * pertubation_factor),
-                               do.fit = FALSE)
+        fit0 <- lavaan::update(sem_out,
+                               model = p_table0,
+                               do.fit = FALSE,
+                               baseline = FALSE,
+                               h1 = FALSE,
+                               se = "none",
+                               test = "satorra.bentler")
         time_spent <- Sys.time() - time_start
         if (debug) {
-            cat("\nfit0b update: \n",
+            cat("\nfit00 update customized ptable: \n",
                 time_spent, "\n")
           }
-        p_tmp <- lavaan::parameterTable(fit0b)
-        time_start <- Sys.time()
-        fit0b <- lavaan::update(fit0b, model = p_tmp,
-                               add = "0 < 1",
-                               do.fit = FALSE)
-        time_spent <- Sys.time() - time_start
-        if (debug) {
-            cat("\nfit0b update with eq con: \n",
-                time_spent, "\n")
-          }
-        p_table0b <- lavaan::parameterTable(fit0b)
-        i_std <- which(p_table0b$lhs == i_label & p_table0b$op == ":=")
-        i_constr <- which(p_table0b$lhs == i_label & p_table0b$op == "==")
-        i_extra <- which(p_table0b$lhs == "0" & p_table0b$rhs == "1")
-        # Not sure why we have to manually set this constraint to free
-        p_table0b[i_std, "free"] <- 0
-        p_table0b[i_constr, "free"] <- 0
-        p_table0b[i_extra, "free"] <- 0
-        p_table0b[p_table0b$free > 0, "start"] <-
-                                          p_table[p_table0b$free > 0, "est"]
-        p_table0b[p_table0b$free > 0, "est"] <-
-                                          p_table[p_table0b$free > 0, "est"]
 
         if (force_converged) {
             time_start <- Sys.time()
@@ -188,19 +203,12 @@ scaling_factor2 <- function(sem_out,
             fit1@test[[1]]$stat <- sem_out@test[[1]]$stat * 10
             fit1@test[[1]]$df <- sem_out@test[[1]]$df + 1
             time_start <- Sys.time()
-            fit2 <- suppressWarnings(
-                        lavaan::update(fit0b, model = p_table0b, start = p_table0b, do.fit = FALSE,
-                              baseline = FALSE, h1 = FALSE, se = "none",
-                              optim.force.converged = TRUE)
-                      )
-            time_spent <- Sys.time() - time_start
-            if (debug) {
-                cat("\nfit2 update with eq con: \n",
-                    time_spent, "\n")
-              }
+
+            fit2 <- fit1
             fit2@test[[1]]$stat <- sem_out@test[[1]]$stat * 25
             fit2@test[[1]]$df <- sem_out@test[[1]]$df + 1
           } else {
+            # To-Fix: This block does not work
             update_args0 <- list(object = fit0,
                                 model = p_table0,
                                 do.fit = TRUE,
@@ -208,7 +216,7 @@ scaling_factor2 <- function(sem_out,
             update_args1 <- utils::modifyList(update_args0,
                                               update_args)
             fit1 <- do.call(lavaan::update, update_args1)
-            update_args0b <- list(object = fit0b,
+            update_args0b <- list(object = fit0,
                                 model = p_table0b,
                                 do.fit = TRUE,
                                 optim.force.converged = TRUE)
@@ -237,17 +245,6 @@ scaling_factor2 <- function(sem_out,
         # # Not sure why we have to manually set this constraint to fixed
         p_table0[p_table0$lhs == i_label, "free"] <- 0
 
-        fit0b <- lavaan::update(sem_out, model = p_table_fit,
-                              add = paste0(i_label, " == ",
-                                            i_est * pertubation_factor * 2),
-                              do.fit = FALSE,
-                              baseline = FALSE,
-                              h1 = FALSE,
-                              se = "none")
-        p_table0b <- lavaan::parameterTable(fit0b)
-        # # Not sure why we have to manually set this constraint to fixed
-        p_table0b[p_table0b$lhs == i_label, "free"] <- 0
-        i_constr <- which(p_table0b$lhs == i_label & p_table0b$op == "==")
         if (force_converged) {
             fit1 <- suppressWarnings(
                         lavaan::update(fit0, model = p_table0, start = p_table0, do.fit = FALSE,
@@ -256,14 +253,12 @@ scaling_factor2 <- function(sem_out,
                       )
             fit1@test[[1]]$stat <- sem_out@test[[1]]$stat * 10
             fit1@test[[1]]$df <- sem_out@test[[1]]$df + 1
-            fit2 <- suppressWarnings(
-                        lavaan::update(fit0b, model = p_table0b, start = p_table0b, do.fit = FALSE,
-                              baseline = FALSE, h1 = FALSE, se = "none",
-                              optim.force.converged = TRUE)
-                      )
+
+            fit2 <- fit1
             fit2@test[[1]]$stat <- sem_out@test[[1]]$stat * 25
             fit2@test[[1]]$df <- sem_out@test[[1]]$df + 1
           } else {
+            # To-Fix: This block does not work
             update_args0 <- list(object = fit0,
                                 model = p_table0,
                                 do.fit = TRUE,
