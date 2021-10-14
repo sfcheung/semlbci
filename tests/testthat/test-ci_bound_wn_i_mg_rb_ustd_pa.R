@@ -1,5 +1,3 @@
-skip("WIP: Not working. Need to update scaling factor to MG cases")
-
 library(testthat)
 library(semlbci)
 
