@@ -50,6 +50,7 @@ std_lav <- function(param, sem_out) {
     ram <- lapply(glist_new, lav_mod_to_ram)
     ram_std <- lapply(ram, std_ram)
     glist_std <- mapply(ram_to_lav_mod, ram_std, glist_new,
+                        MoreArgs = list(standardized = TRUE),
                         SIMPLIFY = FALSE)
 
     # Update GLIST
