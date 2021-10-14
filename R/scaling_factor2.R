@@ -117,7 +117,7 @@ scaling_factor2 <- function(sem_out,
                 time_spent, "\n")
           }
         p_tmp <- lavaan::parameterTable(fit0)
-        time_spent <- Sys.time()
+        time_start <- Sys.time()
         fit0 <- lavaan::update(fit0, model = p_tmp,
                                add = "0 < 1",
                                do.fit = FALSE)
