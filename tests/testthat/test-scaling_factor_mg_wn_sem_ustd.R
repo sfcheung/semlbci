@@ -16,11 +16,11 @@ f1 ~ f2
 "
 fit <- lavaan::sem(mod, cfa_two_factors_mg, test = "satorra.bentler", group = "gp", meanstructure = TRUE)
 
-summary(fit)
+#summary(fit)
 
 # Find the scaling factor
 
-sc1 <- scaling_factor2(fit, i = 2, debug = TRUE)
+sc1 <- scaling_factor2(fit, i = 2)
 
 # Pre-computed answer
 

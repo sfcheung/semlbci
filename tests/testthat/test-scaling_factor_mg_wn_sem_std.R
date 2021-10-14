@@ -1,7 +1,3 @@
-skip_if(Sys.getenv("SEMLBCI_TEST_SLOW") == "",
-        "Skip due to speed or other issues")
-# To be tested in interactive sessions only due to scoping or speed issues
-
 library(semlbci)
 library(lavaan)
 options(width = 132)
@@ -24,7 +20,7 @@ fit <- lavaan::cfa(mod, cfa_two_factors_mg, test = "satorra.bentler", group = "g
 
 # Find the scaling factor
 
-sc1 <- scaling_factor2(fit, i = 2, standardized = TRUE, debug = TRUE)
+sc1 <- scaling_factor2(fit, i = 2, standardized = TRUE)
 
 # Pre-computed answer
 sc1_ans <- structure(list(chisq_2 = 24.4342136814431, chisq_1 = 23.2151878626046, 
