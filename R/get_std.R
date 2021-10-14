@@ -38,7 +38,7 @@
 
 get_std <- function(fit_str, i, std_method = "lavaan") {
     fit <- eval(get(fit_str), parent.frame())
-    fit_pt <- lavaan::parameterTable(fit)
+    # fit_pt <- lavaan::parameterTable(fit)
     .x. <- get(".x.", envir = parent.frame())
 
     # Internal standardization
@@ -55,10 +55,12 @@ get_std <- function(fit_str, i, std_method = "lavaan") {
     fit@Model <- lavaan::lav_model_set_parameters(
                       fit@Model, .x.
                     )
-    fit_pt2 <- fit_pt
-    nfree <- sum(fit_pt$free > 0)
-    fit_pt2[fit_pt$free > 0, "est"] <- .x.[seq_len(nfree)]
-    fit@ParTable <- as.list(fit_pt2)
+    # fit_pt2 <- fit_pt
+    # nfree <- sum(fit@ParTable$free > 0)
+    # fit_pt2[fit_pt$free > 0, "est"] <- .x.[seq_len(nfree)]
+    # fit@ParTable <- as.list(fit_pt2)
+    nfree <- sum(fit@ParTable$free > 0)
+    fit@ParTable$est[fit@ParTable$free > 0] <- .x.[seq_len(nfree)]
     std <- lavaan::standardizedSolution(
                       fit,
                       se = FALSE,

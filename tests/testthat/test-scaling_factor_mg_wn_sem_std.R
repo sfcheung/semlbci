@@ -104,26 +104,26 @@ test_that("Check scaling factor (MV)", {
 
 # geteststd <- semlbci:::get_std_genfct(fit = fit, i = 2)
 
-# i <- 2
-# est_i <- standardizedSolution(fit)[i, "est.std"]
-# modc <- paste(modc0, "\ntstd == ", est_i * .98, "\n0 < 1")
-# fitc <- lavaan::cfa(modc, cfa_two_factors_mg, do.fit = FALSE, test = "satorra.bentler", group = "gp")
-# ptable <- parameterTable(fitc)
-# ptable[ptable$free > 0, "est"] <- coef(fit)
-# fitc <- update(fitc, start = ptable, do.fit = TRUE,
-#                    baseline = FALSE, h1 = FALSE, se = "none",
-#                    verbose = FALSE
-#                   #  optim.force.converged = TRUE,
-#                   #  optim.dx.tol = .01,
-#                   #  warn = FALSE,
-#                   #  control = list(
-#                   #     eval.max = 2,
-#                   #     iterations = 1,
-#                   #     control.outer = list(tol = 1e-02,
-#                   #                          itmax = 1)
-#                   # )
-#                 )
-# fitc_a <- fitc
+i <- 2
+est_i <- standardizedSolution(fit)[i, "est.std"]
+modc <- paste(modc0, "\ntstd == ", est_i * .98, "\n0 < 1")
+fitc <- lavaan::cfa(modc, cfa_two_factors_mg, do.fit = FALSE, test = "satorra.bentler", group = "gp")
+ptable <- parameterTable(fitc)
+ptable[ptable$free > 0, "est"] <- coef(fit)
+fitc <- update(fitc, start = ptable, do.fit = TRUE,
+                   baseline = FALSE, h1 = FALSE, se = "none",
+                   verbose = FALSE
+                  #  optim.force.converged = TRUE,
+                  #  optim.dx.tol = .01,
+                  #  warn = FALSE,
+                  #  control = list(
+                  #     eval.max = 2,
+                  #     iterations = 1,
+                  #     control.outer = list(tol = 1e-02,
+                  #                          itmax = 1)
+                  # )
+                )
+fitc_a <- fitc
 
 # i <- 2
 # est_i <- standardizedSolution(fit)[i, "est.std"]
