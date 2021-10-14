@@ -20,6 +20,14 @@
 #'
 #' @param force_converged Whether the constrained model will be forced
 #'   to have converged, without update. Default is `TRUE`.
+#' 
+#' @param std_method The method used to find the standardized solution.
+#'  If equal to `"lavaan"``, [lavaan::standardizedSolution()] will be used.
+#'  If equal to `"internal"`, an internal function of this package will be used.
+#'  The `"lavaan"` method should work in all situations, but the `"internal"`
+#'  method can be faster. Default is `"lavaan"` for now, but may be changed to
+#'  `"internal"` if it is confirmed to work in all situations tested.
+#'
 #'
 #' @noRd
 
@@ -28,7 +36,8 @@ scaling_factor2 <- function(sem_out,
                            standardized = FALSE,
                            pertubation_factor = .98,
                            update_args = list(),
-                           force_converged = TRUE
+                           force_converged = TRUE,
+                           std_method = "lavaan"
                            ) {
     sem_out_name <- deparse(substitute(sem_out))
     # This function will NOT check whether the SEM was done with robust model
@@ -79,7 +88,10 @@ scaling_factor2 <- function(sem_out,
                                model = p_table_fit,
                                add = paste0(i_label, " := ",
                                             "semlbci::get_std('",
-                                            sem_out_name, "',", i, ")"),
+                                            sem_out_name, "',", i,
+                                            ", std_method = ",
+                                            sQuote(std_method), 
+                                            ")"),
                                do.fit = FALSE,
                                baseline = FALSE,
                                h1 = FALSE,
