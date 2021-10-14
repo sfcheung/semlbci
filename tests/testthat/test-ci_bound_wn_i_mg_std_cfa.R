@@ -34,12 +34,12 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_rel = 1e-7,
               tol_constraints_eq = 1e-10
               )
-time1l <- system.time(out1l <- ci_bound_wn_i(2, 38, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
-time1u <- system.time(out1u <- ci_bound_wn_i(2, 38, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
-time2l <- system.time(out2l <- ci_bound_wn_i(29, 38, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
-time2u <- system.time(out2u <- ci_bound_wn_i(29, 38, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
-time3l <- system.time(out3l <- ci_bound_wn_i(38, 38, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
-time3u <- system.time(out3u <- ci_bound_wn_i(38, 38, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
+time1l <- system.time(out1l <- ci_bound_wn_i(2, 38, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
+time1u <- system.time(out1u <- ci_bound_wn_i(2, 38, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = TRUE, std_method = "internal"))
+time2l <- system.time(out2l <- ci_bound_wn_i(29, 38, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
+time2u <- system.time(out2u <- ci_bound_wn_i(29, 38, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
+time3l <- system.time(out3l <- ci_bound_wn_i(38, 38, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
+time3u <- system.time(out3u <- ci_bound_wn_i(38, 38, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 
 timexx <- rbind(time1l, time1u, time2l, time2u, time3l, time3u)
 timexx
