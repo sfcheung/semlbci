@@ -24,7 +24,7 @@ fit <- lavaan::sem(mod, cfa_two_factors, test = "satorra.bentler")
 
 # Find the scaling factor
 
-sc1 <- scaling_factor(fit, i = 2, standardized = TRUE)
+sc1 <- scaling_factor2(fit, i = 2, standardized = TRUE)
 
 # Find chisq diff
 
