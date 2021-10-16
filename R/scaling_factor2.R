@@ -28,6 +28,9 @@
 #'  method can be faster. Default is `"lavaan"` for now, but may be changed to
 #'  `"internal"` if it is confirmed to work in all situations tested.
 #'
+#' @param sem_out_name The name of the object supplied to `sem_out`. `NULL`
+#'  by default. To be used by [get_std()].
+#'
 #' @param debug Print debug information. Default is `FALSE`.
 #'
 #' @noRd
@@ -39,9 +42,12 @@ scaling_factor2 <- function(sem_out,
                            update_args = list(),
                            force_converged = TRUE,
                            std_method = "lavaan",
-                           debug = FALSE
+                           debug = FALSE,
+                           sem_out_name = NULL
                            ) {
-    sem_out_name <- deparse(substitute(sem_out))
+    if (is.null(sem_out_name)) {
+        sem_out_name <- deparse(substitute(sem_out))
+      }
     # This function will NOT check whether the SEM was done with robust model
     # test. This check should be done before calling this function.
     p_table <- lavaan::parameterTable(sem_out)
