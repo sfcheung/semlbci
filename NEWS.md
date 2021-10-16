@@ -1,11 +1,7 @@
 # semlbci 0.0.0.10
 
-- Remove the function for the Neale-Miller-1992 approach. This approach is not
-  supported anymore. The default approach is now the Wu-Neale-2012 approach
-  (`method = "wn"`).
-
 - Added initial support for likelihood-based confidence interval using 
-  robust likelihood ratio test (Falk, XXXX).
+  robust likelihood ratio test (Falk, 2018).
 
 - Added tests for confirmatory factor analysis (CFA) models and structural
   models with latent factors.
@@ -13,10 +9,16 @@
 - Added initial support for using parallel processing to search the limits
   for several parameters.
 
-- Write print generic functions for the class `cibound`, returned by 
+- Added initial support for multiple-group models.
+
+- Added `print` functions for the class `cibound`, returned by 
   `ci_bound_wn_i()`, and the class `semblci`, returned by `semlbci()`. 
 
 - `ci_bound_wn_i()` now returns a list instead of a one-element numeric vector.
+
+- Remove the function for the Neale-Miller-1992 approach. This approach is not
+  supported anymore. The default approach is now the Wu-Neale-2012 approach
+  (`method = "wn"`).
 
 # semlbci 0.0.0.9
 
