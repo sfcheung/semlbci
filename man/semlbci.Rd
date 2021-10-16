@@ -103,14 +103,14 @@ Falk, C. F. (2018). Are robust standard errors the best approach
 for interval estimation with nonnormal data in structural equation
 modeling? \emph{Structural Equation Modeling: A Multidisciplinary
 Journal, 25}(2), 244-266.
-\url{https://doi.org/10.1080/10705511.2017.1367254}
+\doi{10.1080/10705511.2017.1367254}
 
 Neale, M. C., & Miller, M. B. (1997). The use of likelihood-based confidence
 intervals in genetic models. \emph{Behavior Genetics, 27}(2), 113-120.
-\url{https://doi.org/10.1023/A:1025681223921}
+\doi{10.1023/A:1025681223921}
 
 Pritikin, J. N., Rappaport, L. M., & Neale, M. C. (2017). Likelihood-based
 confidence intervals for a parameter with an upper or lower bound.
 \emph{Structural Equation Modeling: A Multidisciplinary Journal, 24}(3), 395-401.
-\url{https://doi.org/10.1080/10705511.2016.1275969}
+\doi{10.1080/10705511.2016.1275969}
 }

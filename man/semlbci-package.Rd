@@ -34,22 +34,22 @@ Falk, C. F. (2018). Are robust standard errors the best approach
 for interval estimation with nonnormal data in structural equation
 modeling? \emph{Structural Equation Modeling: A Multidisciplinary
 Journal, 25}(2), 244-266.
-\url{https://doi.org/10.1080/10705511.2017.1367254}
+\doi{10.1080/10705511.2017.1367254}
 
 Pek, J., & Wu, H. (2015). Profile likelihood-based confidence
 intervals and regions for structural equation models.
 \emph{Psychometrika, 80}(4), 1123-1145.
-\url{https://doi.org/10.1007/s11336-015-9461-1}
+\doi{10.1007/s11336-015-9461-1}
 
 Pritikin, J. N., Rappaport, L. M., & Neale, M. C. (2017).
 Likelihood-based confidence intervals for a parameter with an
 upper or lower bound. \emph{Structural Equation Modeling: A
 Multidisciplinary Journal, 24}(3), 395-401.
-\url{https://doi.org/10.1080/10705511.2016.1275969}
+\doi{10.1080/10705511.2016.1275969}
 
 Wu, H., & Neale, M. C. (2012). Adjusted confidence intervals for a
 bounded parameter. \emph{Behavior Genetics, 42}(6), 886-898.
-\url{https://doi.org/10.1007/s10519-012-9560-z}
+\doi{10.1007/s10519-012-9560-z}
 }
 \seealso{
 \code{\link[=semlbci]{semlbci()}}

@@ -34,15 +34,17 @@ test is to be found. Only "satorra.2000" in \link{lavaan} is supported
 for now. If `"none"``, the default, then likelihood ratio test based
 on maximum likelihood estimation will be used.}
 
-\item{sf_args}{The list of arguments to be passed to \code{\link[=scaling_factor2]{scaling_factor2()}}
-if \code{robust} is \code{"satorra.2000"}.}
+\item{sf_args}{The list of arguments to be used for computing scaling factors
+if \code{robust} is \code{"satorra.2000"}. Used only by \code{\link[=semlbci]{semlbci()}}.}
 
 \item{sem_out_name}{The name of the object supplied to \code{sem_out}. \code{NULL}
 by default. To be used by \code{\link[=get_std]{get_std()}}.}
 
-\item{sf_full}{Ignored if \code{robust}
-is \code{"none"}. If \code{robust} is \code{"satorra.2000"} and this is not empty,
-then this is used as the output of \code{\link[=scaling_factor2]{scaling_factor2()}}.}
+\item{sf_full}{A list with the scaling factors. Ignored if \code{robust}
+is \code{"none"}. If \code{robust} is \code{"satorra.2000"} and \code{sf_full} is
+supplied, then its value will be used.
+If \code{robust} is \code{"satorra.2000"} but \code{sf_full} is
+\code{NA}, then scaling factors will be computed internally.}
 
 \item{...}{Arguments to be passed to the function corresponds to
 the requested method (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} for "wn").}

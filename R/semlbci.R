@@ -64,16 +64,16 @@
 #' for interval estimation with nonnormal data in structural equation
 #' modeling? *Structural Equation Modeling: A Multidisciplinary
 #' Journal, 25*(2), 244-266.
-#' \url{https://doi.org/10.1080/10705511.2017.1367254}
+#' \doi{10.1080/10705511.2017.1367254}
 #'
 #' Neale, M. C., & Miller, M. B. (1997). The use of likelihood-based confidence
 #' intervals in genetic models. *Behavior Genetics, 27*(2), 113-120.
-#' \url{https://doi.org/10.1023/A:1025681223921}
+#' \doi{10.1023/A:1025681223921}
 #'
 #' Pritikin, J. N., Rappaport, L. M., & Neale, M. C. (2017). Likelihood-based
 #' confidence intervals for a parameter with an upper or lower bound.
 #' *Structural Equation Modeling: A Multidisciplinary Journal, 24*(3), 395-401.
-#' \url{https://doi.org/10.1080/10705511.2016.1275969}
+#' \doi{10.1080/10705511.2016.1275969}
 #'
 #' @examples
 #'
@@ -168,7 +168,7 @@ semlbci <- function(sem_out,
                                        envir = environment())
         if (requireNamespace ("pbapply", quietly = TRUE) &
             use_pbapply) {
-            args_final <- modifyList(list(...),
+            args_final <- utils::modifyList(list(...),
                                     list(npar = npar,
                                         sem_out = sem_out,
                                         standardized = standardized,
@@ -197,7 +197,7 @@ semlbci <- function(sem_out,
                                 SIMPLIFY = FALSE,
                                 cl = cl)
           } else {
-            args_final <- modifyList(list(...),
+            args_final <- utils::modifyList(list(...),
                                     list(npar = npar,
                                         sem_out = sem_out,
                                         standardized = standardized,
@@ -226,7 +226,7 @@ semlbci <- function(sem_out,
           }
         parallel::stopCluster(cl)
       } else {
-        args_final <- modifyList(list(...),
+        args_final <- utils::modifyList(list(...),
                                 list(npar = npar,
                                     sem_out = sem_out,
                                     standardized = standardized,

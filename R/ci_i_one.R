@@ -39,14 +39,14 @@
 #'  for now. If `"none"``, the default, then likelihood ratio test based
 #'  on maximum likelihood estimation will be used.
 #'
-#' @param sf_full The output of [scaling_factor2()]. Ignored if `robust`
+#' @param sf_full A list with the scaling factors. Ignored if `robust`
 #'  is `"none"`. If `robust` is `"satorra.2000"` and `sf_full` is
 #'  supplied, then its value will be used.
 #'  If `robust` is `"satorra.2000"` but `sf_full` is
-#'  `NA`, then [scaling_factor2()] will be called.
+#'  `NA`, then scaling factors will be computed internally.
 #'
-#' @param sf_args The list of arguments to be passed to [scaling_factor2()]
-#'  if `robust` is `"satorra.2000"`.
+#' @param sf_args The list of arguments to be used for computing scaling factors
+#'  if `robust` is `"satorra.2000"`. Used only by [semlbci()].
 #'
 #' @param sem_out_name The name of the object supplied to `sem_out`. `NULL`
 #'  by default. To be used by [get_std()].
@@ -103,7 +103,7 @@ ci_i_one <- function(i,
             if (is.null(sem_out_name)) {
                 sem_out_name <- deparse(substitute(sem_out))
               }
-            sf_args_final <- modifyList(sf_args,
+            sf_args_final <- utils::modifyList(sf_args,
                                     list(sem_out = sem_out,
                                          i = i,
                                          standardized = standardized,

@@ -108,11 +108,11 @@
 #' Pek, J., & Wu, H. (2015). Profile likelihood-based confidence
 #'  intervals and regions for structural equation models.
 #'  *Psychometrika, 80*(4), 1123-1145.
-#'  \url{https://doi.org/10.1007/s11336-015-9461-1}
+#'  \doi{10.1007/s11336-015-9461-1}
 #'
 #' Wu, H., & Neale, M. C. (2012). Adjusted confidence intervals for a
 #'  bounded parameter. *Behavior Genetics, 42*(6), 886-898.
-#'  \url{https://doi.org/10.1007/s10519-012-9560-z}
+#'  \doi{10.1007/s10519-012-9560-z}
 #'
 #' @seealso [semlbci()], [ci_i()]
 #'
