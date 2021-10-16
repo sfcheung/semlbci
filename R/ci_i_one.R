@@ -119,23 +119,23 @@ ci_i_one <- function(i,
         sf2 <- 0
       }
     if (method == "wn") {
-        b_time <- system.time(b <- try(ci_bound_wn_i(i,
+        b_time <- system.time(b <- try(suppressWarnings(ci_bound_wn_i(i,
                                                    sem_out = sem_out,
                                                    which = which,
                                                    standardized = standardized,
                                                    sf = sf,
                                                    sf2 = sf2,
                                                    std_method = "internal",
-                                                    ...), silent = TRUE))
+                                                    ...)), silent = TRUE))
         if (inherits(b, "try-error")) {
-            b_time <- system.time(b <- ci_bound_wn_i(i,
+            b_time <- system.time(b <- suppressWarnings(ci_bound_wn_i(i,
                                                       sem_out = sem_out,
                                                       which = which,
                                                       standardized = standardized,
                                                       sf = sf,
                                                       sf2 = sf2,
                                                       std_method = "lavaan",
-                                                        ...))
+                                                        ...)))
           }
       }
     if (method == "nm") {
