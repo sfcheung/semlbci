@@ -85,20 +85,42 @@ ci_i <- function(i,
         sf2 <- 0
       }
     if (method == "wn") {
-        lb_time <- system.time(lb <- ci_bound_wn_i(i,
+        lb_time <- system.time(lb <- try(ci_bound_wn_i(i,
                                                    sem_out = sem_out,
                                                    which = "lbound",
                                                    standardized = standardized,
                                                    sf = sf,
                                                    sf2 = sf2,
-                                                    ...))
-        ub_time <- system.time(ub <- ci_bound_wn_i(i,
+                                                   std_method = "internal",
+                                                    ...), silent = TRUE))
+        if (inherits(lb, "try-error")) {
+            lb_time <- system.time(lb <- ci_bound_wn_i(i,
+                                                      sem_out = sem_out,
+                                                      which = "lbound",
+                                                      standardized = standardized,
+                                                      sf = sf,
+                                                      sf2 = sf2,
+                                                      std_method = "lavaan",
+                                                        ...), silent = TRUE)
+          }
+        ub_time <- system.time(ub <- try(ci_bound_wn_i(i,
                                                    sem_out = sem_out,
                                                    which = "ubound",
                                                    standardized = standardized,
                                                    sf = sf,
                                                    sf2 = sf2,
-                                                    ...))
+                                                   std_method = "internal",
+                                                    ...), silent = TRUE))
+        if (inherits(ub, "try-error")) {
+            ub_time <- system.time(ub <- ci_bound_wn_i(i,
+                                                      sem_out = sem_out,
+                                                      which = "ubound",
+                                                      standardized = standardized,
+                                                      sf = sf,
+                                                      sf2 = sf2,
+                                                      std_method = "lavaan",
+                                                        ...))
+          }
       }
     if (method == "nm") {
         stop("The method 'nm' is no longer supported.")
