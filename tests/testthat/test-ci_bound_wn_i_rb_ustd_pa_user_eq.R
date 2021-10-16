@@ -1,3 +1,4 @@
+skip_on_cran()
 
 # All test passed.
 

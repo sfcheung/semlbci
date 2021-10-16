@@ -1,3 +1,4 @@
+skip_on_cran()
 # Note:
 # A.method = "exact" does not work if there is an 
 # equality constraint. Need to resort "delta".
