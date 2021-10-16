@@ -47,14 +47,14 @@ time3u <- system.time(out3u <- ci_bound_wn_i(26, 38, sem_out = fit, f_constr = f
 timexx <- rbind(time1l, time1u, time2l, time2u, time3l, time3u)
 timexx
 
-gen_test_data <- FALSE
-if (gen_test_data) {
-
 # Not yet have a way to find how to make test_constr work in standardized solution
 
 test_p <- function(fit0, fit1, ciperc, tol) {
     abs(anova(fit0, fit1)[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
   }
+
+gen_test_data <- FALSE
+if (gen_test_data) {
 
 modc0 <-
 "
