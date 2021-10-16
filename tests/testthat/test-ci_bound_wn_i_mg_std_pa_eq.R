@@ -33,13 +33,14 @@ opts0 <- list(ftol_abs = 1e-7,
               # xtol_rel = 1e-3,
               # tol_constraints_eq = 1e-3
               )
-time1l <- system.time(out1l <- ci_bound_wn_i(1, 16, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, opts = opts0))
-time1u <- system.time(out1u <- ci_bound_wn_i(1, 16, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, opts = opts0))
-time2l <- system.time(out2l <- ci_bound_wn_i(10, 16, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, opts = opts0))
-time2u <- system.time(out2u <- ci_bound_wn_i(10, 16, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, opts = opts0))
+time1l <- system.time(out1l <- ci_bound_wn_i(1, 16, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, opts = opts0, wald_ci_start = FALSE, std_method = "internal"))
+time1u <- system.time(out1u <- ci_bound_wn_i(1, 16, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, opts = opts0, std_method = "internal"))
+time2l <- system.time(out2l <- ci_bound_wn_i(10, 16, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, opts = opts0, std_method = "internal"))
+time2u <- system.time(out2u <- ci_bound_wn_i(10, 16, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, opts = opts0, std_method = "internal"))
 
 timexx <- rbind(time1l, time1u, time2l, time2u)
 timexx
+colSums(timexx)
 
 # Check the results
 
@@ -48,6 +49,9 @@ timexx
 test_p <- function(fit0, fit1, ciperc, tol) {
     abs(anova(fit0, fit1)[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
   }
+
+gen_test_data <- FALSE
+if (gen_test_data) {
 
 geteststd <- get_std_genfct(fit = fit, i = 1)
 
@@ -106,6 +110,16 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE
                    verbose = FALSE, optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out2u <- fitc
+
+save(fitc_out1l, fitc_out1u,
+     fitc_out2l, fitc_out2u,
+     file = "inst/testdata/test-ci_bound_wn_i_mg_std_pa_eq.RData",
+     compress = "xz",
+     compression_level = 9)
+}
+
+load(system.file("testdata", "test-ci_bound_wn_i_mg_std_pa_eq.RData",
+                  package = "semlbci"))
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))
