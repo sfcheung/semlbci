@@ -51,7 +51,7 @@ ram_to_lav_mod <- function(ram, lav_mod, standardized = FALSE) {
         lav_mod$theta <- mS[theta_names, theta_names]
         if (standardized) {
           tmp <- diag(lav_mod$theta)
-          lav_mod$theta <- cov2cor(lav_mod$theta)
+          lav_mod$theta <- stats::cov2cor(lav_mod$theta)
           diag(lav_mod$theta) <- tmp
         }
         lav_mod$theta[lambda1, lambda1] <- 0
@@ -63,7 +63,7 @@ ram_to_lav_mod <- function(ram, lav_mod, standardized = FALSE) {
         lav_mod$psi <- mS[psi_names, psi_names]
         if (standardized) {
           tmp <- diag(lav_mod$psi)
-          lav_mod$psi <- cov2cor(lav_mod$psi)
+          lav_mod$psi <- stats::cov2cor(lav_mod$psi)
           diag(lav_mod$psi) <- tmp
         }
       }

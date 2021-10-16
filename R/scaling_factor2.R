@@ -208,21 +208,22 @@ scaling_factor2 <- function(sem_out,
             fit2@test[[1]]$stat <- sem_out@test[[1]]$stat * 25
             fit2@test[[1]]$df <- sem_out@test[[1]]$df + 1
           } else {
+            stop("force_converged = FALSE not ready for use")
             # To-Fix: This block does not work
-            update_args0 <- list(object = fit0,
-                                model = p_table0,
-                                do.fit = TRUE,
-                                optim.force.converged = TRUE)
-            update_args1 <- utils::modifyList(update_args0,
-                                              update_args)
-            fit1 <- do.call(lavaan::update, update_args1)
-            update_args0b <- list(object = fit0,
-                                model = p_table0b,
-                                do.fit = TRUE,
-                                optim.force.converged = TRUE)
-            update_args1b <- utils::modifyList(update_args0b,
-                                              update_args)
-            fit2 <- do.call(lavaan::update, update_args1b)
+            # update_args0 <- list(object = fit0,
+            #                     model = p_table0,
+            #                     do.fit = TRUE,
+            #                     optim.force.converged = TRUE)
+            # update_args1 <- utils::modifyList(update_args0,
+            #                                   update_args)
+            # fit1 <- do.call(lavaan::update, update_args1)
+            # update_args0b <- list(object = fit0,
+            #                     model = p_table0,
+            #                     do.fit = TRUE,
+            #                     optim.force.converged = TRUE)
+            # update_args1b <- utils::modifyList(update_args0b,
+            #                                   update_args)
+            # fit2 <- do.call(lavaan::update, update_args1b)
           }
       } else {
 
@@ -258,21 +259,22 @@ scaling_factor2 <- function(sem_out,
             fit2@test[[1]]$stat <- sem_out@test[[1]]$stat * 25
             fit2@test[[1]]$df <- sem_out@test[[1]]$df + 1
           } else {
+            stop("force_converged = FALSE not ready for use")
             # To-Fix: This block does not work
-            update_args0 <- list(object = fit0,
-                                model = p_table0,
-                                do.fit = TRUE,
-                                optim.force.converged = TRUE)
-            update_args1 <- utils::modifyList(update_args0,
-                                              update_args)
-            fit1 <- do.call(lavaan::update, update_args1)
-            update_args0b <- list(object = fit0b,
-                                model = p_table0b,
-                                do.fit = TRUE,
-                                optim.force.converged = TRUE)
-            update_args1b <- utils::modifyList(update_args0b,
-                                              update_args)
-            fit2 <- do.call(lavaan::update, update_args1b)
+            # update_args0 <- list(object = fit0,
+            #                     model = p_table0,
+            #                     do.fit = TRUE,
+            #                     optim.force.converged = TRUE)
+            # update_args1 <- utils::modifyList(update_args0,
+            #                                   update_args)
+            # fit1 <- do.call(lavaan::update, update_args1)
+            # update_args0b <- list(object = fit0b,
+            #                     model = p_table0b,
+            #                     do.fit = TRUE,
+            #                     optim.force.converged = TRUE)
+            # update_args1b <- utils::modifyList(update_args0b,
+            #                                   update_args)
+            # fit2 <- do.call(lavaan::update, update_args1b)
           }
       }
     # Do the LR test

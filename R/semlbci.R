@@ -202,7 +202,7 @@ semlbci <- function(sem_out,
     out_p$lbci_lb <- NA
     if (standardized) {
         pstd <- lavaan::standardizedSolution(sem_out)
-        if (lavTech(sem_out, "ngroups") == 1) {
+        if (lavaan::lavTech(sem_out, "ngroups") == 1) {
             pstd$group <- 1
           }
         pstd$group[pstd$op == ":="] <- 0

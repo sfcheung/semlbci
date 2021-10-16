@@ -86,6 +86,9 @@
 #' @param sf Scaling factor. Used for robust confidence limits.
 #'  Default is 1.
 #'
+#' @param sf2 The second scaling factor. Used for robust confidence limits.
+#'  Default is 0.
+#'
 #' @param p_tol Tolerance for checking the achieved level of
 #'  confidence. If the absolute difference between the achieved level
 #'  and and `ciperc` is greater than this amount, a warning is set in
@@ -183,7 +186,7 @@ ci_bound_wn_i <- function(i = NULL,
         if (std_method == "internal") {
             # Test whether the internal function can reproduce the
             # solution from lavaan::standardizedSolution().
-            p_est_int <- std_lav(coef(sem_out),
+            p_est_int <- std_lav(lavaan::coef(sem_out),
                                   sem_out)
             p_est_test <- lavaan::parameterEstimates(
                                     sem_out,
@@ -198,7 +201,7 @@ ci_bound_wn_i <- function(i = NULL,
                                     remove.ineq = FALSE,
                                     remove.def = FALSE,
                                     remove.nonfree = FALSE)
-            if (lavTech(sem_out, "ngroups") > 1) {
+            if (lavaan::lavTech(sem_out, "ngroups") > 1) {
                 p_est_test <- p_est_test[, c("lhs", "op", "rhs",
                                               "group",
                                               "std.all")]

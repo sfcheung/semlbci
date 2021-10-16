@@ -4,12 +4,17 @@
 \alias{get_std}
 \title{Standardized Estimate Function}
 \usage{
-get_std(fit_str, i)
+get_std(fit_str, i, std_method = "lavaan")
 }
 \arguments{
 \item{fit_str}{A one-element character vector. The name of the fit object.}
 
 \item{i}{The position of the parameter in the parameter table.}
+
+\item{std_method}{The method used to find the standardized solution.
+If equal to \verb{"lavaan"``, [lavaan::standardizedSolution()] will be used. If equal to }"internal"\verb{, an internal function of this package will be used. The }"lavaan"\verb{method should work in all situations, but the}"internal"\verb{method can be faster. Default is}"lavaan"\verb{for now, but may be changed to}"internal"` if it is confirmed to work in all situations tested. Note that
+if the internal method failed, the \code{\link[=get_std]{get_std()}} will fall back to the
+lavaan method.}
 }
 \value{
 The standardized estimate of the \emph{i} parameter.

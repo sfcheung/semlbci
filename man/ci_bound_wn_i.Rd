@@ -22,6 +22,7 @@ ci_bound_wn_i(
   sf = 1,
   sf2 = 0,
   p_tol = 0.001,
+  std_method = "lavaan",
   ...
 )
 }
@@ -83,10 +84,16 @@ information in the attribute \code{diag}. Default is \code{FALSE}.}
 \item{sf}{Scaling factor. Used for robust confidence limits.
 Default is 1.}
 
+\item{sf2}{The second scaling factor. Used for robust confidence limits.
+Default is 0.}
+
 \item{p_tol}{Tolerance for checking the achieved level of
 confidence. If the absolute difference between the achieved level
 and and \code{ciperc} is greater than this amount, a warning is set in
 the status code and the bound is set to \code{NA}. Default is 1e-3.}
+
+\item{std_method}{The method used to find the standardized solution.
+If equal to \verb{"lavaan"``, [lavaan::standardizedSolution()] will be used. If equal to }"internal"\verb{, an internal function of this package will be used. The }"lavaan"\verb{method should work in all situations, but the}"internal"\verb{method can be faster. Default is}"lavaan"\verb{for now, but may be changed to}"internal"` if it is confirmed to work in all situations tested.}
 
 \item{...}{Optional arguments. Not used.}
 }
