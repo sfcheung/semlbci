@@ -45,6 +45,9 @@
 #'  If `robust` is `"satorra.2000"` but `sf_full` is
 #'  `NULL`, then [scaling_factor2()] will be called.
 #'
+#' @param sf_args The list of arguments to be passed to [scaling_factor2()]
+#'  if `robust` is `"satorra.2000"`.
+#'
 #' @param ... Arguments to be passed to the function corresponds to
 #'  the requested method ([ci_bound_wn_i()] for "wn").
 #'
@@ -84,6 +87,7 @@ ci_i_one <- function(i,
                  standardized = FALSE,
                  robust = "none",
                  sf_full = NULL,
+                 sf_args = list(),
                  ...) {
     # It should be the job of the calling function to check whether it is 
     # appropriate to use the robust method.
@@ -92,7 +96,14 @@ ci_i_one <- function(i,
       }
     if (tolower(robust) == "satorra.2000") {
         if (is.null(sf_full)) {
-            sf_full <- scaling_factor2(sem_out, i)
+            sem_out_name <- deparse(substitute(sem_out))
+            sf_args_final <- modifyList(sf_args,
+                                    list(sem_out = sem_out,
+                                         i = i,
+                                         standardized = standardized,
+                                         std_method = "internal",
+                                         sem_out_name = sem_out_name))
+            sf_full <- do.call(scaling_factor2, sf_args_final)
           }
         sf <- sf_full$c_r
         sf2 <- sf_full$c_rb
