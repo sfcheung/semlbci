@@ -4,7 +4,15 @@
 \alias{ci_i}
 \title{LBCI for One Parameter}
 \usage{
-ci_i(i, sem_out, method = "wn", standardized = FALSE, robust = "none", ...)
+ci_i(
+  i,
+  sem_out,
+  method = "wn",
+  standardized = FALSE,
+  robust = "none",
+  sf_args = list(),
+  ...
+)
 }
 \arguments{
 \item{i}{The position of the target parameters as appeared in the
@@ -23,6 +31,9 @@ solution is to be searched. Default is \code{FALSE}.}
 test is to be found. Only "satorra.2000" in \link{lavaan} is supported
 for now. If `"none"``, the default, then likelihood ratio test based
 on maximum likelihood estimation will be used.}
+
+\item{sf_args}{The list of arguments to be passed to \code{\link[=scaling_factor2]{scaling_factor2()}}
+if \code{robust} is \code{"satorra.2000"}.}
 
 \item{...}{Arguments to be passed to the function corresponds to
 the requested method (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} for "wn").}

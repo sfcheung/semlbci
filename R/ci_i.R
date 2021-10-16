@@ -36,6 +36,9 @@
 #'  for now. If `"none"``, the default, then likelihood ratio test based
 #'  on maximum likelihood estimation will be used.
 #'
+#' @param sf_args The list of arguments to be passed to [scaling_factor2()]
+#'  if `robust` is `"satorra.2000"`.
+#'
 #' @param ... Arguments to be passed to the function corresponds to
 #'  the requested method ([ci_bound_wn_i()] for "wn").
 #'
@@ -72,11 +75,19 @@ ci_i <- function(i,
                  method = "wn",
                  standardized = FALSE,
                  robust = "none",
+                 sf_args = list(),
                  ...) {
     # It should be the job of the calling function to check whether it is 
     # appropriate to use the robust method.
     if (tolower(robust) == "satorra.2000") {
-        sf_full <- scaling_factor2(sem_out, i)
+        sem_out_name <- deparse(substitute(sem_out))
+        sf_args_final <- modifyList(sf_args,
+                                list(sem_out = sem_out,
+                                      i = i,
+                                      standardized = standardized,
+                                      std_method = "internal",
+                                      sem_out_name = sem_out_name))
+        sf_full <- do.call(scaling_factor2, sf_args_final)
         sf <- sf_full$c_r
         sf2 <- sf_full$c_rb
       } else {
@@ -85,14 +96,14 @@ ci_i <- function(i,
         sf2 <- 0
       }
     if (method == "wn") {
-        lb_time <- system.time(lb <- try(ci_bound_wn_i(i,
+        lb_time <- system.time(lb <- try(suppressWarnings(ci_bound_wn_i(i,
                                                    sem_out = sem_out,
                                                    which = "lbound",
                                                    standardized = standardized,
                                                    sf = sf,
                                                    sf2 = sf2,
                                                    std_method = "internal",
-                                                    ...), silent = TRUE))
+                                                    ...)), silent = TRUE))
         if (inherits(lb, "try-error")) {
             lb_time <- system.time(lb <- ci_bound_wn_i(i,
                                                       sem_out = sem_out,
@@ -103,14 +114,14 @@ ci_i <- function(i,
                                                       std_method = "lavaan",
                                                         ...))
           }
-        ub_time <- system.time(ub <- try(ci_bound_wn_i(i,
+        ub_time <- system.time(ub <- try(suppressWarnings(ci_bound_wn_i(i,
                                                    sem_out = sem_out,
                                                    which = "ubound",
                                                    standardized = standardized,
                                                    sf = sf,
                                                    sf2 = sf2,
                                                    std_method = "internal",
-                                                    ...), silent = TRUE))
+                                                    ...)), silent = TRUE))
         if (inherits(ub, "try-error")) {
             ub_time <- system.time(ub <- ci_bound_wn_i(i,
                                                       sem_out = sem_out,
