@@ -101,7 +101,7 @@ ci_i <- function(i,
                                                       sf = sf,
                                                       sf2 = sf2,
                                                       std_method = "lavaan",
-                                                        ...), silent = TRUE)
+                                                        ...))
           }
         ub_time <- system.time(ub <- try(ci_bound_wn_i(i,
                                                    sem_out = sem_out,
