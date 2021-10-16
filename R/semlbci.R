@@ -108,7 +108,7 @@ semlbci <- function(sem_out,
     if (!inherits(sem_out, "lavaan")) {
         stop("sem_out is not a supported object.")
       }
-
+    sem_out_name <- deparse(substitute(sem_out))
     # Check sem_out
     sem_out_check <- check_sem_out(sem_out = sem_out, robust = robust)
     if (sem_out_check > 0) {
@@ -143,6 +143,19 @@ semlbci <- function(sem_out,
       } else {
         f_constr <- NULL
       }
+
+    # Compute the scaling factors
+    if (robust == "satorra.2000") {
+        sf_full_list <- lapply(pars,
+                               scaling_factor2,
+                               sem_out = sem_out,
+                               standardized = standardized,
+                               std_method = "internal",
+                               sem_out_name = sem_out_name)
+      } else {
+        sf_full_list <- rep(NA, length(pars))
+      }
+
     if (parallel) {
         cl <- parallel::makeCluster(ncpus)
         pkgs <- .packages()
@@ -153,48 +166,101 @@ semlbci <- function(sem_out,
                       })
         parallel::clusterExport(cl, ls(envir = parent.frame()),
                                        envir = environment())
-        if (requireNamespace ("pbapply", quietly = TRUE)) {
-            out_raw <- pbapply::pblapply(
-                                pars,
+        if (requireNamespace ("pbapply", quietly = TRUE) &
+            use_pbapply) {
+            # out_raw <- pbapply::pblapply(
+            #                     pars,
+            #                     semlbci::ci_i,
+            #                     npar = npar,
+            #                     sem_out = sem_out,
+            #                     standardized = standardized,
+            #                     debug = FALSE,
+            #                     f_constr = f_constr,
+            #                     method = method,
+            #                     ciperc = ciperc,
+            #                     robust = robust,
+            #                     sem_out_name = sem_out_name,
+            #                     ...,
+            #                     cl = cl
+            #                 )
+            args_final <- modifyList(list(...),
+                                    list(npar = npar,
+                                        sem_out = sem_out,
+                                        standardized = standardized,
+                                        debug = FALSE,
+                                        f_constr = f_constr,
+                                        method = method,
+                                        ciperc = ciperc,
+                                        robust = robust,
+                                        sem_out_name = sem_out_name))
+            out_raw <- pbapply::pbmapply(
                                 semlbci::ci_i,
-                                npar = npar,
-                                sem_out = sem_out,
-                                standardized = standardized,
-                                debug = FALSE,
-                                f_constr = f_constr,
-                                method = method,
-                                ciperc = ciperc,
-                                robust = robust,
-                                ...,
-                                cl = cl
-                            )
+                                i = pars,
+                                sf_full = sf_full_list,
+                                MoreArgs = args_final,
+                                SIMPLIFY = FALSE,
+                                cl = cl)
           } else {
-            out_raw <- parallel::parLapply(cl,
-                            pars,
-                                semlbci::ci_i,
-                                npar = npar,
-                                sem_out = sem_out,
-                                standardized = standardized,
-                                debug = FALSE,
-                                f_constr = f_constr,
-                                method = method,
-                                ciperc = ciperc,
-                                robust = robust,
-                                ...
-                            )
+            # out_raw <- parallel::parLapply(cl,
+            #                 pars,
+            #                     semlbci::ci_i,
+            #                     npar = npar,
+            #                     sem_out = sem_out,
+            #                     standardized = standardized,
+            #                     debug = FALSE,
+            #                     f_constr = f_constr,
+            #                     method = method,
+            #                     ciperc = ciperc,
+            #                     robust = robust,
+            #                     sem_out_name = sem_out_name,
+            #                     ...
+            #                 )
+            args_final <- modifyList(list(...),
+                                    list(npar = npar,
+                                        sem_out = sem_out,
+                                        standardized = standardized,
+                                        debug = FALSE,
+                                        f_constr = f_constr,
+                                        method = method,
+                                        ciperc = ciperc,
+                                        robust = robust,
+                                        sem_out_name = sem_out_name))
+            out_raw <- parallel::clusterMap(cl,
+                              semlbci::ci_i,
+                              i = pars,
+                              sf_full = sf_full_list,
+                              MoreArgs = args_final,
+                              SIMPLIFY = FALSE)
           }
         parallel::stopCluster(cl)
       } else {
-        out_raw <- lapply(pars, ci_i,
-                      npar = npar,
-                      sem_out = sem_out,
-                      standardized = standardized,
-                      debug = FALSE,
-                      f_constr = f_constr,
-                      method = method,
-                      ciperc = ciperc,
-                      robust = robust,
-                      ...)
+        # out_raw <- lapply(pars, ci_i,
+        #               npar = npar,
+        #               sem_out = sem_out,
+        #               standardized = standardized,
+        #               debug = FALSE,
+        #               f_constr = f_constr,
+        #               method = method,
+        #               ciperc = ciperc,
+        #               robust = robust,
+        #               sem_out_name = sem_out_name,
+        #               ...)
+        args_final <- modifyList(list(...),
+                                list(npar = npar,
+                                    sem_out = sem_out,
+                                    standardized = standardized,
+                                    debug = FALSE,
+                                    f_constr = f_constr,
+                                    method = method,
+                                    ciperc = ciperc,
+                                    robust = robust,
+                                    sem_out_name = sem_out_name))
+        out_raw <- mapply(
+                      ci_i,
+                      i = pars,
+                      sf_full = sf_full_list,
+                      MoreArgs = args_final,
+                      SIMPLIFY = FALSE)
       }
     out <- do.call(rbind, lapply(out_raw, function(x) x$bounds))
     # out <- do.call(rbind, out_raw)
