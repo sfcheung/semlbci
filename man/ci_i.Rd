@@ -11,6 +11,8 @@ ci_i(
   standardized = FALSE,
   robust = "none",
   sf_args = list(),
+  sem_out_name = NULL,
+  sf_full = NA,
   ...
 )
 }
@@ -34,6 +36,13 @@ on maximum likelihood estimation will be used.}
 
 \item{sf_args}{The list of arguments to be passed to \code{\link[=scaling_factor2]{scaling_factor2()}}
 if \code{robust} is \code{"satorra.2000"}.}
+
+\item{sem_out_name}{The name of the object supplied to \code{sem_out}. \code{NULL}
+by default. To be used by \code{\link[=get_std]{get_std()}}.}
+
+\item{sf_full}{Ignored if \code{robust}
+is \code{"none"}. If \code{robust} is \code{"satorra.2000"} and this is not empty,
+then this is used as the output of \code{\link[=scaling_factor2]{scaling_factor2()}}.}
 
 \item{...}{Arguments to be passed to the function corresponds to
 the requested method (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} for "wn").}
