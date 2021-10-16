@@ -23,7 +23,9 @@ pars <- c("b1 :=",
           "f2 =~ x5",
           "ce :=")
 pars_i <- syntax_to_i(pars, fit)
-lbci_fit <- semlbci(fit, pars = pars, method = "wn", verbose = TRUE)
+lbci_fit <- semlbci(fit, pars = pars,
+                    method = "wn",
+                    verbose = TRUE)
 
 # Check the results
 

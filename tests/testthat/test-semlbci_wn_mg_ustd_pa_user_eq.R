@@ -21,7 +21,10 @@ pars <- c("a :=",
           "y ~ m",
           "ab :=")
 pars_i <- syntax_to_i(pars, fit)
-lbci_fit <- semlbci(fit, pars = pars, method = "wn", verbose = TRUE)
+system.time(lbci_fit <- semlbci(fit,
+                                pars = pars,
+                                method = "wn",
+                                verbose = TRUE))
 
 # Check the results
 
