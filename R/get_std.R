@@ -43,7 +43,7 @@ get_std <- function(fit_str, i, std_method = "lavaan") {
 
     # Internal standardization
     if (std_method == "internal") {
-        out <- try(std_lav(.x., fit)[i], silent = TRUE)
+        out <- suppressWarnings(try(std_lav(.x., fit)[i], silent = TRUE))
         if (!inherits(out, "try-error")) {
             return(out)
           }
