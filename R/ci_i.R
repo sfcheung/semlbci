@@ -39,6 +39,13 @@
 #' @param sf_args The list of arguments to be passed to [scaling_factor2()]
 #'  if `robust` is `"satorra.2000"`.
 #'
+#' @param sem_out_name The name of the object supplied to `sem_out`. `NULL`
+#'  by default. To be used by [get_std()].
+#'
+#' @param sf_full Ignored if `robust`
+#'  is `"none"`. If `robust` is `"satorra.2000"` and this is not empty,
+#'  then this is used as the output of [scaling_factor2()].
+#'
 #' @param ... Arguments to be passed to the function corresponds to
 #'  the requested method ([ci_bound_wn_i()] for "wn").
 #'
@@ -76,18 +83,24 @@ ci_i <- function(i,
                  standardized = FALSE,
                  robust = "none",
                  sf_args = list(),
+                 sem_out_name = NULL,
+                 sf_full = NA,
                  ...) {
     # It should be the job of the calling function to check whether it is 
     # appropriate to use the robust method.
     if (tolower(robust) == "satorra.2000") {
-        sem_out_name <- deparse(substitute(sem_out))
-        sf_args_final <- modifyList(sf_args,
-                                list(sem_out = sem_out,
-                                      i = i,
-                                      standardized = standardized,
-                                      std_method = "internal",
-                                      sem_out_name = sem_out_name))
-        sf_full <- do.call(scaling_factor2, sf_args_final)
+        if (all(is.na(sf_full))) {
+            if (is.null(sem_out_name)) {
+                sem_out_name <- deparse(substitute(sem_out))
+              }
+            sf_args_final <- modifyList(sf_args,
+                                    list(sem_out = sem_out,
+                                          i = i,
+                                          standardized = standardized,
+                                          std_method = "internal",
+                                          sem_out_name = sem_out_name))
+            sf_full <- do.call(scaling_factor2, sf_args_final)
+          }
         sf <- sf_full$c_r
         sf2 <- sf_full$c_rb
       } else {
