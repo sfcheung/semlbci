@@ -46,6 +46,7 @@ time3u <- system.time(out3u <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = f
 
 timexx <- rbind(time1l, time1u, time2l, time2u, time3l, time3u)
 timexx
+colSums(timexx)
 
 # Check the results
 
@@ -71,6 +72,9 @@ get_scaling_factor <- function(lrt_out) {
         c_r = chisq_diff_c / chisq_diff_r)
     out
   }
+
+gen_test_data <- FALSE
+if (gen_test_data) {
 
 geteststd1 <- get_std_genfct(fit = fit, i = 2)
 
@@ -162,6 +166,19 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out3u <- fitc
 
+save(fitc_out1l, fitc_out1u,
+     fitc_out2l, fitc_out2u,
+     fitc_out3l, fitc_out3u,
+     geteststd1,
+     geteststd2,
+     geteststd3,
+     file = "inst/testdata/test-ci_bound_wn_i_rb_std_cfa.RData",
+     compress = "xz",
+     compression_level = 9)
+}
+
+load(system.file("testdata", "test-ci_bound_wn_i_rb_std_cfa.RData",
+                  package = "semlbci"))
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-5))

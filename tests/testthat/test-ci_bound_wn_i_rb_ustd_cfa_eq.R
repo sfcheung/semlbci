@@ -49,7 +49,7 @@ timexx <- rbind(time1l, time1u,
                 time3l, time3u,
                 time4l, time4u)
 timexx
-
+colSums(timexx)
 
 # Check the results
 
@@ -76,6 +76,8 @@ get_scaling_factor <- function(lrt_out) {
     out
   }
 
+gen_test_data <- FALSE
+if (gen_test_data) {
 
 modc0 <- 
 "
@@ -258,6 +260,17 @@ fitc <- suppressWarnings(update(fitc, start = ptable, do.fit = TRUE,
 fitc_out4u <- fitc
 lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact")
 
+save(fitc_out1l, fitc_out1u,
+     fitc_out2l, fitc_out2u,
+     fitc_out3l, fitc_out3u,
+     fitc_out4l, fitc_out4u,
+     file = "inst/testdata/test-ci_bound_wn_i_rb_ustd_cfa_eq.RData",
+     compress = "xz",
+     compression_level = 9)
+}
+
+load(system.file("testdata", "test-ci_bound_wn_i_rb_ustd_cfa_eq.RData",
+                  package = "semlbci"))
 
 
 

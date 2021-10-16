@@ -2,10 +2,6 @@ skip_if(Sys.getenv("SEMLBCI_TEST_SLOW") == "",
         "Skip due to speed or other issues")
 # To be tested in interactive sessions only due to scoping or speed issues
 
-# NOTE
-# Can take a long time to find the scaling factor.
-# Cannot find the scaling factor for i = 15
-
 library(testthat)
 library(semlbci)
 
@@ -57,13 +53,9 @@ time2u <- system.time(out2u <- ci_bound_wn_i(4, 13, sem_out = fit, f_constr = fn
 time3l <- system.time(out3l <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, sf = sf3$c_r, sf2 = sf1$c_rb, wald_ci_start = FALSE, std_method = "internal"))
 time3u <- system.time(out3u <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, sf = sf3$c_r, sf2 = sf1$c_rb, wald_ci_start = FALSE, std_method = "internal"))
 
-# out1l$diag$ciperc_final
-# out1u$diag$ciperc_final
-# out2l$diag$ciperc_final
-# out2u$diag$ciperc_final
-
 timexx <- rbind(time1l, time1u, time2l, time2u, time3l, time3u)
 timexx
+colSums(timexx)
 
 # Check the results
 
@@ -89,6 +81,9 @@ get_scaling_factor <- function(lrt_out) {
         c_r = chisq_diff_c / chisq_diff_r)
     out
   }
+
+gen_test_data <- FALSE
+if (gen_test_data) {
 
 geteststd1 <- get_std_genfct(fit = fit, i = 5)
 
@@ -188,6 +183,21 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out3u <- fitc
 (tmp <- lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact"))
+
+save(fitc_out1l, fitc_out1u,
+     fitc_out2l, fitc_out2u,
+     fitc_out3l, fitc_out3u,
+     geteststd1,
+     geteststd2,
+     geteststd3,
+     file = "inst/testdata/test-ci_bound_wn_i_rb_std_cfa_eq.RData",
+     compress = "xz",
+     compression_level = 9)
+}
+
+load(system.file("testdata", "test-ci_bound_wn_i_rb_std_cfa_eq.RData",
+                  package = "semlbci"))
+
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-3))
