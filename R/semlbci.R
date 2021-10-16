@@ -168,21 +168,6 @@ semlbci <- function(sem_out,
                                        envir = environment())
         if (requireNamespace ("pbapply", quietly = TRUE) &
             use_pbapply) {
-            # out_raw <- pbapply::pblapply(
-            #                     pars,
-            #                     semlbci::ci_i,
-            #                     npar = npar,
-            #                     sem_out = sem_out,
-            #                     standardized = standardized,
-            #                     debug = FALSE,
-            #                     f_constr = f_constr,
-            #                     method = method,
-            #                     ciperc = ciperc,
-            #                     robust = robust,
-            #                     sem_out_name = sem_out_name,
-            #                     ...,
-            #                     cl = cl
-            #                 )
             args_final <- modifyList(list(...),
                                     list(npar = npar,
                                         sem_out = sem_out,
@@ -193,28 +178,25 @@ semlbci <- function(sem_out,
                                         ciperc = ciperc,
                                         robust = robust,
                                         sem_out_name = sem_out_name))
-            out_raw <- pbapply::pbmapply(
-                                semlbci::ci_i,
-                                i = pars,
-                                sf_full = sf_full_list,
+            # out_raw <- pbapply::pbmapply(
+            #                     semlbci::ci_i,
+            #                     i = pars,
+            #                     sf_full = sf_full_list,
+            #                     MoreArgs = args_final,
+            #                     SIMPLIFY = FALSE,
+            #                     cl = cl)
+            pars2 <- rep(pars, each = 2)
+            sf_full_list2 <- rep(sf_full_list, each = 2)
+            which2 <- rep(c("lbound", "ubound"), times = 2)
+            out_raw2 <- pbapply::pbmapply(
+                                semlbci::ci_i_one,
+                                i = pars2,
+                                sf_full = sf_full_list2,
+                                which = which2,
                                 MoreArgs = args_final,
                                 SIMPLIFY = FALSE,
                                 cl = cl)
           } else {
-            # out_raw <- parallel::parLapply(cl,
-            #                 pars,
-            #                     semlbci::ci_i,
-            #                     npar = npar,
-            #                     sem_out = sem_out,
-            #                     standardized = standardized,
-            #                     debug = FALSE,
-            #                     f_constr = f_constr,
-            #                     method = method,
-            #                     ciperc = ciperc,
-            #                     robust = robust,
-            #                     sem_out_name = sem_out_name,
-            #                     ...
-            #                 )
             args_final <- modifyList(list(...),
                                     list(npar = npar,
                                         sem_out = sem_out,
@@ -225,26 +207,25 @@ semlbci <- function(sem_out,
                                         ciperc = ciperc,
                                         robust = robust,
                                         sem_out_name = sem_out_name))
-            out_raw <- parallel::clusterMap(cl,
-                              semlbci::ci_i,
-                              i = pars,
-                              sf_full = sf_full_list,
+            # out_raw <- parallel::clusterMap(cl,
+            #                   semlbci::ci_i,
+            #                   i = pars,
+            #                   sf_full = sf_full_list,
+            #                   MoreArgs = args_final,
+            #                   SIMPLIFY = FALSE)
+            pars2 <- rep(pars, each = 2)
+            sf_full_list2 <- rep(sf_full_list, each = 2)
+            which2 <- rep(c("lbound", "ubound"), times = 2)
+            out_raw2 <- parallel::clusterMap(cl,
+                              semlbci::ci_i_one,
+                              i = pars2,
+                              sf_full = sf_full_list2,
+                              which = which2,
                               MoreArgs = args_final,
                               SIMPLIFY = FALSE)
           }
         parallel::stopCluster(cl)
       } else {
-        # out_raw <- lapply(pars, ci_i,
-        #               npar = npar,
-        #               sem_out = sem_out,
-        #               standardized = standardized,
-        #               debug = FALSE,
-        #               f_constr = f_constr,
-        #               method = method,
-        #               ciperc = ciperc,
-        #               robust = robust,
-        #               sem_out_name = sem_out_name,
-        #               ...)
         args_final <- modifyList(list(...),
                                 list(npar = npar,
                                     sem_out = sem_out,
@@ -255,13 +236,35 @@ semlbci <- function(sem_out,
                                     ciperc = ciperc,
                                     robust = robust,
                                     sem_out_name = sem_out_name))
-        out_raw <- mapply(
-                      ci_i,
-                      i = pars,
-                      sf_full = sf_full_list,
+        # out_raw <- mapply(
+        #               ci_i,
+        #               i = pars,
+        #               sf_full = sf_full_list,
+        #               MoreArgs = args_final,
+        #               SIMPLIFY = FALSE)
+        pars2 <- rep(pars, each = 2)
+        sf_full_list2 <- rep(sf_full_list, each = 2)
+        which2 <- rep(c("lbound", "ubound"), times = 2)
+        out_raw2 <- mapply(
+                      ci_i_one,
+                      i = pars2,
+                      sf_full = sf_full_list2,
+                      which = which2,
                       MoreArgs = args_final,
                       SIMPLIFY = FALSE)
       }
+    tmpfct <- function(x, y) {
+        out <- mapply(c, x, y, SIMPLIFY = FALSE)
+        out$method <- out$method[[1]]
+        out$sf_full <- out$sf_full[[1]]
+        out
+      }
+    tmp1 <- seq(1, 2 * length(pars), 2)
+    tmp2 <- tmp1 + 1
+    out_raw <- mapply(tmpfct,
+                      out_raw2[tmp1],
+                      out_raw2[tmp2],
+                      SIMPLIFY = FALSE)
     out <- do.call(rbind, lapply(out_raw, function(x) x$bounds))
     # out <- do.call(rbind, out_raw)
     out_p <- ptable[, c("id", "lhs", "op", "rhs", "group", "label")]
