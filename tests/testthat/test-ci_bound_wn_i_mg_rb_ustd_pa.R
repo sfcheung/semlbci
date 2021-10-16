@@ -38,7 +38,7 @@ time2l <- system.time(out2l <- ci_bound_wn_i(10, 16, sem_out = fit, f_constr = f
 time2u <- system.time(out2u <- ci_bound_wn_i(10, 16, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb))
 
 timexx <- rbind(time1l, time1u, time2l, time2u)
-timexx
+colSums(timexx)
 
 # Check the results
 
@@ -46,6 +46,9 @@ test_p <- function(fit0, fit1, ciperc, tol) {
     out <- lavTestLRT(fit0, fit1, method = "satorra.2000", A.method = "exact")
     abs(out[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
   }
+
+gen_test_data <- FALSE
+if (gen_test_data) {
 
 get_scaling_factor <- function(lrt_out) {
     diff_from_p <- qchisq(lrt_out[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
@@ -216,6 +219,17 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE,
 fitc_out2u <- fitc
 
 lavTestLRT(fitc_out2u, fit, method = "satorra.2000", A.method = "exact")
+
+save(fitc_out1l, fitc_out1u,
+     fitc_out2l, fitc_out2u,
+     file = "inst/testdata/test-ci_bound_wn_i_mg_rb_ustd_pa.RData",
+     compress = "xz",
+     compression_level = 9)
+}
+
+load(system.file("testdata", "test-ci_bound_wn_i_mg_rb_ustd_pa.RData",
+                  package = "semlbci"))
+
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))

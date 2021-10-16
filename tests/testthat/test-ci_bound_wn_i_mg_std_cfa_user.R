@@ -35,21 +35,25 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_abs = 1e-7,
               xtol_rel = 1e-7
               )
-time1l <- system.time(out1l <- ci_bound_wn_i(2, 38, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
-time1u <- system.time(out1u <- ci_bound_wn_i(2, 38, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
-time2l <- system.time(out2l <- ci_bound_wn_i(47, 38, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
-time2u <- system.time(out2u <- ci_bound_wn_i(47, 38, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
-time3l <- system.time(out3l <- ci_bound_wn_i(48, 38, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
-time3u <- system.time(out3u <- ci_bound_wn_i(48, 38, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE))
+time1l <- system.time(out1l <- ci_bound_wn_i(2, 38, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal"))
+time1u <- system.time(out1u <- ci_bound_wn_i(2, 38, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal"))
+time2l <- system.time(out2l <- ci_bound_wn_i(47, 38, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal"))
+time2u <- system.time(out2u <- ci_bound_wn_i(47, 38, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal"))
+time3l <- system.time(out3l <- ci_bound_wn_i(48, 38, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal"))
+time3u <- system.time(out3u <- ci_bound_wn_i(48, 38, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal"))
 
 timexx <- rbind(time1l, time1u, time2l, time2u, time3l, time3u)
 timexx
+colSums(timexx)
 
 # Not yet have a way to find how to make test_constr work in standardized solution
 
 test_p <- function(fit0, fit1, ciperc, tol) {
     abs(anova(fit0, fit1)[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
   }
+
+gen_test_data <- FALSE
+if (gen_test_data) {
 
 modc0 <- 
 "
@@ -127,6 +131,17 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE
                    verbose = FALSE, optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out3u <- fitc
+
+save(fitc_out1l, fitc_out1u,
+     fitc_out2l, fitc_out2u,
+     fitc_out3l, fitc_out3u,
+     file = "inst/testdata/test-ci_bound_wn_i_mg_std_cfa_user.RData",
+     compress = "xz",
+     compression_level = 9)
+}
+
+load(system.file("testdata", "test-ci_bound_wn_i_mg_std_cfa_user.RData",
+                  package = "semlbci"))
 
 
 test_that("Check p-value for the chi-square difference test", {
