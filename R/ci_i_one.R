@@ -43,10 +43,13 @@
 #'  is `"none"`. If `robust` is `"satorra.2000"` and `sf_full` is
 #'  supplied, then its value will be used.
 #'  If `robust` is `"satorra.2000"` but `sf_full` is
-#'  `NULL`, then [scaling_factor2()] will be called.
+#'  `NA`, then [scaling_factor2()] will be called.
 #'
 #' @param sf_args The list of arguments to be passed to [scaling_factor2()]
 #'  if `robust` is `"satorra.2000"`.
+#'
+#' @param sem_out_name The name of the object supplied to `sem_out`. `NULL`
+#'  by default. To be used by [get_std()].
 #'
 #' @param ... Arguments to be passed to the function corresponds to
 #'  the requested method ([ci_bound_wn_i()] for "wn").
@@ -86,8 +89,9 @@ ci_i_one <- function(i,
                  method = "wn",
                  standardized = FALSE,
                  robust = "none",
-                 sf_full = NULL,
+                 sf_full = NA,
                  sf_args = list(),
+                 sem_out_name = NULL,
                  ...) {
     # It should be the job of the calling function to check whether it is 
     # appropriate to use the robust method.
@@ -95,8 +99,10 @@ ci_i_one <- function(i,
         stop("Must be 'lbound' or 'ubound' for the which argument.")
       }
     if (tolower(robust) == "satorra.2000") {
-        if (is.null(sf_full)) {
-            sem_out_name <- deparse(substitute(sem_out))
+        if (all(is.na(sf_full))) {
+            if (is.null(sem_out_name)) {
+                sem_out_name <- deparse(substitute(sem_out))
+              }
             sf_args_final <- modifyList(sf_args,
                                     list(sem_out = sem_out,
                                          i = i,
