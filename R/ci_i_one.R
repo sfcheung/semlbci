@@ -119,6 +119,7 @@ ci_i_one <- function(i,
         sf2 <- 0
       }
     if (method == "wn") {
+        wald_ci_start <- !standardized
         b_time <- system.time(b <- try(suppressWarnings(ci_bound_wn_i(i,
                                                    sem_out = sem_out,
                                                    which = which,
@@ -126,6 +127,7 @@ ci_i_one <- function(i,
                                                    sf = sf,
                                                    sf2 = sf2,
                                                    std_method = "internal",
+                                                   wald_ci_start = wald_ci_start,
                                                     ...)), silent = TRUE))
         if (inherits(b, "try-error")) {
             b_time <- system.time(b <- suppressWarnings(ci_bound_wn_i(i,
