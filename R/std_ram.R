@@ -25,6 +25,7 @@ std_ram <- function(ram_est) {
     colnames(mAz) <- rownames(mAz) <- colnames(mA)
     colnames(mSz) <- rownames(mSz) <- colnames(mS)
     mMz <- ram_est$M
+    # TODO: Mz of x = Mz / (SD of x)
     mMz[] <- 0
     list(A = mAz,
          S = mSz,
