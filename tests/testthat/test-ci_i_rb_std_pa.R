@@ -46,8 +46,8 @@ colSums(timexx)
 
 # Find the scaling factors
 
-# sf1 <- scaling_factor2(fit, i = 1, standardized = TRUE)
-# sf2 <- scaling_factor2(fit, i = 2, standardized = TRUE)
+# sf1 <- scaling_factor3(fit, i = 1, standardized = TRUE)
+# sf2 <- scaling_factor3(fit, i = 2, standardized = TRUE)
 
 # time1l <- system.time(out1l <- ci_bound_wn_i(1, 5, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, sf = sf1$c_r, sf2 = sf1$c_rb, wald_ci_start = FALSE, std_method = "internal"))
 # time2u <- system.time(out2u <- ci_bound_wn_i(2, 5, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, sf = sf2$c_r, sf2 = sf1$c_rb, wald_ci_start = FALSE, std_method = "internal"))

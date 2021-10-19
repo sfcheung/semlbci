@@ -1,5 +1,4 @@
-skip("Skip due to speed or other issues")
-# To be tested in interactive sessions only due to scoping or speed issues
+skip_on_cran()
 
 library(semlbci)
 library(lavaan)
@@ -23,7 +22,7 @@ fit <- lavaan::sem(mod, cfa_two_factors_mg, test = "satorra.bentler", group = "g
 
 # Find the scaling factor
 
-sc1 <- scaling_factor2(fit, i = 2)
+sc1 <- scaling_factor3(fit, i = 2)
 
 # Pre-computed answer
 
@@ -187,7 +186,7 @@ test_that("Check scaling factor (MV)", {
 # "
 # fit1 <- lavaan::sem(mod1, cfa_two_factors, test = "satorra.bentler")
 
-# sc2 <- scaling_factor2(fit1, i = 2)
+# sc2 <- scaling_factor3(fit1, i = 2)
 
 # modc01 <-
 # "

@@ -1,5 +1,4 @@
-skip("Skip due to speed or other issues")
-# To be tested in interactive sessions only due to scoping or speed issues
+skip_on_cran()
 
 library(semlbci)
 library(lavaan)
@@ -23,8 +22,8 @@ fit <- lavaan::cfa(mod, cfa_two_factors_mg, test = "satorra.bentler", group = "g
 
 # Find the scaling factor
 
-system.time(sc1_lav <- scaling_factor2(fit, i = 2, standardized = TRUE, std_method = "lavaan"))
-system.time(sc1_inv <- scaling_factor2(fit, i = 2, standardized = TRUE, std_method = "internal"))
+system.time(sc1_lav <- scaling_factor3(fit, i = 2, standardized = TRUE, std_method = "lavaan"))
+system.time(sc1_inv <- scaling_factor3(fit, i = 2, standardized = TRUE, std_method = "internal"))
 
 # Check the results
 

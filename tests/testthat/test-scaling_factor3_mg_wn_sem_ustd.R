@@ -20,7 +20,6 @@ fit <- lavaan::sem(mod, cfa_two_factors_mg, test = "satorra.bentler", group = "g
 
 # Find the scaling factor
 
-#sc1b <- scaling_factor2(fit, i = 2)
 sc1 <- scaling_factor3(fit, i = 2)
 
 # Pre-computed answer

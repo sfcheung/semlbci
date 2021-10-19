@@ -1,5 +1,4 @@
-skip("Skip due to speed or other issues")
-# To be tested in interactive sessions only due to scoping or speed issues
+skip_on_cran()
 
 library(semlbci)
 library(lavaan)
@@ -23,7 +22,7 @@ summary(fit)
 
 # Find the scaling factor
 
-sc1 <- scaling_factor2(fit, i = 2)
+sc1 <- scaling_factor3(fit, i = 2)
 
 # Pre-computed answer
 

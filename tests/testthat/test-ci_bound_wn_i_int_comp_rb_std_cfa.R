@@ -19,8 +19,8 @@ fit <- lavaan::cfa(mod, cfa_two_factors, test = "satorra.bentler")
 
 # Find the scaling factors
 
-sf1 <- scaling_factor2(fit, i = 2, standardized = TRUE)
-sf2 <- scaling_factor2(fit, i = 6, standardized = TRUE)
+sf1 <- scaling_factor3(fit, i = 2, standardized = TRUE)
+sf2 <- scaling_factor3(fit, i = 6, standardized = TRUE)
 
 # Find the LBCIs
 

@@ -18,8 +18,8 @@ fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE, test = "satorra.bentler")
 
 # Find the scaling factors
 
-# sf1 <- scaling_factor2(fit, i = 1, standardized = TRUE)
-# sf2 <- scaling_factor2(fit, i = 2, standardized = TRUE)
+# sf1 <- scaling_factor3(fit, i = 1, standardized = TRUE)
+# sf2 <- scaling_factor3(fit, i = 2, standardized = TRUE)
 
 # Find the LBCIs
 
