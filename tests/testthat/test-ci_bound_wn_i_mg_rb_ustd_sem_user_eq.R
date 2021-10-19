@@ -23,8 +23,8 @@ fit <- lavaan::sem(mod, cfa_two_factors_mg,
 
 # Find the scaling factors
 
-sf1 <- scaling_factor2(fit, 47)
-sf2 <- scaling_factor2(fit, 26)
+sf1 <- scaling_factor3(fit, 47)
+sf2 <- scaling_factor3(fit, 26)
 
 # Find the LBCIs
 

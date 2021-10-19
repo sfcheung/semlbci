@@ -1,5 +1,4 @@
-skip("Skip due to speed or other issues")
-# To be tested in interactive sessions only due to scoping or speed issues
+skip_on_cran()
 
 library(testthat)
 library(semlbci)
@@ -20,8 +19,8 @@ fit <- lavaan::cfa(mod, cfa_two_factors_mg, test = "satorra.bentler", group = "g
 
 # Find the scaling factors
 
-sf1 <- scaling_factor2(fit, 2, standardized = TRUE)
-sf2 <- scaling_factor2(fit, 30, standardized = TRUE)
+sf1 <- scaling_factor3(fit, 2, standardized = TRUE)
+sf2 <- scaling_factor3(fit, 30, standardized = TRUE)
 
 # Find the LBCIs
 
@@ -37,11 +36,11 @@ opts0 <- list(ftol_abs = 1e-7,
 #              tol_constraints_eq = 1e-10
               )
 time1l <- system.time(out1l <- ci_bound_wn_i( 2, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
-time1u <- system.time(out1u <- ci_bound_wn_i( 2, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
+#time1u <- system.time(out1u <- ci_bound_wn_i( 2, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 time2l <- system.time(out2l <- ci_bound_wn_i(30, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 time2u <- system.time(out2u <- ci_bound_wn_i(30, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 
-timexx <- rbind(time1l, time1u, time2l, time2u)
+timexx <- rbind(time1l, time2l, time2u)
 timexx
 colSums(timexx)
 
@@ -149,7 +148,7 @@ load(system.file("testdata", "test-ci_bound_wn_i_mg_rb_std_cfa.RData",
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-5))
-    expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-5))
+    # expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-5))
     expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-5))
     expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-5))
   })

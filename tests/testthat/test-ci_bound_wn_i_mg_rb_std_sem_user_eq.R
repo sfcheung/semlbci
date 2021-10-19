@@ -1,5 +1,4 @@
-skip("Skip due to speed or other issues")
-# To be tested in interactive sessions only due to scoping or speed issues
+skip_on_cran()
 
 library(testthat)
 library(semlbci)
@@ -25,8 +24,8 @@ fit <- lavaan::sem(mod, cfa_two_factors_mg,
 
 # Find the scaling factors
 
-sf1 <- scaling_factor2(fit, 47, standardized = TRUE)
-sf2 <- scaling_factor2(fit, 26, standardized = TRUE)
+sf1 <- scaling_factor3(fit, 47, standardized = TRUE)
+sf2 <- scaling_factor3(fit, 26, standardized = TRUE)
 
 # Find the LBCIs
 

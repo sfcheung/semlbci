@@ -20,8 +20,8 @@ lavaan::parameterTable(fit)
 
 # Find the scaling factors
 
-sf1 <- scaling_factor2(fit, 1)
-sf2 <- scaling_factor2(fit, 17)
+sf1 <- scaling_factor3(fit, 1)
+sf2 <- scaling_factor3(fit, 17)
 
 # Find the LBCIs
 
