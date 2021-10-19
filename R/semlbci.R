@@ -147,7 +147,7 @@ semlbci <- function(sem_out,
     # Compute the scaling factors
     if (robust == "satorra.2000") {
         sf_full_list <- lapply(pars,
-                               scaling_factor2,
+                               scaling_factor3,
                                sem_out = sem_out,
                                standardized = standardized,
                                std_method = "internal",

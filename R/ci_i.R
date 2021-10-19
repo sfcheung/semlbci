@@ -101,7 +101,7 @@ ci_i <- function(i,
                                           standardized = standardized,
                                           std_method = "internal",
                                           sem_out_name = sem_out_name))
-            sf_full <- do.call(scaling_factor2, sf_args_final)
+            sf_full <- do.call(scaling_factor3, sf_args_final)
           }
         sf <- sf_full$c_r
         sf2 <- sf_full$c_rb
