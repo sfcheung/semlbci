@@ -1,4 +1,5 @@
-skip_on_cran()
+skip("Run it only if are major changes in the arguments in ci_i_* functions")
+
 library(testthat)
 library(semlbci)
 
