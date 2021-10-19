@@ -103,7 +103,7 @@ scaling_factor3 <- function(sem_out,
         }
       }
 
-    gd <- lavaan::lav_func_jacobian_complex(gfct, coef(sem_out))
+    gd <- lavaan::lav_func_jacobian_complex(gfct, lavaan::coef(sem_out))
 
     # Satorra-2000, p. 240
     x <- pinv %*% t(gd) %*% MASS::ginv(gd %*% pinv %*% t(gd)) %*% gd %*% pinv
