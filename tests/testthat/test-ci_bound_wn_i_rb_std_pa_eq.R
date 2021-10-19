@@ -1,4 +1,4 @@
-skip_on_cran()
+skip("To be run in an interactive session")
 
 # NOTE:
 # The nonlinear constraints may lead to difficulty in the search.
