@@ -1,4 +1,4 @@
-skip("Skip due to speed or other issues")
+skip_on_cran()
 # To be tested in interactive sessions only due to scoping or speed issues
 
 library(testthat)
@@ -20,8 +20,8 @@ fit <- lavaan::sem(mod, cfa_two_factors, test = "satorra.bentler")
 
 # Find the scaling factors
 
-sf1 <- scaling_factor2(fit, i = 2, standardized = TRUE)
-sf2 <- scaling_factor2(fit, i = 7, standardized = TRUE)
+sf1 <- scaling_factor3(fit, i = 2, standardized = TRUE)
+sf2 <- scaling_factor3(fit, i = 7, standardized = TRUE)
 
 # Find the LBCIs
 

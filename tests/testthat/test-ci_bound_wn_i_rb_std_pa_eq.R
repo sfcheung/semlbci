@@ -1,6 +1,4 @@
-
-skip("Skip due to speed or other issues")
-# To be tested in interactive sessions only due to scoping or speed issues
+skip_on_cran()
 
 # NOTE:
 # The nonlinear constraints may lead to difficulty in the search.
@@ -33,8 +31,8 @@ update_args <- list(
                                   )
                               )
 
-sf1 <- scaling_factor2(fit, i = 1, standardized = TRUE, update_args = update_args)
-sf2 <- scaling_factor2(fit, i = 2, standardized = TRUE, update_args = update_args)
+sf1 <- scaling_factor3(fit, i = 1, standardized = TRUE, update_args = update_args)
+sf2 <- scaling_factor3(fit, i = 2, standardized = TRUE, update_args = update_args)
 
 # Find the LBCIs
 

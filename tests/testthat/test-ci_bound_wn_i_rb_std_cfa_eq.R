@@ -31,9 +31,9 @@ update_args <- list(
                                   )
                               )
 
-sf1 <- scaling_factor2(fit, i =  5, standardized = TRUE, update_args = update_args)
-sf2 <- scaling_factor2(fit, i =  4, standardized = TRUE, update_args = update_args)
-sf3 <- scaling_factor2(fit, i = 15, standardized = TRUE, update_args = update_args)
+sf1 <- scaling_factor3(fit, i =  5, standardized = TRUE, update_args = update_args)
+sf2 <- scaling_factor3(fit, i =  4, standardized = TRUE, update_args = update_args)
+sf3 <- scaling_factor3(fit, i = 15, standardized = TRUE, update_args = update_args)
 
 # Find the LBCIs
 

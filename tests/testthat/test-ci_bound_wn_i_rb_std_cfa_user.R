@@ -1,5 +1,4 @@
-skip("Skip due to speed or other issues")
-# To be tested in interactive sessions only due to scoping or speed issues
+skip_on_cran()
 
 library(testthat)
 library(semlbci)
@@ -21,9 +20,9 @@ fit <- lavaan::cfa(mod, cfa_two_factors, test = "satorra.bentler")
 
 # Find the scaling factors
 
-sf1 <- scaling_factor2(fit, i = 2, standardized = TRUE)
-sf2 <- scaling_factor2(fit, i = 16, standardized = TRUE)
-sf3 <- scaling_factor2(fit, i = 17, standardized = TRUE)
+sf1 <- scaling_factor3(fit, i = 2, standardized = TRUE)
+sf2 <- scaling_factor3(fit, i = 16, standardized = TRUE)
+sf3 <- scaling_factor3(fit, i = 17, standardized = TRUE)
 
 # Find the LBCIs
 
@@ -177,6 +176,9 @@ fitc_out3u <- fitc
 save(fitc_out1l, fitc_out1u,
      fitc_out2l, fitc_out2u,
      fitc_out3l, fitc_out3u,
+     geteststd1,
+     geteststd2,
+     geteststd3,
      file = "inst/testdata/test-ci_bound_wn_i_rb_std_cfa_user.RData",
      compress = "xz",
      compression_level = 9)
