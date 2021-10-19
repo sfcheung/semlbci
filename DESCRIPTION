@@ -36,4 +36,4 @@ Imports:
 VignetteBuilder: knitr
 Config/testthat/parallel: true
 Config/testthat/edition: 3
-Config/testthat/start-first: ci_bound_wn_i_std_*
+Config/testthat/start-first: semlbci_wn_mg_*
