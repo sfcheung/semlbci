@@ -37,12 +37,14 @@ out1l <- ci_i_one(1, npar = 5, which = "lbound", sem_out = fit, method = "wn",
              f_constr = fn_constr0,
              ciperc = ciperc,
              standardized = TRUE,
-             wald_ci_start = FALSE)
+             wald_ci_start = FALSE,
+             opts = list(ftol_rel = 1e-5))
 out2u <- ci_i_one(2, npar = 5, which = "ubound", sem_out = fit, method = "wn",
              f_constr = fn_constr0,
              ciperc = ciperc,
              standardized = TRUE,
-             wald_ci_start = FALSE)
+             wald_ci_start = FALSE,
+             opts = list(ftol_rel = 1e-5))
 
 # Check with known results
 
