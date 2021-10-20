@@ -5,6 +5,6 @@ options(Ncpus = 9)
 
 Sys.setenv("SEMLBCI_TEST_COMPREHENSIVE" = "TRUE")
 
-devtools::test()
+#devtools::test()
 
 Sys.unsetenv("SEMLBCI_TEST_COMPREHENSIVE")
