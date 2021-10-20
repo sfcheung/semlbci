@@ -182,7 +182,7 @@ fitc_out1u <- fitc
 lavTestLRT(fitc_out1u, fit, method = "satorra.2000", A.method = "exact")
 
 test_limit <- out2l
-modc <- paste(modc0, "\nb2 == ", test_limit$bound)
+modc <- paste(modc0, "\nr2 == ", test_limit$bound)
 fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, test = "satorra.bentler", group = "gp")
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
@@ -204,7 +204,7 @@ fitc_out2l <- fitc
 lavTestLRT(fitc_out2l, fit, method = "satorra.2000", A.method = "exact")
 
 test_limit <- out2u
-modc <- paste(modc0, "\nb2 == ", test_limit$bound)
+modc <- paste(modc0, "\nr2 == ", test_limit$bound)
 fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, test = "satorra.bentler", group = "gp")
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
