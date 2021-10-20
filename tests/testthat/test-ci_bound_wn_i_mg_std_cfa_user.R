@@ -29,10 +29,11 @@ fn_constr0 <- set_constraint(fit, ciperc = ciperc)
 
 # opts0 <- list(print_level = 3)
 opts0 <- list()
-opts0 <- list(ftol_abs = 1e-7,
-              ftol_rel = 1e-7,
-              xtol_abs = 1e-7,
-              xtol_rel = 1e-7
+opts0 <- list(#ftol_abs = 1e-7,
+              ftol_rel = 1e-4
+              # xtol_abs = 1e-7,
+              # xtol_rel = 1e-7,
+              # tol_constraints_eq = 1e-10
               )
 time1l <- system.time(out1l <- ci_bound_wn_i(2, 38, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal"))
 time1u <- system.time(out1u <- ci_bound_wn_i(2, 38, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal"))
