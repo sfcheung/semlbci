@@ -1,4 +1,5 @@
 skip("To be run in an interactive session")
+# To fix: Do not use saved data
 
 library(testthat)
 library(semlbci)

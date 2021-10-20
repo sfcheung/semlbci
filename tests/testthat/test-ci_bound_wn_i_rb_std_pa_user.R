@@ -1,6 +1,7 @@
 skip("Skip due to speed or other issues")
 # To be tested in interactive sessions only due to scoping or speed issues
 skip("To be run in an interactive session")
+# To fix: Do not use saved data
 
 library(testthat)
 library(semlbci)
