@@ -25,7 +25,8 @@ pars_i <- syntax_to_i(pars, fit)
 system.time(lbci_fit <- semlbci(fit,
                                 pars = pars,
                                 method = "wn",
-                                verbose = TRUE))
+                                verbose = TRUE,
+                                opts = list(ftol_rel = 1e-4)))
 
 # Check the results
 
