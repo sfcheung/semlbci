@@ -29,14 +29,14 @@ fn_constr0 <- set_constraint(fit, ciperc = ciperc)
 
 # opts0 <- list(print_level = 3)
 opts0 <- list()
-opts0 <- list(ftol_abs = 1e-7,
-              ftol_rel = 1e-7,
-              xtol_abs = 1e-7,
-              xtol_rel = 1e-7
+opts0 <- list(#ftol_abs = 1e-7,
+              ftol_rel = 1e-4
+              #xtol_abs = 1e-7,
+              #xtol_rel = 1e-7
               # tol_constraints_eq = 1e-10
               )
-time1l <- system.time(out1l <- ci_bound_wn_i(2, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
-time1u <- system.time(out1u <- ci_bound_wn_i(2, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
+time1l <- system.time(out1l <- ci_bound_wn_i(2, 38, sem_out = fit, which = "lbound", opts = list( ftol_rel = 1e-6), f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
+time1u <- system.time(out1u <- ci_bound_wn_i(2, 38, sem_out = fit, which = "lbound", opts = list( ftol_rel = 1e-6), f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
 time2l <- system.time(out2l <- ci_bound_wn_i(30, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb))
 time2u <- system.time(out2u <- ci_bound_wn_i(30, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb))
 
@@ -52,8 +52,8 @@ test_p <- function(fit0, fit1, ciperc, tol) {
     abs(out[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
   }
 
-gen_test_data <- FALSE
-if (gen_test_data) {
+# gen_test_data <- FALSE
+# if (gen_test_data) {
 
 get_scaling_factor <- function(lrt_out) {
     diff_from_p <- qchisq(lrt_out[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
@@ -226,15 +226,15 @@ fitc_out2u <- fitc
 
 lavTestLRT(fitc_out2u, fit, method = "satorra.2000", A.method = "exact")
 
-save(fitc_out1l, fitc_out1u,
-     fitc_out2l, fitc_out2u,
-     file = "inst/testdata/test-ci_bound_wn_i_mg_rb_ustd_sem.RData",
-     compress = "xz",
-     compression_level = 9)
-}
+# save(fitc_out1l, fitc_out1u,
+#      fitc_out2l, fitc_out2u,
+#      file = "inst/testdata/test-ci_bound_wn_i_mg_rb_ustd_sem.RData",
+#      compress = "xz",
+#      compression_level = 9)
+# }
 
-load(system.file("testdata", "test-ci_bound_wn_i_mg_rb_ustd_sem.RData",
-                  package = "semlbci"))
+# load(system.file("testdata", "test-ci_bound_wn_i_mg_rb_ustd_sem.RData",
+#                   package = "semlbci"))
 
 
 test_that("Check p-value for the chi-square difference test", {
