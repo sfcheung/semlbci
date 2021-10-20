@@ -41,6 +41,15 @@ time2u <- system.time(out2u <- ci_bound_wn_i(10, 16, sem_out = fit, f_constr = f
 timexx <- rbind(time1l, time1u, time2l, time2u)
 colSums(timexx)
 
+test_that("Check against precomputed answers", {
+    expect_equal(out1l$bound, -0.415261, tolerance = 1e-5)
+    expect_equal(out1u$bound, 2.976953, tolerance = 1e-5)
+    expect_equal(out2l$bound, 0.3313538, tolerance = 1e-5)
+    expect_equal(out2u$bound, 0.8156593, tolerance = 1e-5)
+  })
+
+skip("Run only if data changed")
+
 # Check the results
 
 test_p <- function(fit0, fit1, ciperc, tol) {
