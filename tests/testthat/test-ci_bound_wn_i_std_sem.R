@@ -1,4 +1,6 @@
 skip_on_cran()
+# To fix: Do not use saved data
+
 library(testthat)
 library(semlbci)
 
