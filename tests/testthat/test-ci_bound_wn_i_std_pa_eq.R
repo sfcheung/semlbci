@@ -1,4 +1,5 @@
 skip_on_cran()
+skip_if_not(Sys.getenv("SEMLBCI_TEST_COMPREHENSIVE") == "TRUE")
 # To fix: Do not use saved data
 
 library(testthat)

@@ -1,4 +1,5 @@
 skip_on_cran()
+skip_if_not(Sys.getenv("SEMLBCI_TEST_COMPREHENSIVE") == "TRUE")
 # Note:
 # A.method = "exact" does not work if there is an 
 # equality constraint. Need to resort "delta".
