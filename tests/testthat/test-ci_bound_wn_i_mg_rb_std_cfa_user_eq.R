@@ -1,4 +1,3 @@
-skip("To be run in an interactive session")
 # To fix: Do not use saved data
 
 library(testthat)
@@ -46,6 +45,13 @@ timexx <- rbind(time1l, time1u)
 timexx
 colSums(timexx)
 
+test_that("Check against precomputed answers", {
+    expect_equal(out1l$bound, 0.3179522, tolerance = 1e-5)
+    expect_equal(out1u$bound, 0.5073198, tolerance = 1e-5)
+  })
+
+
+skip("Run only if data changed")
 
 # Check the results
 
@@ -72,8 +78,8 @@ get_scaling_factor <- function(lrt_out) {
     out
   }
 
-gen_test_data <- FALSE
-if (gen_test_data) {
+# gen_test_data <- FALSE
+# if (gen_test_data) {
 
 geteststd1 <- get_std_genfct(fit = fit, i = 47)
 
@@ -108,15 +114,15 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE
 fitc_out1u <- fitc
 
 
-save(fitc_out1l, fitc_out1u,
-     geteststd1,
-     file = "inst/testdata/test-ci_bound_wn_i_mg_rb_std_cfa_user_eq.RData",
-     compress = "xz",
-     compression_level = 9)
-}
+# save(fitc_out1l, fitc_out1u,
+#      geteststd1,
+#      file = "inst/testdata/test-ci_bound_wn_i_mg_rb_std_cfa_user_eq.RData",
+#      compress = "xz",
+#      compression_level = 9)
+# }
 
-load(system.file("testdata", "test-ci_bound_wn_i_mg_rb_std_cfa_user_eq.RData",
-                  package = "semlbci"))
+# load(system.file("testdata", "test-ci_bound_wn_i_mg_rb_std_cfa_user_eq.RData",
+#                   package = "semlbci"))
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-5))

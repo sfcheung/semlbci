@@ -1,5 +1,3 @@
-skip("To be run in an interactive session")
-
 library(testthat)
 library(semlbci)
 
@@ -47,6 +45,14 @@ timexx <- rbind(time1l, time1u, time2l, time2u)
 timexx
 colSums(timexx)
 
+test_that("Check against precomputed answers", {
+    expect_equal(out1l$bound, 0.1199864, tolerance = 1e-5)
+    expect_equal(out1u$bound, 0.4437102, tolerance = 1e-5)
+    expect_equal(out2l$bound, 0.04061998, tolerance = 1e-5)
+    expect_equal(out2u$bound, 0.2467619, tolerance = 1e-5)
+  })
+
+skip("Run only if data changed")
 
 # Check the results
 
