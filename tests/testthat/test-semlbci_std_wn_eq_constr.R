@@ -20,8 +20,8 @@ fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 ciperc <- .96
 
 opts0 <- list()
-opts0 <- list(ftol_abs = 1e-7,
-              ftol_rel = 1e-7
+opts0 <- list(#ftol_abs = 1e-7,
+              ftol_rel = 1e-4
               # xtol_abs = 1e-3,
               # xtol_rel = 1e-3,
               # tol_constraints_eq = 1e-3

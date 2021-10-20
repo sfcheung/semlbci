@@ -18,7 +18,15 @@ fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE, test = "satorra.bentler")
 
 ciperc <- .96
 
-lbci_fit <- semlbci(fit, ciperc = ciperc, pars = c(1, 2), method = "wn", robust = "satorra.2000", verbose = TRUE)
+system.time(
+    lbci_fit <- semlbci(fit,
+                        ciperc = ciperc,
+                        pars = c(1, 2),
+                        method = "wn",
+                        robust = "satorra.2000",
+                        verbose = TRUE,
+                        opts = list(ftol_rel = 1e-4))
+  )
 
 # print(lbci_fit)
 
