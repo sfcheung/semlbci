@@ -1,4 +1,5 @@
 skip_on_cran()
+skip("ci_i is no longer used")
 
 library(testthat)
 library(semlbci)

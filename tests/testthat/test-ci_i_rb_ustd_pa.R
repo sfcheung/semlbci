@@ -1,3 +1,4 @@
+skip("ci_i is no longer used")
 
 library(testthat)
 library(semlbci)
