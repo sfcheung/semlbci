@@ -13,9 +13,11 @@ test_list <-
         full.names = TRUE))
 
 Sys.setenv("SEMLBCI_TEST_SLOW" = "true")
+Sys.setenv("NOT_CRAN" = "true")
 
 for (i in test_list) {
     test_file(i)
   }
 
-Sys.setenv("SEMLBCI_TEST_SLOW" = "")
+Sys.unsetenv("SEMLBCI_TEST_SLOW" = "")
+Sys.unsetenv("NOT_CRAN")

@@ -38,13 +38,19 @@ opts0 <- list(#ftol_abs = 1e-7,
               # xtol_rel = 1e-7
               )
 time1l <- system.time(out1l <- ci_bound_wn_i(47, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
-time1u <- system.time(out1u <- ci_bound_wn_i(47, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
+# time1u <- system.time(out1u <- ci_bound_wn_i(47, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
 
-timexx <- rbind(time1l, time1u)
+timexx <- rbind(time1l)
 timexx
 colSums(timexx)
 
 
+test_that("Check against precomputed answers", {
+    expect_equal(out1l$bound, 0.7495111, tolerance = 1e-5)
+    # expect_equal(out1u$bound, 1.388424, tolerance = 1e-5)
+  })
+
+skip("Run only if data changed")
 # Check the results
 
 test_p <- function(fit0, fit1, ciperc, tol) {

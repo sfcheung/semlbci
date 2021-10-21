@@ -30,7 +30,7 @@ system.time(
                         pars = pars,
                         method = "wn",
                         verbose = TRUE,
-                        opts = list(ftol_rel = 1e-7))
+                        opts = list(ftol_rel = 1e-6))
   )
 
 # Check the results

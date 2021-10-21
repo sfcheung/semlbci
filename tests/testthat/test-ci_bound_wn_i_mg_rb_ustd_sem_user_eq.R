@@ -41,14 +41,23 @@ opts0 <- list(#ftol_abs = 1e-7,
               # tol_constraints_eq = 1e-10
               )
 time1l <- system.time(out1l <- ci_bound_wn_i(47, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
-time1u <- system.time(out1u <- ci_bound_wn_i(47, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
-time2l <- system.time(out2l <- ci_bound_wn_i(26, 38, sem_out = fit, which = "ubound", opts = list( ftol_rel = 1e-6), f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb))
+# time1u <- system.time(out1u <- ci_bound_wn_i(47, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
+# time2l <- system.time(out2l <- ci_bound_wn_i(26, 38, sem_out = fit, which = "lbound", opts = list( ftol_rel = 1e-6), f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb))
 time2u <- system.time(out2u <- ci_bound_wn_i(26, 38, sem_out = fit, which = "ubound", opts = list( ftol_rel = 1e-6), f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb))
 
-timexx <- rbind(time1l, time1u, time2l, time2u)
+timexx <- rbind(time1l, time2u)
 timexx
 colSums(timexx)
 
+test_that("Check against precomputed answers", {
+    expect_equal(out1l$bound, 0.6845666, tolerance = 1e-5)
+    # expect_equal(out1u$bound, 1.970853, tolerance = 1e-5)
+    # expect_equal(out2l$bound, 0.5740507, tolerance = 1e-5)
+    expect_equal(out2u$bound, 1.055492, tolerance = 1e-5)
+  })
+
+
+skip("Run only if data changed")
 
 # Check the results
 
@@ -232,17 +241,6 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE,
 fitc_out2u <- fitc
 
 lavTestLRT(fitc_out2u, fit, method = "satorra.2000", A.method = "exact")
-
-# save(fitc_out1l, fitc_out1u,
-#      fitc_out2l, fitc_out2u,
-#      file = "inst/testdata/test-ci_bound_wn_i_mg_rb_ustd_sem_user_eq.RData",
-#      compress = "xz",
-#      compression_level = 9)
-# }
-
-# load(system.file("testdata", "test-ci_bound_wn_i_mg_rb_ustd_sem_user_eq.RData",
-#                   package = "semlbci"))
-
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))

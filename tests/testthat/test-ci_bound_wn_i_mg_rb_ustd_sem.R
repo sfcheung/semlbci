@@ -36,14 +36,22 @@ opts0 <- list(#ftol_abs = 1e-7,
               # tol_constraints_eq = 1e-10
               )
 time1l <- system.time(out1l <- ci_bound_wn_i(2, 38, sem_out = fit, which = "lbound", opts = list( ftol_rel = 1e-6), f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
-time1u <- system.time(out1u <- ci_bound_wn_i(2, 38, sem_out = fit, which = "lbound", opts = list( ftol_rel = 1e-6), f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
-time2l <- system.time(out2l <- ci_bound_wn_i(30, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb))
+# time1u <- system.time(out1u <- ci_bound_wn_i(2, 38, sem_out = fit, which = "ubound", opts = list( ftol_rel = 1e-6), f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
+# time2l <- system.time(out2l <- ci_bound_wn_i(30, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb))
 time2u <- system.time(out2u <- ci_bound_wn_i(30, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb))
 
-timexx <- rbind(time1l, time1u, time2l, time2u)
+timexx <- rbind(time1l, time2u)
 timexx
 colSums(timexx)
 
+test_that("Check against precomputed answers", {
+    expect_equal(out1l$bound, 0.8192577, tolerance = 1e-5)
+    # expect_equal(out1u$bound, 2.629935, tolerance = 1e-5)
+    # expect_equal(out2l$bound, 0.2704905, tolerance = 1e-5)
+    expect_equal(out2u$bound, 0.7464474, tolerance = 1e-5)
+  })
+
+skip("Run only if data changed")
 
 # Check the results
 
