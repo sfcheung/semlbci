@@ -187,7 +187,7 @@ semlbci <- function(sem_out,
             #                     cl = cl)
             pars2 <- rep(pars, each = 2)
             sf_full_list2 <- rep(sf_full_list, each = 2)
-            which2 <- rep(c("lbound", "ubound"), times = 2)
+            which2 <- rep(c("lbound", "ubound"), times = length(pars))
             out_raw2 <- pbapply::pbmapply(
                                 semlbci::ci_i_one,
                                 i = pars2,
@@ -215,7 +215,7 @@ semlbci <- function(sem_out,
             #                   SIMPLIFY = FALSE)
             pars2 <- rep(pars, each = 2)
             sf_full_list2 <- rep(sf_full_list, each = 2)
-            which2 <- rep(c("lbound", "ubound"), times = 2)
+            which2 <- rep(c("lbound", "ubound"), times = length(pars))
             out_raw2 <- parallel::clusterMap(cl,
                               semlbci::ci_i_one,
                               i = pars2,
@@ -244,7 +244,7 @@ semlbci <- function(sem_out,
         #               SIMPLIFY = FALSE)
         pars2 <- rep(pars, each = 2)
         sf_full_list2 <- rep(sf_full_list, each = 2)
-        which2 <- rep(c("lbound", "ubound"), times = 2)
+        which2 <- rep(c("lbound", "ubound"), times = length(pars))
         out_raw2 <- mapply(
                       ci_i_one,
                       i = pars2,
