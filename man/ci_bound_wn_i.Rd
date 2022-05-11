@@ -23,6 +23,7 @@ ci_bound_wn_i(
   sf2 = 0,
   p_tol = 0.001,
   std_method = "lavaan",
+  bounds = "none",
   ...
 )
 }
@@ -94,6 +95,13 @@ the status code and the bound is set to \code{NA}. Default is 1e-3.}
 
 \item{std_method}{The method used to find the standardized solution.
 If equal to \verb{"lavaan"``, [lavaan::standardizedSolution()] will be used. If equal to }"internal"\verb{, an internal function of this package will be used. The }"lavaan"\verb{method should work in all situations, but the}"internal"\verb{method can be faster. Default is}"lavaan"\verb{for now, but may be changed to}"internal"` if it is confirmed to work in all situations tested.}
+
+\item{bounds}{Default is \code{""} and this function will set the lower bounds
+to \code{lb_var} for variances. Other valid values are those
+accepted by
+\code{\link[lavaan:lavaan]{lavaan::lavaan()}}. If the fit object \code{sem_out} already
+has bounds, this argument will be ignored and the existing
+bounds will be used.}
 
 \item{...}{Optional arguments. Not used.}
 }
