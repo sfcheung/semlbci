@@ -291,6 +291,8 @@ semlbci <- function(sem_out,
     ub_diag <- lapply(out_raw, function(x) x$diags$ub_diag)
     lb_time <- sapply(out_raw, function(x) x$times$lb_time)
     ub_time <- sapply(out_raw, function(x) x$times$ub_time)
+    lb_out <- lapply(out_raw, function(x) x$ci_bound_i_out$lb_out)
+    ub_out <- lapply(out_raw, function(x) x$ci_bound_i_out$ub_out)
     ci_method <- sapply(out_raw, function(x) x$method)
     scaling_factor <- lapply(out_raw, function(x) x$sf_full)
     p_names <- mapply(paste0, out_p[pars, "lhs"],
@@ -301,6 +303,8 @@ semlbci <- function(sem_out,
     names(ub_diag) <- p_names
     names(lb_time) <- p_names
     names(ub_time) <- p_names
+    names(lb_out) <- p_names
+    names(ub_out) <- p_names
     names(ci_method) <- p_names
     names(scaling_factor) <- p_names
 
@@ -308,6 +312,8 @@ semlbci <- function(sem_out,
     attr(out_p, "ub_diag") <- ub_diag
     attr(out_p, "lb_time") <- lb_time
     attr(out_p, "ub_time") <- ub_time
+    attr(out_p, "lb_out") <- lb_out
+    attr(out_p, "ub_out") <- ub_out
     attr(out_p, "ci_method") <- ci_method
     attr(out_p, "scaling_factor") <- scaling_factor
     attr(out_p, "call") <- match.call()
