@@ -148,14 +148,16 @@ ci_i_one <- function(i,
                     diags = list(lb_diag = b$diag),
                     method = method,
                     times = list(lb_time = b_time[3]),
-                    sf_full = sf_full)
+                    sf_full = sf_full,
+                    ci_bound_i_out = list(lb_out = b))
       }
     if (which == "ubound") {
         out <- list(bounds = c(ubound = b$bound),
                     diags = list(ub_diag = b$diag),
                     method = method,
                     times = list(ub_time = b_time[3]),
-                    sf_full = sf_full)
+                    sf_full = sf_full,
+                    ci_bound_i_out =  list(ub_out = b))
       }
     out
   }
