@@ -17,6 +17,7 @@ fit <- cfa(HS.model, data = HolzingerSwineford1939)
 
 p_table <- parameterTable(fit)
 i_free <- which(p_table$free > 0)
+length(i_free)
 fit_lbci <- semlbci(fit, pars = i_free[c(2, 3, 8, 9)])
 fit_lbci <- semlbci(fit, pars = i_free[17:21])
 
@@ -24,6 +25,15 @@ fit_lbci <- semlbci(fit, pars = i_free[17:21])
 # In mapply(.pb_env$FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY,  :
 #  longer argument not a multiple of length of shorter
 # fit_lbci <- semlbci(fit, pars = i_free, parallel = TRUE, ncpus = 4)
+fit_lbci <- semlbci(fit, pars = i_free[1:20], parallel = TRUE, ncpus = 4)
+
+fit_lbci <- semlbci(fit, pars = i_free[2:21], parallel = TRUE, ncpus = 4)
+fit_lbci <- semlbci(fit, pars = i_free[18:21], parallel = TRUE, ncpus = 4)
+fit_lbci <- semlbci(fit, pars = i_free[1:3], parallel = TRUE, ncpus = 2)
+fit_lbci <- semlbci(fit, pars = i_free[1:2], parallel = TRUE, ncpus = 2)
+fit_lbci <- semlbci(fit, pars = i_free[1:2], parallel = TRUE, ncpus = 2)
+fit_lbci <- semlbci(fit, pars = i_free[20:21], parallel = TRUE, ncpus = 2)
+
 
 # Error for this:
 # Error in if (is.na(f0$objective)) { : argument is of length zero
