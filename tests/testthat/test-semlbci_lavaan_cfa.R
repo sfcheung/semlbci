@@ -25,14 +25,22 @@ fit_lbci <- semlbci(fit, pars = i_free[17:21])
 # In mapply(.pb_env$FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY,  :
 #  longer argument not a multiple of length of shorter
 # fit_lbci <- semlbci(fit, pars = i_free, parallel = TRUE, ncpus = 4)
-fit_lbci <- semlbci(fit, pars = i_free[1:20], parallel = TRUE, ncpus = 4)
+# fit_lbci <- semlbci(fit, pars = i_free[1:21], parallel = TRUE, ncpus = 8)
+# fit_lbci <- semlbci(fit, pars = i_free[1:21], parallel = TRUE, ncpus = 4)
+# fit_lbci <- semlbci(fit, pars = i_free[21:1], parallel = TRUE, ncpus = 4)
 
-fit_lbci <- semlbci(fit, pars = i_free[2:21], parallel = TRUE, ncpus = 4)
-fit_lbci <- semlbci(fit, pars = i_free[18:21], parallel = TRUE, ncpus = 4)
-fit_lbci <- semlbci(fit, pars = i_free[1:3], parallel = TRUE, ncpus = 2)
-fit_lbci <- semlbci(fit, pars = i_free[1:2], parallel = TRUE, ncpus = 2)
-fit_lbci <- semlbci(fit, pars = i_free[1:2], parallel = TRUE, ncpus = 2)
-fit_lbci <- semlbci(fit, pars = i_free[20:21], parallel = TRUE, ncpus = 2)
+# No warning?
+# fit_lbci <- semlbci(fit, pars = i_free[1:21], parallel = TRUE, ncpus = 7)
+# fit_lbci <- semlbci(fit, pars = i_free[1:21], parallel = TRUE, ncpus = 7)
+
+# No warnings:
+# fit_lbci <- semlbci(fit, pars = i_free[1:20], parallel = TRUE, ncpus = 4)
+# fit_lbci <- semlbci(fit, pars = i_free[2:21], parallel = TRUE, ncpus = 4)
+# fit_lbci <- semlbci(fit, pars = i_free[18:21], parallel = TRUE, ncpus = 4)
+# fit_lbci <- semlbci(fit, pars = i_free[1:3], parallel = TRUE, ncpus = 2)
+# fit_lbci <- semlbci(fit, pars = i_free[1:2], parallel = TRUE, ncpus = 2)
+# fit_lbci <- semlbci(fit, pars = i_free[1:2], parallel = TRUE, ncpus = 2)
+# fit_lbci <- semlbci(fit, pars = i_free[20:21], parallel = TRUE, ncpus = 2)
 
 
 # Error for this:
