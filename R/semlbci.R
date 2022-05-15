@@ -125,6 +125,7 @@ semlbci <- function(sem_out,
     i <- ptable$free > 0
     #i_id <- ptable$id[i]
     i_id <- ptable$id
+    i_id_free <- i_id[i]
     # pars must be the position as in the lavaan parameterTable.
     if (!is.null(pars)) {
         if (is.character(pars)) {
@@ -132,7 +133,8 @@ semlbci <- function(sem_out,
           }
         i_selected <- i_id[pars]
       } else {
-        pars <- seq_len(sum(i))
+        # pars <- seq_len(sum(i))
+        pars <- i_id_free
         i_selected <- i_id[pars]
       }
     npar <- sum(i)
@@ -155,7 +157,6 @@ semlbci <- function(sem_out,
       } else {
         sf_full_list <- rep(NA, length(pars))
       }
-
     if (parallel) {
         cl <- parallel::makeCluster(ncpus)
         pkgs <- .packages()
