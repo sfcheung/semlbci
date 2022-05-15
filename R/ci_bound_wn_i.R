@@ -106,7 +106,7 @@
 #'               accepted by
 #'               [lavaan::lavaan()]. If the fit object `sem_out` already
 #'               has bounds, this argument will be ignored and the existing
-#'               bounds will be used. 
+#'               bounds will be used.
 #'
 #' @param ... Optional arguments. Not used.
 #'
@@ -373,27 +373,31 @@ ci_bound_wn_i <- function(i = NULL,
       } else {
         xstart <- perturbation_factor * lavaan::coef(sem_out)
       }
-    if (!is.null(p_table$lower)) {
-        fit_lb <- p_table$lower[p_table$free > 0]
-      } else {
-        if (bounds == "") {
-            fit_lb <- rep(-Inf, npar)
-            fit_lb[find_variance_in_free(sem_out)] <- lb_var
-          } else {
-            p_bounds <- set_bounds(sem_out = sem_out, bounds = bounds)
-            fit_lb <- p_bounds$lower[p_bounds$free > 0]
-          }
-      }
-    if (!is.null(p_table$upper)) {
-        fit_ub <- p_table$upper[p_table$free > 0]
-      } else {
-        if (bounds == "") {
-            fit_ub <- rep(+Inf, npar)
-          } else {
-            p_bounds <- set_bounds(sem_out = sem_out, bounds = bounds)
-            fit_ub <- p_bounds$upper[p_bounds$free > 0]
-          }
-      }
+    fit_lb <- rep(-Inf, npar)
+    fit_lb[find_variance_in_free(sem_out)] <- lb_var
+    fit_ub <- rep(+Inf, npar)
+    # Need further test on using lavaan bounds
+    # if (!is.null(p_table$lower)) {
+    #     fit_lb <- p_table$lower[p_table$free > 0]
+    #   } else {
+    #     if (bounds == "") {
+    #         fit_lb <- rep(-Inf, npar)
+    #         fit_lb[find_variance_in_free(sem_out)] <- lb_var
+    #       } else {
+    #         p_bounds <- set_bounds(sem_out = sem_out, bounds = bounds)
+    #         fit_lb <- p_bounds$lower[p_bounds$free > 0]
+    #       }
+    #   }
+    # if (!is.null(p_table$upper)) {
+    #     fit_ub <- p_table$upper[p_table$free > 0]
+    #   } else {
+    #     if (bounds == "") {
+    #         fit_ub <- rep(+Inf, npar)
+    #       } else {
+    #         p_bounds <- set_bounds(sem_out = sem_out, bounds = bounds)
+    #         fit_ub <- p_bounds$upper[p_bounds$free > 0]
+    #       }
+    #   }
     opts_final <- utils::modifyList(list("algorithm" = "NLOPT_LD_SLSQP",
                         "xtol_rel" = 1.0e-10,
                         "maxeval" = 1000,
