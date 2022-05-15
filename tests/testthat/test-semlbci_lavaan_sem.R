@@ -30,10 +30,16 @@ fit <- sem(model, data = PoliticalDemocracy)
 
 p_table <- parameterTable(fit)
 i_free <- which(p_table$free > 0)
-fit_lbci <- semlbci(fit, pars = i_free[c(2, 3, 8, 9)])
-fit_lbci <- semlbci(fit, pars = i_free[c(2, 3, 8, 9)], parallel = TRUE, ncpus = 4)
+
+
+
 
 # Error for this:
 # Error in if (i_op == ":=") { : missing value where TRUE/FALSE needed
 # fit_lbci <- semlbci(fit, pars = i_free[32:34])
 
+# OK
+#fit_lbci <- semlbci(fit)
+#fit_lbci <- semlbci(fit, pars = i_free[c(2, 3, 8, 9)])
+#fit_lbci <- semlbci(fit, pars = i_free[c(2, 3, 8, 9, 11)], parallel = TRUE, ncpus = 2)
+#fit_lbci <- semlbci(fit, parallel = TRUE, ncpus = 2)

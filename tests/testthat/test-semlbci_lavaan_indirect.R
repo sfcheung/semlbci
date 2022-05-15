@@ -30,6 +30,9 @@ i_free <- which(p_table$free > 0)
 i_user <- which(p_table$op == ":=")
 i_par <- unique(c(i_free, i_user))
 
-fit_lbci <- semlbci(fit)
-fit_lbci <- semlbci(fit, pars = i_par[c(3, 1, 2, 7, 6)])
-fit_lbci <- semlbci(fit, pars = i_par[c(7, 3)])
+
+
+# OK
+# fit_lbci <- semlbci(fit)
+# fit_lbci <- semlbci(fit, pars = i_par[c(3, 1, 2, 7, 6)])
+# fit_lbci <- semlbci(fit, pars = i_par[c(7, 3)])
