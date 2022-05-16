@@ -49,7 +49,7 @@
 #'  if `robust` is `"satorra.2000"`. Used only by [semlbci()].
 #'
 #' @param sem_out_name The name of the object supplied to `sem_out`. `NULL`
-#'  by default. To be used by [scaling_factor3()].
+#'  by default. To be used by internal functions.
 #'
 #' @param ... Arguments to be passed to the function corresponds to
 #'  the requested method ([ci_bound_wn_i()] for "wn").

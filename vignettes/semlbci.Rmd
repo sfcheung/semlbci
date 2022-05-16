@@ -148,7 +148,7 @@ The method used to search a bound. Currently only support `"wn"` (the method pro
 
 ## Other arguments
 
-For detailed documentation of other argumetns, please refer to its help page, as well as the help page for `ci_bound_wn_i()` and `ci_i()`, the functions called by `semlbci()`.
+For detailed documentation of other argumetns, please refer to its help page, as well as the help page for `ci_bound_wn_i()` and `ci_i_one()`, the functions called by `semlbci()`.
 
 # Diagnostic information
 

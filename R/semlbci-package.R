@@ -6,8 +6,8 @@
 #' intervals (LBCIs) for parameters in structural equation modeling.
 #'
 #' The main function is [semlbci()], which receives an SEM output and
-#' finds the LBCIs for selected parameters. It will call [ci_i()] for each
-#' parameter. [ci_i()] will then call [ci_bound_wn_i()] twice, each time
+#' finds the LBCIs for selected parameters. It will call [ci_i_one()] for each
+#' parameter. [ci_i_one()] will then call [ci_bound_wn_i()] twice, each time
 #' find one of the two confidence limits (lower and upper limits).
 #'
 #' Currently, the supported approach is the one proposed by Wu and

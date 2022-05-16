@@ -48,7 +48,7 @@ If \code{robust} is \code{"satorra.2000"} but \code{sf_full} is
 if \code{robust} is \code{"satorra.2000"}. Used only by \code{\link[=semlbci]{semlbci()}}.}
 
 \item{sem_out_name}{The name of the object supplied to \code{sem_out}. \code{NULL}
-by default. To be used by \code{\link[=scaling_factor3]{scaling_factor3()}}.}
+by default. To be used by internal functions.}
 
 \item{...}{Arguments to be passed to the function corresponds to
 the requested method (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} for "wn").}

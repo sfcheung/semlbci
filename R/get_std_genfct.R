@@ -3,8 +3,7 @@
 #' @description Generates a function to get the standardized estiamte
 #'  of a parameter.
 #'
-#' @details This function is no longer used by other functions. Kept
-#'  here in case future functions need it.
+#' @details This function is used in tests.
 #'
 #' @return A function to be used in a lavaan model.
 #'

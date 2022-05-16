@@ -114,5 +114,5 @@ check_sem_out(fit3, robust = "satorra.2000")
 
 }
 \seealso{
-\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_i]{ci_i()}}
+\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_i_one]{ci_i_one()}}
 }

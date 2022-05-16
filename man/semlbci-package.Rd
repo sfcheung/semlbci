@@ -9,8 +9,8 @@ This package is for forming the likelihood-based confidence
 intervals (LBCIs) for parameters in structural equation modeling.
 
 The main function is \code{\link[=semlbci]{semlbci()}}, which receives an SEM output and
-finds the LBCIs for selected parameters. It will call \code{\link[=ci_i]{ci_i()}} for each
-parameter. \code{\link[=ci_i]{ci_i()}} will then call \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} twice, each time
+finds the LBCIs for selected parameters. It will call \code{\link[=ci_i_one]{ci_i_one()}} for each
+parameter. \code{\link[=ci_i_one]{ci_i_one()}} will then call \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} twice, each time
 find one of the two confidence limits (lower and upper limits).
 
 Currently, the supported approach is the one proposed by Wu and

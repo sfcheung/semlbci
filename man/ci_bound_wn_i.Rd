@@ -169,5 +169,5 @@ bounded parameter. \emph{Behavior Genetics, 42}(6), 886-898.
 \doi{10.1007/s10519-012-9560-z}
 }
 \seealso{
-\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_i]{ci_i()}}
+\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_i_one]{ci_i_one()}}
 }

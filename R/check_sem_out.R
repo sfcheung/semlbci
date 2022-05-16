@@ -78,7 +78,7 @@
 #'  multiple-group model. Default is `TRUE`.
 #'
 #' @seealso 
-#' [semlbci()], [ci_i()]
+#' [semlbci()], [ci_i_one()]
 #'
 #' @examples
 #' library(lavaan)

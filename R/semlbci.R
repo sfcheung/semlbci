@@ -4,8 +4,8 @@
 #'  selected free parameters in an SEM output.
 #'
 #' @details [semlbci()] finds the positions of the selected parameters
-#'  in the parameter table and then calls [ci_i()] once for each of
-#'  them. Please see [ci_i()] and the functions it calls to find a
+#'  in the parameter table and then calls [ci_i_one()] once for each of
+#'  them. Please see [ci_i_one()] and the functions it calls to find a
 #'  confidence limit (currently [ci_bound_wn_i()]) for the technical
 #'  details.
 #'

@@ -69,8 +69,8 @@ selected free parameters in an SEM output.
 }
 \details{
 \code{\link[=semlbci]{semlbci()}} finds the positions of the selected parameters
-in the parameter table and then calls \code{\link[=ci_i]{ci_i()}} once for each of
-them. Please see \code{\link[=ci_i]{ci_i()}} and the functions it calls to find a
+in the parameter table and then calls \code{\link[=ci_i_one]{ci_i_one()}} once for each of
+them. Please see \code{\link[=ci_i_one]{ci_i_one()}} and the functions it calls to find a
 confidence limit (currently \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}) for the technical
 details.
 

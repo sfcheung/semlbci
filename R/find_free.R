@@ -8,9 +8,6 @@
 #' of the \code{lavaan}. parameter tables. A position is `TRUE` if the
 #' corresponding parameter is free.
 #'
-#' This function is no longer used by other functions.
-#' Kept here in case future functions need it.
-#'
 #' @param sem_out The SEM output. Currently supports
 #'  [lavaan::lavaan-class] outputs only.
 #'

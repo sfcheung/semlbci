@@ -121,7 +121,7 @@
 #'  bounded parameter. *Behavior Genetics, 42*(6), 886-898.
 #'  \doi{10.1007/s10519-012-9560-z}
 #'
-#' @seealso [semlbci()], [ci_i()]
+#' @seealso [semlbci()], [ci_i_one()]
 #'
 #' @examples
 #'
