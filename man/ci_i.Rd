@@ -38,7 +38,7 @@ on maximum likelihood estimation will be used.}
 if \code{robust} is \code{"satorra.2000"}. Used only by \code{\link[=semlbci]{semlbci()}}.}
 
 \item{sem_out_name}{The name of the object supplied to \code{sem_out}. \code{NULL}
-by default. To be used by \code{\link[=get_std]{get_std()}}.}
+by default. To be used by \code{\link[=scaling_factor3]{scaling_factor3()}}.}
 
 \item{sf_full}{A list with the scaling factors. Ignored if \code{robust}
 is \code{"none"}. If \code{robust} is \code{"satorra.2000"} and \code{sf_full} is

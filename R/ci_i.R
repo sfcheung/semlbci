@@ -40,7 +40,7 @@
 #'  if `robust` is `"satorra.2000"`. Used only by [semlbci()].
 #'
 #' @param sem_out_name The name of the object supplied to `sem_out`. `NULL`
-#'  by default. To be used by [get_std()].
+#'  by default. To be used by [scaling_factor3()].
 #'
 #' @param sf_full A list with the scaling factors. Ignored if `robust`
 #'  is `"none"`. If `robust` is `"satorra.2000"` and `sf_full` is
