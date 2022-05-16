@@ -26,7 +26,7 @@
 #'              Use the position as appeared on the parameter tables of the
 #'              `sem_out`. If NULL, the default, then LBCIs for all free
 #'              parameters will be searched.
-#'              Can also be a vector of strings to indicate the paramters
+#'              Can also be a vector of strings to indicate the parameters
 #'              on the parameter table. The parameters should be specified in 
 #'              [lavaan::lavaan()] syntax. The vector of strings will be
 #'              converted by [syntax_to_i()] to parameter positions.
