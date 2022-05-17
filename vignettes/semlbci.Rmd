@@ -1,0 +1,206 @@
+---
+title: "Quick Start"
+author: "Shu Fai Cheung"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{quick_start}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(semlbci)
+```
+
+# Introduction
+
+This package includes functions for finding the likelihood based confidence intervals (LBCIs) of parameters in the output of a structural equation modeling (SEM) function. Currently, it supports the output from `lavaan::lavaan()`.
+
+# Fit a model to a dataset
+
+The package has a dataset, `simple_med`, with three variables, `x`, `m`, and `y`. Let us fit a simple mediation model to this datast.
+
+```{r}
+data(simple_med)
+dat <- simple_med
+head(dat)
+library(lavaan)
+mod <-
+"
+m ~ a*x
+y ~ b*m
+ab := a * b
+"
+# We set fixed.x = FALSE because we will also find the LBCIs for
+# standardized solution
+fit <- sem(mod, simple_med, fixed.x = FALSE)
+```
+
+If we want to find the LBCIs for standardized solution, we usually should also treat the exogenous variables as random variables such that the sampling error in estimating their variances and covariances will be taken into account.
+
+To illustrate how to find the LBCIs for user-defined parameters, we labelled the `m ~ x` path by `a`, the `y ~ m` path by `b`, and defined the indirect effect, `ab`, by `a * b`.
+
+This is the summary:
+
+```{r}
+summary(fit, standardized = TRUE)
+```
+
+# Exmaples
+
+The main function to find the LBCIs for free parameters is `semlbci()`. This should be the only function used by normal users. We will first illustrate its usage by some examples, and then present other technical details in the following section.
+
+## Find the LBCI for a free parameter
+
+All free parameters can be specified in `lavaan` style. For example, the path from `m` to `y` is denoted by `"y ~ m"`, and the covariance or correlation between `x` and `m` (not in the example) is denoted by `"x ~~ m"` (order does not matter).
+
+```{r}
+out <- semlbci(sem_out = fit,
+               pars = c("y ~ m",
+                        "m ~ x"))
+```
+
+The output is the parameter table of the fitted `lavaan` object, with two columns added, `lbci_lb` and `lbci_ub`, the likelihood-based lower bounds and upper bounds, respectively. The column of point estimates in the fit object is positioned between these two columns of bounds. Diagnostic information will also be appended to the output (described in details below).
+
+```{r}
+out
+```
+
+In this example, the point estimate of the unstandardized coefficient from `x` to `m` is `r out[out$id == 1, "est"]`, and the LBCI is `r out[out$id == 1, "lbci_lb"]` to `r out[out$id == 1, "lbci_ub"]`.  
+
+## Find the LBCI for a user-defined parameter
+
+To find the LBCI for a user-defined parameter, use `label :=`, where `label` is the label used in the model specification. The definition of this parameter can be omitted. The content after `:=` will be ignored by `semlbci()`.
+
+```{r}
+out <- semlbci(sem_out = fit,
+               pars = c("ab := "))
+out
+```
+
+In this example, the point estimate of the indirect effect is `r out[out$lhs == "ab", "est"]`, and the LBCI is `r out[out$lhs == "ab", "lbci_lb"]` to `r out[out$lhs == "ab", "lbci_ub"]`.  
+
+## Find the LBCI for the parameters in the standardized metric
+
+By the default, the unstandardized solution is used by `semlbci()`. If the LBCIs for the standardized solution solution are desired, set `standardized = TRUE`.
+
+```{r}
+out <- semlbci(sem_out = fit,
+               pars = c("y ~ m",
+                        "m ~ x"),
+               standardized = TRUE)
+out
+```
+
+The LBCIs for standardized user-defined parameters can be requested similarly.
+
+```{r}
+out <- semlbci(sem_out = fit,
+               pars = c("ab :="),
+               standardized = TRUE)
+out
+```
+
+Note that it can be very slow when finding the LBCIs for standardized solution. In the above example, the time used to find the lower bound of the standardized indirect effect is `r out[out$op == ":=", "time_lb"]` second(s), and that for the upper bound is `r out[out$op == ":=", "time_ub"]` second(s). This is because several parameters are involved even for the standardized indirect effect with one mediator (six parameters: the variances of `x`, the error variances of `m` and `y`, the three unstandardized path coefficients `m ~ x`, `y ~ m`, and `y ~ x`).
+
+## Specify the coverage probability of the LBCI
+
+This can be done by setting `ciperc`. The default is .95.
+
+```{r}
+out <- semlbci(sem_out = fit,
+               pars = c("y ~ m",
+                        "m ~ x"),
+               ciperc = .99)
+out
+```
+
+# Basic arguments in `semlbci()`
+
+## `sem_out` and `pars`: The fit object and the parameters
+
+The only required argument for `semlbci()` is `sem_out`, the fit object from `lavaan::lavaan()` or its variants (e.g., `lavann::cfa()` and `lavaan::sem()`). By default, `semlbci()` will find the LBCIs for all free parameters and user-defined parameters, which can take a long time for a model with many parameters. Moreover, LBCI is usually used when Wald-type confidence interval may not be suitable, such as an indirect effect or a parameter in the standardized solution. These parameters may have sampling distributions that are asymmetric or otherwise substantially nonnormal due to bounded parameter spaces or other reasons.
+
+Therefore, it is recommended to use `semlbci()` only for selected parameters. The argument `pars` should be a list of strings which specifies the parameters for which LBCIs will be formed (detailed below).
+
+If time is not a concern, for example, when users want to explore the LBCIs for all free and user-defined parameters in a final model, then `pars` can be omitted to reques the LBCIs for all free and user-defined parameters (if any) in a model.
+
+## `ciperc`: The level of confidence
+
+By default, the 95% LBCIs for the unstandardized solution will be formed. To change the level of confidence, set the argument `ciperc` to the desired coverage probability, e.g., .95 for 95%, .90 for 90%. 
+
+## `standardized`: Whether standardized solution is used
+
+By default, the LBCIs for the unstandardized solution will be formed. If the LBCIs for the standardized solution are desired, set `standardized = TRUE`. Note that it is much slower to find the LBCIs for the standardized solution than for the unstandardized solution.
+
+## `method`: Method to be used for computing the LBCIs
+
+The method used to search a bound. Currently only support `"wn"` (the method proposed by Wu & Neale, 2012).
+
+## Other arguments
+
+For detailed documentation of other argumetns, please refer to its help page, as well as the help page for `ci_bound_wn_i()` and `ci_i_one()`, the functions called by `semlbci()`.
+
+# Diagnostic information
+
+Columns with diagnostic information will always be appended to the output of `semlbci()`. This feature cannot be turned off because we believe it is important to check the diagnostic information to see if there are any anomalies in the search. Unlike Wald-type CIs, LBCIs are searched by optimization rather than by closed-form equations. It is possible that the bounds are difficult to find for some situations. 
+
+## `status_lb` and `status_ub`
+
+These two columns store the status codes in searching for the lower bound and the upper bound, respectively. If the status code is equal to zero, then the optimization should be fine. Any value other than zero indicates one or more issues in the optimization. Users are recommended to examine other columns, such as `post_check_lb` and `post_check_ub`. Detailed information on the search can be requested by setting `verbose = TRUE`. Additional diagnostic information can then be retrieved by inspecting the attributes `lb_diag` or `ub_diag` (e.g., `attr(out, "lb_diag")` in the example above) for the probable reason of the non-zero status code.
+
+## `ci_org_lb` and `ci_org_ub`
+
+The confidence intervals computed by `lavaan`. These are the same confidence intervals returned by `lavaan::ParameterEstimates()` or `lavaan::StandardizedSolution()` for the fit object specified in `sem_out`. These intervals are included in the output for comparison.
+
+## `ratio_lb` and `ratio_ub`
+
+The ratio of the distance from a LBCI bound to the point estimates to that from the corresponding `lavaan` confidence bound to the same point estimates, sign ignored. This ratio is not expected to be zero. However, if the ratio is too large or too small, users should decide whether it is usual based on the nature of the parameters. The optional argument `ci_limit_ratio_tol` in `semlbci()` (documented in `ci_bound_wn_i()`) sets the threshold for alerting the users. If the ratio is larger than this threshold (defualt 1.5), the status code will be set to a non-zero value.
+
+## `post_check_lb` and `post_check_ub`
+
+These two columns indicate whether the solution at the boundary found passes the check conducted by `lavaan::lavInspect()` with argument set to `post.check`. If `FALSE` for a bound, the bound should not be trusted.
+
+## `time_lb` and `time_ub`
+
+The time, in second, used to search for each bound. It can serve as an estimate for rerunning the search. It also reflects how difficult it is to find the solution for a bound.
+
+## `method`
+
+The method used to search a bound. Currently only support `"wn"` (the method proposed by Wu & Neale, 2012).
+
+# Limitations
+
+The following is a summary of the limitations of `semlbci()`. Please refer to `check_sem_out()` for the full list of limitations. This function is called by `semlbci()` to check the `sem_out` object, and will raise warnings or errors as appropriate.
+
+## Estimators
+
+The function `semlbci()` currently supports `lavaan::lavaan()` results estimated by maximum likelihood (`ML`), full information maximum likelihood for missing data (`fiml`), generalized least squares (`GLS`), and weighted least squares (a.k.a. asymptotically distribution free) (`WLS`).
+
+## Models
+
+Officially, this package currently supports single group models with continuous variables. It *may* work for multiple group models but it has not been tested for these models.
+
+## Methods
+ 
+The current and preferred method is the one proposed by Wu and Neale (2012). The current implementation in `semlbci()` does not check whether a parameter is near its boundary. The more advanced methods by Pritikin, Rappaport, and Neale (2017) will be considered in future development. The method by Neale and Miller (1997, `"nm"` `semlbci()`) was also attempted but only tested in a few simple scenarios.
+
+# References
+
+Neale, M. C., & Miller, M. B. (1997). The use of likelihood-based confidence intervals in genetic models. *Behavior Genetics, 27*(2), 113–120.
+
+Pek, J., & Wu, H. (2015). Profile likelihood-based confidence intervals and regions for structural equation models. *Psychometrika, 80*(4), 1123–1145. https://doi.org/10.1007/s11336-015-9461-1
+
+Pritikin, J. N., Rappaport, L. M., & Neale, M. C. (2017). Likelihood-based confidence intervals for a parameter with an upper or lower bound. *Structural Equation Modeling: A Multidisciplinary Journal, 24*(3), 395-401. https://doi.org/10.1080/10705511.2016.1275969
+
+Wu, H., & Neale, M. C. (2012). Adjusted confidence intervals for a bounded parameter. *Behavior Genetics, 42*(6), 886–898. https://doi.org/10.1007/s10519-012-9560-z
+

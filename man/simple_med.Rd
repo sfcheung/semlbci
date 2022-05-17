@@ -3,12 +3,12 @@
 \docType{data}
 \name{simple_med}
 \alias{simple_med}
-\title{Dataset: Simple mediation model, one IV, one DV, one mediation, 500 cases}
+\title{Dataset (Simple Mediation Model)}
 \format{
-A data framw with 500 rows and three variables:
+A data frame with 500 rows and three variables:
 \describe{
 \item{x}{x, the independent variable}
-\item{m}{m, the mediatior}
+\item{m}{m, the mediator}
 \item{y}{y, the dependent variable}
 }
 }
@@ -18,15 +18,12 @@ simple_med
 \description{
 Generated from a simple mediation model, n = 500
 }
-\examples{
-\dontrun{
-
- library(lavaan)
- mod <- "m ~ x
-         y ~ m"
- fit <- cfa(mod, simple_med)
- summary(fit)
+\details{
+Supposed to be tested using this example:\preformatted{library(lavaan)
+mod <- "m ~ x
+        y ~ m"
+fit <- cfa(mod, simple_med)
+summary(fit)
 }
-
 }
 \keyword{datasets}

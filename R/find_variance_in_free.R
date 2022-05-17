@@ -1,23 +1,21 @@
-#' @title Find free variances in an SEM output 
+#' @title Free Variances in an SEM Output
 #'
-#' @description Find free variances in an SEM output
+#' @description Find the free variances in an SEM output
 #'
-#' @details 
-#' 
-#' Currently supports [lavaan::lavaan-class] outputs only.
+#' @details Currently supports [lavaan::lavaan-class] outputs only.
 #'
-#' @return
-#' A boolean vector of the same length as the number of free parameters. 
-#' A position is \code{TRUE} if the corresponding free parameter 
-#' is a variance (op == "~~").
-#' 
-#' @param sem_out The SEM output. Currently [lavaan::lavaan-class] outputs only.
+#' @return A boolean vector of the same length as the number of free
+#'  parameters. A position is \code{TRUE} if the corresponding free
+#'  parameter is a variance (op == "~~").
+#'
+#' @param sem_out The SEM output. Currently [lavaan::lavaan-class]
+#'  outputs only.
 #'
 #' @examples
 #' \dontrun{
 #' cfa_two_factors
 #'
-#' mod <- 
+#' mod <-
 #' "
 #' f1 =~ x1 + x2 + x3
 #' f2 =~ x4 + x5 + x6
@@ -27,14 +25,14 @@
 #' out <- find_variance_in_free(fit)
 #' coef(fit)[out]
 #' }
-#' @keywords internal
+#' @noRd
 
 find_variance_in_free <- function(sem_out) {
     if (!inherits(sem_out, "lavaan")) {
         stop("sem_out is not a supported object.")
       }
     ptable <- lavaan::parameterTable(sem_out)
-    # Do not check for 
+    # Do not check for
     i_id <- ptable$id
     i_free <- ptable$free > 0
     id_free <- i_id[find_free(sem_out)]

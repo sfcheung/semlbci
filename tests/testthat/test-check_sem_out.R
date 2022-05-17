@@ -22,14 +22,21 @@ fit01 <- lavaan::sem(mod, dat)
 fit02 <- lavaan::sem(mod, dat, estimator = "MLR")
 (out_02 <- check_sem_out(fit02))
 
-fit03 <- lavaan::sem(mod, dat, estimator = "ML", se = "robust")
-(out_03 <- check_sem_out(fit03))
+# No need to check SE method. SEs are not used.
+# fit03 <- lavaan::sem(mod, dat, estimator = "ML", se = "robust")
+# (out_03 <- check_sem_out(fit03))
 
 fit04<- lavaan::sem(mod, dat, estimator = "DWLS")
 (out_04 <- check_sem_out(fit04))
 
 suppressWarnings(fit05 <- lavaan::sem(mod, dat, group = "gp"))
 (out_05 <- check_sem_out(fit05))
+
+fit06<- lavaan::sem(mod, dat, estimator = "MLR")
+(out_06 <- check_sem_out(fit06, robust = "satorra.2000"))
+
+fit07<- lavaan::sem(mod, dat, estimator = "ML")
+(out_07 <- check_sem_out(fit07, robust = "satorra.2000"))
 
 test_that("Check against the flags", {
     expect_true(
@@ -39,15 +46,15 @@ test_that("Check against the flags", {
 
 test_that("Check against the flags", {
     expect_true(
-        out_02 == -2
+        out_02 == -1
       )
   })
 
-test_that("Check against the flags", {
-    expect_true(
-        out_03 == -1
-      )
-  })
+# test_that("Check against the flags", {
+#     expect_true(
+#         out_03 == -1
+#       )
+#   })
 
 test_that("Check against the flags", {
     expect_true(
@@ -55,9 +62,21 @@ test_that("Check against the flags", {
       )
   })
 
+# test_that("Check against the flags", {
+#     expect_true(
+#         out_05 == -1
+#       )
+#   })
+
 test_that("Check against the flags", {
     expect_true(
-        out_05 == -1
+        out_06 == 0
+      )
+  })
+
+test_that("Check against the flags", {
+    expect_true(
+        out_07 == -1
       )
   })
 
@@ -82,6 +101,18 @@ test_that("Check against the flags", {
 test_that("Check against the flags", {
     expect_error(
         semlbci(fit05)
+      )
+  })
+
+test_that("Check against the flags", {
+    expect_error(
+        semlbci(fit06)
+      )
+  })
+
+test_that("Check against the flags", {
+    expect_error(
+        semlbci(fit07, robust = "satorra.2000")
       )
   })
 

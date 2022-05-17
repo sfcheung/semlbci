@@ -3,9 +3,9 @@
 \docType{data}
 \name{cfa_two_factors}
 \alias{cfa_two_factors}
-\title{Dataset: Two factors, six variables, 500 cases}
+\title{Dataset (CFA, Two Factors, Six Variables)}
 \format{
-A data framw with 500 rows and six variables.
+A data frame with 500 rows and six variables, \code{x1} to \code{x6}.
 }
 \usage{
 cfa_two_factors
@@ -13,14 +13,12 @@ cfa_two_factors
 \description{
 Generated from a two-factor model with six variables, n = 500
 }
-\examples{
-\dontrun{
-
- library(lavaan)
- mod <- "f1 =~ x1 + x2 + x3
-         f2 =~ x4 + x5 + x6"
- fit <- cfa(mod, cfa_two_factors)
- summary(fit)
+\details{
+Supposed to be tested using this example:\preformatted{library(lavaan)
+mod <- "f1 =~ x1 + x2 + x3
+        f2 =~ x4 + x5 + x6"
+fit <- cfa(mod, cfa_two_factors)
+summary(fit)
 }
 }
 \keyword{datasets}

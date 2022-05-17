@@ -2,43 +2,56 @@
 % Please edit documentation in R/check_sem_out.R
 \name{check_sem_out}
 \alias{check_sem_out}
-\title{Check the SEM output in semlbci}
+\title{Pre-analysis Check For semlbci}
 \usage{
-check_sem_out(sem_out)
+check_sem_out(sem_out, robust = "none", multigroup_ok = TRUE)
 }
 \arguments{
 \item{sem_out}{The output from an SEM analysis. Currently only
 supports a \link[lavaan:lavaan-class]{lavaan::lavaan} object.}
+
+\item{robust}{Whether the LBCI based on robust likelihood ratio
+test is to be found. Only "satorra.2000" in \link{lavaan} is supported
+for now. If \code{"none"}, the default, then likelihood ratio test based
+on maximum likelihood estimation will be used.}
+
+\item{multigroup_ok}{If \code{TRUE}, will not check whether the model is a
+multiple-group model. Default is \code{TRUE}.}
 }
 \value{
 A numeric vector of one element. If 0, the model and
 estimation method are officially supported. If larger than zero,
-then the model and method are not officially supported. If less
-than zero, then the model and/or the method are officially
-not supported.
+then the model and method are not officially supported but users
+can still try to use \code{\link[=semlbci]{semlbci()}} on it at their own risks. If less
+than zero, then the model and/or the method are officially not
+supported.
 
-The attributes \code{info} contains the reason for a value other
-than zero.
+The attributes \code{info} contains the reason for a value other than
+zero.
 }
 \description{
-Check whether the model and the estimation method in the
-\code{sem_out}
-object passed to \code{\link[=semlbci]{semlbci()}}
-are supported by the current version of
-\code{\link[=semlbci]{semlbci()}}.
+Checks the output passed to semlbci
 }
 \details{
-This function is to be used by \code{\link[=semlbci]{semlbci()}} but is exported such that
-the compatibility of an SEM output can be checked independently.
+Checks whether the model and the estimation method in the
+\code{sem_out} object passed to \code{\link[=semlbci]{semlbci()}} are supported by the
+current version of \code{\link[=semlbci]{semlbci()}}. This function is to be used by
+\code{\link[=semlbci]{semlbci()}} but is exported such that the compatibility of an SEM
+output can be checked independently.
 
-Estimation methods (\code{estimator} in
-\code{\link[lavaan:lavaan]{lavaan::lavaan()}}) currently supported:
+Estimation methods (\code{estimator} in \code{\link[lavaan:lavaan]{lavaan::lavaan()}}) currently
+supported:
 \itemize{
 \item Maximum likelihood (\code{ML})
 \item Full information maximum likelihood with missing data (\code{fiml})
 \item Generalized least squares (\code{GLS})
-\item Weighted least squares (a.k.a.
-asymptotically distribution free) (\code{WLS})
+\item Weighted least squares (a.k.a. asymptotically distribution
+free) (\code{WLS})
+\item Estimation done with robust test statistics is supported if \code{robust}
+set to "satorra.2000":
+\itemize{
+\item \code{MLR}, \code{MLMVS}, \code{MLM}, \code{MLMV}
+}
 }
 
 Estimation methods not yet supported:
@@ -48,15 +61,16 @@ Estimation methods not yet supported:
 \item Variants with robust standard errors and/or robust
 test statistics:
 \itemize{
-\item \code{MLM}, \code{MLMV}, \code{MLMVS}, \code{MLF}, and \code{MLR}.
+\item \code{MLF}.
 \item \code{WLSM}, \code{WLSMV}.
 \item \code{ULSM}, \code{ULSMV}.
 }
 }
 
-Currently supported models:
+Models supported:
 \itemize{
-\item Single group models with continuous variables.
+\item Single-group models with continuous variables.
+\item Multiple-group models with continuous variables.
 }
 
 Models not tested:
@@ -66,8 +80,7 @@ Models not tested:
 
 Models not yet supported:
 \itemize{
-\item Multigroup models.
-\item Models with formative factors
+\item Models with formative factors.
 \item Multilevel models
 }
 }
@@ -85,12 +98,21 @@ fit <- sem(mod, cfa_two_factors)
 # Should be 0
 check_sem_out(fit)
 
-fit2 <- sem(mod, cfa_two_factors, estimator = "MLR")
+fit2 <- sem(mod, cfa_two_factors, estimator = "DWLS")
 
-# Should be negative because MLR is officially not supported
+# Should be negative because DWLS is officially not supported
 check_sem_out(fit2)
+
+fit3 <- sem(mod, cfa_two_factors, estimator = "MLR")
+
+# Should be negative because MLR is supported only if
+# robust is set to "satorra.2000"
+
+check_sem_out(fit3, robust = "satorra.2000")
+
+# Should be zero because robust is set to "satorra.2000"
 
 }
 \seealso{
-\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_i]{ci_i()}}
+\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_i_one]{ci_i_one()}}
 }
