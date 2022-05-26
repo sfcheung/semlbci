@@ -51,6 +51,18 @@ set_constraint <- function(sem_out, ciperc = .95) {
         }
     # NOTE: For lavaan, chisq = 2 * n * fmin
     target <- fmin + qcrit / (2 * n)
+
+    slot_opt2 <- sem_out@Options
+    slot_pat2 <- sem_out@ParTable
+    slot_mod2 <- sem_out@Model
+    slot_smp2 <- sem_out@SampleStats
+    slot_dat2 <- sem_out@Data
+
+    slot_opt3 <- slot_opt2
+    slot_opt3$do.fit <- FALSE
+    slot_opt3$se <- "none"
+    slot_opt3$test <- "none"
+
     # Check if there are any equality constraints
     if (sem_out@Model@eq.constraints ||
         !is.null(body(sem_out@Model@ceq.function))) {
@@ -65,22 +77,35 @@ set_constraint <- function(sem_out, ciperc = .95) {
                 cat(ls())
                 cat(ls(globalenv()))
                 }
-            start0 <- lavaan::parameterTable(sem_out)
-            start0[p_free, "est"] <- param
+            # start0 <- lavaan::parameterTable(sem_out)
+            # start0[p_free, "est"] <- param
+            slot_mod3 <- lavaan::lav_model_set_parameters(slot_mod2, param)
             eq_out <- sem_out@Model@ceq.function(param)
             eq_jac <- sem_out@Model@con.jac
             if (lav_warn) {
-                    fit2 <- lavaan::update(sem_out,
-                                           start = start0,
-                                           do.fit = FALSE)
+                    # fit2 <- lavaan::update(sem_out,
+                    #                        start = start0,
+                    #                        do.fit = FALSE)
+                    fit2 <- lavaan::lavaan(
+                              slotOptions = slot_opt3,
+                              slotParTable = slot_pat2,
+                              slotModel = slot_mod3,
+                              slotSampleStats = slot_smp2,
+                              slotData = slot_dat2)
                 } else {
-                    suppressWarnings(fit2 <- lavaan::update(sem_out,
-                                                            start = start0,
-                                                            do.fit = FALSE))
+                    # suppressWarnings(fit2 <- lavaan::update(sem_out,
+                    #                                         start = start0,
+                    #                                         do.fit = FALSE))
+                    suppressWarnings(fit2 <- lavaan::lavaan(
+                                              slotOptions = slot_opt3,
+                                              slotParTable = slot_pat2,
+                                              slotModel = slot_mod3,
+                                              slotSampleStats = slot_smp2,
+                                              slotData = slot_dat2))
                 }
             if (lav_warn) {
                     fit2_gradient <- rbind(lavaan::lavTech(fit2, "gradient"))
-                    fit2_jacobian <- rbind(eq_jac, 
+                    fit2_jacobian <- rbind(eq_jac,
                                            lavaan::lavTech(fit2, "gradient"))
                 } else {
                     suppressWarnings(fit2_gradient <-
@@ -109,16 +134,29 @@ set_constraint <- function(sem_out, ciperc = .95) {
                 cat(ls())
                 cat(ls(globalenv()))
                 }
-            start0 <- lavaan::parameterTable(sem_out)
-            start0[p_free, "est"] <- param
+            # start0 <- lavaan::parameterTable(sem_out)
+            # start0[p_free, "est"] <- param
+            slot_mod3 <- lavaan::lav_model_set_parameters(slot_mod2, param)
             if (lav_warn) {
-                    fit2 <- lavaan::update(sem_out,
-                                           start = start0,
-                                           do.fit = FALSE)
+                    # fit2 <- lavaan::update(sem_out,
+                    #                        start = start0,
+                    #                        do.fit = FALSE)
+                    fit2 <- lavaan::lavaan(
+                              slotOptions = slot_opt3,
+                              slotParTable = slot_pat2,
+                              slotModel = slot_mod3,
+                              slotSampleStats = slot_smp2,
+                              slotData = slot_dat2)
                 } else {
-                    suppressWarnings(fit2 <- lavaan::update(sem_out,
-                                                            start = start0,
-                                                            do.fit = FALSE))
+                    # suppressWarnings(fit2 <- lavaan::update(sem_out,
+                    #                                         start = start0,
+                    #                                         do.fit = FALSE))
+                    suppressWarnings(fit2 <- lavaan::lavaan(
+                                              slotOptions = slot_opt3,
+                                              slotParTable = slot_pat2,
+                                              slotModel = slot_mod3,
+                                              slotSampleStats = slot_smp2,
+                                              slotData = slot_dat2))
                 }
             if (lav_warn) {
                     fit2_gradient <- rbind(lavaan::lavTech(fit2, "gradient"))
@@ -129,6 +167,7 @@ set_constraint <- function(sem_out, ciperc = .95) {
                     suppressWarnings(fit2_jacobian <-
                                     rbind(lavaan::lavTech(fit2, "gradient")))
                 }
+            # fit2@implied <- lavaan::lav_model_implied(slot_mod3)
             list(
                   objective = lavaan::lavTech(fit2, "optim")$fx,
                   gradient = fit2_gradient,
