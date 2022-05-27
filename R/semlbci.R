@@ -31,6 +31,10 @@
 #'  vector of strings will be converted by [syntax_to_i()] to
 #'  parameter positions.
 #'
+#' @param include_user_pars Logical. Whether all user-defined parameters
+#'  are automatically included when `pars` is not set. Default is `FALSE`.
+#'  If `pars` is explicitly set, this argument will be ignored.
+#'
 #' @param ciperc The proportion of coverage for the confidence
 #'  interval. Default is .95, requesting a 95 percent confidence
 #'  interval.
@@ -97,6 +101,7 @@
 
 semlbci <- function(sem_out,
                     pars = NULL,
+                    include_user_pars = FALSE,
                     ciperc = .95,
                     standardized = FALSE,
                     method = "wn",
@@ -126,6 +131,7 @@ semlbci <- function(sem_out,
     #i_id <- ptable$id[i]
     i_id <- ptable$id
     i_id_free <- i_id[i]
+    i_id_user <- i_id[(ptable$free == 0) & (ptable$user > 0)]
     # pars must be the position as in the lavaan parameterTable.
     if (!is.null(pars)) {
         if (is.character(pars)) {
@@ -135,6 +141,9 @@ semlbci <- function(sem_out,
       } else {
         # pars <- seq_len(sum(i))
         pars <- i_id_free
+        if (include_user_pars && length(i_id_user) > 0) {
+            pars <- c(pars, i_id_user)
+          }
         i_selected <- i_id[pars]
       }
     npar <- sum(i)
@@ -162,7 +171,7 @@ semlbci <- function(sem_out,
         pkgs <- .packages()
         pkgs <- rev(pkgs)
         parallel::clusterExport(cl, "pkgs", envir = environment())
-        parallel::clusterEvalQ(cl, {sapply(pkgs, 
+        parallel::clusterEvalQ(cl, {sapply(pkgs,
                         function(x) library(x, character.only = TRUE))
                       })
         parallel::clusterExport(cl, ls(envir = parent.frame()),

@@ -7,6 +7,7 @@
 semlbci(
   sem_out,
   pars = NULL,
+  include_user_pars = FALSE,
   ciperc = 0.95,
   standardized = FALSE,
   method = "wn",
@@ -29,6 +30,10 @@ strings to indicate the parameters on the parameter table. The
 parameters should be specified in \code{\link[lavaan:lavaan]{lavaan::lavaan()}} syntax. The
 vector of strings will be converted by \code{\link[=syntax_to_i]{syntax_to_i()}} to
 parameter positions.}
+
+\item{include_user_pars}{Logical. Whether all user-defined parameters
+are automatically included when \code{pars} is not set. Default is \code{FALSE}.
+If \code{pars} is explicitly set, this argument will be ignored.}
 
 \item{ciperc}{The proportion of coverage for the confidence
 interval. Default is .95, requesting a 95 percent confidence
