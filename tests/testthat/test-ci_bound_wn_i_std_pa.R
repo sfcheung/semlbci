@@ -1,4 +1,4 @@
-skip_on_cran()
+# skip_on_cran()
 # To fix: Do not use saved data
 
 library(testthat)
@@ -9,7 +9,7 @@ library(semlbci)
 library(lavaan)
 data(simple_med)
 dat <- simple_med
-mod <- 
+mod <-
 "
 m ~ x
 y ~ m
@@ -52,7 +52,7 @@ if (gen_test_data) {
 
 geteststd <- get_std_genfct(fit = fit, i = 1)
 
-modc0 <- 
+modc0 <-
 "
 m ~ a*x
 y ~ b*m
@@ -81,7 +81,7 @@ fitc_out1u <- fitc
 
 geteststd <- get_std_genfct(fit = fit, i = 2)
 
-modc0 <- 
+modc0 <-
 "
 m ~ a*x
 y ~ b*m

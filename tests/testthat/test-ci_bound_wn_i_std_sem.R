@@ -1,4 +1,4 @@
-skip_on_cran()
+# skip_on_cran()
 # To fix: Do not use saved data
 
 library(testthat)
@@ -10,7 +10,7 @@ library(lavaan)
 
 data(cfa_two_factors)
 dat <- cfa_two_factors
-mod <- 
+mod <-
 "
 f1 =~ x1 + x2 + x3
 f2 =~ x4 + x5 + x6
@@ -52,7 +52,7 @@ test_p <- function(fit0, fit1, ciperc, tol) {
 gen_test_data <- FALSE
 if (gen_test_data) {
 
-modc0 <- 
+modc0 <-
 "
 f1 =~ x1 + x2 + x3
 f2 =~ x4 + x5 + x6

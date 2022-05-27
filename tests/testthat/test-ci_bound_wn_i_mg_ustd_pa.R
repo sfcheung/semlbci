@@ -1,4 +1,4 @@
-skip_on_cran()
+# skip_on_cran()
 library(testthat)
 library(semlbci)
 
@@ -7,7 +7,7 @@ library(semlbci)
 library(lavaan)
 data(simple_med_mg)
 dat <- simple_med_mg
-mod <- 
+mod <-
 "
 m ~ x
 y ~ m
@@ -39,7 +39,7 @@ colSums(timexx)
 
 # Check the results
 
-modc0 <- 
+modc0 <-
 "
 m ~ c(a1, a2)*x
 y ~ c(b1, b2)*m
