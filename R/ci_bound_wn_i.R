@@ -93,14 +93,14 @@
 #'  confidence. If the absolute difference between the achieved level
 #'  and and `ciperc` is greater than this amount, a warning is set in
 #'  the status code and the bound is set to `NA`. Default is 1e-3.
-#' 
+#'
 #' @param std_method The method used to find the standardized solution.
 #'  If equal to `"lavaan"``, [lavaan::standardizedSolution()] will be used.
 #'  If equal to `"internal"`, an internal function of this package will be used.
 #'  The `"lavaan"` method should work in all situations, but the `"internal"`
 #'  method can be faster. Default is `"lavaan"` for now, but may be changed to
 #'  `"internal"` if it is confirmed to work in all situations tested.
-#' 
+#'
 #' @param bounds Default is `""` and this function will set the lower bounds
 #'               to `lb_var` for variances. Other valid values are those
 #'               accepted by
@@ -374,7 +374,11 @@ ci_bound_wn_i <- function(i = NULL,
         xstart <- perturbation_factor * lavaan::coef(sem_out)
       }
     fit_lb <- rep(-Inf, npar)
-    fit_lb[find_variance_in_free(sem_out)] <- lb_var
+    if (isTRUE(identical(lb_var, -Inf))) {
+        fit_lb[find_variance_in_free(sem_out)] <- find_variance_in_free_lb(sem_out)
+      } else {
+        fit_lb[find_variance_in_free(sem_out)] <- lb_var
+      }
     fit_ub <- rep(+Inf, npar)
     # Need further test on using lavaan bounds
     # if (!is.null(p_table$lower)) {
@@ -404,8 +408,8 @@ ci_bound_wn_i <- function(i = NULL,
                         "print_level" = 0),
                         opts)
     out <- nloptr::nloptr(
-                        x0 = xstart, 
-                        eval_f = lbci_b_f, 
+                        x0 = xstart,
+                        eval_f = lbci_b_f,
                         lb = fit_lb,
                         ub = fit_ub,
                         eval_grad_f = lbci_b_grad,
@@ -456,7 +460,7 @@ ci_bound_wn_i <- function(i = NULL,
         status <- 0
         bound <- NA
         # The warning should be raised by the calling function, not this one
-        # warning("Optimization converged but the final solution is not 
+        # warning("Optimization converged but the final solution is not
         # admissible.")
       }
 
