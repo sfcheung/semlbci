@@ -278,7 +278,6 @@ semlbci <- function(sem_out,
     out <- do.call(rbind, lapply(out_raw, function(x) x$bounds))
     # out <- do.call(rbind, out_raw)
     out_p <- ptable[, c("id", "lhs", "op", "rhs", "group", "label")]
-    out_p$lbci_lb <- NA
     if (standardized) {
         pstd <- lavaan::standardizedSolution(sem_out)
         if (lavaan::lavTech(sem_out, "ngroups") == 1) {
@@ -290,6 +289,7 @@ semlbci <- function(sem_out,
       } else {
         out_p$est <- ptable[, c("est")]
       }
+    out_p$lbci_lb <- NA
     out_p$lbci_ub <- NA
 
     out_p[i_selected, "lbci_lb"] <- out[, 1]

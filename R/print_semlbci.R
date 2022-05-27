@@ -118,8 +118,8 @@ print.semlbci <- function(x,
     out$method <- NULL
 
     out_names <- colnames(out)
-    out_names <- gsub("lbci_lb", "lb", out_names, fixed = TRUE)
-    out_names <- gsub("lbci_ub", "ub", out_names, fixed = TRUE)
+    # out_names <- gsub("lbci_lb", "lb", out_names, fixed = TRUE)
+    # out_names <- gsub("lbci_ub", "ub", out_names, fixed = TRUE)
     out_names <- gsub("ci_org_lb", "wald_l", out_names, fixed = TRUE)
     out_names <- gsub("ci_org_ub", "wald_u", out_names, fixed = TRUE)
     out_names <- gsub("status_lb", "ok_l", out_names, fixed = TRUE)
@@ -139,7 +139,7 @@ print.semlbci <- function(x,
     if (annotation) {
         msg <- NULL
         msg <- c(msg,
-              "* lb, ub: The lower and upper likelihood-based limits.")
+              "* lbci_lb, lbci_ub: The lower and upper likelihood-based limits.")
         msg <- c(msg,
               paste0("* est: ",
                    "The point estimates from the original lavaan",
