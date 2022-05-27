@@ -139,7 +139,7 @@ print.semlbci <- function(x,
     if (annotation) {
         msg <- NULL
         msg <- c(msg,
-              "* lb, ub: The lower and upper likehood-based limits.")
+              "* lb, ub: The lower and upper likelihood-based limits.")
         msg <- c(msg,
               paste0("* est: ",
                    "The point estimates from the original lavaan",
