@@ -152,8 +152,8 @@ ci_bound_wn_i <- function(i = NULL,
                        history = FALSE,
                        perturbation_factor = .9,
                        lb_var = -Inf,
-                       wald_ci_start = TRUE,
                        standardized = FALSE,
+                       wald_ci_start = !standardized,
                        opts = list(),
                        ciperc = .95,
                        ci_limit_ratio_tol = 1.5,
@@ -403,8 +403,10 @@ ci_bound_wn_i <- function(i = NULL,
     #       }
     #   }
     opts_final <- utils::modifyList(list("algorithm" = "NLOPT_LD_SLSQP",
-                        "xtol_rel" = 1.0e-10,
-                        "maxeval" = 1000,
+                        # "xtol_rel" = 1.0e-10,
+                        "xtol_rel" = 1.0e-5,
+                        # "ftol_rel" = 1.0e-5,
+                        "maxeval" = 500,
                         "print_level" = 0),
                         opts)
     out <- nloptr::nloptr(
