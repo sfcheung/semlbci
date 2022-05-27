@@ -62,7 +62,11 @@ print.semlbci <- function(x,
       }
     class(out) <- "data.frame"
     out$lbci_lb <- round(out$lbci_lb, digits)
-    out$est <- round(out$est, digits)
+    if ("est.std" %in% colnames(x)) {
+        out$est.std <- round(out$est.std, digits)
+      } else {
+        out$est <- round(out$est, digits)
+      }
     out$lbci_ub <- round(out$lbci_ub, digits)
     out$ci_org_lb <- round(out$ci_org_lb, digits)
     out$ci_org_ub <- round(out$ci_org_ub, digits)
