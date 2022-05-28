@@ -32,7 +32,7 @@
 #'  parameter positions.
 #'
 #' @param include_user_pars Logical. Whether all user-defined parameters
-#'  are automatically included when `pars` is not set. Default is `FALSE`.
+#'  are automatically included when `pars` is not set. Default is `TRUE`.
 #'  If `pars` is explicitly set, this argument will be ignored.
 #'
 #' @param ciperc The proportion of coverage for the confidence
@@ -101,7 +101,7 @@
 
 semlbci <- function(sem_out,
                     pars = NULL,
-                    include_user_pars = FALSE,
+                    include_user_pars = TRUE,
                     ciperc = .95,
                     standardized = FALSE,
                     method = "wn",
