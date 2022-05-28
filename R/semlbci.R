@@ -174,8 +174,8 @@ semlbci <- function(sem_out,
         parallel::clusterEvalQ(cl, {sapply(pkgs,
                         function(x) library(x, character.only = TRUE))
                       })
-        # parallel::clusterExport(cl, ls(envir = parent.frame()),
-        #                               envir = environment())
+        parallel::clusterExport(cl, ls(envir = parent.frame()),
+                                      envir = environment())
         if (requireNamespace ("pbapply", quietly = TRUE) &
             use_pbapply) {
             args_final <- utils::modifyList(list(...),
@@ -198,14 +198,25 @@ semlbci <- function(sem_out,
             pars2 <- rep(pars, each = 2)
             sf_full_list2 <- rep(sf_full_list, each = 2)
             which2 <- rep(c("lbound", "ubound"), times = length(pars))
-            out_raw2 <- pbapply::pbmapply(
-                                semlbci::ci_i_one,
-                                i = pars2,
-                                sf_full = sf_full_list2,
-                                which = which2,
-                                MoreArgs = args_final,
-                                SIMPLIFY = FALSE,
-                                cl = cl)
+            plist <- mapply(function(x, y, z) list(i = x, sf_full = y, which = z),
+                            x = pars2, y = sf_full_list2, z = which2,
+                            SIMPLIFY = FALSE)
+            tmpfct <- function(x) {
+                force(args_final)
+                args_final1 <- utils::modifyList(args_final, x)
+                do.call(semlbci::ci_i_one, args_final1)
+              }
+            out_raw2 <- pbapply::pblapply(plist,
+                                          tmpfct,
+                                          cl = cl)
+            # out_raw2 <- pbapply::pbmapply(
+            #                     semlbci::ci_i_one,
+            #                     i = pars2,
+            #                     sf_full = sf_full_list2,
+            #                     which = which2,
+            #                     MoreArgs = args_final,
+            #                     SIMPLIFY = FALSE,
+            #                     cl = cl)
           } else {
             args_final <- utils::modifyList(list(...),
                                     list(npar = npar,
