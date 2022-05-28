@@ -1,13 +1,12 @@
-skip_on_cran()
-skip("WIP")
-skip_if_not(Sys.getenv("SEMLBCI_TEST_COMPREHENSIVE") == "TRUE")
+skip("Test parallel processing: Test in interactive sections")
+
 library(testthat)
 library(semlbci)
 
 # lavaan example: sem()
 
 library(lavaan)
-model <- ' 
+model <- '
   # latent variable definitions
      ind60 =~ x1 + x2 + x3
      dem60 =~ y1 + a*y2 + b*y3 + c*y4
@@ -31,15 +30,11 @@ fit <- sem(model, data = PoliticalDemocracy)
 p_table <- parameterTable(fit)
 i_free <- which(p_table$free > 0)
 
+fit_lbci_parallel <- semlbci(fit, pars = i_free[29:31], parallel = TRUE, ncpus = 3)
+fit_lbci_no_parallel <- semlbci(fit, pars = i_free[29:31], parallel = TRUE, ncpus = 3)
 
-
-
-# Error for this:
-# Error in if (i_op == ":=") { : missing value where TRUE/FALSE needed
-# fit_lbci <- semlbci(fit, pars = i_free[32:34])
-
-# OK
-#fit_lbci <- semlbci(fit)
-#fit_lbci <- semlbci(fit, pars = i_free[c(2, 3, 8, 9)])
-#fit_lbci <- semlbci(fit, pars = i_free[c(2, 3, 8, 9, 11)], parallel = TRUE, ncpus = 2)
-#fit_lbci <- semlbci(fit, parallel = TRUE, ncpus = 2)
+test_that("Compare parallel and non-parallel results", {
+  expect_true(all.equal(data.frame(fit_lbci_parallel[, -c(18, 19)]),
+          data.frame(fit_lbci_no_parallel[, -c(18, 19)]),
+          check_attributes = FALSE))
+})

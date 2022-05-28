@@ -1,6 +1,5 @@
-skip_on_cran()
-skip("WIP")
-skip_if_not(Sys.getenv("SEMLBCI_TEST_COMPREHENSIVE") == "TRUE")
+skip("Test parallel processing: Test in interactive sections")
+
 library(testthat)
 library(semlbci)
 
@@ -30,9 +29,11 @@ i_free <- which(p_table$free > 0)
 i_user <- which(p_table$op == ":=")
 i_par <- unique(c(i_free, i_user))
 
+fit_lbci_no_parallel <- semlbci(fit)
+fit_lbci_parallel <- semlbci(fit, parallel = 4)
 
-
-# OK
-# fit_lbci <- semlbci(fit)
-# fit_lbci <- semlbci(fit, pars = i_par[c(3, 1, 2, 7, 6)])
-# fit_lbci <- semlbci(fit, pars = i_par[c(7, 3)])
+test_that("Compare parallel and non-parallel results", {
+  expect_true(all.equal(data.frame(fit_lbci_no_parallel[, -c(18, 19)]),
+          data.frame(fit_lbci_parallel[, -c(18, 19)]),
+          check_attributes = FALSE))
+})
