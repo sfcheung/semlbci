@@ -405,7 +405,7 @@ ci_bound_wn_i <- function(i = NULL,
     opts_final <- utils::modifyList(list("algorithm" = "NLOPT_LD_SLSQP",
                         # "xtol_rel" = 1.0e-10,
                         "xtol_rel" = 1.0e-5,
-                        # "ftol_rel" = 1.0e-5,
+                        "ftol_rel" = 1.0e-5,
                         "maxeval" = 500,
                         "print_level" = 0),
                         opts)

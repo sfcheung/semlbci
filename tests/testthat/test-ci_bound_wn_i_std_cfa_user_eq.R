@@ -10,7 +10,7 @@ library(lavaan)
 
 data(cfa_two_factors)
 dat <- cfa_two_factors
-mod <- 
+mod <-
 "
 f1 =~ x1 + a*x2 + b*x3
 f2 =~ x4 + b*x5 + d*x6
@@ -52,7 +52,7 @@ test_that("Check against precomputed answers", {
     # expect_equal(out1u$bound, 0.6973046, tolerance = 1e-5)
     # expect_equal(out2l$bound, 0.6588698, tolerance = 1e-5)
     expect_equal(out2u$bound, 0.802191, tolerance = 1e-5)
-    expect_equal(out3l$bound, 0.4075831, tolerance = 1e-5)
+    expect_equal(out3l$bound, 0.4075831, tolerance = 1e-4)
     # expect_equal(out3u$bound, 0.617597, tolerance = 1e-5)
   })
 
