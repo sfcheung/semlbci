@@ -98,8 +98,7 @@
 #'  If equal to `"lavaan"``, [lavaan::standardizedSolution()] will be used.
 #'  If equal to `"internal"`, an internal function of this package will be used.
 #'  The `"lavaan"` method should work in all situations, but the `"internal"`
-#'  method can be faster. Default is `"lavaan"` for now, but may be changed to
-#'  `"internal"` if it is confirmed to work in all situations tested.
+#'  method can be faster. Default is `"internal"`.
 #'
 #' @param bounds Default is `""` and this function will set the lower bounds
 #'               to `lb_var` for variances. Other valid values are those
@@ -161,7 +160,7 @@ ci_bound_wn_i <- function(i = NULL,
                        sf = 1,
                        sf2 = 0,
                        p_tol = 1e-3,
-                       std_method = "lavaan",
+                       std_method = "internal",
                        bounds = "none",
                        ...) {
     k <- switch(which,
