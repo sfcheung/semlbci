@@ -7,7 +7,7 @@
 semlbci(
   sem_out,
   pars = NULL,
-  include_user_pars = FALSE,
+  include_user_pars = TRUE,
   ciperc = 0.95,
   standardized = FALSE,
   method = "wn",
@@ -32,7 +32,7 @@ vector of strings will be converted by \code{\link[=syntax_to_i]{syntax_to_i()}}
 parameter positions.}
 
 \item{include_user_pars}{Logical. Whether all user-defined parameters
-are automatically included when \code{pars} is not set. Default is \code{FALSE}.
+are automatically included when \code{pars} is not set. Default is \code{TRUE}.
 If \code{pars} is explicitly set, this argument will be ignored.}
 
 \item{ciperc}{The proportion of coverage for the confidence

@@ -13,8 +13,8 @@ ci_bound_wn_i(
   history = FALSE,
   perturbation_factor = 0.9,
   lb_var = -Inf,
-  wald_ci_start = TRUE,
   standardized = FALSE,
+  wald_ci_start = !standardized,
   opts = list(),
   ciperc = 0.95,
   ci_limit_ratio_tol = 1.5,
@@ -22,7 +22,7 @@ ci_bound_wn_i(
   sf = 1,
   sf2 = 0,
   p_tol = 0.001,
-  std_method = "lavaan",
+  std_method = "internal",
   bounds = "none",
   ...
 )
@@ -57,13 +57,13 @@ variances. Default is \code{-Inf}. This is not an admissible value but
 seems to be necessary when we need to find the LBCI bound for a
 user-defined parameter.}
 
+\item{standardized}{If \code{TRUE}, the LBCI is for the requested
+estimate in the standardized solution. Default is \code{FALSE}.}
+
 \item{wald_ci_start}{If \code{TRUE} and there are no equality
 constraints in the model, and the target parameter is not a
 user-defined parameter, the Wald confidence limit will be used as
 the starting value.}
-
-\item{standardized}{If \code{TRUE}, the LBCI is for the requested
-estimate in the standardized solution. Default is \code{FALSE}.}
 
 \item{opts}{Options to be passed to \code{\link[nloptr:nloptr]{nloptr::nloptr()}}. Default is
 \code{list()}.}
@@ -94,7 +94,7 @@ and and \code{ciperc} is greater than this amount, a warning is set in
 the status code and the bound is set to \code{NA}. Default is 1e-3.}
 
 \item{std_method}{The method used to find the standardized solution.
-If equal to \verb{"lavaan"``, [lavaan::standardizedSolution()] will be used. If equal to }"internal"\verb{, an internal function of this package will be used. The }"lavaan"\verb{method should work in all situations, but the}"internal"\verb{method can be faster. Default is}"lavaan"\verb{for now, but may be changed to}"internal"` if it is confirmed to work in all situations tested.}
+If equal to \verb{"lavaan"``, [lavaan::standardizedSolution()] will be used. If equal to }"internal"\verb{, an internal function of this package will be used. The }"lavaan"\verb{method should work in all situations, but the}"internal"\verb{method can be faster. Default is}"internal"`.}
 
 \item{bounds}{Default is \code{""} and this function will set the lower bounds
 to \code{lb_var} for variances. Other valid values are those
