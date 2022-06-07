@@ -51,6 +51,9 @@
 #'  (2018). If `"none"`, the default, then likelihood ratio test based
 #'  on maximum likelihood estimation will be used.
 #'
+#' @param try_k_more_times How many more times to try if failed.
+#'                         Default is 0.
+#'
 #' @param ... Arguments to be passed to [ci_bound_wn_i()].
 #'
 #' @param parallel If `TRUE`, will use `parallel` to parallelize the search.
@@ -106,6 +109,7 @@ semlbci <- function(sem_out,
                     standardized = FALSE,
                     method = "wn",
                     robust = "none",
+                    try_k_more_times = 0,
                     ...,
                     parallel = FALSE,
                     ncpus = 2,
@@ -187,6 +191,7 @@ semlbci <- function(sem_out,
                                         method = method,
                                         ciperc = ciperc,
                                         robust = robust,
+                                        try_k_more_times = try_k_more_times,
                                         sem_out_name = sem_out_name))
             # out_raw <- pbapply::pbmapply(
             #                     semlbci::ci_i,
@@ -227,6 +232,7 @@ semlbci <- function(sem_out,
                                         method = method,
                                         ciperc = ciperc,
                                         robust = robust,
+                                        try_k_more_times = try_k_more_times,
                                         sem_out_name = sem_out_name))
             # out_raw <- parallel::clusterMap(cl,
             #                   semlbci::ci_i,
@@ -256,6 +262,7 @@ semlbci <- function(sem_out,
                                     method = method,
                                     ciperc = ciperc,
                                     robust = robust,
+                                    try_k_more_times = try_k_more_times,
                                     sem_out_name = sem_out_name))
         # out_raw <- mapply(
         #               ci_i,

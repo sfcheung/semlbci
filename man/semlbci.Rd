@@ -12,6 +12,7 @@ semlbci(
   standardized = FALSE,
   method = "wn",
   robust = "none",
+  try_k_more_times = 0,
   ...,
   parallel = FALSE,
   ncpus = 2,
@@ -50,6 +51,9 @@ test is to be found. Only \code{"satorra.2000"} in \code{\link[lavaan:lavTestLRT
 is supported for now, implemented by the method proposed by Falk
 (2018). If \code{"none"}, the default, then likelihood ratio test based
 on maximum likelihood estimation will be used.}
+
+\item{try_k_more_times}{How many more times to try if failed.
+Default is 0.}
 
 \item{...}{Arguments to be passed to \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.}
 
