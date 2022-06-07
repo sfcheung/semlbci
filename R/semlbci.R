@@ -141,10 +141,17 @@ semlbci <- function(sem_out,
         if (is.character(pars)) {
             pars <- syntax_to_i(pars, sem_out)
           }
+        if (standardized) {
+            pars <- remove_v1(pars, sem_out)
+          }
         i_selected <- i_id[pars]
       } else {
         # pars <- seq_len(sum(i))
         pars <- i_id_free
+        if (standardized) {
+            pars <- remove_v1(pars, sem_out)
+            pars <- sort(unique(c(pars, free_in_std(i_id, sem_out))))
+          }
         if (include_user_pars && length(i_id_user) > 0) {
             pars <- c(pars, i_id_user)
           }
