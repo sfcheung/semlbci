@@ -472,7 +472,7 @@ ci_bound_wn_i <- function(i = NULL,
                                 check.vcov = TRUE)
     fit_post_check <- lavaan::lavInspect(fit_final, "post.check")
     if (!fit_post_check) {
-        status <- 0
+        status <- 1
         bound <- NA
         # The warning should be raised by the calling function, not this one
         # warning("Optimization converged but the final solution is not
@@ -490,7 +490,7 @@ ci_bound_wn_i <- function(i = NULL,
     chisq_diff <- (fmin_final - fmin_org) * 2 * ntotal / sf + sf2
     ciperc_final <- stats::pchisq(chisq_diff, 1)
     if (abs(ciperc_final - ciperc) > p_tol) {
-        status <- 0
+        status <- 1
         bound <- NA
       }
 
