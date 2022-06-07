@@ -12,7 +12,7 @@ library(lavaan)
 
 data(cfa_two_factors)
 dat <- cfa_two_factors
-mod <- 
+mod <-
 "
 f1 =~ x1 + b*x2 + c*x3
 f2 =~ x4 + d*x5 + e*x6
@@ -42,7 +42,7 @@ opts0 <- list(ftol_abs = 1e-12)
 time1l <- system.time(out1l <- ci_bound_wn_i(2, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-07), verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
 time1u <- system.time(out1u <- ci_bound_wn_i(2, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-07), verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
 time2l <- system.time(out2l <- ci_bound_wn_i(7, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-07), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf1$c_rb))
-time2u <- system.time(out2u <- ci_bound_wn_i(7, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-07), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf1$c_rb, wald_ci_start = FALSE))
+time2u <- system.time(out2u <- ci_bound_wn_i(7, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_rel = 0), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf1$c_rb, wald_ci_start = FALSE))
 
 timexx <- rbind(time1l, time1u, time2l, time2u)
 timexx
@@ -61,7 +61,7 @@ get_scaling_factor <- function(lrt_out) {
     chisq_diff_c <- chisq_1 - chisq_0
     chisq_diff_p <- qchisq(lrt_out[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
     chisq_diff_r <- lrt_out[2, "Chisq diff"]
-    out <- 
+    out <-
       data.frame(chisq_1 = chisq_1,
         chisq_0 = chisq_0,
         chisq_diff_c = chisq_diff_c,
@@ -73,7 +73,7 @@ get_scaling_factor <- function(lrt_out) {
   }
 
 
-modc0 <- 
+modc0 <-
 "
 f1 =~ x1 + b*x2 + c*x3
 f2 =~ x4 + d*x5 + e*x6
@@ -171,4 +171,3 @@ test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-3))
     expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-3))
   })
-
