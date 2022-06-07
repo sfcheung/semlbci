@@ -76,7 +76,7 @@ syntax_to_i <- function(syntax,
         stop("sem_out is not a supported object.")
       }
     ptable <- lavaan::parameterTable(sem_out)
-    ngroups <- length(table(ptable$group))
+    ngroups <- lavaan::lavTech(sem_out, "ngroups")
     l_model <- lavaan::lavParseModelString(syntax, as.data.frame = TRUE)
     if (nrow(l_model) > 0) {
         if (ngroups == 1) {
