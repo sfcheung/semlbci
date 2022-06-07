@@ -92,7 +92,7 @@
 #' @param p_tol Tolerance for checking the achieved level of
 #'  confidence. If the absolute difference between the achieved level
 #'  and and `ciperc` is greater than this amount, a warning is set in
-#'  the status code and the bound is set to `NA`. Default is 1e-3.
+#'  the status code and the bound is set to `NA`. Default is 5e-4.
 #'
 #' @param std_method The method used to find the standardized solution.
 #'  If equal to `"lavaan"``, [lavaan::standardizedSolution()] will be used.
@@ -171,7 +171,7 @@ ci_bound_wn_i <- function(i = NULL,
                        verbose = FALSE,
                        sf = 1,
                        sf2 = 0,
-                       p_tol = 1e-3,
+                       p_tol = 5e-4,
                        std_method = "internal",
                        bounds = "none",
                        xtol_rel_factor = 1,
