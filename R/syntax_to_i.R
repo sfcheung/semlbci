@@ -17,15 +17,22 @@
 #' interpreted. For example, to specify the user parameter `ab`, "ab
 #' := x" will do. The right hand side will be ignored.
 #'
-#' To denote a labelled parameters, e.g., "y ~ a*x", treat it as a user-defined
-#' parameters us use `:=`, e.g., "a :=" in this example.
+#' To denote a labelled parameters, e.g., "y ~ a*x", treat it as a
+#' user-defined
+#' parameters and use `:=`, e.g., "a :=" in this example.
 #'
-#' For multiple-group models, if a parameter is specified as in a single-group
-#' models, then this parameter in all groups will be selected. For example,
-#' if a model has three groups, "y ~ x" denotes this path parameter in all
-#' three groups, and it will be converted to three row numbers. To select
-#' the parameter in a specific group, label the parameter and select it using
-#' `:=` as described above.
+#' For multiple-group models, if a parameter is specified as
+#' in a single-group models, then this parameter in all
+#' groups will be selected. For example, if a model has
+#' three groups, "y ~ x" denotes this path parameter in all
+#' three groups, and it will be converted to three row
+#' numbers. To select the parameter in a specific group,
+#' "multiple" the right-hand-side variable by the group number. E.g.,
+#' "y ~ 2*x" denotes the path coefficient from `x` to `y` in Group 2.
+#' To denote the parameters in more than one group, multiply the
+#' right-hand-side variable by a vector of number. E.g.,
+#' "f1 =~ c(2,3)*x2" denotes the factor loading of `x2` on `f1` in
+#' Group 2 and Group 3.
 #'
 #' Elements that cannot be converted to a parameter in the parameter table will
 #' be ignored.
@@ -69,13 +76,51 @@ syntax_to_i <- function(syntax,
         stop("sem_out is not a supported object.")
       }
     ptable <- lavaan::parameterTable(sem_out)
+    ngroups <- length(table(ptable$group))
     l_model <- lavaan::lavParseModelString(syntax, as.data.frame = TRUE)
     if (nrow(l_model) > 0) {
-        l_model$req <- TRUE
-        p_out <- merge(ptable, l_model[, c("lhs", "op", "rhs", "req")], 
-                      by = c("lhs", "op", "rhs"), all.x = TRUE, sort = FALSE)
-        p_out <- p_out[match(ptable$id, p_out$id), ]
-        i_par <- which(p_out$req)
+        if (ngroups == 1) {
+            l_model$req <- TRUE
+            p_out <- merge(ptable, l_model[, c("lhs", "op", "rhs", "req")],
+                          by = c("lhs", "op", "rhs"), all.x = TRUE, sort = FALSE)
+            p_out <- p_out[match(ptable$id, p_out$id), ]
+            i_par <- which(p_out$req)
+          } else {
+            l_model$group <- NA
+            tmp0 <- list()
+            for (i in seq_len(nrow(l_model))) {
+                if (l_model[i, "fixed"] == "") {
+                    l_model[i, "group"] <- 1
+                    tmp <- do.call(rbind, replicate(ngroups - 1,
+                                                    l_model[i, ],
+                                                    simplify = FALSE))
+                    tmp$group <- seq(2, ngroups)
+                    tmp0[[i]] <- tmp
+                  } else {
+                    x_i <- as.numeric(strsplit(l_model[i, "fixed"], ";")[[1]])
+                    x_k <- length(x_i)
+                    if (x_k == 1) {
+                        l_model[i, "group"] <- x_i
+                      } else {
+                        l_model[i, "group"] <- x_i[1]
+                        tmp <- do.call(rbind, replicate(x_k - 1,
+                                                        l_model[i, ],
+                                                        simplify = FALSE))
+                        tmp$group <- x_i[-1]
+                        tmp0[[i]] <- tmp
+                      }
+                  }
+              }
+            l_model <- rbind(l_model, do.call(rbind, tmp0))
+            l_model$req <- TRUE
+            p_out <- merge(ptable,
+                           l_model[, c("lhs", "op", "rhs", "group", "req")],
+                           by = c("lhs", "op", "rhs", "group"),
+                           all.x = TRUE,
+                           sort = FALSE)
+            p_out <- p_out[match(ptable$id, p_out$id), ]
+            i_par <- which(p_out$req)
+          }
       } else {
         i_par <- NULL
       }
