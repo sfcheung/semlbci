@@ -131,7 +131,7 @@ semlbci <- function(sem_out,
     #i_id <- ptable$id[i]
     i_id <- ptable$id
     i_id_free <- i_id[i]
-    i_id_user <- i_id[(ptable$free == 0) & (ptable$user > 0)]
+    i_id_user <- i_id[(ptable$free == 0) & (ptable$op == ":=")]
     # pars must be the position as in the lavaan parameterTable.
     if (!is.null(pars)) {
         if (is.character(pars)) {

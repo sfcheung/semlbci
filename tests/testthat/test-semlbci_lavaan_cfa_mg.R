@@ -29,6 +29,6 @@ fit_lbci
 #               xtol_abs = 1e-5,
 #               xtol_rel = 1e-5
 #               )
-opts0 <- list(ftol_rel = 1e-5,
-              )
+opts0 <- list(ftol_rel = 1e-5)
 fit_lbci <- semlbci(fit, pars = i_free[c(2)], options = opts0)
+fit_lbci
