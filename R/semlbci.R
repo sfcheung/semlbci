@@ -288,7 +288,7 @@ semlbci <- function(sem_out,
                       MoreArgs = args_final,
                       SIMPLIFY = FALSE)
       }
-    tmpfct <- function(x, y) {
+    tmpfct2 <- function(x, y) {
         out <- mapply(c, x, y, SIMPLIFY = FALSE)
         out$method <- out$method[[1]]
         out$sf_full <- out$sf_full[[1]]
@@ -296,7 +296,7 @@ semlbci <- function(sem_out,
       }
     tmp1 <- seq(1, 2 * length(pars), 2)
     tmp2 <- tmp1 + 1
-    out_raw <- mapply(tmpfct,
+    out_raw <- mapply(tmpfct2,
                       out_raw2[tmp1],
                       out_raw2[tmp2],
                       SIMPLIFY = FALSE)
