@@ -19,11 +19,13 @@ simple_med
 Generated from a simple mediation model, n = 500
 }
 \details{
-Supposed to be tested using this example:\preformatted{library(lavaan)
+Supposed to be tested using this example:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{library(lavaan)
 mod <- "m ~ x
         y ~ m"
 fit <- cfa(mod, simple_med)
 summary(fit)
-}
+}\if{html}{\out{</div>}}
 }
 \keyword{datasets}

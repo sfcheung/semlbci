@@ -16,7 +16,9 @@ Generated from a two-factor model, with one
 standardized error variance close to zero.
 }
 \details{
-Supposed to be tested using this example:\preformatted{# If fitted by the following model, the standardized
+Supposed to be tested using this example:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# If fitted by the following model, the standardized
 # error variance of `x3` is close to zero.
 # Consequently, the R-square of `x3` is close to one:
 
@@ -25,6 +27,6 @@ mod <- "f1 =~ x1 + x2 + x3
         f2 =~ x4 + x5 + x6"
 fit <- cfa(mod, cfa_evar_near_zero)
 summary(fit, standardized = TRUE, rsquare = TRUE)
-}
+}\if{html}{\out{</div>}}
 }
 \keyword{datasets}

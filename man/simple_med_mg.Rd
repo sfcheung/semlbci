@@ -21,11 +21,13 @@ Generated from a simple mediation model, n = 500, two groups,
 n = 250 each.
 }
 \details{
-Supposed to be tested using this example:\preformatted{library(lavaan)
+Supposed to be tested using this example:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{library(lavaan)
 mod <- "m ~ x
         y ~ m"
 fit <- sem(mod, simple_med_mg, gp = "group")
 summary(fit)
-}
+}\if{html}{\out{</div>}}
 }
 \keyword{datasets}

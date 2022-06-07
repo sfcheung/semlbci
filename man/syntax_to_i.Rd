@@ -31,15 +31,22 @@ For user-defined parameters, only \code{lhs} and \code{op} will be
 interpreted. For example, to specify the user parameter \code{ab}, "ab
 := x" will do. The right hand side will be ignored.
 
-To denote a labelled parameters, e.g., "y ~ a*x", treat it as a user-defined
-parameters us use \verb{:=}, e.g., "a :=" in this example.
+To denote a labelled parameters, e.g., "y ~ a*x", treat it as a
+user-defined
+parameters and use \verb{:=}, e.g., "a :=" in this example.
 
-For multiple-group models, if a parameter is specified as in a single-group
-models, then this parameter in all groups will be selected. For example,
-if a model has three groups, "y ~ x" denotes this path parameter in all
-three groups, and it will be converted to three row numbers. To select
-the parameter in a specific group, label the parameter and select it using
-\verb{:=} as described above.
+For multiple-group models, if a parameter is specified as
+in a single-group models, then this parameter in all
+groups will be selected. For example, if a model has
+three groups, "y ~ x" denotes this path parameter in all
+three groups, and it will be converted to three row
+numbers. To select the parameter in a specific group,
+"multiple" the right-hand-side variable by the group number. E.g.,
+"y ~ 2*x" denotes the path coefficient from \code{x} to \code{y} in Group 2.
+To denote the parameters in more than one group, multiply the
+right-hand-side variable by a vector of number. E.g.,
+"f1 =~ c(2,3)*x2" denotes the factor loading of \code{x2} on \code{f1} in
+Group 2 and Group 3.
 
 Elements that cannot be converted to a parameter in the parameter table will
 be ignored.
