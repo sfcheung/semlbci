@@ -14,6 +14,7 @@ ci_i_one(
   sf_full = NA,
   sf_args = list(),
   sem_out_name = NULL,
+  try_k_more_times = 0,
   ...
 )
 }
@@ -49,6 +50,9 @@ if \code{robust} is \code{"satorra.2000"}. Used only by \code{\link[=semlbci]{se
 
 \item{sem_out_name}{The name of the object supplied to \code{sem_out}. \code{NULL}
 by default. To be used by internal functions.}
+
+\item{try_k_more_times}{How many more times to try if the status code is not zero.
+Default is 0.}
 
 \item{...}{Arguments to be passed to the function corresponds to
 the requested method (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} for "wn").}

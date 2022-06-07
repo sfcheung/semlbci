@@ -51,6 +51,9 @@
 #' @param sem_out_name The name of the object supplied to `sem_out`. `NULL`
 #'  by default. To be used by internal functions.
 #'
+#' @param try_k_more_times How many more times to try if the status code is not zero.
+#'                         Default is 0.
+#'
 #' @param ... Arguments to be passed to the function corresponds to
 #'  the requested method ([ci_bound_wn_i()] for "wn").
 #'
@@ -92,8 +95,9 @@ ci_i_one <- function(i,
                  sf_full = NA,
                  sf_args = list(),
                  sem_out_name = NULL,
+                 try_k_more_times = 0,
                  ...) {
-    # It should be the job of the calling function to check whether it is 
+    # It should be the job of the calling function to check whether it is
     # appropriate to use the robust method.
     if (!(which %in% c("lbound", "ubound"))) {
         stop("Must be 'lbound' or 'ubound' for the which argument.")
@@ -120,24 +124,46 @@ ci_i_one <- function(i,
       }
     if (method == "wn") {
         wald_ci_start <- !standardized
+        std_method_i <- "internal"
         b_time <- system.time(b <- try(suppressWarnings(ci_bound_wn_i(i,
                                                    sem_out = sem_out,
                                                    which = which,
                                                    standardized = standardized,
                                                    sf = sf,
                                                    sf2 = sf2,
-                                                   std_method = "internal",
+                                                   std_method = std_method_i,
                                                    wald_ci_start = wald_ci_start,
                                                     ...)), silent = TRUE))
         if (inherits(b, "try-error")) {
+            std_method_i <- "lavaan"
             b_time <- system.time(b <- suppressWarnings(ci_bound_wn_i(i,
                                                       sem_out = sem_out,
                                                       which = which,
                                                       standardized = standardized,
                                                       sf = sf,
                                                       sf2 = sf2,
-                                                      std_method = "lavaan",
+                                                      std_method = std_method_i,
                                                         ...)))
+          }
+        if (b$diag$status != 0) {
+            ki <- try_k_more_times
+            fxi <- 1
+            fti <- 1
+            while (ki > 0) {
+                ki <- ki - 1
+                fxi <- fxi * .1
+                fti <- fti * .1
+                b_time <- system.time(b <- suppressWarnings(ci_bound_wn_i(i,
+                                                          sem_out = sem_out,
+                                                          which = which,
+                                                          standardized = standardized,
+                                                          sf = sf,
+                                                          sf2 = sf2,
+                                                          std_method = std_method_i,
+                                                          xtol_rel_factor = fxi,
+                                                          ftol_rel_factor = fti,
+                                                            ...)))
+              }
           }
       }
     if (method == "nm") {
