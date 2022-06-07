@@ -24,6 +24,8 @@ ci_bound_wn_i(
   p_tol = 0.001,
   std_method = "internal",
   bounds = "none",
+  xtol_rel_factor = 1,
+  ftol_rel_factor = 1,
   ...
 )
 }
@@ -102,6 +104,18 @@ accepted by
 \code{\link[lavaan:lavaan]{lavaan::lavaan()}}. If the fit object \code{sem_out} already
 has bounds, this argument will be ignored and the existing
 bounds will be used.}
+
+\item{xtol_rel_factor}{Multiply the default \code{xtol_rel} by
+a number, usually a positive
+number equal to or less than 1, to
+change the default termination
+criterion. Default is 1.}
+
+\item{ftol_rel_factor}{Multiply the default \code{ftol_rel} by
+a number, usually a positive
+number equal to or less than 1, to
+change the default termination
+criterion. Default is 1.}
 
 \item{...}{Optional arguments. Not used.}
 }

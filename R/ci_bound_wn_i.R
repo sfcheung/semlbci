@@ -107,6 +107,18 @@
 #'               has bounds, this argument will be ignored and the existing
 #'               bounds will be used.
 #'
+#' @param xtol_rel_factor Multiply the default `xtol_rel` by
+#'                        a number, usually a positive
+#'                        number equal to or less than 1, to
+#'                        change the default termination
+#'                        criterion. Default is 1.
+#'
+#' @param ftol_rel_factor Multiply the default `ftol_rel` by
+#'                        a number, usually a positive
+#'                        number equal to or less than 1, to
+#'                        change the default termination
+#'                        criterion. Default is 1.
+#'
 #' @param ... Optional arguments. Not used.
 #'
 #' @references
@@ -162,6 +174,8 @@ ci_bound_wn_i <- function(i = NULL,
                        p_tol = 1e-3,
                        std_method = "internal",
                        bounds = "none",
+                       xtol_rel_factor = 1,
+                       ftol_rel_factor = 1,
                        ...) {
     k <- switch(which,
                 lbound = 1,
@@ -403,8 +417,8 @@ ci_bound_wn_i <- function(i = NULL,
     #   }
     opts_final <- utils::modifyList(list("algorithm" = "NLOPT_LD_SLSQP",
                         # "xtol_rel" = 1.0e-10,
-                        "xtol_rel" = 1.0e-5,
-                        "ftol_rel" = 1.0e-5,
+                        "xtol_rel" = 1.0e-5 * xtol_rel_factor,
+                        "ftol_rel" = 1.0e-5 * ftol_rel_factor,
                         "maxeval" = 500,
                         "print_level" = 0),
                         opts)
