@@ -21,7 +21,7 @@ ci_bound_wn_i(
   verbose = FALSE,
   sf = 1,
   sf2 = 0,
-  p_tol = 0.001,
+  p_tol = 5e-04,
   std_method = "internal",
   bounds = "none",
   xtol_rel_factor = 1,
@@ -93,7 +93,7 @@ Default is 0.}
 \item{p_tol}{Tolerance for checking the achieved level of
 confidence. If the absolute difference between the achieved level
 and and \code{ciperc} is greater than this amount, a warning is set in
-the status code and the bound is set to \code{NA}. Default is 1e-3.}
+the status code and the bound is set to \code{NA}. Default is 5e-4.}
 
 \item{std_method}{The method used to find the standardized solution.
 If equal to \verb{"lavaan"``, [lavaan::standardizedSolution()] will be used. If equal to }"internal"\verb{, an internal function of this package will be used. The }"lavaan"\verb{method should work in all situations, but the}"internal"\verb{method can be faster. Default is}"internal"`.}
