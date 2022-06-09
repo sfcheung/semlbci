@@ -149,10 +149,15 @@ ci_i_one <- function(i,
             ki <- try_k_more_times
             fxi <- 1
             fti <- 1
-            while (ki > 0) {
+            while ((ki > 0) & (b$diag$status != 0)) {
                 ki <- ki - 1
                 fxi <- fxi * .1
-                fti <- fti * .1
+                if (ki > 0) {
+                    fti <- fti * .1
+                  } else {
+                    # Try hard in the last attempt
+                    fti <- 0
+                  }
                 b_time <- system.time(b <- suppressWarnings(ci_bound_wn_i(i,
                                                           sem_out = sem_out,
                                                           which = which,
