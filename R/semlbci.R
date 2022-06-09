@@ -52,7 +52,7 @@
 #'  on maximum likelihood estimation will be used.
 #'
 #' @param try_k_more_times How many more times to try if failed.
-#'                         Default is 0.
+#'                         Default is 2.
 #'
 #' @param ... Arguments to be passed to [ci_bound_wn_i()].
 #'
@@ -109,7 +109,7 @@ semlbci <- function(sem_out,
                     standardized = FALSE,
                     method = "wn",
                     robust = "none",
-                    try_k_more_times = 0,
+                    try_k_more_times = 2,
                     ...,
                     parallel = FALSE,
                     ncpus = 2,
