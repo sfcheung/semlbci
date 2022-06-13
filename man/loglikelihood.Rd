@@ -5,6 +5,8 @@
 \alias{loglike_point}
 \alias{loglike_quad_range}
 \alias{loglike_quad_point}
+\alias{loglike_compare}
+\alias{loglikelihood}
 \title{Loglikelihood When a Parameter ss Fixed to Values in a Range}
 \usage{
 loglike_range(
@@ -21,6 +23,8 @@ loglike_point(theta0, sem_out, par_i, verbose = FALSE)
 loglike_quad_range(sem_out, par_i, confidence = 0.95, n_points = 20)
 
 loglike_quad_point(theta0, sem_out, par_i)
+
+loglike_compare(sem_out, par_i, confidence = 0.95, n_points = 20)
 }
 \arguments{
 \item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
@@ -60,6 +64,8 @@ Default is \code{FALSE}.}
 \item \code{loglike_quad_range}: Description of this function
 
 \item \code{loglike_quad_point}: Description of this function
+
+\item \code{loglike_compare}: Description of this function
 }}
 
 \examples{
@@ -84,5 +90,4 @@ pars <- c("m ~ x",
 out <- syntax_to_i(pars, fit_med)
 out
 p_table[out, ]
-
 }

@@ -36,7 +36,7 @@ a_loglik_w <- loglike_quad_range(fit, par_i = i)
 # Get the LBCI
 theta_int <- unlist(unname(confint(fit_lbci)[1, ]))
 # Plot the true loglikelihood over the LBCI
-a_loglik <- loglike_p_range(fit, par_i = i,
+a_loglik <- loglike_range(fit, par_i = i,
                             interval = theta_int)
 # Get the ranges for the plot
 theta_range <- range(c(a_loglik_w$theta, a_loglik$theta))
@@ -59,7 +59,9 @@ loglike_p(a_loglik_w[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chi
 loglike_p(a_loglik[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 loglike_p(a_loglik[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 
-
+out <- loglike_compare(fit, i, n_points = 40)
+out
+plot(out)
 
 # User Parameters
 
@@ -79,13 +81,11 @@ fit_lbci
 
 i <- 6
 # Plot the quadratic approximation of the loglikelihood
-a_loglik_w <- quad_approx_p_range(fit, par_i = i)
+a_loglik_w <- loglike_quad_range(fit, par_i = i)
 # Get the LBCI
 theta_int <- unlist(unname(confint(fit_lbci)[1, ]))
-# Plot the quadratic approximation of the loglikelihood
-a_loglik_w <- quad_approx_p_range(fit, par_i = i)
 # Plot the true loglikelihood over the LBCI
-a_loglik <- loglike_p_range(fit, par_i = i,
+a_loglik <- loglike_range(fit, par_i = i,
                             interval = theta_int)
 # Get the ranges for the plot
 theta_range <- range(c(a_loglik_w$theta, a_loglik$theta))

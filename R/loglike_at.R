@@ -45,8 +45,10 @@
 #' out <- syntax_to_i(pars, fit_med)
 #' out
 #' p_table[out, ]
-#'
-#' @describeIn loglike_range Description of this function
+#' @name loglikelihood
+NULL
+
+#' @describeIn loglikelihood Description of this function
 #' @order 1
 
 loglike_range <- function(sem_out, par_i,
@@ -75,7 +77,7 @@ loglike_range <- function(sem_out, par_i,
 
 #' @param theta0 The value at which the parameter is fixed to.
 #'
-#' @describeIn loglike_range Description of this function
+#' @describeIn loglikelihood Description of this function
 #' @order 2
 
 loglike_point <- function(theta0,
@@ -106,7 +108,7 @@ loglike_point <- function(theta0,
     out
   }
 
-#' @describeIn loglike_range Description of this function
+#' @describeIn loglikelihood Description of this function
 #' @order 3
 
 
@@ -126,7 +128,7 @@ loglike_quad_range <- function(sem_out,
     out_final
   }
 
-#' @describeIn loglike_range Description of this function
+#' @describeIn loglikelihood Description of this function
 #' @order 4
 
 
@@ -137,4 +139,45 @@ loglike_quad_point <- function(theta0,
     est <- lavaan::parameterEstimates(sem_out)[par_i, "est"]
     p_info <- 1 / lavaan::parameterEstimates(sem_out)[par_i, "se"]^2
     -.5 * p_info * (theta0 - est) ^ 2 + lavaan::fitMeasures(sem_out, "logl")
+  }
+
+#' @describeIn loglikelihood Description of this function
+#' @order 5
+
+loglike_compare <- function(sem_out,
+                            par_i,
+                            confidence = .95,
+                            n_points = 20) {
+    ll_q <- loglike_quad_range(sem_out, par_i = par_i,
+                               confidence = confidence, n_points = n_points)
+    lbci_i <- semlbci(sem_out, pars = par_i, ciperc = confidence)
+    theta_int <- unlist(unname(confint(lbci_i)[1, ]))
+    ll <- loglike_range(sem_out, par_i = par_i,
+                        interval = theta_int,
+                        n_points = n_points)
+    # theta_range <- range(c(ll_q$theta, ll$theta))
+    # loglik_range <- range(c(ll_q$loglike, ll$loglik))
+    pvalue_q_lb <- loglike_point(ll_q[1, "theta"], sem_out = sem_out, par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+    pvalue_q_ub <- loglike_point(ll_q[nrow(ll_q), "theta"], sem_out = sem_out, par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+    pvalue_l_lb <- loglike_point(ll[1, "theta"], sem_out = sem_out, par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+    pvalue_l_ub <- loglike_point(ll[nrow(ll), "theta"], sem_out = sem_out, par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+    out <- list(quadratic = ll_q,
+                loglikelihood = ll,
+                pvalue_quadratic = c(pvalue_q_lb, pvalue_q_ub),
+                pvalue_loglikelihood = c(pvalue_l_lb, pvalue_l_ub))
+    class(out) <- "loglike_compare"
+    out
+  }
+
+#' @export
+
+plot.loglike_compare <- function(x, y, ...) {
+    theta_range <- range(c(x$quadratic$theta, x$loglikelihood$theta))
+    loglik_range <- range(c(x$quadratic$loglike, x$loglikelihood$loglik))
+    loglik_max <- max(c(x$quadratic$loglike, x$loglikelihood$loglik))
+    loglik_range <- loglik_range - loglik_max
+    plot(x$quadratic$theta, x$quadratic$loglike - loglik_max, type = "l", col = "blue",
+        xlim = theta_range, ylim = loglik_range)
+    # Plot true loglikelihood
+    points(x$loglikelihood$theta, x$loglikelihood$loglike - loglik_max, type = "l", col = "red")
   }
