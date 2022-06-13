@@ -33,7 +33,7 @@ fit_lbci
 
 i <- "f1 ~~ f2"
 # Plot the quadratic approximation of the loglikelihood
-a_loglik_w <- loglike_quad_range(fit, par_i = )
+a_loglik_w <- loglike_quad_range(fit, par_i = i)
 # Get the LBCI
 theta_int <- unlist(unname(confint(fit_lbci)[1, ]))
 # Plot the true loglikelihood over the LBCI
@@ -60,9 +60,7 @@ loglike_point(a_loglik_w[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(
 loglike_point(a_loglik[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 loglike_point(a_loglik[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 
-syntax_to_i("f1 ~~ f2", fit)
-
-out <- loglike_compare(fit, i, n_points = 40)
+out <- loglike_compare(fit, par_i = i, n_points = 40)
 out
 plot(out)
 plot(out, type = "ggplot2")
@@ -85,7 +83,7 @@ lavaan::parameterTable(fit)
 fit_lbci <- semlbci(fit, c("ab := "))
 fit_lbci
 
-i <- 6
+i <- "ab :="
 # Plot the quadratic approximation of the loglikelihood
 a_loglik_w <- loglike_quad_range(fit, par_i = i)
 # Get the LBCI
@@ -101,15 +99,6 @@ plot(a_loglik_w$theta, a_loglik_w$loglike, type = "l", col = "blue",
      xlim = theta_range, ylim = loglik_range)
 # Plot true loglikelihood
 points(a_loglik$theta, a_loglik$loglike, type = "l", col = "red")
-
-dat <- rbind(data.frame(a_loglik_w, type = "quadratic"),
-             data.frame(a_loglik, type = "true"))
-p <- ggplot2::ggplot() +
-        ggplot2::geom_line(data = dat,
-                           ggplot2::aes(x = theta, y = loglike, color = type))
-        ggplot2::ylab("Scaled Loglikelihood") +
-        ggplot2::xlab("Parameter Value")
-p
 
 fit_logl <- lavaan::fitMeasures(fit, "logl")
 
@@ -128,5 +117,6 @@ out
 plot(out)
 library(ggplot2)
 plot(out, type = "ggplot2")
+plot(out, type = "ggplot2", add_pvalues = TRUE)
 
 options(options_old)
