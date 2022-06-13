@@ -54,10 +54,10 @@ a_loglik$pvalue_check <- pchisq(2 * (fit_logl - a_loglik$loglike),
                                 lower.tail = FALSE)
 print(a_loglik, digits = 3)
 
-loglike_p(a_loglik_w[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
-loglike_p(a_loglik_w[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
-loglike_p(a_loglik[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
-loglike_p(a_loglik[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
+loglike_point(a_loglik_w[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
+loglike_point(a_loglik_w[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
+loglike_point(a_loglik[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
+loglike_point(a_loglik[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 
 out <- loglike_compare(fit, i, n_points = 40)
 out
@@ -96,6 +96,15 @@ plot(a_loglik_w$theta, a_loglik_w$loglike, type = "l", col = "blue",
 # Plot true loglikelihood
 points(a_loglik$theta, a_loglik$loglike, type = "l", col = "red")
 
+dat <- rbind(data.frame(a_loglik_w, type = "quadratic"),
+             data.frame(a_loglik, type = "true"))
+p <- ggplot2::ggplot() +
+        ggplot2::geom_line(data = dat,
+                           ggplot2::aes(x = theta, y = loglike, color = type))
+        ggplot2::ylab("Scaled Loglikelihood") +
+        ggplot2::xlab("Parameter Value")
+p
+
 fit_logl <- lavaan::fitMeasures(fit, "logl")
 
 a_loglik$pvalue_check <- pchisq(2 * (fit_logl - a_loglik$loglike),
@@ -103,10 +112,15 @@ a_loglik$pvalue_check <- pchisq(2 * (fit_logl - a_loglik$loglike),
                                 lower.tail = FALSE)
 print(a_loglik, digits = 3)
 
-loglike_p(a_loglik_w[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
-loglike_p(a_loglik_w[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
-loglike_p(a_loglik[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
-loglike_p(a_loglik[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
+loglike_point(a_loglik_w[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
+loglike_point(a_loglik_w[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
+loglike_point(a_loglik[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
+loglike_point(a_loglik[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 
+out <- loglike_compare(fit, i, n_points = 20)
+out
+plot(out)
+library(ggplot2)
+plot(out, type = "ggplot2")
 
 options(options_old)

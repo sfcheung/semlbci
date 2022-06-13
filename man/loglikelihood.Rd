@@ -20,7 +20,13 @@ loglike_range(
 
 loglike_point(theta0, sem_out, par_i, verbose = FALSE)
 
-loglike_quad_range(sem_out, par_i, confidence = 0.95, n_points = 20)
+loglike_quad_range(
+  sem_out,
+  par_i,
+  confidence = 0.95,
+  n_points = 20,
+  interval = NULL
+)
 
 loglike_quad_point(theta0, sem_out, par_i)
 
@@ -38,8 +44,12 @@ is used as the interval.}
 
 \item{n_points}{The number of points to be evaluated in the interval.}
 
-\item{interval}{A vector of two numbers. If provided, this will be used
-as the interval. Default is \code{NULL}.}
+\item{interval}{A vector of numbers. If provided and has two elements, this
+will be used
+as the end points of the interval. If it has more than
+two elements, the elements will be used directly to form
+the range of values in the interval.
+Default is \code{NULL}.}
 
 \item{verbose}{Whether some diagnostic information will be printed.
 Default is \code{FALSE}.}
