@@ -7,7 +7,7 @@
 \alias{loglike_quad_point}
 \alias{loglike_compare}
 \alias{loglikelihood}
-\title{Loglikelihood When a Parameter ss Fixed to Values in a Range}
+\title{Log-likelihood When a Parameter is Fixed to a Value}
 \usage{
 loglike_range(
   sem_out,
@@ -57,13 +57,68 @@ Default is \code{FALSE}.}
 \item{theta0}{The value at which the parameter is fixed to.}
 }
 \value{
-...
+\code{\link[=loglike_point]{loglike_point()}} returns a list with these elements:
+\itemize{
+\item \code{loglike}: The log-likelihood of the model when the parameter
+is fixed to \code{theta0}.
+\item \code{pvalue}: The \emph{p}-values based on the likelihood ratio
+difference test between the original model and
+model with the parameter fixed to \code{theta0}.
+\item \code{fit}: A \link[lavaan:lavaan-class]{lavaan::lavaan} object. The original model
+with the parameter fixed to \code{theta0}.
+\item \code{lrt}: The output of \code{\link[lavaan:lavTestLRT]{lavaan::lavTestLRT()}}, comparing the
+original model with the model with the parameter
+fixed to \code{theta0}.
+}
+
+\code{\link[=loglike_quad_range]{loglike_quad_range()}} returns a data frame with
+these columns:
+\itemize{
+\item \code{theta}: The values to which the parameter is fixed to.
+\item \code{loglike}: The log-likelihood values of the model using
+quadratic approximation.
+\item \code{pvalue}: The \emph{p}-values based on the likelihood ratio
+difference test between the original model and
+model with the parameter fixed to theta.
+}
+
+\code{\link[=loglike_quad_point]{loglike_quad_point()}} returns a single number of
+the class \code{lavaan.vector} because it is the output
+out \verb{lavann:;fitMeasures()}. This number is the
+quadratic approximation of the log-likelihood when
+the parameter is fixed to \code{theta0}.
+
+\code{\link[=loglike_range]{loglike_range()}} returns a data frame with
+these columns:
+\itemize{
+\item \code{theta}: The values to which the parameter is fixed to.
+\item \code{loglike}: The log-likelihood values of the model.
+\item \code{pvalue}: The \emph{p}-values based on the likelihood ratio
+difference test between the original model and
+model with the parameter fixed to theta.
+}
 }
 \description{
-...
+These functions compute the log-likelihood
+of a model when a parameter is fixed to a
+value or a range of values
 }
 \details{
-...
+The methods presented in Pawitan (2013) are used
+to compute and visualize the log-likelihood of a
+structural equation model when a parameter is
+fixed to a value. \code{\link[=loglike_range]{loglike_range()}} and
+\code{\link[=loglike_point]{loglike_point()}} compute the so-called "true"
+log-likelihood, while \code{\link[=loglike_quad_range]{loglike_quad_range()}} and
+\code{\link[=loglike_quad_point]{loglike_quad_point()}} compute the
+log-likelihood using quadratic assumption.
+
+These functions are for the purpose of illustration and
+learning. Therefore, they are not a versatile as
+\code{\link[=semlbic]{semlbic()}} in the types of models and parameters
+supported. They can be used for free parameters and
+user-defined parameters not involved in any constraints.
+Only a model fitted by maximum likelihood is supported.
 }
 \section{Functions}{
 \itemize{

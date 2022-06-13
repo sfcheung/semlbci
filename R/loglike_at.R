@@ -1,10 +1,33 @@
-#' @title Loglikelihood When a Parameter ss Fixed to Values in a Range
+#' @title Log-likelihood When a Parameter is Fixed to a Value
 #'
-#' @description ...
+#' @description These functions compute the log-likelihood
+#'              of a model when a parameter is fixed to a
+#'              value or a range of values
 #'
-#' @details ...
+#' @details The methods presented in Pawitan (2013) are used
+#'          to compute and visualize the log-likelihood of a
+#'          structural equation model when a parameter is
+#'          fixed to a value. [loglike_range()] and
+#'          [loglike_point()] compute the so-called "true"
+#'          log-likelihood, while [loglike_quad_range()] and
+#'          [loglike_quad_point()] compute the
+#'          log-likelihood using quadratic assumption.
 #'
-#' @return ...
+#' These functions are for the purpose of illustration and
+#' learning. Therefore, they are not a versatile as
+#' [semlbic()] in the types of models and parameters
+#' supported. They can be used for free parameters and
+#' user-defined parameters not involved in any constraints.
+#' Only a model fitted by maximum likelihood is supported.
+#'
+#' @return [loglike_range()] returns a data frame with
+#' these columns:
+#'
+#' - `theta`: The values to which the parameter is fixed to.
+#' - `loglike`: The log-likelihood values of the model.
+#' - `pvalue`: The *p*-values based on the likelihood ratio
+#'             difference test between the original model and
+#'             model with the parameter fixed to theta.
 #'
 #' @param sem_out The SEM output. Currently \code{lavaan} output only.
 #'
@@ -85,6 +108,19 @@ loglike_range <- function(sem_out, par_i,
 
 #' @param theta0 The value at which the parameter is fixed to.
 #'
+#' @return [loglike_point()] returns a list with these elements:
+#'
+#' - `loglike`: The log-likelihood of the model when the parameter
+#'              is fixed to `theta0`.
+#' - `pvalue`: The *p*-values based on the likelihood ratio
+#'             difference test between the original model and
+#'             model with the parameter fixed to `theta0`.
+#' - `fit`: A [lavaan::lavaan-class] object. The original model
+#'          with the parameter fixed to `theta0`.
+#' - `lrt`: The output of [lavaan::lavTestLRT()], comparing the
+#'          original model with the model with the parameter
+#'          fixed to `theta0`.
+#'
 #' @describeIn loglikelihood Description of this function
 #' @order 2
 
@@ -116,6 +152,16 @@ loglike_point <- function(theta0,
     out
   }
 
+#' @return [loglike_quad_range()] returns a data frame with
+#' these columns:
+#'
+#' - `theta`: The values to which the parameter is fixed to.
+#' - `loglike`: The log-likelihood values of the model using
+#'              quadratic approximation.
+#' - `pvalue`: The *p*-values based on the likelihood ratio
+#'             difference test between the original model and
+#'             model with the parameter fixed to theta.
+#'
 #' @describeIn loglikelihood Description of this function
 #' @order 3
 
@@ -149,6 +195,11 @@ loglike_quad_range <- function(sem_out,
     out_final
   }
 
+#' @return [loglike_quad_point()] returns a single number of
+#'         the class `lavaan.vector` because it is the output
+#'         out `lavann:;fitMeasures()`. This number is the
+#'         quadratic approximation of the log-likelihood when
+#'         the parameter is fixed to `theta0`.
 #' @describeIn loglikelihood Description of this function
 #' @order 4
 
