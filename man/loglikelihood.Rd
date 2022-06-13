@@ -39,17 +39,17 @@ loglike_compare(sem_out, par_i, confidence = 0.95, n_points = 20)
 \code{\link[lavaan:lavParTable]{lavaan::parameterTable()}}.}
 
 \item{confidence}{The level of confidence of the Wald confidence
-interval. If \code{interval} is \code{NULL}, this confidence
-is used as the interval.}
+interval. If \code{interval} is \code{NULL}, this
+confidence is used as the interval.}
 
-\item{n_points}{The number of points to be evaluated in the interval.}
+\item{n_points}{The number of points to be evaluated in the
+interval.}
 
-\item{interval}{A vector of numbers. If provided and has two elements, this
-will be used
-as the end points of the interval. If it has more than
-two elements, the elements will be used directly to form
-the range of values in the interval.
-Default is \code{NULL}.}
+\item{interval}{A vector of numbers. If provided and has two
+elements, this will be used as the end points of
+the interval. If it has more than two elements, the
+elements will be used directly to form the range of
+values in the interval. Default is \code{NULL}.}
 
 \item{verbose}{Whether some diagnostic information will be printed.
 Default is \code{FALSE}.}
@@ -59,66 +59,76 @@ Default is \code{FALSE}.}
 \value{
 \code{\link[=loglike_point]{loglike_point()}} returns a list with these elements:
 \itemize{
-\item \code{loglike}: The log-likelihood of the model when the parameter
-is fixed to \code{theta0}.
-\item \code{pvalue}: The \emph{p}-values based on the likelihood ratio
-difference test between the original model and
-model with the parameter fixed to \code{theta0}.
-\item \code{fit}: A \link[lavaan:lavaan-class]{lavaan::lavaan} object. The original model
-with the parameter fixed to \code{theta0}.
-\item \code{lrt}: The output of \code{\link[lavaan:lavTestLRT]{lavaan::lavTestLRT()}}, comparing the
-original model with the model with the parameter
+\item \code{loglike}: The log-likelihood of the model when the parameter is
 fixed to \code{theta0}.
+\item \code{pvalue}: The \emph{p}-values based on the likelihood ratio difference
+test between the original model and model with the
+parameter fixed to \code{theta0}.
+\item \code{fit}: A \link[lavaan:lavaan-class]{lavaan::lavaan} object. The original model with
+the parameter fixed to \code{theta0}.
+\item \code{lrt}: The output of \code{\link[lavaan:lavTestLRT]{lavaan::lavTestLRT()}}, comparing the
+original model with the model with the parameter fixed to
+\code{theta0}.
 }
 
-\code{\link[=loglike_quad_range]{loglike_quad_range()}} returns a data frame with
-these columns:
+\code{\link[=loglike_quad_range]{loglike_quad_range()}} returns a data frame with these
+columns:
 \itemize{
 \item \code{theta}: The values to which the parameter is fixed to.
-\item \code{loglike}: The log-likelihood values of the model using
-quadratic approximation.
-\item \code{pvalue}: The \emph{p}-values based on the likelihood ratio
-difference test between the original model and
-model with the parameter fixed to theta.
+\item \code{loglike}: The log-likelihood values of the model using quadratic
+approximation.
+\item \code{pvalue}: The \emph{p}-values based on the likelihood ratio difference
+test between the original model and model with the
+parameter fixed to theta.
 }
 
-\code{\link[=loglike_quad_point]{loglike_quad_point()}} returns a single number of
-the class \code{lavaan.vector} because it is the output
-out \verb{lavann:;fitMeasures()}. This number is the
-quadratic approximation of the log-likelihood when
-the parameter is fixed to \code{theta0}.
+\code{\link[=loglike_quad_point]{loglike_quad_point()}} returns a single number of the class
+\code{lavaan.vector} because it is the output out
+\verb{lavann:;fitMeasures()}. This number is the quadratic
+approximation of the log-likelihood when the parameter is
+fixed to \code{theta0}.
 
-\code{\link[=loglike_range]{loglike_range()}} returns a data frame with
-these columns:
+\code{\link[=loglike_compare]{loglike_compare()}} calls \code{\link[=loglike_range]{loglike_range()}} and
+\code{\link[=loglike_quad_range]{loglike_quad_range()}} and return their results as a list
+with these elements:
+\itemize{
+\item \code{quadratic}: The output of \code{\link[=loglike_quad_range]{loglike_quad_range()}}.
+\item \code{loglikelihood}: The output of \code{\link[=loglike_range]{loglike_range()}}.
+\item \code{pvalue_quadratic}: The likelihood ratio test \emph{p}-values at the
+quadratic approximation confidence limits.
+\item \code{pvalue_loglikelihood}: The likelihood ratio test \emph{p}-values at
+the likelihood-based confidence limits.
+}
+
+\code{\link[=loglike_range]{loglike_range()}} returns a data frame with these columns:
 \itemize{
 \item \code{theta}: The values to which the parameter is fixed to.
 \item \code{loglike}: The log-likelihood values of the model.
-\item \code{pvalue}: The \emph{p}-values based on the likelihood ratio
-difference test between the original model and
-model with the parameter fixed to theta.
+\item \code{pvalue}: The \emph{p}-values based on the likelihood ratio difference
+test between the original model and model with the
+parameter fixed to theta.
 }
 }
 \description{
-These functions compute the log-likelihood
-of a model when a parameter is fixed to a
-value or a range of values
+These functions compute the log-likelihood of a model
+when a parameter is fixed to a value or a range of
+values
 }
 \details{
-The methods presented in Pawitan (2013) are used
-to compute and visualize the log-likelihood of a
-structural equation model when a parameter is
-fixed to a value. \code{\link[=loglike_range]{loglike_range()}} and
-\code{\link[=loglike_point]{loglike_point()}} compute the so-called "true"
-log-likelihood, while \code{\link[=loglike_quad_range]{loglike_quad_range()}} and
-\code{\link[=loglike_quad_point]{loglike_quad_point()}} compute the
-log-likelihood using quadratic assumption.
+The methods presented in Pawitan (2013) are used to
+compute and visualize the log-likelihood of a structural
+equation model when a parameter is fixed to a value.
+\code{\link[=loglike_range]{loglike_range()}} and \code{\link[=loglike_point]{loglike_point()}} compute the
+so-called "true" log-likelihood, while
+\code{\link[=loglike_quad_range]{loglike_quad_range()}} and \code{\link[=loglike_quad_point]{loglike_quad_point()}} compute
+the log-likelihood using quadratic assumption.
 
-These functions are for the purpose of illustration and
-learning. Therefore, they are not a versatile as
-\code{\link[=semlbic]{semlbic()}} in the types of models and parameters
-supported. They can be used for free parameters and
-user-defined parameters not involved in any constraints.
-Only a model fitted by maximum likelihood is supported.
+These functions are for the purpose of illustration and learning.
+Therefore, they are not a versatile as \code{\link[=semlbic]{semlbic()}} in the types of
+models and parameters supported. They can be used for free
+parameters and user-defined parameters not involved in any
+constraints. Only a model fitted by maximum likelihood is
+supported.
 }
 \section{Functions}{
 \itemize{
@@ -155,4 +165,8 @@ pars <- c("m ~ x",
 out <- syntax_to_i(pars, fit_med)
 out
 p_table[out, ]
+}
+\references{
+Pawitan, Y. (2013). \emph{In all likelihood: Statistical
+modelling and inference using likelihood}. Oxford University Press.
 }

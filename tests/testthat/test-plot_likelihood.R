@@ -3,6 +3,7 @@ skip("WIP")
 options_old <- options(width = 132)
 library(testthat)
 library(semlbci)
+library(ggplot2)
 
 # Fit the model
 
@@ -30,9 +31,9 @@ fit_lbci
 
 # Factor Covariance
 
-i <- 7
+i <- "f1 ~~ f2"
 # Plot the quadratic approximation of the loglikelihood
-a_loglik_w <- loglike_quad_range(fit, par_i = i)
+a_loglik_w <- loglike_quad_range(fit, par_i = )
 # Get the LBCI
 theta_int <- unlist(unname(confint(fit_lbci)[1, ]))
 # Plot the true loglikelihood over the LBCI
@@ -59,9 +60,14 @@ loglike_point(a_loglik_w[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(
 loglike_point(a_loglik[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 loglike_point(a_loglik[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 
+syntax_to_i("f1 ~~ f2", fit)
+
 out <- loglike_compare(fit, i, n_points = 40)
 out
 plot(out)
+plot(out, type = "ggplot2")
+p <- plot(out, type = "ggplot2", add_pvalues = TRUE)
+p
 
 # User Parameters
 
