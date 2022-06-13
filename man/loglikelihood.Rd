@@ -36,7 +36,9 @@ loglike_compare(sem_out, par_i, confidence = 0.95, n_points = 20)
 \item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
 
 \item{par_i}{The row number of the parameter in the output of
-\code{\link[lavaan:lavParTable]{lavaan::parameterTable()}}.}
+\code{\link[lavaan:lavParTable]{lavaan::parameterTable()}}. Can also be a \link[lavaan:model.syntax]{lavaan::model.syntax}
+specification for a parameter, e.g., \code{"y ~ x"}. It will be
+converted to the row number by \code{\link[=syntax_to_i]{syntax_to_i()}}.}
 
 \item{confidence}{The level of confidence of the Wald confidence
 interval. If \code{interval} is \code{NULL}, this
@@ -124,7 +126,7 @@ so-called "true" log-likelihood, while
 the log-likelihood using quadratic assumption.
 
 These functions are for the purpose of illustration and learning.
-Therefore, they are not a versatile as \code{\link[=semlbic]{semlbic()}} in the types of
+Therefore, they are not a versatile as \code{\link[=semlbci]{semlbci()}} in the types of
 models and parameters supported. They can be used for free
 parameters and user-defined parameters not involved in any
 constraints. Only a model fitted by maximum likelihood is

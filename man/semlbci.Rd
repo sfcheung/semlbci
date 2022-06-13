@@ -12,7 +12,7 @@ semlbci(
   standardized = FALSE,
   method = "wn",
   robust = "none",
-  try_k_more_times = 0,
+  try_k_more_times = 2,
   ...,
   parallel = FALSE,
   ncpus = 2,
@@ -53,7 +53,7 @@ is supported for now, implemented by the method proposed by Falk
 on maximum likelihood estimation will be used.}
 
 \item{try_k_more_times}{How many more times to try if failed.
-Default is 0.}
+Default is 2.}
 
 \item{...}{Arguments to be passed to \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.}
 

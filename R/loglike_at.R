@@ -13,7 +13,7 @@
 #'          the log-likelihood using quadratic assumption.
 #'
 #' These functions are for the purpose of illustration and learning.
-#' Therefore, they are not a versatile as [semlbic()] in the types of
+#' Therefore, they are not a versatile as [semlbci()] in the types of
 #' models and parameters supported. They can be used for free
 #' parameters and user-defined parameters not involved in any
 #' constraints. Only a model fitted by maximum likelihood is
@@ -274,7 +274,7 @@ loglike_compare <- function(sem_out,
     zs <- seq(-z, z, length.out = n_points)
     thetas_q <- est + se * zs
     lbci_i <- semlbci(sem_out, pars = par_i, ciperc = confidence)
-    lbci_range <- unlist(unname(confint(lbci_i)[1, ]))
+    lbci_range <- unlist(unname(stats::confint(lbci_i)[1, ]))
     thetas_l <- seq(lbci_range[1], lbci_range[2], length.out = n_points)
     thetas_0 <- sort(c(thetas_q, thetas_l))
     int_q <- thetas_0[which(thetas_0 == min(thetas_q)):which(thetas_0 == max(thetas_q))]
@@ -314,7 +314,7 @@ loglike_compare <- function(sem_out,
 #'          scaled to have a maximum of zero as suggested by Pawitan
 #'          (2013).
 #'
-#' @return Nothing if `type = "default"`, the generated [ggplot2]
+#' @return Nothing if `type = "default"`, the generated [ggplot2::ggplot()]
 #'         graph if `type = "ggplot2"`.
 #'
 #' @param x The output of [loglike_compare()].
@@ -419,7 +419,7 @@ plot.loglike_compare <- function(x, y,
              ylab = "Scaled Log-Likelihood",
              sub = "Blue: Quadratic Approximation; Red: 'True' Log-Likelihood")
         # Plot true loglikelihood
-        points(x$loglikelihood$theta,
+        graphics::points(x$loglikelihood$theta,
                x$loglikelihood$loglike - loglik_max,
                type = "l",
                col = "blue")

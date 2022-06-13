@@ -21,7 +21,7 @@ plot for the confidence limits.}
 \item{...}{Optional arguments. Ignored.}
 }
 \value{
-Nothing if \code{type = "default"}, the generated \link{ggplot2}
+Nothing if \code{type = "default"}, the generated \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}
 graph if \code{type = "ggplot2"}.
 }
 \description{

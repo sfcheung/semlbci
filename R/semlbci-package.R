@@ -56,3 +56,4 @@
 #' @name semlbci-package
 #'
 NULL
+globalVariables(c("theta", "loglike", "pvalue"))
