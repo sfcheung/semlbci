@@ -301,22 +301,26 @@ loglike_compare <- function(sem_out,
     int_q <- thetas_0[which(thetas_0 == min(thetas_q)):which(thetas_0 == max(thetas_q))]
     int_l <- thetas_0[which(thetas_0 == min(thetas_l)):which(thetas_0 == max(thetas_l))]
     ll_q <- loglike_quad_range(sem_out, par_i = par_i,
-                               interval = int_q,
-                               start = start)
+                               interval = int_q)
     ll <- loglike_range(sem_out, par_i = par_i,
-                        interval = int_l)
+                        interval = int_l,
+                        start = start)
     pvalue_q_lb <- loglike_point(ll_q[1, "theta"],
                                  sem_out = sem_out,
-                                 par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+                                 par_i = par_i,
+                                 start = start)$lrt[2, "Pr(>Chisq)"]
     pvalue_q_ub <- loglike_point(ll_q[nrow(ll_q), "theta"],
                                  sem_out = sem_out,
-                                 par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+                                 par_i = par_i,
+                                 start = start)$lrt[2, "Pr(>Chisq)"]
     pvalue_l_lb <- loglike_point(ll[1, "theta"],
                                  sem_out = sem_out,
-                                 par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+                                 par_i = par_i,
+                                 start = start)$lrt[2, "Pr(>Chisq)"]
     pvalue_l_ub <- loglike_point(ll[nrow(ll), "theta"],
                                  sem_out = sem_out,
-                                 par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+                                 par_i = par_i,
+                                 start = start)$lrt[2, "Pr(>Chisq)"]
     out <- list(quadratic = ll_q,
                 loglikelihood = ll,
                 pvalue_quadratic = c(pvalue_q_lb, pvalue_q_ub),
