@@ -285,9 +285,10 @@ loglike_compare <- function(sem_out,
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
-            stop("par_i must denote one parameter only.")
+            stop("par_i must denote one parameter.")
           }
       }
+    par_i_name <- i_to_name(par_i, sem_out)
     ptable <- lavaan::parameterTable(sem_out)
     est <- ptable$est[par_i]
     se <- ptable$se[par_i]
@@ -324,7 +325,8 @@ loglike_compare <- function(sem_out,
     out <- list(quadratic = ll_q,
                 loglikelihood = ll,
                 pvalue_quadratic = c(pvalue_q_lb, pvalue_q_ub),
-                pvalue_loglikelihood = c(pvalue_l_lb, pvalue_l_ub))
+                pvalue_loglikelihood = c(pvalue_l_lb, pvalue_l_ub),
+                par_name = par_i_name)
     class(out) <- "loglike_compare"
     out
   }
@@ -387,6 +389,11 @@ plot.loglike_compare <- function(x, y,
                                  type = "default",
                                  add_pvalues = FALSE,
                                  ...) {
+    if (!is.null(x$par_name)) {
+        par_name <- x$par_name
+      } else {
+        par_name <- "Parameter Value"
+      }
     if (type == "ggplot2") {
         dat <- rbind(data.frame(x$quadratic, type = "quadratic"),
                      data.frame(x$loglikelihood, type = "true"))
@@ -395,11 +402,15 @@ plot.loglike_compare <- function(x, y,
                 ggplot2::geom_line(data = dat,
                                    ggplot2::aes(x = theta,
                                                 y = loglike,
-                                                color = type)) +
-                ggplot2::scale_colour_manual(values = c("red", "blue")) +
+                                                color = type,
+                                                linetype = type)) +
+                ggplot2::scale_colour_manual(values = c(quadratic = "red",
+                                                        true = "blue")) +
+                ggplot2::scale_linetype_manual(values = c(quadratic = "dashed",
+                                                          true = "solid")) +
                 ggplot2::geom_hline(yintercept = min(dat$loglike)) +
                 ggplot2::ylab("Scaled Log (Profile) likelihood") +
-                ggplot2::xlab("Parameter Value") +
+                ggplot2::xlab(par_name) +
                 ggplot2::labs(title = "Log (Profile) Likelihood") +
                 ggplot2::theme(legend.position = "top")
         if (add_pvalues) {
@@ -419,13 +430,19 @@ plot.loglike_compare <- function(x, y,
                                                            color = type),
                                               size = 5,
                                               box.padding = .5,
-                                              nudge_y = .25) +
+                                              nudge_y = .25,
+                                              show.legend = FALSE) +
                       ggplot2::geom_point(data = dat_0,
                                           ggplot2::aes(x = theta,
                                                        y = loglike,
-                                                       color = type),
-                                          size = 4) +
-                      ggplot2::guides(shape = "none")
+                                                       color = type,
+                                                       shape = type),
+                                          size = 4,
+                                          show.legend = c(color = FALSE,
+                                                          shape = TRUE)) +
+                      ggplot2::guides(color = guide_legend(order = 1),
+                                      linetype = guide_legend(order = 1),
+                                      shape = guide_legend(order = 2))
           }
         return(p)
       } else {
@@ -437,11 +454,12 @@ plot.loglike_compare <- function(x, y,
         plot(x$quadratic$theta,
              x$quadratic$loglike - loglik_max,
              type = "l",
+             lty = "dashed",
              col = "red",
              xlim = theta_range,
              ylim = loglik_range,
              main = "Log (Profile) Likelihood",
-             xlab = "Parameter Value",
+             xlab = par_name,
              ylab = "Scaled Log (Profile) Likelihood",
              sub = "Blue: Quadratic Approximation; Red: 'True' Log-Likelihood")
         # Plot true loglikelihood
@@ -449,6 +467,7 @@ plot.loglike_compare <- function(x, y,
                x$loglikelihood$loglike - loglik_max,
                type = "l",
                col = "blue")
+        graphics::abline(h = min(x$quadratic$loglike - loglik_max))
       }
     invisible()
   }
