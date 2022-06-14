@@ -440,9 +440,9 @@ plot.loglike_compare <- function(x, y,
                                           size = 4,
                                           show.legend = c(color = FALSE,
                                                           shape = TRUE)) +
-                      ggplot2::guides(color = guide_legend(order = 1),
-                                      linetype = guide_legend(order = 1),
-                                      shape = guide_legend(order = 2))
+                      ggplot2::guides(color = ggplot2::guide_legend(order = 1),
+                                      linetype = ggplot2::guide_legend(order = 1),
+                                      shape = ggplot2::guide_legend(order = 2))
           }
         return(p)
       } else {
