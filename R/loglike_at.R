@@ -80,6 +80,8 @@ NULL
 
 #' @describeIn loglikelihood Description of this function
 #' @order 1
+#' @export
+
 
 loglike_range <- function(sem_out, par_i,
                           confidence = .95,
@@ -132,6 +134,7 @@ loglike_range <- function(sem_out, par_i,
 #'
 #' @describeIn loglikelihood Description of this function
 #' @order 2
+#' @export
 
 loglike_point <- function(theta0,
                           sem_out,
@@ -179,6 +182,7 @@ loglike_point <- function(theta0,
 #'
 #' @describeIn loglikelihood Description of this function
 #' @order 3
+#' @export
 
 
 loglike_quad_range <- function(sem_out,
@@ -226,6 +230,7 @@ loglike_quad_range <- function(sem_out,
 #'         fixed to `theta0`.
 #' @describeIn loglikelihood Description of this function
 #' @order 4
+#' @export
 
 
 loglike_quad_point <- function(theta0,
@@ -256,6 +261,7 @@ loglike_quad_point <- function(theta0,
 #'
 #' @describeIn loglikelihood Description of this function
 #' @order 5
+#' @export
 
 loglike_compare <- function(sem_out,
                             par_i,
