@@ -136,7 +136,7 @@ ci_i_one <- function(i,
                                                     ...)), silent = TRUE))
         if (inherits(b, "try-error")) {
             std_method_i <- "lavaan"
-            b_time <- system.time(b <- suppressWarnings(ci_bound_wn_i(i,
+            b_time <- b_time + system.time(b <- suppressWarnings(ci_bound_wn_i(i,
                                                       sem_out = sem_out,
                                                       which = which,
                                                       standardized = standardized,
@@ -145,11 +145,35 @@ ci_i_one <- function(i,
                                                       std_method = std_method_i,
                                                         ...)))
           }
+        attempt_lb_var <- 0
+        if (b$diag$status != 0) {
+            # Try changing the lower bounds of free variances
+            lb_se_k0 <- 10
+            lb_prop0 <- .11
+            lb_prop1 <- .01
+            lb_propi <- lb_prop0
+            while ((lb_propi > lb_prop1) & (b$diag$status != 0)) {
+              attempt_lb_var <- attempt_lb_var + 1
+              lb_propi <- lb_propi - .01
+              b_time <- b_time + system.time(b <- suppressWarnings(ci_bound_wn_i(i,
+                                                        sem_out = sem_out,
+                                                        which = which,
+                                                        standardized = standardized,
+                                                        sf = sf,
+                                                        sf2 = sf2,
+                                                        std_method = std_method_i,
+                                                        lb_prop = lb_propi,
+                                                        lb_se_k = lb_se_k0,
+                                                        ...)))
+                }
+          }
+        attempt_more_times <- 0
         if (b$diag$status != 0) {
             ki <- try_k_more_times
             fxi <- 1
             fti <- 1
             while ((ki > 0) & (b$diag$status != 0)) {
+                attempt_more_times <- attempt_more_times + 1
                 ki <- ki - 1
                 fxi <- fxi * .1
                 if (ki > 0) {
@@ -158,7 +182,7 @@ ci_i_one <- function(i,
                     # Try hard in the last attempt
                     fti <- 0
                   }
-                b_time <- system.time(b <- suppressWarnings(ci_bound_wn_i(i,
+                b_time <- b_time + system.time(b <- suppressWarnings(ci_bound_wn_i(i,
                                                           sem_out = sem_out,
                                                           which = which,
                                                           standardized = standardized,
@@ -167,6 +191,8 @@ ci_i_one <- function(i,
                                                           std_method = std_method_i,
                                                           xtol_rel_factor = fxi,
                                                           ftol_rel_factor = fti,
+                                                          lb_prop = lb_propi,
+                                                          lb_se_k = lb_se_k0,
                                                             ...)))
               }
           }
@@ -180,7 +206,9 @@ ci_i_one <- function(i,
                     method = method,
                     times = list(lb_time = b_time[3]),
                     sf_full = sf_full,
-                    ci_bound_i_out = list(lb_out = b))
+                    ci_bound_i_out = list(lb_out = b),
+                    attempt_lb_var = attempt_lb_var,
+                    attempt_more_times = attempt_more_times)
       }
     if (which == "ubound") {
         out <- list(bounds = c(ubound = b$bound),
@@ -188,7 +216,9 @@ ci_i_one <- function(i,
                     method = method,
                     times = list(ub_time = b_time[3]),
                     sf_full = sf_full,
-                    ci_bound_i_out =  list(ub_out = b))
+                    ci_bound_i_out =  list(ub_out = b),
+                    attempt_lb_var = attempt_lb_var,
+                    attempt_more_times = attempt_more_times)
       }
     out
   }
