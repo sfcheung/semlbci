@@ -50,6 +50,11 @@
 #' @param verbose Whether some diagnostic information will be printed.
 #'                Default is `FALSE`.
 #'
+#' @param start How the start values are set in [lavaan::lavaan()].
+#'              See [lavaan::lavOptions()] on this argument.
+#'              Default is `"default"`. If the plot is too irregular,
+#'              try setting it to `"simple"`.
+#'
 #' @references Pawitan, Y. (2013). *In all likelihood: Statistical
 #' modelling and inference using likelihood*. Oxford University Press.
 #'
@@ -87,7 +92,8 @@ loglike_range <- function(sem_out, par_i,
                           confidence = .95,
                           n_points = 20,
                           interval = NULL,
-                          verbose = FALSE) {
+                          verbose = FALSE,
+                          start = "default") {
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -110,7 +116,8 @@ loglike_range <- function(sem_out, par_i,
       }
     out <- lapply(thetas, loglike_point, sem_out = sem_out,
                                      par_i = par_i,
-                                     verbose = verbose)
+                                     verbose = verbose,
+                                     start = start)
     out_final <- data.frame(theta = thetas,
                             loglike = sapply(out, function(x) x$loglike),
                             pvalue = sapply(out, function(x) x$pvalue))
@@ -139,7 +146,8 @@ loglike_range <- function(sem_out, par_i,
 loglike_point <- function(theta0,
                           sem_out,
                           par_i,
-                          verbose = FALSE) {
+                          verbose = FALSE,
+                          start = "default") {
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -152,12 +160,18 @@ loglike_point <- function(theta0,
         ptable[par_i, "free"] <- 0
         ptable[par_i, "start"] <- theta0
         ptable[par_i, "est"] <- theta0
-        fit_i <- lavaan::update(sem_out, model = ptable, se = "none")
+        fit_i <- lavaan::update(sem_out, model = ptable, se = "none",
+                                baseline = FALSE,
+                                h1 = FALSE,
+                                start = start)
       } else {
         par_plabel <- ptable$label[par_i]
         fit_i <- lavaan::update(sem_out,
                                 add = paste0(par_plabel, " == ", theta0),
-                                se = "none")
+                                se = "none",
+                                baseline = FALSE,
+                                h1 = FALSE,
+                                start = start)
       }
     lrt <- lavaan::lavTestLRT(fit_i, sem_out)
     if (verbose) print(lrt)
@@ -266,7 +280,8 @@ loglike_quad_point <- function(theta0,
 loglike_compare <- function(sem_out,
                             par_i,
                             confidence = .95,
-                            n_points = 20) {
+                            n_points = 20,
+                            start = "default") {
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -286,7 +301,8 @@ loglike_compare <- function(sem_out,
     int_q <- thetas_0[which(thetas_0 == min(thetas_q)):which(thetas_0 == max(thetas_q))]
     int_l <- thetas_0[which(thetas_0 == min(thetas_l)):which(thetas_0 == max(thetas_l))]
     ll_q <- loglike_quad_range(sem_out, par_i = par_i,
-                               interval = int_q)
+                               interval = int_q,
+                               start = start)
     ll <- loglike_range(sem_out, par_i = par_i,
                         interval = int_l)
     pvalue_q_lb <- loglike_point(ll_q[1, "theta"],

@@ -15,10 +15,11 @@ loglike_range(
   confidence = 0.95,
   n_points = 20,
   interval = NULL,
-  verbose = FALSE
+  verbose = FALSE,
+  start = "default"
 )
 
-loglike_point(theta0, sem_out, par_i, verbose = FALSE)
+loglike_point(theta0, sem_out, par_i, verbose = FALSE, start = "default")
 
 loglike_quad_range(
   sem_out,
@@ -30,7 +31,13 @@ loglike_quad_range(
 
 loglike_quad_point(theta0, sem_out, par_i)
 
-loglike_compare(sem_out, par_i, confidence = 0.95, n_points = 20)
+loglike_compare(
+  sem_out,
+  par_i,
+  confidence = 0.95,
+  n_points = 20,
+  start = "default"
+)
 }
 \arguments{
 \item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
@@ -55,6 +62,11 @@ values in the interval. Default is \code{NULL}.}
 
 \item{verbose}{Whether some diagnostic information will be printed.
 Default is \code{FALSE}.}
+
+\item{start}{How the start values are set in \code{\link[lavaan:lavaan]{lavaan::lavaan()}}.
+See \code{\link[lavaan:lavOptions]{lavaan::lavOptions()}} on this argument.
+Default is \code{"default"}. If the plot is too irregular,
+try setting it to \code{"simple"}.}
 
 \item{theta0}{The value at which the parameter is fixed to.}
 }
