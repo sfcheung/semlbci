@@ -398,9 +398,9 @@ plot.loglike_compare <- function(x, y,
                                                 color = type)) +
                 ggplot2::scale_colour_manual(values = c("red", "blue")) +
                 ggplot2::geom_hline(yintercept = min(dat$loglike)) +
-                ggplot2::ylab("Scaled Loglikelihood") +
+                ggplot2::ylab("Scaled Log (Profile) likelihood") +
                 ggplot2::xlab("Parameter Value") +
-                ggplot2::labs(title = "Log-Likelihood") +
+                ggplot2::labs(title = "Log (Profile) Likelihood") +
                 ggplot2::theme(legend.position = "top")
         if (add_pvalues) {
             ll_max <- max(c(x$quadratic$loglike, x$loglike$loglike))
@@ -440,9 +440,9 @@ plot.loglike_compare <- function(x, y,
              col = "red",
              xlim = theta_range,
              ylim = loglik_range,
-             main = "Log-Likelihood",
+             main = "Log (Profile) Likelihood",
              xlab = "Parameter Value",
-             ylab = "Scaled Log-Likelihood",
+             ylab = "Scaled Log (Profile) Likelihood",
              sub = "Blue: Quadratic Approximation; Red: 'True' Log-Likelihood")
         # Plot true loglikelihood
         graphics::points(x$loglikelihood$theta,
