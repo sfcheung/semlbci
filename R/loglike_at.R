@@ -160,18 +160,18 @@ loglike_point <- function(theta0,
         ptable[par_i, "free"] <- 0
         ptable[par_i, "start"] <- theta0
         ptable[par_i, "est"] <- theta0
-        fit_i <- lavaan::update(sem_out, model = ptable, se = "none",
+        suppressWarnings(fit_i <- lavaan::update(sem_out, model = ptable, se = "none",
                                 baseline = FALSE,
                                 h1 = FALSE,
-                                start = start)
+                                start = start))
       } else {
         par_plabel <- ptable$label[par_i]
-        fit_i <- lavaan::update(sem_out,
+        suppressWarnings(fit_i <- lavaan::update(sem_out,
                                 add = paste0(par_plabel, " == ", theta0),
                                 se = "none",
                                 baseline = FALSE,
                                 h1 = FALSE,
-                                start = start)
+                                start = start))
       }
     lrt <- lavaan::lavTestLRT(fit_i, sem_out)
     if (verbose) print(lrt)
