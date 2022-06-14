@@ -119,6 +119,16 @@
 #'                        change the default termination
 #'                        criterion. Default is 1.
 #'
+#' @param lb_prop Used by an internal function to set the lower bound
+#'                for free variances. Default is .05, setting the lower
+#'                bound to .05 * estimate. Used only if the lower bound
+#'                set by `lb_se_k` is negative.
+#'
+#' @param lb_se_k Used by an internal function to set the lower bound
+#'                for free variances. Default is 3, the estimate minus
+#'                3 standard error. If negative, the lower bound is set
+#'                using `lb_prop`.
+#'
 #' @param ... Optional arguments. Not used.
 #'
 #' @references
@@ -176,6 +186,8 @@ ci_bound_wn_i <- function(i = NULL,
                        bounds = "none",
                        xtol_rel_factor = 1,
                        ftol_rel_factor = 1,
+                       lb_prop = .05,
+                       lb_se_k = 3,
                        ...) {
     k <- switch(which,
                 lbound = 1,
@@ -388,7 +400,9 @@ ci_bound_wn_i <- function(i = NULL,
       }
     fit_lb <- rep(-Inf, npar)
     if (isTRUE(identical(lb_var, -Inf))) {
-        fit_lb[find_variance_in_free(sem_out)] <- find_variance_in_free_lb(sem_out)
+        fit_lb[find_variance_in_free(sem_out)] <- find_variance_in_free_lb(sem_out,
+                                                      prop = lb_prop,
+                                                      se_k = lb_se_k)
       } else {
         fit_lb[find_variance_in_free(sem_out)] <- lb_var
       }
