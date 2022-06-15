@@ -172,6 +172,7 @@ loglike_point <- function(theta0,
                                 baseline = FALSE,
                                 h1 = FALSE,
                                 start = start))
+        suppressWarnings(fit_i <- try_more(fit_i, attempts = 5))
       }
     lrt <- lavaan::lavTestLRT(fit_i, sem_out)
     if (verbose) print(lrt)
@@ -470,4 +471,36 @@ plot.loglike_compare <- function(x, y,
         graphics::abline(h = min(x$quadratic$loglike - loglik_max))
       }
     invisible()
+  }
+
+#' @noRd
+
+try_more <- function(object, attempts = 5, seed = NULL, rmin = .25, rmax = 1) {
+    set.seed(seed)
+    ptable <- lavaan::parameterTable(object)
+    i_free <- ptable$free > 0
+    i_free_p <- i_free & (ptable$op != "~~")
+    k <- sum(i_free_p)
+    ptable$est <- ptable$start
+    x <- replicate(attempts, stats::runif(k, rmin, rmax), simplify = FALSE)
+    out0 <- lapply(x, function(x) {
+                      ptable_i <- ptable
+                      ptable_i[i_free_p, "est"] <- ptable[i_free_p, "est"] * x
+                      # Should do something to reject "bad" starting values
+                      out <- tryCatch(stats::update(object, start = ptable_i,
+                                      check.start = FALSE),
+                                      error = function(e) e,
+                                      warning = function(w) w)
+                      out
+                    })
+    is_lavaan <- sapply(out0, inherits, what = "lavaan")
+    if (all(!is_lavaan)) return(object)
+    out0 <- out0[is_lavaan]
+    out0 <- c(list(object), out0)
+    fit_ok <- sapply(out0, lavaan::lavInspect, what = "post.check")
+    if (all(!fit_ok)) return(object)
+    out1 <- out0[fit_ok]
+    fit_fmin <- sapply(out1, lavaan::fitMeasures, fit.measures = "fmin")
+    out2 <- out1[which(fit_fmin == min(fit_fmin))]
+    out2[[1]]
   }
