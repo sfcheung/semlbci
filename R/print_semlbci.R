@@ -63,8 +63,10 @@ print.semlbci <- function(x,
     class(out) <- "data.frame"
     out$lbci_lb <- round(out$lbci_lb, digits)
     if ("est.std" %in% colnames(x)) {
+        standardized <- TRUE
         out$est.std <- round(out$est.std, digits)
       } else {
+        standardized <- FALSE
         out$est <- round(out$est, digits)
       }
     out$lbci_ub <- round(out$lbci_ub, digits)
@@ -124,8 +126,8 @@ print.semlbci <- function(x,
     out_names <- colnames(out)
     # out_names <- gsub("lbci_lb", "lb", out_names, fixed = TRUE)
     # out_names <- gsub("lbci_ub", "ub", out_names, fixed = TRUE)
-    out_names <- gsub("ci_org_lb", "wald_l", out_names, fixed = TRUE)
-    out_names <- gsub("ci_org_ub", "wald_u", out_names, fixed = TRUE)
+    out_names <- gsub("ci_org_lb", "lb", out_names, fixed = TRUE)
+    out_names <- gsub("ci_org_ub", "ub", out_names, fixed = TRUE)
     out_names <- gsub("status_lb", "ok_l", out_names, fixed = TRUE)
     out_names <- gsub("status_ub", "ok_u", out_names, fixed = TRUE)
     out_names <- gsub("ratio_lb", "ratio_l", out_names, fixed = TRUE)
@@ -144,32 +146,55 @@ print.semlbci <- function(x,
         msg <- NULL
         msg <- c(msg,
               "* lbci_lb, lbci_ub: The lower and upper likelihood-based limits.")
-        msg <- c(msg,
-              paste0("* est: ",
-                   "The point estimates from the original lavaan",
-                   " output"))
+        if (standardized) {
+            msg <- c(msg,
+                  paste0("* est.std: ",
+                      "The point estimates from the original lavaan",
+                      " standardized solution."))
+          } else {
+            msg <- c(msg,
+                  paste0("* est: ",
+                      "The point estimates from the original lavaan",
+                      " output."))
+          }
         if (status_note) {
           msg <- c(msg,
             paste0("* ok_l, ok_u: Whether the search encountered any problem. ",
                   "If no problem encountered, it is equal to 0. Any value ",
                   "other than 0 indicates something was wrong in the search."))
           }
-        msg <- c(msg,
-              paste0("* wald_l, wald_u: ",
-              "The lower and upper Wald limits,",
-                   " extracted from the original lavaan output."))
+        if (standardized) {
+            msg <- c(msg,
+                  paste0("* lb, ub: ",
+                  "The original lower and upper limits,",
+                      " extracted from the original lavaan standardized",
+                      " solution output.",
+                      " Usually the delta method CIs for the",
+                      " standardized parameters and user-defined parameters."))
+          } else {
+            msg <- c(msg,
+                  paste0("* lb, ub: ",
+                  "The original lower and upper limits,",
+                      " extracted from the original lavaan output.",
+                      " Usually Wald CIs for free parameters and",
+                      " delta method CIs for user-defined parameters"))
+          }
         msg <- c(msg,
               paste0("* cl_lb, cl_ub: ",
-              "The achieved level of confidence of the bound,",
-                   " computed from the chi-square difference test.",
-                   " Should be close to the requested level of confidence."))
+              "One minus the p-values of chi-square difference tests",
+                   " at the limits.",
+                   " Should be close to the requested level of confidence,",
+                   " e.g., .95 for 95% confidence intervals."))
         if (ratio_note) {
           msg <- c(msg,
               paste0("* ratio_l, ratio_u: ",
                   "Ratio of a to b, ",
-                  "a = Distance from the point estimate to the likehood-based",
-                  " limit, b = Distance from the point estimate to the Wald",
-                  " limit."))
+                  "a = Distance from the point estimate to the likelihood-based",
+                  " limit, b = Distance from the point estimate to the original",
+                  " limit. A limit should be interpreted with caution if",
+                  " the ratio is too large or too small, indicating a large",
+                  " difference between the original interval and the",
+                  " likelihood-based interval."))
           }
         if (post_check_note) {
           msg <- c(msg,
@@ -180,14 +205,14 @@ print.semlbci <- function(x,
           }
         if ("sec_l" %in% colnames(out)) {
           msg <- c(msg,
-            "* sec_l, sec_u: The time (in seconds) used to search each limit.")
+            "* sec_l, sec_u: The time (in seconds) used to search a limit.")
           }
         if ("robust" %in% colnames(out)) {
           msg <- c(msg,
               paste0("* robust: ",
               "The robust method used in the likelihood ratio ",
                      "test of lavaan in searching the robust ",
-                     "likelihood-basd limits."))
+                     "likelihood-based limits."))
           }
         if ("method" %in% colnames(out)) {
           msg <- c(msg,
