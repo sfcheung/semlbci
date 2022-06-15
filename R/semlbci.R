@@ -109,7 +109,7 @@
 semlbci <- function(sem_out,
                     pars = NULL,
                     include_user_pars = TRUE,
-                    include_variances = FALSE,
+                    remove_variances = TRUE,
                     ciperc = .95,
                     standardized = FALSE,
                     method = "wn",
@@ -160,7 +160,7 @@ semlbci <- function(sem_out,
         if (include_user_pars && length(i_id_user) > 0) {
             pars <- c(pars, i_id_user)
           }
-        if (include_variances) {
+        if (remove_variances) {
             pars <- remove_variances(pars, sem_out)
           }
         i_selected <- i_id[pars]
