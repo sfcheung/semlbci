@@ -35,6 +35,10 @@
 #'  are automatically included when `pars` is not set. Default is `TRUE`.
 #'  If `pars` is explicitly set, this argument will be ignored.
 #'
+#' @param remove_variances Logical. Whether variances and error variances
+#'  will be removed. Default is `TRUE`, removing all variances and error
+#'  variances even if specified in `pars`.
+#'
 #' @param ciperc The proportion of coverage for the confidence
 #'  interval. Default is .95, requesting a 95 percent confidence
 #'  interval.
@@ -105,6 +109,7 @@
 semlbci <- function(sem_out,
                     pars = NULL,
                     include_user_pars = TRUE,
+                    include_variances = FALSE,
                     ciperc = .95,
                     standardized = FALSE,
                     method = "wn",
@@ -154,6 +159,9 @@ semlbci <- function(sem_out,
           }
         if (include_user_pars && length(i_id_user) > 0) {
             pars <- c(pars, i_id_user)
+          }
+        if (include_variances) {
+            pars <- remove_variances(pars, sem_out)
           }
         i_selected <- i_id[pars]
       }
