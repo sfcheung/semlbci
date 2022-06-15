@@ -61,21 +61,21 @@ print.semlbci <- function(x,
         out$label <- NULL
       }
     class(out) <- "data.frame"
-    out$lbci_lb <- round(out$lbci_lb, digits)
+    out$lbci_lb <- formatC(out$lbci_lb, digits, format = "f")
     if ("est.std" %in% colnames(x)) {
         standardized <- TRUE
-        out$est.std <- round(out$est.std, digits)
+        out$est.std <- formatC(out$est.std, digits, format = "f")
       } else {
         standardized <- FALSE
-        out$est <- round(out$est, digits)
+        out$est <- formatC(out$est, digits, format = "f")
       }
-    out$lbci_ub <- round(out$lbci_ub, digits)
-    out$ci_org_lb <- round(out$ci_org_lb, digits)
-    out$ci_org_ub <- round(out$ci_org_ub, digits)
-    out$ratio_lb <- round(out$ratio_lb, digits)
-    out$ratio_ub <- round(out$ratio_ub, digits)
-    out$cl_lb <- round(out$cl_lb, digits)
-    out$cl_ub <- round(out$cl_ub, digits)
+    out$lbci_ub <- formatC(out$lbci_ub, digits, format = "f")
+    out$ci_org_lb <- formatC(out$ci_org_lb, digits, format = "f")
+    out$ci_org_ub <- formatC(out$ci_org_ub, digits, format = "f")
+    out$ratio_lb <- formatC(out$ratio_lb, digits, format = "f")
+    out$ratio_ub <- formatC(out$ratio_ub, digits, format = "f")
+    out$cl_lb <- formatC(out$cl_lb, digits, format = "f")
+    out$cl_ub <- formatC(out$cl_ub, digits, format = "f")
     call_org <- attr(out, "call")
     if (drop_no_lbci) {
         out <- out[!is.na(out$status_lb), ]
