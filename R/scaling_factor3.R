@@ -120,7 +120,10 @@ scaling_factor3 <- function(sem_out,
     tr_ug2 <- ugs[2]
 
     # Satorra-2000
-    # Asparouhov & Muthen (2000)
+    # Asparouhov & Muthen (2010)
+    # Asparouhov, T., & Muthén, B. O. (2010). Simple second order chi-square
+    #     correction. Obtained from
+    #     https://www.statmodel.com/download/WLSMV_new_chi21.pdf
     a <- sqrt(1 / tr_ug2)
     b <- 1 - tr_ug / sqrt(tr_ug2)
     out <-
