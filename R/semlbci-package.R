@@ -56,4 +56,4 @@
 #' @name semlbci-package
 #'
 NULL
-utils::globalVariables(c("theta", "loglike", "pvalue"))
+utils::globalVariables(c("theta", "loglike", "pvalue", "theta_str"))

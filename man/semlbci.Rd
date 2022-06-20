@@ -9,6 +9,7 @@ semlbci(
   pars = NULL,
   include_user_pars = TRUE,
   remove_variances = TRUE,
+  remove_intercepts = TRUE,
   ciperc = 0.95,
   standardized = FALSE,
   method = "wn",
@@ -40,6 +41,11 @@ If \code{pars} is explicitly set, this argument will be ignored.}
 \item{remove_variances}{Logical. Whether variances and error variances
 will be removed. Default is \code{TRUE}, removing all variances and error
 variances even if specified in \code{pars}.}
+
+\item{remove_intercepts}{Logical. Whether intercepts will be removed.
+Default is \code{TRUE}, removing all intercepts (parameters with operator \code{~1}).
+Intercepts are not yet supported in standardized solution and so will
+always be removed if \code{standardized = TRUE}.}
 
 \item{ciperc}{The proportion of coverage for the confidence
 interval. Default is .95, requesting a 95 percent confidence

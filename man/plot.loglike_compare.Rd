@@ -4,7 +4,7 @@
 \alias{plot.loglike_compare}
 \title{Plot the Output of 'loglike_compare()'}
 \usage{
-\method{plot}{loglike_compare}(x, y, type = "default", add_pvalues = FALSE, ...)
+\method{plot}{loglike_compare}(x, y, type = c("ggplot2", "default"), add_pvalues = FALSE, ...)
 }
 \arguments{
 \item{x}{The output of \code{\link[=loglike_compare]{loglike_compare()}}.}
@@ -12,11 +12,13 @@
 \item{y}{Not used.}
 
 \item{type}{Character. If \code{"ggplot2"}, will use \link{ggplot2} to plot
-the graph. Default is \code{"default"} and R base graphics
-is used.}
+the graph. If \code{"default"}, will use R base graphics,
+The \code{ggplot2} version prints more information.
+Default is \code{"ggplot2"}.}
 
 \item{add_pvalues}{If \code{TRUE}, likelihood ratio test \emph{p}-values will be
-plot for the confidence limits.}
+plot for the confidence limits. Only available if
+\code{type = "ggplot2"}.}
 
 \item{...}{Optional arguments. Ignored.}
 }

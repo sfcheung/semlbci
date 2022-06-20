@@ -35,7 +35,7 @@ loglike_compare(
   sem_out,
   par_i,
   confidence = 0.95,
-  n_points = 20,
+  n_points = 21,
   start = "default"
 )
 }
@@ -112,6 +112,7 @@ with these elements:
 quadratic approximation confidence limits.
 \item \code{pvalue_loglikelihood}: The likelihood ratio test \emph{p}-values at
 the likelihood-based confidence limits.
+\item \code{est}: The estimate of the parameter in \code{sem_out}.
 }
 
 \code{\link[=loglike_range]{loglike_range()}} returns a data frame with these columns:
