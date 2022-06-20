@@ -16,22 +16,18 @@
 #'  with older version.
 #'
 #' @param update_args  `NULL`. Not used. Included to maintain compatibility
-#'  with older version.
+#'  with older versions.
 #'
 #' @param force_converged  `NULL`. Not used. Included to maintain compatibility
-#'  with older version.
+#'  with older versions.
 #'
-#' @param std_method The method used to find the standardized solution.
-#'  If equal to `"lavaan"``, [lavaan::standardizedSolution()] will be used.
-#'  If equal to `"internal"`, an internal function of this package will be used.
-#'  The `"lavaan"` method should work in all situations, but the `"internal"`
-#'  method can be faster. Default is `"lavaan"` for now, but may be changed to
-#'  `"internal"` if it is confirmed to work in all situations tested.
+#' @param std_method Not used. Included to maintain compatibility
+#'  with older versions.
 #'
 #' @param sem_out_name  `NULL`. Not used. Included to maintain compatibility
-#'  with older version.
+#'  with older versions.
 #'
-#' @param debug Print debug information. Default is `FALSE`.
+#' @param debug Print debug information, if any. Default is `FALSE`.
 #'
 #' @noRd
 
