@@ -39,6 +39,11 @@
 #'  will be removed. Default is `TRUE`, removing all variances and error
 #'  variances even if specified in `pars`.
 #'
+#' @param remove_intercepts Logical. Whether intercepts will be removed.
+#'  Default is `TRUE`, removing all intercepts (parameters with operator `~1`).
+#'  Intercepts are not yet supported in standardized solution and so will
+#'  always be removed if `standardized = TRUE`.
+#'
 #' @param ciperc The proportion of coverage for the confidence
 #'  interval. Default is .95, requesting a 95 percent confidence
 #'  interval.
@@ -110,6 +115,7 @@ semlbci <- function(sem_out,
                     pars = NULL,
                     include_user_pars = TRUE,
                     remove_variances = TRUE,
+                    remove_intercepts = TRUE,
                     ciperc = .95,
                     standardized = FALSE,
                     method = "wn",
@@ -154,6 +160,7 @@ semlbci <- function(sem_out,
         # pars <- seq_len(sum(i))
         pars <- i_id_free
         if (standardized) {
+            remove_intercepts <- TRUE
             pars <- remove_v1(pars, sem_out)
             pars <- sort(unique(c(pars, free_in_std(i_id, sem_out))))
           }
@@ -161,6 +168,9 @@ semlbci <- function(sem_out,
             pars <- c(pars, i_id_user)
           }
         if (remove_variances) {
+            pars <- remove_variances(pars, sem_out)
+          }
+        if (remove_intercepts) {
             pars <- remove_variances(pars, sem_out)
           }
         i_selected <- i_id[pars]
