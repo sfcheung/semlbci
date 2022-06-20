@@ -417,13 +417,14 @@ plot.loglike_compare <- function(x, y,
                                                    yend = 0),
                                       color = "blue",
                                       linetype = "dashed") +
-                ggplot2::geom_point(aes(x = x$est, y = min(dat$loglike)),
+                ggplot2::geom_point(ggplot2::aes(x = x$est, y = min(dat$loglike)),
                                     color = "blue",
                                     shape = 4) +
                 ggplot2::annotate("text", x = x$est, y = min(dat$loglike),
                                   label = formatC(x$est, 3, 4, format = "f"),
                                   color = "blue",
-                                  vjust = 1) +
+                                  vjust = 1,
+                                  size = 4) +
                 ggplot2::scale_colour_manual(values = c(quadratic = "red",
                                                         true = "blue")) +
                 ggplot2::scale_linetype_manual(values = c(quadratic = "dashed",
@@ -433,22 +434,33 @@ plot.loglike_compare <- function(x, y,
                 ggplot2::xlab(par_name) +
                 ggplot2::labs(title = "Log (Profile) Likelihood") +
                 ggplot2::theme(legend.position = "top")
+        ll_max <- max(c(x$quadratic$loglike, x$loglike$loglike))
+        dat_q <- x$quadratic[c(1, nrow(x$quadratic)), ]
+        dat_q$loglike <- dat_q$loglike - ll_max
+        dat_q$pvalue <- paste0("p=",formatC(dat_q$pvalue, 3, 4, format = "f"))
+        dat_l <- x$loglike[c(1, nrow(x$loglike)), ]
+        dat_l$loglike <- dat_l$loglike - ll_max
+        dat_l$pvalue <- paste0("p=",formatC(dat_l$pvalue, 3, 4, format = "f"))
+        dat_0 <- rbind(data.frame(dat_q, type = "quadratic"),
+                        data.frame(dat_l, type = "true"))
+        dat_0$theta_str <- formatC(dat_0$theta, 3, 4, "f")
+        p <- p + ggrepel::geom_text_repel(data = dat_0,
+                                              ggplot2::aes(x = theta,
+                                                           y = loglike,
+                                                           label = theta_str,
+                                                           color = type),
+                                              size = 4,
+                                              box.padding = .5,
+                                              nudge_y = -.5,
+                                              show.legend = FALSE) +
+                 ggplot2::ylim(-2.1, 0)
         if (add_pvalues) {
-            ll_max <- max(c(x$quadratic$loglike, x$loglike$loglike))
-            dat_q <- x$quadratic[c(1, nrow(x$quadratic)), ]
-            dat_q$loglike <- dat_q$loglike - ll_max
-            dat_q$pvalue <- paste0("p=",formatC(dat_q$pvalue, 3, 4, format = "f"))
-            dat_l <- x$loglike[c(1, nrow(x$loglike)), ]
-            dat_l$loglike <- dat_l$loglike - ll_max
-            dat_l$pvalue <- paste0("p=",formatC(dat_l$pvalue, 3, 4, format = "f"))
-            dat_0 <- rbind(data.frame(dat_q, type = "quadratic"),
-                           data.frame(dat_l, type = "true"))
             p <- p + ggrepel::geom_text_repel(data = dat_0,
                                               ggplot2::aes(x = theta,
                                                            y = loglike,
                                                            label = pvalue,
                                                            color = type),
-                                              size = 5,
+                                              size = 4,
                                               box.padding = .5,
                                               nudge_y = .25,
                                               show.legend = FALSE) +
