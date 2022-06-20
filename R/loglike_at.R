@@ -174,7 +174,9 @@ loglike_point <- function(theta0,
                                 start = start))
         suppressWarnings(fit_i <- try_more(fit_i, attempts = 5))
       }
-    lrt <- lavaan::lavTestLRT(fit_i, sem_out)
+    # Suppress the warning that may occur if theta0 is close the
+    # the estimate in sem_out
+    lrt <- suppressWarnings(lavaan::lavTestLRT(fit_i, sem_out))
     if (verbose) print(lrt)
     loglike <- lavaan::logLik(fit_i)
     p <- lrt[2, "Pr(>Chisq)"]
@@ -273,6 +275,7 @@ loglike_quad_point <- function(theta0,
 #'                       quadratic approximation confidence limits.
 #' - `pvalue_loglikelihood`: The likelihood ratio test *p*-values at
 #'                           the likelihood-based confidence limits.
+#' - `est`: The estimate of the parameter in `sem_out`.
 #'
 #' @describeIn loglikelihood Description of this function
 #' @order 5
@@ -281,7 +284,7 @@ loglike_quad_point <- function(theta0,
 loglike_compare <- function(sem_out,
                             par_i,
                             confidence = .95,
-                            n_points = 20,
+                            n_points = 21,
                             start = "default") {
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
@@ -327,7 +330,8 @@ loglike_compare <- function(sem_out,
                 loglikelihood = ll,
                 pvalue_quadratic = c(pvalue_q_lb, pvalue_q_ub),
                 pvalue_loglikelihood = c(pvalue_l_lb, pvalue_l_ub),
-                par_name = par_i_name)
+                par_name = par_i_name,
+                est = est)
     class(out) <- "loglike_compare"
     out
   }
@@ -351,11 +355,13 @@ loglike_compare <- function(sem_out,
 #' @param y Not used.
 #'
 #' @param type Character. If `"ggplot2"`, will use [ggplot2] to plot
-#'             the graph. Default is `"default"` and R base graphics
-#'             is used.
+#'             the graph. If `"default"`, will use R base graphics,
+#'             The `ggplot2` version prints more information.
+#'             Default is `"ggplot2"`.
 #'
 #' @param add_pvalues If `TRUE`, likelihood ratio test *p*-values will be
-#'                    plot for the confidence limits.
+#'                    plot for the confidence limits. Only available if
+#'                    `type = "ggplot2"`.
 #'
 #' @param ... Optional arguments. Ignored.
 #'
@@ -387,7 +393,7 @@ loglike_compare <- function(sem_out,
 #' @export
 
 plot.loglike_compare <- function(x, y,
-                                 type = "default",
+                                 type = c("ggplot2", "default"),
                                  add_pvalues = FALSE,
                                  ...) {
     if (!is.null(x$par_name)) {
@@ -405,6 +411,19 @@ plot.loglike_compare <- function(x, y,
                                                 y = loglike,
                                                 color = type,
                                                 linetype = type)) +
+                ggplot2::geom_segment(ggplot2::aes(x = x$est,
+                                                   y = min(dat$loglike),
+                                                   xend = x$est,
+                                                   yend = 0),
+                                      color = "blue",
+                                      linetype = "dashed") +
+                ggplot2::geom_point(aes(x = x$est, y = min(dat$loglike)),
+                                    color = "blue",
+                                    shape = 4) +
+                ggplot2::annotate("text", x = x$est, y = min(dat$loglike),
+                                  label = formatC(x$est, 3, 4, format = "f"),
+                                  color = "blue",
+                                  vjust = 1) +
                 ggplot2::scale_colour_manual(values = c(quadratic = "red",
                                                         true = "blue")) +
                 ggplot2::scale_linetype_manual(values = c(quadratic = "dashed",
