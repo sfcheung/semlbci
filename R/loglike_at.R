@@ -55,17 +55,16 @@
 #'              Default is `"default"`. If the plot is too irregular,
 #'              try setting it to `"simple"`.
 #'
-#' @param parallel If `TRUE`, will use parallel processing.
+#' @param parallel Ignored. Not yet supported. (If `TRUE`, will use parallel processing.
 #'                 A cluster will be created by [parallel::makeCluster()],
-#'                 with the number of workers equal to `ncpus`.
+#'                 with the number of workers equal to `ncpus`.)
 #'
-#' @param ncpus The number of workers if `parallel` is `TRUE`.
-#'              Default is [parallel::detectCores(logical = FALSE)] - 1.
+#' @param ncpus Ignored. Not yet supported. (The number of workers if `parallel` is `TRUE`.
+#'              Default is [parallel::detectCores(logical = FALSE)] - 1.)
 #'
-#' @param use_pbapply If `TRUE`, `parallel` is `TRUE`, and `pbapply`
-#'  is installed, [pbapply::pbapply()] will be used to display a
+#' @param use_pbapply If `TRUE` and `pbapply`
+#'  is installed, `pbapply` will be used to display a
 #'  progress bar when finding the intervals. Default is `TRUE`.
-#'  Ignored if `parallel` is `FALSE`.
 #'
 #' @references Pawitan, Y. (2013). *In all likelihood: Statistical
 #' modelling and inference using likelihood*. Oxford University Press.
@@ -109,6 +108,8 @@ loglike_range <- function(sem_out, par_i,
                           parallel = FALSE,
                           ncpus = parallel::detectCores(logical = FALSE) - 1,
                           use_pbapply = TRUE) {
+    # Parallel processing not yet supported
+    parallel <- FALSE
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -162,6 +163,9 @@ loglike_range <- function(sem_out, par_i,
       } else {
         if (requireNamespace("pbapply", quietly = TRUE) &
                     use_pbapply) {
+            cat("\n", "Finding p-values for LR test", "\n",
+                sep = "")
+            flush.console()
             out <- pbapply::pblapply(thetas,
                                      semlbci::loglike_point,
                                      sem_out = sem_out,
@@ -263,7 +267,8 @@ loglike_quad_range <- function(sem_out,
                                par_i,
                                confidence = .95,
                                n_points = 20,
-                               interval = NULL) {
+                               interval = NULL,
+                               use_pbapply = TRUE) {
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -286,11 +291,24 @@ loglike_quad_range <- function(sem_out,
       }
     out <- sapply(thetas, loglike_quad_point,
                   sem_out = sem_out, par_i = par_i)
-    pvalues <- sapply(thetas, function(x) {
-                          loglike_point(x,
-                                        sem_out = sem_out,
-                                        par_i = par_i)$lrt[2, "Pr(>Chisq)"]
-                        })
+    if (requireNamespace("pbapply", quietly = TRUE) &
+                use_pbapply) {
+        cat("\n", "Finding p-values for quadratic approximation", "\n",
+            sep = "")
+        flush.console()
+        pvalues <- pbapply::pbsapply(thetas, function(x) {
+                              loglike_point(x,
+                                            sem_out = sem_out,
+                                            par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+                            })
+      } else {
+        pvalues <- sapply(thetas, function(x) {
+                              loglike_point(x,
+                                            sem_out = sem_out,
+                                            par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+                            })
+      }
+
     out_final <- data.frame(theta = thetas,
                             loglike = out,
                             pvalue = pvalues)
