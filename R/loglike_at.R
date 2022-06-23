@@ -463,6 +463,7 @@ plot.loglike_compare <- function(x, y,
       } else {
         par_name <- "Parameter Value"
       }
+    type <- match.arg(type)
     if (type == "ggplot2") {
         dat <- rbind(data.frame(x$quadratic, type = "quadratic"),
                      data.frame(x$loglikelihood, type = "true"))
