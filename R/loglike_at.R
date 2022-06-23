@@ -55,12 +55,12 @@
 #'              Default is `"default"`. If the plot is too irregular,
 #'              try setting it to `"simple"`.
 #'
-#' @param parallel Ignored. Not yet supported. (If `TRUE`, will use parallel processing.
+#' @param parallel If `TRUE`, will use parallel processing.
 #'                 A cluster will be created by [parallel::makeCluster()],
-#'                 with the number of workers equal to `ncpus`.)
+#'                 with the number of workers equal to `ncpus`.
 #'
-#' @param ncpus Ignored. Not yet supported. (The number of workers if `parallel` is `TRUE`.
-#'              Default is [parallel::detectCores(logical = FALSE)] - 1.)
+#' @param ncpus The number of workers if `parallel` is `TRUE`.
+#'              Default is `parallel::detectCores(logical = FALSE) - 1`.
 #'
 #' @param use_pbapply If `TRUE` and `pbapply`
 #'  is installed, `pbapply` will be used to display a
@@ -109,7 +109,7 @@ loglike_range <- function(sem_out, par_i,
                           ncpus = parallel::detectCores(logical = FALSE) - 1,
                           use_pbapply = TRUE) {
     # Parallel processing not yet supported
-    parallel <- FALSE
+    # parallel <- FALSE
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -144,6 +144,9 @@ loglike_range <- function(sem_out, par_i,
                                        envir = environment())
         if (requireNamespace("pbapply", quietly = TRUE) &
                     use_pbapply) {
+            cat("\n", "Finding p-values for LR test", "\n",
+                sep = "")
+            flush.console()
             out <- pbapply::pblapply(thetas,
                                      semlbci::loglike_point,
                                      sem_out = sem_out,
@@ -160,6 +163,7 @@ loglike_range <- function(sem_out, par_i,
                                          verbose = verbose,
                                          start = start)
           }
+        parallel::stopCluster(cl)
       } else {
         if (requireNamespace("pbapply", quietly = TRUE) &
                     use_pbapply) {
@@ -217,6 +221,14 @@ loglike_point <- function(theta0,
       }
     ptable <- lavaan::parameterTable(sem_out)
     op_i <- ptable[par_i, "op"]
+    slot_opt2 <- sem_out@Options
+    slot_pat2 <- sem_out@ParTable
+    slot_mod2 <- sem_out@Model
+    slot_smp2 <- sem_out@SampleStats
+    slot_dat2 <- sem_out@Data
+    slot_opt3 <- slot_opt2
+    # slot_opt3$do.fit <- FALSE
+    slot_opt3$se <- "none"
     if (op_i != ":=") {
         ptable[par_i, "free"] <- 0
         ptable[par_i, "start"] <- theta0
@@ -224,7 +236,10 @@ loglike_point <- function(theta0,
         suppressWarnings(fit_i <- lavaan::update(sem_out, model = ptable, se = "none",
                                 baseline = FALSE,
                                 h1 = FALSE,
-                                start = start))
+                                start = start,
+                                slotOptions = slot_opt3,
+                                slotSampleStats = slot_smp2,
+                                slotData = slot_dat2))
       } else {
         par_plabel <- ptable$label[par_i]
         suppressWarnings(fit_i <- lavaan::update(sem_out,
@@ -232,8 +247,11 @@ loglike_point <- function(theta0,
                                 se = "none",
                                 baseline = FALSE,
                                 h1 = FALSE,
-                                start = start))
-        suppressWarnings(fit_i <- try_more(fit_i, attempts = 5))
+                                start = start,
+                                slotOptions = slot_opt3,
+                                slotSampleStats = slot_smp2,
+                                slotData = slot_dat2))
+       suppressWarnings(fit_i <- try_more(fit_i, attempts = 5))
       }
     # Suppress the warning that may occur if theta0 is close the
     # the estimate in sem_out
@@ -268,6 +286,8 @@ loglike_quad_range <- function(sem_out,
                                confidence = .95,
                                n_points = 20,
                                interval = NULL,
+                               parallel = FALSE,
+                               ncpus = parallel::detectCores(logical = FALSE) - 1,
                                use_pbapply = TRUE) {
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
@@ -291,22 +311,54 @@ loglike_quad_range <- function(sem_out,
       }
     out <- sapply(thetas, loglike_quad_point,
                   sem_out = sem_out, par_i = par_i)
-    if (requireNamespace("pbapply", quietly = TRUE) &
-                use_pbapply) {
-        cat("\n", "Finding p-values for quadratic approximation", "\n",
-            sep = "")
-        flush.console()
-        pvalues <- pbapply::pbsapply(thetas, function(x) {
-                              loglike_point(x,
-                                            sem_out = sem_out,
-                                            par_i = par_i)$lrt[2, "Pr(>Chisq)"]
-                            })
+    if (parallel) {
+        cl <- parallel::makeCluster(ncpus)
+        pkgs <- .packages()
+        pkgs <- rev(pkgs)
+        parallel::clusterExport(cl, "pkgs", envir = environment())
+        parallel::clusterEvalQ(cl, {sapply(pkgs,
+                        function(x) library(x, character.only = TRUE))
+                      })
+        parallel::clusterExport(cl, ls(envir = parent.frame()),
+                                       envir = parent.frame())
+        parallel::clusterExport(cl, ls(envir = environment()),
+                                       envir = environment())
+        if (requireNamespace("pbapply", quietly = TRUE) &
+                    use_pbapply) {
+            cat("\n", "Finding p-values for quadratic approximation", "\n",
+                sep = "")
+            flush.console()
+            pvalues <- pbapply::pbsapply(thetas, function(x, sem_out, par_i) {
+                                  loglike_point(x,
+                                                sem_out = sem_out,
+                                                par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+                                }, sem_out = sem_out, par_i = par_i, cl = cl)
+          } else {
+            pvalues <- parallel::parSapplyLB(cl = cl, thetas, function(x, sem_out, par_i) {
+                                  loglike_point(x,
+                                                sem_out = sem_out,
+                                                par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+                                }, sem_out = sem_out, par_i = par_i)
+          }
+        parallel::stopCluster(cl)
       } else {
-        pvalues <- sapply(thetas, function(x) {
-                              loglike_point(x,
-                                            sem_out = sem_out,
-                                            par_i = par_i)$lrt[2, "Pr(>Chisq)"]
-                            })
+        if (requireNamespace("pbapply", quietly = TRUE) &
+                    use_pbapply) {
+            cat("\n", "Finding p-values for quadratic approximation", "\n",
+                sep = "")
+            flush.console()
+            pvalues <- pbapply::pbsapply(thetas, function(x) {
+                                  loglike_point(x,
+                                                sem_out = sem_out,
+                                                par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+                                })
+          } else {
+            pvalues <- sapply(thetas, function(x) {
+                                  loglike_point(x,
+                                                sem_out = sem_out,
+                                                par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+                                })
+          }
       }
 
     out_final <- data.frame(theta = thetas,

@@ -29,7 +29,10 @@ loglike_quad_range(
   par_i,
   confidence = 0.95,
   n_points = 20,
-  interval = NULL
+  interval = NULL,
+  parallel = FALSE,
+  ncpus = parallel::detectCores(logical = FALSE) - 1,
+  use_pbapply = TRUE
 )
 
 loglike_quad_point(theta0, sem_out, par_i)
@@ -79,12 +82,11 @@ A cluster will be created by \code{\link[parallel:makeCluster]{parallel::makeClu
 with the number of workers equal to \code{ncpus}.}
 
 \item{ncpus}{The number of workers if \code{parallel} is \code{TRUE}.
-Default is \link[parallel:detectCores(logical = FALSE)]{parallel::detectCores(logical = FALSE)} - 1.}
+Default is \code{parallel::detectCores(logical = FALSE) - 1}.}
 
-\item{use_pbapply}{If \code{TRUE}, \code{parallel} is \code{TRUE}, and \code{pbapply}
-is installed, \code{\link[pbapply:pbapply]{pbapply::pbapply()}} will be used to display a
-progress bar when finding the intervals. Default is \code{TRUE}.
-Ignored if \code{parallel} is \code{FALSE}.}
+\item{use_pbapply}{If \code{TRUE} and \code{pbapply}
+is installed, \code{pbapply} will be used to display a
+progress bar when finding the intervals. Default is \code{TRUE}.}
 
 \item{theta0}{The value at which the parameter is fixed to.}
 }
