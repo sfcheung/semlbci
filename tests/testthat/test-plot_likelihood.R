@@ -61,7 +61,7 @@ standardizedSolution(fit)
 # loglike_point(a_loglik[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 
 i <- "f1 ~~ f2"
-out <- loglike_compare(fit, par_i = i, n_points = 41)
+out <- loglike_compare(fit, par_i = i, n_points = 41, parallel = TRUE)
 out
 plot(out, type = "default")
 plot(out, type = "ggplot2")
@@ -114,7 +114,7 @@ lavaan::parameterTable(fit)
 # loglike_point(a_loglik[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 
 i <- "ab :="
-out <- loglike_compare(fit, i, n_points = 20)
+out <- loglike_compare(fit, i, n_points = 21, parallel = TRUE)
 out
 plot(out)
 plot(out, type = "ggplot2")

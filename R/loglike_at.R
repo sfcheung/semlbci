@@ -55,6 +55,18 @@
 #'              Default is `"default"`. If the plot is too irregular,
 #'              try setting it to `"simple"`.
 #'
+#' @param parallel If `TRUE`, will use parallel processing.
+#'                 A cluster will be created by [parallel::makeCluster()],
+#'                 with the number of workers equal to `ncpus`.
+#'
+#' @param ncpus The number of workers if `parallel` is `TRUE`.
+#'              Default is [parallel::detectCores(logical = FALSE)] - 1.
+#'
+#' @param use_pbapply If `TRUE`, `parallel` is `TRUE`, and `pbapply`
+#'  is installed, [pbapply::pbapply()] will be used to display a
+#'  progress bar when finding the intervals. Default is `TRUE`.
+#'  Ignored if `parallel` is `FALSE`.
+#'
 #' @references Pawitan, Y. (2013). *In all likelihood: Statistical
 #' modelling and inference using likelihood*. Oxford University Press.
 #'
@@ -93,7 +105,10 @@ loglike_range <- function(sem_out, par_i,
                           n_points = 20,
                           interval = NULL,
                           verbose = FALSE,
-                          start = "default") {
+                          start = "default",
+                          parallel = FALSE,
+                          ncpus = parallel::detectCores(logical = FALSE) - 1,
+                          use_pbapply = TRUE) {
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -114,10 +129,52 @@ loglike_range <- function(sem_out, par_i,
             thetas <- interval
           }
       }
-    out <- lapply(thetas, loglike_point, sem_out = sem_out,
+    if (parallel) {
+        cl <- parallel::makeCluster(ncpus)
+        pkgs <- .packages()
+        pkgs <- rev(pkgs)
+        parallel::clusterExport(cl, "pkgs", envir = environment())
+        parallel::clusterEvalQ(cl, {sapply(pkgs,
+                        function(x) library(x, character.only = TRUE))
+                      })
+        parallel::clusterExport(cl, ls(envir = parent.frame()),
+                                       envir = parent.frame())
+        parallel::clusterExport(cl, ls(envir = environment()),
+                                       envir = environment())
+        if (requireNamespace("pbapply", quietly = TRUE) &
+                    use_pbapply) {
+            out <- pbapply::pblapply(thetas,
+                                     semlbci::loglike_point,
+                                     sem_out = sem_out,
+                                     par_i = par_i,
+                                     verbose = verbose,
+                                     start = start,
+                                     cl = cl)
+          } else {
+            out <- parallel::parLapplyLB(cl = cl,
+                                         thetas,
+                                         semlbci::loglike_point,
+                                         sem_out = sem_out,
+                                         par_i = par_i,
+                                         verbose = verbose,
+                                         start = start)
+          }
+      } else {
+        if (requireNamespace("pbapply", quietly = TRUE) &
+                    use_pbapply) {
+            out <- pbapply::pblapply(thetas,
+                                     semlbci::loglike_point,
+                                     sem_out = sem_out,
                                      par_i = par_i,
                                      verbose = verbose,
                                      start = start)
+          } else {
+            out <- lapply(thetas, loglike_point, sem_out = sem_out,
+                                            par_i = par_i,
+                                            verbose = verbose,
+                                            start = start)
+          }
+      }
     out_final <- data.frame(theta = thetas,
                             loglike = sapply(out, function(x) x$loglike),
                             pvalue = sapply(out, function(x) x$pvalue))
@@ -285,7 +342,10 @@ loglike_compare <- function(sem_out,
                             par_i,
                             confidence = .95,
                             n_points = 21,
-                            start = "default") {
+                            start = "default",
+                            parallel = FALSE,
+                            ncpus = parallel::detectCores(logical = FALSE) - 1,
+                            use_pbapply = TRUE) {
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -309,7 +369,9 @@ loglike_compare <- function(sem_out,
                                interval = int_q)
     ll <- loglike_range(sem_out, par_i = par_i,
                         interval = int_l,
-                        start = start)
+                        start = start,
+                        parallel = parallel,
+                        ncpus = ncpus)
     pvalue_q_lb <- loglike_point(ll_q[1, "theta"],
                                  sem_out = sem_out,
                                  par_i = par_i,

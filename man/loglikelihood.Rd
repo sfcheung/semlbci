@@ -16,7 +16,10 @@ loglike_range(
   n_points = 20,
   interval = NULL,
   verbose = FALSE,
-  start = "default"
+  start = "default",
+  parallel = FALSE,
+  ncpus = parallel::detectCores(logical = FALSE) - 1,
+  use_pbapply = TRUE
 )
 
 loglike_point(theta0, sem_out, par_i, verbose = FALSE, start = "default")
@@ -36,7 +39,10 @@ loglike_compare(
   par_i,
   confidence = 0.95,
   n_points = 21,
-  start = "default"
+  start = "default",
+  parallel = FALSE,
+  ncpus = parallel::detectCores(logical = FALSE) - 1,
+  use_pbapply = TRUE
 )
 }
 \arguments{
@@ -67,6 +73,18 @@ Default is \code{FALSE}.}
 See \code{\link[lavaan:lavOptions]{lavaan::lavOptions()}} on this argument.
 Default is \code{"default"}. If the plot is too irregular,
 try setting it to \code{"simple"}.}
+
+\item{parallel}{If \code{TRUE}, will use parallel processing.
+A cluster will be created by \code{\link[parallel:makeCluster]{parallel::makeCluster()}},
+with the number of workers equal to \code{ncpus}.}
+
+\item{ncpus}{The number of workers if \code{parallel} is \code{TRUE}.
+Default is \link[parallel:detectCores(logical = FALSE)]{parallel::detectCores(logical = FALSE)} - 1.}
+
+\item{use_pbapply}{If \code{TRUE}, \code{parallel} is \code{TRUE}, and \code{pbapply}
+is installed, \code{\link[pbapply:pbapply]{pbapply::pbapply()}} will be used to display a
+progress bar when finding the intervals. Default is \code{TRUE}.
+Ignored if \code{parallel} is \code{FALSE}.}
 
 \item{theta0}{The value at which the parameter is fixed to.}
 }
