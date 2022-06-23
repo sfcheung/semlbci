@@ -39,7 +39,7 @@
 #'
 #' @export
 
-confint.semlbci<- function(object, parm, level = .95, ...) {
+confint.semlbci <- function(object, parm, level = .95, ...) {
     x <- as.data.frame(object)
     out0 <- x[!is.na(x$method),
               c("lhs", "op", "rhs", "group", "lbci_lb", "lbci_ub"),
@@ -55,7 +55,13 @@ confint.semlbci<- function(object, parm, level = .95, ...) {
     pnames <- paste0(out0$lhs, op1, rhs1, group1)
     out1 <- out0[, c("lbci_lb", "lbci_ub"), drop = FALSE]
     rownames(out1) <- pnames
-    level0 <- attr(object, "lb_out")[[1]]$call$ciperc
+    lb_out_tmp <- attr(object, "lb_out")
+    lb_out_tmp <- lb_out_tmp[!sapply(lb_out_tmp, anyNA)]
+    level_tmp <- sapply(lb_out_tmp, function(x) x$call$ciperc)
+    if (var(level_tmp) != 0) {
+        stop("The levels of confidence are not identical for all LBCIs.")
+      }
+    level0 <- level_tmp[1]
     cnames <- paste(format(100 * c((1 - level0) / 2,
                                    1 - (1 - level0) / 2),
                            trim = TRUE,

@@ -24,5 +24,6 @@ m ~ x
 y ~ m
 "
 fit_mg <- lavaan::sem(mod, simple_med_mg, fixed.x = FALSE, group = "gp")
-lbci_med_mg <- semlbci(fit_mg, try_k_more_times = 5)
+lbci_med_mg <- semlbci(fit_mg, c(2, 9, 10))
+lbci_med_mg
 confint(lbci_med_mg)
