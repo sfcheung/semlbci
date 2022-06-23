@@ -204,8 +204,8 @@ semlbci <- function(sem_out,
                         function(x) library(x, character.only = TRUE))
                       })
         parallel::clusterExport(cl, ls(envir = parent.frame()),
-                                      envir = environment())
-        if (requireNamespace ("pbapply", quietly = TRUE) &
+                                       envir = environment())
+        if (requireNamespace("pbapply", quietly = TRUE) &
             use_pbapply) {
             args_final <- utils::modifyList(list(...),
                                     list(npar = npar,
