@@ -63,6 +63,9 @@
 #' @param try_k_more_times How many more times to try if failed.
 #'                         Default is 2.
 #'
+#' @param semlbci_out An `semlbci-class` object. If provided, parameters already
+#'                    with LBCIs formed will be excluded.
+#'
 #' @param ... Arguments to be passed to [ci_bound_wn_i()].
 #'
 #' @param parallel If `TRUE`, will use `parallel` to parallelize the search.
@@ -121,12 +124,18 @@ semlbci <- function(sem_out,
                     method = "wn",
                     robust = "none",
                     try_k_more_times = 2,
+                    semlbci_out = NULL,
                     ...,
                     parallel = FALSE,
                     ncpus = 2,
                     use_pbapply = TRUE) {
     if (!inherits(sem_out, "lavaan")) {
         stop("sem_out is not a supported object.")
+      }
+    if (!is.null(semlbci_out)) {
+        if (!inherits(semlbci_out, "semlbci")) {
+            stop("semlbci_out is not an output of semlbci().")
+          }
       }
     sem_out_name <- deparse(substitute(sem_out))
     # Check sem_out
@@ -141,6 +150,17 @@ semlbci <- function(sem_out,
       }
 
     ptable <- as.data.frame(lavaan::parameterTable(sem_out))
+    pars_lbci_yes <- rep(FALSE, nrow(ptable))
+    if (!is.null(semlbci_out)) {
+        tmp0 <- ptable[, c("id", "lhs", "op", "rhs", "group", "label")]
+        tmp1 <- as.data.frame(semlbci_out)[, c("id", "lhs", "op", "rhs", "group", "label")]
+        if (!identical(tmp0, tmp1)) {
+            stop("semblci_out and the parameter table of sem_out do not match.")
+          }
+        # pars with both lbci_lb and lbci_ub
+        pars_lbci_yes <- !sapply(semlbci_out$lbci_lb, is.na) &
+                         !sapply(semlbci_out$lbci_ub, is.na)
+      }
     # Do not check for
     i <- ptable$free > 0
     #i_id <- ptable$id[i]
@@ -155,6 +175,7 @@ semlbci <- function(sem_out,
         if (standardized) {
             pars <- remove_v1(pars, sem_out)
           }
+        pars <- pars[!pars %in% i_id[pars_lbci_yes]]
         i_selected <- i_id[pars]
       } else {
         # pars <- seq_len(sum(i))
@@ -173,7 +194,16 @@ semlbci <- function(sem_out,
         if (remove_intercepts) {
             pars <- remove_variances(pars, sem_out)
           }
+        pars <- pars[!pars %in% i_id[pars_lbci_yes]]
         i_selected <- i_id[pars]
+      }
+    if (length(pars) == 0) {
+        if (is.null(semlbci_out)) {
+            stop("The number of parameters selected is zero.")
+          } else {
+            warning("No parameter selected. semlbci_out returned.")
+            return(semlbci_out)
+          }
       }
     npar <- sum(i)
     # KEEP for reference: environment(set_constraint) <- parent.frame()
@@ -320,46 +350,71 @@ semlbci <- function(sem_out,
                       SIMPLIFY = FALSE)
     out <- do.call(rbind, lapply(out_raw, function(x) x$bounds))
     # out <- do.call(rbind, out_raw)
-    out_p <- ptable[, c("id", "lhs", "op", "rhs", "group", "label")]
-    if (standardized) {
-        pstd <- lavaan::standardizedSolution(sem_out)
-        if (lavaan::lavTech(sem_out, "ngroups") == 1) {
-            pstd$group <- 1
+    if (is.null(semlbci_out)) {
+        out_p <- ptable[, c("id", "lhs", "op", "rhs", "group", "label")]
+        if (standardized) {
+            pstd <- lavaan::standardizedSolution(sem_out)
+            if (lavaan::lavTech(sem_out, "ngroups") == 1) {
+                pstd$group <- 1
+              }
+            pstd$group[pstd$op == ":="] <- 0
+            out_p <- merge(out_p, pstd[, c("lhs", "op", "rhs", "group", "est.std")],
+                    by = c("lhs", "op", "rhs", "group"), all.x = TRUE, sort = FALSE)
+          } else {
+            out_p$est <- ptable[, c("est")]
           }
-        pstd$group[pstd$op == ":="] <- 0
-        out_p <- merge(out_p, pstd[, c("lhs", "op", "rhs", "group", "est.std")],
-                by = c("lhs", "op", "rhs", "group"), all.x = TRUE, sort = FALSE)
+        out_p$lbci_lb <- NA
+        out_p$lbci_ub <- NA
       } else {
-        out_p$est <- ptable[, c("est")]
+        out_p <- semlbci_out
       }
-    out_p$lbci_lb <- NA
-    out_p$lbci_ub <- NA
 
     out_p[i_selected, "lbci_lb"] <- out[, 1]
     out_p[i_selected, "lbci_ub"] <- out[, 2]
 
     # Collect diagnostic info
-
-    lb_diag <- lapply(out_raw, function(x) x$diags$lb_diag)
-    ub_diag <- lapply(out_raw, function(x) x$diags$ub_diag)
-    lb_time <- sapply(out_raw, function(x) x$times$lb_time)
-    ub_time <- sapply(out_raw, function(x) x$times$ub_time)
-    lb_out <- lapply(out_raw, function(x) x$ci_bound_i_out$lb_out)
-    ub_out <- lapply(out_raw, function(x) x$ci_bound_i_out$ub_out)
-    ci_method <- sapply(out_raw, function(x) x$method)
-    scaling_factor <- lapply(out_raw, function(x) x$sf_full)
-    p_names <- mapply(paste0, out_p[pars, "lhs"],
-                              out_p[pars, "op"],
-                              out_p[pars, "rhs"],
-                      USE.NAMES = FALSE)
-    names(lb_diag) <- p_names
-    names(ub_diag) <- p_names
-    names(lb_time) <- p_names
-    names(ub_time) <- p_names
-    names(lb_out) <- p_names
-    names(ub_out) <- p_names
-    names(ci_method) <- p_names
-    names(scaling_factor) <- p_names
+    if (is.null(semlbci_out)) {
+        q <- length(i_id)
+        lb_diag <- as.list(rep(NA, q))
+        ub_diag <- as.list(rep(NA, q))
+        lb_time <- as.numeric(rep(NA, q))
+        ub_time <- as.numeric(rep(NA, q))
+        lb_out <- as.list(rep(NA, q))
+        ub_out <- as.list(rep(NA, q))
+        ci_method <- as.character(rep(NA, q))
+        scaling_factor <- as.list(rep(NA, q))
+      } else {
+        q <- length(i_id)
+        lb_diag <- attr(semlbci_out, "lb_diag")
+        ub_diag <- attr(semlbci_out, "ub_diag")
+        lb_time <- attr(semlbci_out, "lb_time")
+        ub_time <- attr(semlbci_out, "ub_time")
+        lb_out <- attr(semlbci_out, "lb_out")
+        ub_out <- attr(semlbci_out, "ub_out")
+        ci_method <- attr(semlbci_out, "ci_method")
+        scaling_factor <- attr(semlbci_out, "scaling_factor")
+      }
+    lb_diag[pars] <- lapply(out_raw, function(x) x$diags$lb_diag)
+    ub_diag[pars] <- lapply(out_raw, function(x) x$diags$ub_diag)
+    lb_time[pars] <- sapply(out_raw, function(x) x$times$lb_time)
+    ub_time[pars] <- sapply(out_raw, function(x) x$times$ub_time)
+    lb_out[pars] <- lapply(out_raw, function(x) x$ci_bound_i_out$lb_out)
+    ub_out[pars] <- lapply(out_raw, function(x) x$ci_bound_i_out$ub_out)
+    ci_method[pars] <- sapply(out_raw, function(x) x$method)
+    scaling_factor[pars] <- lapply(out_raw, function(x) x$sf_full)
+    # p_names <- mapply(paste0, out_p[pars, "lhs"],
+    #                           out_p[pars, "op"],
+    #                           out_p[pars, "rhs"],
+    #                   USE.NAMES = FALSE)
+    p_names <- sapply(pars, i_to_name, sem_out = sem_out)
+    names(lb_diag)[pars] <- p_names
+    names(ub_diag)[pars] <- p_names
+    names(lb_time)[pars] <- p_names
+    names(ub_time)[pars] <- p_names
+    names(lb_out)[pars] <- p_names
+    names(ub_out)[pars] <- p_names
+    names(ci_method)[pars] <- p_names
+    names(scaling_factor)[pars] <- p_names
 
     attr(out_p, "lb_diag") <- lb_diag
     attr(out_p, "ub_diag") <- ub_diag
@@ -373,21 +428,21 @@ semlbci <- function(sem_out,
 
     # Append diagnostic info
 
-    out_p[pars, "status_lb"] <- sapply(lb_diag, function(x) x$status)
-    out_p[pars, "status_ub"] <- sapply(ub_diag, function(x) x$status)
-    out_p[pars, "ci_org_lb"] <- sapply(lb_diag, function(x) x$ci_org_limit)
-    out_p[pars, "ci_org_ub"] <- sapply(ub_diag, function(x) x$ci_org_limit)
-    out_p[pars, "ratio_lb"] <- sapply(lb_diag, function(x) x$ci_limit_ratio)
-    out_p[pars, "ratio_ub"] <- sapply(ub_diag, function(x) x$ci_limit_ratio)
+    out_p[pars, "status_lb"] <- sapply(lb_diag[pars], function(x) x$status)
+    out_p[pars, "status_ub"] <- sapply(ub_diag[pars], function(x) x$status)
+    out_p[pars, "ci_org_lb"] <- sapply(lb_diag[pars], function(x) x$ci_org_limit)
+    out_p[pars, "ci_org_ub"] <- sapply(ub_diag[pars], function(x) x$ci_org_limit)
+    out_p[pars, "ratio_lb"] <- sapply(lb_diag[pars], function(x) x$ci_limit_ratio)
+    out_p[pars, "ratio_ub"] <- sapply(ub_diag[pars], function(x) x$ci_limit_ratio)
     out_p[pars, "post_check_lb"] <-
-                            sapply(lb_diag, function(x) x$fit_post_check)
+                            sapply(lb_diag[pars], function(x) x$fit_post_check)
     out_p[pars, "post_check_ub"] <-
-                            sapply(ub_diag, function(x) x$fit_post_check)
-    out_p[pars, "time_lb"] <- as.numeric(lb_time)
-    out_p[pars, "time_ub"] <- as.numeric(ub_time)
-    out_p[pars, "cl_lb"] <- sapply(lb_diag, function(x) x$ciperc_final)
-    out_p[pars, "cl_ub"] <- sapply(ub_diag, function(x) x$ciperc_final)
-    out_p[pars, "method"] <- ci_method
+                            sapply(ub_diag[pars], function(x) x$fit_post_check)
+    out_p[pars, "time_lb"] <- as.numeric(lb_time[pars])
+    out_p[pars, "time_ub"] <- as.numeric(ub_time[pars])
+    out_p[pars, "cl_lb"] <- sapply(lb_diag[pars], function(x) x$ciperc_final)
+    out_p[pars, "cl_ub"] <- sapply(ub_diag[pars], function(x) x$ciperc_final)
+    out_p[pars, "method"] <- ci_method[pars]
     if (robust != "none") {
         out_p[pars, "robust"] <- robust
       }

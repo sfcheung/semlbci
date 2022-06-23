@@ -8,7 +8,7 @@ library(lavaan)
 
 data(cfa_two_factors_mg)
 dat <- cfa_two_factors_mg
-mod <- 
+mod <-
 "
 f1 =~ x1 + c(b1, b2)*x2 + c(c1, c1)*x3
 f2 =~ x4 + x5 + c(e1, e1)*x6
@@ -35,7 +35,7 @@ system.time(
 
 ciperc <- .95
 
-modc0 <- 
+modc0 <-
 "
 f1 =~ x1 + c(b1, b2)*x2 + c(c1, c1)*x3
 f2 =~ x4 + c(d1, d2)*x5 + c(e1, e1)*x6
@@ -43,13 +43,13 @@ f1 ~~ c(fr1, fr2)*f2
 ce := c1*e1
 b1 == c1
 "
-
-out1l <- list(bound = lbci_fit[2, "lbci_lb"], diag = attr(lbci_fit, "lb_diag")[[1]])
-out1u <- list(bound = lbci_fit[2, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[1]])
-out2l <- list(bound = lbci_fit[28, "lbci_lb"], diag = attr(lbci_fit, "lb_diag")[[3]])
-out2u <- list(bound = lbci_fit[28, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[3]])
-out3l <- list(bound = lbci_fit[47, "lbci_lb"], diag = attr(lbci_fit, "lb_diag")[[4]])
-out3u <- list(bound = lbci_fit[47, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[4]])
+pars_i <- syntax_to_i(pars, fit)
+out1l <- list(bound = lbci_fit[2, "lbci_lb"], diag = attr(lbci_fit, "lb_diag")[[pars_i[1]]])
+out1u <- list(bound = lbci_fit[2, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[pars_i[1]]])
+out2l <- list(bound = lbci_fit[28, "lbci_lb"], diag = attr(lbci_fit, "lb_diag")[[pars_i[3]]])
+out2u <- list(bound = lbci_fit[28, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[pars_i[3]]])
+out3l <- list(bound = lbci_fit[47, "lbci_lb"], diag = attr(lbci_fit, "lb_diag")[[pars_i[4]]])
+out3u <- list(bound = lbci_fit[47, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[pars_i[4]]])
 
 test_out1l <- test_constr(fit = fit, dat = cfa_two_factors_mg, ciperc = ciperc, parc = "b1 == ", modc0 = modc0, ci_out = out1l, semfct = lavaan::cfa, tol = 1e-4, group = "gp")
 test_out1u <- test_constr(fit = fit, dat = cfa_two_factors_mg, ciperc = ciperc, parc = "b1 == ", modc0 = modc0, ci_out = out1u, semfct = lavaan::cfa, tol = 1e-4, group = "gp")

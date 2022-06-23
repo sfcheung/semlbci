@@ -7,7 +7,7 @@ library(semlbci)
 library(lavaan)
 data(simple_med_mg)
 dat <- simple_med_mg
-mod <- 
+mod <-
 "
 m ~ c(a, a)*x
 y ~ c(b1, b2)*m
@@ -32,19 +32,19 @@ system.time(lbci_fit <- semlbci(fit,
 
 ciperc <- .95
 
-modc0 <- 
+modc0 <-
 "
 m ~ c(a, a)*x
 y ~ c(b1, b2)*m
 ab:= a*b1
 "
-
-out1l <- list(bound = lbci_fit[1, "lbci_lb"], diag = attr(lbci_fit, "lb_diag")[[1]])
-out1u <- list(bound = lbci_fit[1, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[1]])
-out2l <- list(bound = lbci_fit[10, "lbci_lb"], diag = attr(lbci_fit, "lb_diag")[[2]])
-out2u <- list(bound = lbci_fit[10, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[2]])
-out3l <- list(bound = lbci_fit[17, "lbci_lb"], diag = attr(lbci_fit, "lb_diag")[[4]])
-out3u <- list(bound = lbci_fit[17, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[4]])
+pars_i <- syntax_to_i(pars, fit)
+out1l <- list(bound = lbci_fit[1, "lbci_lb"], diag = attr(lbci_fit, "lb_diag")[[pars_i[1]]])
+out1u <- list(bound = lbci_fit[1, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[pars_i[1]]])
+out2l <- list(bound = lbci_fit[10, "lbci_lb"], diag = attr(lbci_fit, "lb_diag")[[pars_i[2]]])
+out2u <- list(bound = lbci_fit[10, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[pars_i[2]]])
+out3l <- list(bound = lbci_fit[17, "lbci_lb"], diag = attr(lbci_fit, "lb_diag")[[pars_i[4]]])
+out3u <- list(bound = lbci_fit[17, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[pars_i[4]]])
 
 
 test_out1l <- test_constr(fit = fit, dat = simple_med_mg, ciperc = ciperc, parc = "a == ", modc0 = modc0, ci_out = out1l, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE, group = "gp")

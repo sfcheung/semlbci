@@ -15,6 +15,7 @@ semlbci(
   method = "wn",
   robust = "none",
   try_k_more_times = 2,
+  semlbci_out = NULL,
   ...,
   parallel = FALSE,
   ncpus = 2,
@@ -65,6 +66,9 @@ on maximum likelihood estimation will be used.}
 
 \item{try_k_more_times}{How many more times to try if failed.
 Default is 2.}
+
+\item{semlbci_out}{An \code{semlbci-class} object. If provided, parameters already
+with LBCIs formed will be excluded.}
 
 \item{...}{Arguments to be passed to \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.}
 

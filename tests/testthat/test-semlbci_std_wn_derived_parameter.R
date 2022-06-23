@@ -38,15 +38,15 @@ system.time(
                        opts0 = opts0,
                        verbose = TRUE)
   )
-
+pars_i <- syntax_to_i(c("m~x","ab:="), fit)
 out1l <- list(bound = lbci_fit$lbci_lb[6],
-              diag = (list(history = attr(lbci_fit, "lb_diag")[[2]]$history)))
+              diag = (list(history = attr(lbci_fit, "lb_diag")[[pars_i[2]]]$history)))
 out1u <- list(bound = lbci_fit$lbci_ub[6],
-              diag = (list(history = attr(lbci_fit, "ub_diag")[[2]]$history)))
+              diag = (list(history = attr(lbci_fit, "ub_diag")[[pars_i[2]]]$history)))
 out2l <- list(bound = lbci_fit$lbci_lb[1],
-              diag = (list(history = attr(lbci_fit, "lb_diag")[[1]]$history)))
+              diag = (list(history = attr(lbci_fit, "lb_diag")[[pars_i[1]]]$history)))
 out2u <- list(bound = lbci_fit$lbci_ub[1],
-              diag = (list(history = attr(lbci_fit, "ub_diag")[[1]]$history)))
+              diag = (list(history = attr(lbci_fit, "ub_diag")[[pars_i[1]]]$history)))
 
 
 # Check the results
