@@ -468,7 +468,9 @@ ci_bound_wn_i <- function(i = NULL,
                         ubound = i_org_ci_upper)
     if (!is.na(bound)) {
         ci_limit_ratio <- abs((bound - i_est) / (i_org_ci_limit - i_est))
-        if (isTRUE(ci_limit_ratio > ci_limit_ratio_tol)) {
+        ci_limit_ratio2 <- 1 / ci_limit_ratio
+        if (any(ci_limit_ratio > ci_limit_ratio_tol,
+                ci_limit_ratio2 > ci_limit_ratio_tol)) {
             status <- 1
             # Do not set the bound to NA because the limit may still be valid.
           }
