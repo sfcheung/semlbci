@@ -150,7 +150,7 @@ loglike_range <- function(sem_out, par_i,
                     use_pbapply) {
             cat("\n", "Finding p-values for LR test", "\n",
                 sep = "")
-            flush.console()
+            utils::flush.console()
             out <- pbapply::pblapply(thetas,
                                      semlbci::loglike_point,
                                      sem_out = sem_out,
@@ -175,7 +175,7 @@ loglike_range <- function(sem_out, par_i,
                     use_pbapply) {
             cat("\n", "Finding p-values for LR test", "\n",
                 sep = "")
-            flush.console()
+            utils::flush.console()
             out <- pbapply::pblapply(thetas,
                                      semlbci::loglike_point,
                                      sem_out = sem_out,
@@ -342,7 +342,7 @@ loglike_quad_range <- function(sem_out,
                     use_pbapply) {
             cat("\n", "Finding p-values for quadratic approximation", "\n",
                 sep = "")
-            flush.console()
+            utils::flush.console()
             pvalues <- pbapply::pbsapply(thetas,
                                   function(x,
                                            sem_out,
@@ -385,7 +385,7 @@ loglike_quad_range <- function(sem_out,
                     use_pbapply) {
             cat("\n", "Finding p-values for quadratic approximation", "\n",
                 sep = "")
-            flush.console()
+            utils::flush.console()
             pvalues <- pbapply::pbsapply(thetas, function(x) {
                                   loglike_point(x,
                                                 sem_out = sem_out,

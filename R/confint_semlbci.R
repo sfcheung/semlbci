@@ -58,7 +58,7 @@ confint.semlbci <- function(object, parm, level = .95, ...) {
     lb_out_tmp <- attr(object, "lb_out")
     lb_out_tmp <- lb_out_tmp[!sapply(lb_out_tmp, anyNA)]
     level_tmp <- sapply(lb_out_tmp, function(x) x$call$ciperc)
-    if ((var(level_tmp) != 0) && length(level_tmp) != 1) {
+    if ((stats::var(level_tmp) != 0) && length(level_tmp) != 1) {
         stop("The levels of confidence are not identical for all LBCIs.")
       }
     level0 <- level_tmp[1]
