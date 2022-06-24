@@ -17,12 +17,20 @@ loglike_range(
   interval = NULL,
   verbose = FALSE,
   start = "default",
+  try_k_more = 5,
   parallel = FALSE,
   ncpus = parallel::detectCores(logical = FALSE) - 1,
   use_pbapply = TRUE
 )
 
-loglike_point(theta0, sem_out, par_i, verbose = FALSE, start = "default")
+loglike_point(
+  theta0,
+  sem_out,
+  par_i,
+  verbose = FALSE,
+  start = "default",
+  try_k_more = 5
+)
 
 loglike_quad_range(
   sem_out,
@@ -32,7 +40,9 @@ loglike_quad_range(
   interval = NULL,
   parallel = FALSE,
   ncpus = parallel::detectCores(logical = FALSE) - 1,
-  use_pbapply = TRUE
+  use_pbapply = TRUE,
+  try_k_more = 5,
+  start = "default"
 )
 
 loglike_quad_point(theta0, sem_out, par_i)
@@ -43,6 +53,7 @@ loglike_compare(
   confidence = 0.95,
   n_points = 21,
   start = "default",
+  try_k_more = 5,
   parallel = FALSE,
   ncpus = parallel::detectCores(logical = FALSE) - 1,
   use_pbapply = TRUE
@@ -76,6 +87,9 @@ Default is \code{FALSE}.}
 See \code{\link[lavaan:lavOptions]{lavaan::lavOptions()}} on this argument.
 Default is \code{"default"}. If the plot is too irregular,
 try setting it to \code{"simple"}.}
+
+\item{try_k_more}{How many more times to try finding the p-values,
+by randomizing the starting values. Default is 5.}
 
 \item{parallel}{If \code{TRUE}, will use parallel processing.
 A cluster will be created by \code{\link[parallel:makeCluster]{parallel::makeCluster()}},

@@ -55,6 +55,9 @@
 #'              Default is `"default"`. If the plot is too irregular,
 #'              try setting it to `"simple"`.
 #'
+#' @param try_k_more How many more times to try finding the p-values,
+#'                   by randomizing the starting values. Default is 5.
+#'
 #' @param parallel If `TRUE`, will use parallel processing.
 #'                 A cluster will be created by [parallel::makeCluster()],
 #'                 with the number of workers equal to `ncpus`.
@@ -105,6 +108,7 @@ loglike_range <- function(sem_out, par_i,
                           interval = NULL,
                           verbose = FALSE,
                           start = "default",
+                          try_k_more = 5,
                           parallel = FALSE,
                           ncpus = parallel::detectCores(logical = FALSE) - 1,
                           use_pbapply = TRUE) {
@@ -153,6 +157,7 @@ loglike_range <- function(sem_out, par_i,
                                      par_i = par_i,
                                      verbose = verbose,
                                      start = start,
+                                     try_k_more = try_k_more,
                                      cl = cl)
           } else {
             out <- parallel::parLapplyLB(cl = cl,
@@ -161,7 +166,8 @@ loglike_range <- function(sem_out, par_i,
                                          sem_out = sem_out,
                                          par_i = par_i,
                                          verbose = verbose,
-                                         start = start)
+                                         start = start,
+                                         try_k_more = try_k_more)
           }
         parallel::stopCluster(cl)
       } else {
@@ -175,12 +181,14 @@ loglike_range <- function(sem_out, par_i,
                                      sem_out = sem_out,
                                      par_i = par_i,
                                      verbose = verbose,
-                                     start = start)
+                                     start = start,
+                                     try_k_more = try_k_more)
           } else {
             out <- lapply(thetas, loglike_point, sem_out = sem_out,
                                             par_i = par_i,
                                             verbose = verbose,
-                                            start = start)
+                                            start = start,
+                                            try_k_more = try_k_more)
           }
       }
     out_final <- data.frame(theta = thetas,
@@ -212,7 +220,8 @@ loglike_point <- function(theta0,
                           sem_out,
                           par_i,
                           verbose = FALSE,
-                          start = "default") {
+                          start = "default",
+                          try_k_more = 5) {
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -240,6 +249,7 @@ loglike_point <- function(theta0,
                                slotOptions = slot_opt3,
                                slotSampleStats = slot_smp2,
                                slotData = slot_dat2))
+        suppressWarnings(fit_i <- try_more(fit_i, attempts = 5))
       } else {
         par_plabel <- ptable$label[par_i]
         ptable_i <- lavaan::lav_partable_merge(ptable,
@@ -254,7 +264,7 @@ loglike_point <- function(theta0,
                                slotOptions = slot_opt3,
                                slotSampleStats = slot_smp2,
                                slotData = slot_dat2))
-        suppressWarnings(fit_i <- try_more(fit_i, attempts = 5))
+        suppressWarnings(fit_i <- try_more(fit_i, attempts = try_k_more))
       }
     # Suppress the warning that may occur if theta0 is close the
     # the estimate in sem_out
@@ -291,7 +301,9 @@ loglike_quad_range <- function(sem_out,
                                interval = NULL,
                                parallel = FALSE,
                                ncpus = parallel::detectCores(logical = FALSE) - 1,
-                               use_pbapply = TRUE) {
+                               use_pbapply = TRUE,
+                               try_k_more = 5,
+                               start = "default") {
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -331,17 +343,41 @@ loglike_quad_range <- function(sem_out,
             cat("\n", "Finding p-values for quadratic approximation", "\n",
                 sep = "")
             flush.console()
-            pvalues <- pbapply::pbsapply(thetas, function(x, sem_out, par_i) {
-                                  loglike_point(x,
-                                                sem_out = sem_out,
-                                                par_i = par_i)$lrt[2, "Pr(>Chisq)"]
-                                }, sem_out = sem_out, par_i = par_i, cl = cl)
+            pvalues <- pbapply::pbsapply(thetas,
+                                  function(x,
+                                           sem_out,
+                                           par_i,
+                                           start,
+                                           try_k_more) {
+                                      loglike_point(x,
+                                                    sem_out = sem_out,
+                                                    par_i = par_i,
+                                                    start = start,
+                                                    try_k_more = try_k_more)$lrt[2, "Pr(>Chisq)"]
+                                    },
+                                sem_out = sem_out,
+                                par_i = par_i,
+                                start = start,
+                                try_k_more = try_k_more,
+                                cl = cl)
           } else {
-            pvalues <- parallel::parSapplyLB(cl = cl, thetas, function(x, sem_out, par_i) {
-                                  loglike_point(x,
-                                                sem_out = sem_out,
-                                                par_i = par_i)$lrt[2, "Pr(>Chisq)"]
-                                }, sem_out = sem_out, par_i = par_i)
+            pvalues <- parallel::parSapplyLB(cl = cl,
+                                  thetas,
+                                  function(x,
+                                           sem_out,
+                                           par_i,
+                                           start,
+                                           try_k_more) {
+                                      loglike_point(x,
+                                                    sem_out = sem_out,
+                                                    par_i = par_i,
+                                                    start = start,
+                                                    try_k_more = try_k_more)$lrt[2, "Pr(>Chisq)"]
+                                    },
+                                sem_out = sem_out,
+                                par_i = par_i,
+                                start = start,
+                                try_k_more = try_k_more)
           }
         parallel::stopCluster(cl)
       } else {
@@ -353,13 +389,17 @@ loglike_quad_range <- function(sem_out,
             pvalues <- pbapply::pbsapply(thetas, function(x) {
                                   loglike_point(x,
                                                 sem_out = sem_out,
-                                                par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+                                                par_i = par_i,
+                                                start = start,
+                                                try_k_more = try_k_more)$lrt[2, "Pr(>Chisq)"]
                                 })
           } else {
             pvalues <- sapply(thetas, function(x) {
                                   loglike_point(x,
                                                 sem_out = sem_out,
-                                                par_i = par_i)$lrt[2, "Pr(>Chisq)"]
+                                                par_i = par_i,
+                                                start = start,
+                                                try_k_more = try_k_more)$lrt[2, "Pr(>Chisq)"]
                                 })
           }
       }
@@ -416,6 +456,7 @@ loglike_compare <- function(sem_out,
                             confidence = .95,
                             n_points = 21,
                             start = "default",
+                            try_k_more = 5,
                             parallel = FALSE,
                             ncpus = parallel::detectCores(logical = FALSE) - 1,
                             use_pbapply = TRUE) {
@@ -440,29 +481,36 @@ loglike_compare <- function(sem_out,
     int_l <- thetas_0[which(thetas_0 == min(thetas_l)):which(thetas_0 == max(thetas_l))]
     ll_q <- loglike_quad_range(sem_out, par_i = par_i,
                                interval = int_q,
+                               start = start,
+                               try_k_more = try_k_more,
                                parallel = parallel,
                                ncpus = ncpus)
     ll <- loglike_range(sem_out, par_i = par_i,
                         interval = int_l,
                         start = start,
+                        try_k_more = try_k_more,
                         parallel = parallel,
                         ncpus = ncpus)
     pvalue_q_lb <- loglike_point(ll_q[1, "theta"],
                                  sem_out = sem_out,
                                  par_i = par_i,
-                                 start = start)$lrt[2, "Pr(>Chisq)"]
+                                 start = start,
+                                 try_k_more = try_k_more)$lrt[2, "Pr(>Chisq)"]
     pvalue_q_ub <- loglike_point(ll_q[nrow(ll_q), "theta"],
                                  sem_out = sem_out,
                                  par_i = par_i,
-                                 start = start)$lrt[2, "Pr(>Chisq)"]
+                                 start = start,
+                                 try_k_more = try_k_more)$lrt[2, "Pr(>Chisq)"]
     pvalue_l_lb <- loglike_point(ll[1, "theta"],
                                  sem_out = sem_out,
                                  par_i = par_i,
-                                 start = start)$lrt[2, "Pr(>Chisq)"]
+                                 start = start,
+                                 try_k_more = try_k_more)$lrt[2, "Pr(>Chisq)"]
     pvalue_l_ub <- loglike_point(ll[nrow(ll), "theta"],
                                  sem_out = sem_out,
                                  par_i = par_i,
-                                 start = start)$lrt[2, "Pr(>Chisq)"]
+                                 start = start,
+                                 try_k_more = try_k_more)$lrt[2, "Pr(>Chisq)"]
     out <- list(quadratic = ll_q,
                 loglikelihood = ll,
                 pvalue_quadratic = c(pvalue_q_lb, pvalue_q_ub),
@@ -645,6 +693,8 @@ plot.loglike_compare <- function(x, y,
 #' @noRd
 
 try_more <- function(object, attempts = 5, seed = NULL, rmin = .25, rmax = 1) {
+    attempts <- as.integer(attempts)
+    if (attempts < 2) return(object)
     set.seed(seed)
     ptable <- lavaan::parameterTable(object)
     i_free <- ptable$free > 0
@@ -652,14 +702,28 @@ try_more <- function(object, attempts = 5, seed = NULL, rmin = .25, rmax = 1) {
     k <- sum(i_free_p)
     ptable$est <- ptable$start
     x <- replicate(attempts, stats::runif(k, rmin, rmax), simplify = FALSE)
+    slot_opt2 <- object@Options
+    slot_pat2 <- object@ParTable
+    slot_mod2 <- object@Model
+    slot_smp2 <- object@SampleStats
+    slot_dat2 <- object@Data
+    slot_opt3 <- slot_opt2
+    slot_opt3$check.start <- FALSE
     out0 <- lapply(x, function(x) {
                       ptable_i <- ptable
                       ptable_i[i_free_p, "est"] <- ptable[i_free_p, "est"] * x
                       # Should do something to reject "bad" starting values
-                      out <- tryCatch(stats::update(object, start = ptable_i,
-                                      check.start = FALSE),
-                                      error = function(e) e,
-                                      warning = function(w) w)
+                      slot_opt3$start <- ptable_i
+                      out <- tryCatch(
+                              fit2 <- lavaan::lavaan(
+                                        slotOptions = slot_opt3,
+                                        slotParTable = slot_pat2,
+                                        slotModel = slot_mod2,
+                                        slotSampleStats = slot_smp2,
+                                        slotData = slot_dat2),
+                              error = function(e) e,
+                              warning = function(w) w
+                            )
                       out
                     })
     is_lavaan <- sapply(out0, inherits, what = "lavaan")

@@ -66,7 +66,7 @@ loglike_point(2, fit, par_i = "f1 =~ x2")
 
 i <- "f1 ~~ f2"
 out <- loglike_compare(fit, par_i = i, n_points = 21)
-out <- loglike_compare(fit, par_i = i, n_points = 41, parallel = TRUE)
+out <- loglike_compare(fit, par_i = i, n_points = 21, parallel = TRUE, try_k_more = 10)
 out
 plot(out, type = "default")
 plot(out, type = "ggplot2")
@@ -74,8 +74,8 @@ p <- plot(out, type = "ggplot2", add_pvalues = TRUE)
 p
 
 i <- "f1 =~ x2"
-out <- loglike_compare(fit, par_i = i, n_points = 21)
-out <- loglike_compare(fit, par_i = i, n_points = 41, parallel = TRUE)
+out <- loglike_compare(fit, par_i = i, n_points = 21, try_k_more = 10)
+out <- loglike_compare(fit, par_i = i, n_points = 21, parallel = TRUE, try_k_more = 10)
 out
 plot(out, type = "default")
 plot(out, type = "ggplot2")
@@ -128,7 +128,8 @@ lavaan::parameterTable(fit)
 # loglike_point(a_loglik[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 
 i <- "ab :="
-out <- loglike_compare(fit, i, n_points = 21, parallel = TRUE)
+out <- loglike_compare(fit, i, n_points = 21, try_k_more = 10)
+out <- loglike_compare(fit, i, n_points = 21, parallel = TRUE, try_k_more = 10)
 out
 plot(out)
 plot(out, type = "ggplot2")
