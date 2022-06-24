@@ -227,31 +227,34 @@ loglike_point <- function(theta0,
     slot_smp2 <- sem_out@SampleStats
     slot_dat2 <- sem_out@Data
     slot_opt3 <- slot_opt2
-    # slot_opt3$do.fit <- FALSE
+    slot_opt3$do.fit <- FALSE
     slot_opt3$se <- "none"
-    if (op_i != ":=") {
-        ptable[par_i, "free"] <- 0
-        ptable[par_i, "start"] <- theta0
-        ptable[par_i, "est"] <- theta0
-        suppressWarnings(fit_i <- lavaan::update(sem_out, model = ptable, se = "none",
-                                baseline = FALSE,
-                                h1 = FALSE,
-                                start = start,
-                                slotOptions = slot_opt3,
-                                slotSampleStats = slot_smp2,
-                                slotData = slot_dat2))
+    if (ptable$label[par_i] == "") {
+        ptable_i <- ptable
+        ptable_i[par_i, "free"] <- 0
+        ptable_i[par_i, "start"] <- theta0
+        ptable_i[par_i, "est"] <- theta0
+        slot_opt3$do.fit <- TRUE
+        suppressWarnings(fit_i <- lavaan::lavaan(
+                               model = ptable_i,
+                               slotOptions = slot_opt3,
+                               slotSampleStats = slot_smp2,
+                               slotData = slot_dat2))
       } else {
         par_plabel <- ptable$label[par_i]
-        suppressWarnings(fit_i <- lavaan::update(sem_out,
-                                add = paste0(par_plabel, " == ", theta0),
-                                se = "none",
-                                baseline = FALSE,
-                                h1 = FALSE,
-                                start = start,
-                                slotOptions = slot_opt3,
-                                slotSampleStats = slot_smp2,
-                                slotData = slot_dat2))
-       suppressWarnings(fit_i <- try_more(fit_i, attempts = 5))
+        ptable_i <- lavaan::lav_partable_merge(ptable,
+                                lavaan::lavaanify(paste0(par_plabel,
+                                                  " == ",
+                                                  theta0)),
+                                remove.duplicated = TRUE,
+                                warn = FALSE)
+        slot_opt3$do.fit <- TRUE
+        suppressWarnings(fit_i <- lavaan::lavaan(
+                               model = ptable_i,
+                               slotOptions = slot_opt3,
+                               slotSampleStats = slot_smp2,
+                               slotData = slot_dat2))
+        suppressWarnings(fit_i <- try_more(fit_i, attempts = 5))
       }
     # Suppress the warning that may occur if theta0 is close the
     # the estimate in sem_out
@@ -436,7 +439,9 @@ loglike_compare <- function(sem_out,
     int_q <- thetas_0[which(thetas_0 == min(thetas_q)):which(thetas_0 == max(thetas_q))]
     int_l <- thetas_0[which(thetas_0 == min(thetas_l)):which(thetas_0 == max(thetas_l))]
     ll_q <- loglike_quad_range(sem_out, par_i = par_i,
-                               interval = int_q)
+                               interval = int_q,
+                               parallel = parallel,
+                               ncpus = ncpus)
     ll <- loglike_range(sem_out, par_i = par_i,
                         interval = int_l,
                         start = start,

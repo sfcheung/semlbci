@@ -13,14 +13,14 @@ data(cfa_two_factors)
 dat <- cfa_two_factors
 mod <-
 "
-f1 =~ x1 + a*x2 + b*x3
-f2 =~ x4 + c*x5 + d*x6
+f1 =~ x1 + x2 + x3
+f2 =~ x4 + x5 + x6
 f1 ~~ cov12 * f2
 f1 ~~ v11 * f1
 f2 ~~ v22 * f2
 #corf1f2 := cov12 / sqrt(v11 * v22)
 "
-fit <- lavaan::cfa(mod, cfa_two_factors)
+fit <- lavaan::cfa(mod, dat)
 ptable <- parameterTable(fit)
 ptable
 parameterEstimates(fit)
@@ -55,12 +55,26 @@ standardizedSolution(fit)
 # #                                 lower.tail = FALSE)
 # # print(a_loglik, digits = 3)
 
+loglike_point(2, fit, par_i = "f1 ~~ f2")
+loglike_point(2, fit, par_i = "f1 =~ x2")
+
+
 # loglike_point(a_loglik_w[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 # loglike_point(a_loglik_w[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 # loglike_point(a_loglik[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 # loglike_point(a_loglik[nrow(a_loglik_w), "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
 
 i <- "f1 ~~ f2"
+out <- loglike_compare(fit, par_i = i, n_points = 21)
+out <- loglike_compare(fit, par_i = i, n_points = 41, parallel = TRUE)
+out
+plot(out, type = "default")
+plot(out, type = "ggplot2")
+p <- plot(out, type = "ggplot2", add_pvalues = TRUE)
+p
+
+i <- "f1 =~ x2"
+out <- loglike_compare(fit, par_i = i, n_points = 21)
 out <- loglike_compare(fit, par_i = i, n_points = 41, parallel = TRUE)
 out
 plot(out, type = "default")
@@ -78,7 +92,7 @@ m ~ a*x
 y ~ b*m
 ab:= a*b
 "
-fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+fit <- lavaan::sem(mod, dat, fixed.x = FALSE)
 lavaan::parameterTable(fit)
 
 # fit_lbci <- semlbci(fit, c("ab := "))
