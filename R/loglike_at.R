@@ -709,20 +709,21 @@ try_more <- function(object, attempts = 5, seed = NULL, rmin = .25, rmax = 1) {
     slot_dat2 <- object@Data
     slot_opt3 <- slot_opt2
     slot_opt3$check.start <- FALSE
-    out0 <- lapply(x, function(x) {
+    out0 <- lapply(x, function(y) {
                       ptable_i <- ptable
-                      ptable_i[i_free_p, "est"] <- ptable[i_free_p, "est"] * x
+                      ptable_i[i_free_p, "est"] <- ptable[i_free_p, "est"] * y
+                      ptable_i[i_free_p, "start"] <- ptable[i_free_p, "est"] * y
+                      ptable_i[i_free_p, "ustart"] <- ptable[i_free_p, "est"] * y
                       # Should do something to reject "bad" starting values
-                      slot_opt3$start <- ptable_i
+                      # slot_opt3$start <- ptable_i
                       out <- tryCatch(
-                              fit2 <- lavaan::lavaan(
+                              fit2 <- suppressWarnings(lavaan::lavaan(
+                                        model = ptable_i,
                                         slotOptions = slot_opt3,
-                                        slotParTable = slot_pat2,
-                                        slotModel = slot_mod2,
                                         slotSampleStats = slot_smp2,
-                                        slotData = slot_dat2),
-                              error = function(e) e,
-                              warning = function(w) w
+                                        slotData = slot_dat2,
+                                        warn = FALSE)),
+                              error = function(e) e
                             )
                       out
                     })
