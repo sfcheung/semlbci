@@ -73,11 +73,11 @@
 #'  test is to be found. Only "satorra.2000" in [lavaan] is supported
 #'  for now. If `"none"`, the default, then likelihood ratio test based
 #'  on maximum likelihood estimation will be used.
-#' 
+#'
 #' @param multigroup_ok If `TRUE`, will not check whether the model is a
 #'  multiple-group model. Default is `TRUE`.
 #'
-#' @seealso 
+#' @seealso
 #' [semlbci()], [ci_i_one()]
 #'
 #' @examples
@@ -171,9 +171,10 @@ check_sem_out <- function(sem_out, robust = "none",
     scaled <- any(names(sem_out@test) %in%
                         c("satorra.bentler",
                           "yuan.bentler",
-                          "yuan.bentler.mplus",
-                          "mean.var.adjusted",
-                          "scaled.shifted"))
+                          "yuan.bentler.mplus"))
+    # mean.var.adjusted and scaled.shifted are not yet supported.
+                          # "mean.var.adjusted",
+                          # "scaled.shifted"))
 
     if (robust == "satorra.2000") {
         if (scaled) {
@@ -235,7 +236,7 @@ check_sem_out <- function(sem_out, robust = "none",
 
     if (model_formative_factor) {
           out <- ifelse(out >= 0, -1, out - 1)
-          msg <- c(msg, 
+          msg <- c(msg,
                     "Models with formative factor(s) are not yet supported.")
         }
 
