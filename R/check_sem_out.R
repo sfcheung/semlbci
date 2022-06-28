@@ -171,10 +171,9 @@ check_sem_out <- function(sem_out, robust = "none",
     scaled <- any(names(sem_out@test) %in%
                         c("satorra.bentler",
                           "yuan.bentler",
-                          "yuan.bentler.mplus"))
-    # mean.var.adjusted and scaled.shifted are not yet supported.
-                          # "mean.var.adjusted",
-                          # "scaled.shifted"))
+                          "yuan.bentler.mplus",
+                          "mean.var.adjusted",
+                          "scaled.shifted"))
 
     if (robust == "satorra.2000") {
         if (scaled) {
