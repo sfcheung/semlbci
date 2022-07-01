@@ -1,15 +1,18 @@
-#' @title Print Method of a cibound Object
+#' @title Print Method of a 'cibound'-class Object
 #'
-#' @description Prints the diagnostic information of a `cibound` object.
+#' @description Print the diagnostic information of a `cibound`-class
+#'  object.
 #'
 #' @details This is the print method for the output of
-#'  [ci_bound_wn_i()], a `cibound` object. It prints the diagnostic
-#'  information on the bound being found and the search process.
+#'  [ci_bound_wn_i()], an `cibound`-class object. It prints the
+#'  diagnostic information on the bound being found and the search
+#'  process.
 #'
-#' @return Nothing. It is used for its side effect (printing the information).
+#' @return Nothing. It is used for its side effect (printing the
+#'  information).
 #'
-#' @param x The output of a `ci_bound_xx_i` function. Currently the only
-#'  such function is [ci_bound_wn_i()].
+#' @param x The output of a `ci_bound_xx_i` function. Currently the
+#'  only such function is [ci_bound_wn_i()].
 #'
 #' @param digits The number of digits after the decimal point. To be
 #'  passed to [round()]. Default is 5.

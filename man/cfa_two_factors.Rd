@@ -23,4 +23,10 @@ fit <- cfa(mod, cfa_two_factors)
 summary(fit)
 }\if{html}{\out{</div>}}
 }
+\examples{
+
+print(head(cfa_two_factors), digits = 3)
+nrow(cfa_two_factors)
+
+}
 \keyword{datasets}

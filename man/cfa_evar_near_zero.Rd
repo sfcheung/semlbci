@@ -3,10 +3,10 @@
 \docType{data}
 \name{cfa_evar_near_zero}
 \alias{cfa_evar_near_zero}
-\title{Dataset (CFA, Two Factors, One Standardied Error Variance
+\title{Dataset (CFA, Two Factors, One Standardized Error Variance
 Close to Zero)}
 \format{
-A data frame with 100 rows and six variables, \code{x1} to \code{x6}
+A data frame with 120 rows and six variables, \code{x1} to \code{x6}
 }
 \usage{
 cfa_evar_near_zero
@@ -28,5 +28,13 @@ mod <- "f1 =~ x1 + x2 + x3
 fit <- cfa(mod, cfa_evar_near_zero)
 summary(fit, standardized = TRUE, rsquare = TRUE)
 }\if{html}{\out{</div>}}
+}
+\examples{
+
+print(head(cfa_evar_near_zero), digits = 3)
+nrow(cfa_evar_near_zero)
+
+
+
 }
 \keyword{datasets}

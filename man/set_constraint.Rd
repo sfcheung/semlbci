@@ -2,7 +2,7 @@
 % Please edit documentation in R/set_constraint.R
 \name{set_constraint}
 \alias{set_constraint}
-\title{Constraint for Finding the LBCI by the Wu-Neale-2012 Approach}
+\title{Equality Constraint for Finding the LBCI by Wu-Neale-2012}
 \usage{
 set_constraint(sem_out, ciperc = 0.95)
 }
@@ -10,24 +10,34 @@ set_constraint(sem_out, ciperc = 0.95)
 \item{sem_out}{The SEM output. Currently supports
 \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.}
 
-\item{ciperc}{The probability of coverage for the confidence
+\item{ciperc}{The intendeted coverage probability of the confidence
 interval. Default is .95.}
 }
 \value{
-A constraint function for \link{nloptr}.
+An equality constraint function to be used by \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.
 }
 \description{
-Sets the constraint for finding the likelihood-based
-confidence interval by the Wu-Neale-2012 approach.
+Create the equality constraint for finding the likelihood-based
+confidence interval (LBCI) by the Wu-Neale-2012 method.
 }
 \details{
-The Wu-Neale-2012 approach uses a simple objective function that is
-optimized with a constraint. \link{set_constraint} generates the
-constraint function used by \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.
+\subsection{Important Notice}{
+
+This function is not supposed to be used directly by users in
+typical scenarios. Its interface is user-\emph{unfriendly} because it
+should be used through \code{\link[=semlbci]{semlbci()}}. It is exported such that
+interested users can examine how a confidence bound is found, or
+use it for experiments or simulations.
+}
+
+\subsection{Usage}{
+
+The Wu-Neale-2012 method uses a simple objective function that is
+optimized with an equality constraint. \code{\link[=set_constraint]{set_constraint()}} generates
+the equality constraint function to be used by \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.
 
 Currently supports \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.
-
-This function is not to be used by normal users.
+}
 }
 \examples{
 

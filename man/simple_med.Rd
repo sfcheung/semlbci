@@ -5,7 +5,7 @@
 \alias{simple_med}
 \title{Dataset (Simple Mediation Model)}
 \format{
-A data frame with 500 rows and three variables:
+A data frame with 200 rows and three variables:
 \describe{
 \item{x}{x, the independent variable}
 \item{m}{m, the mediator}
@@ -16,7 +16,7 @@ A data frame with 500 rows and three variables:
 simple_med
 }
 \description{
-Generated from a simple mediation model, n = 500
+Generated from a simple mediation model, n = 200
 }
 \details{
 Supposed to be tested using this example:
@@ -27,5 +27,12 @@ mod <- "m ~ x
 fit <- cfa(mod, simple_med)
 summary(fit)
 }\if{html}{\out{</div>}}
+}
+\examples{
+
+print(head(simple_med), digits = 3)
+nrow(simple_med)
+
+
 }
 \keyword{datasets}

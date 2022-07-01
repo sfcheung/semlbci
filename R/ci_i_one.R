@@ -1,26 +1,51 @@
-#' @title LB Confidence Limit for One Parameter
+#' @title Likelihood-Based Confidence Bound for One Parameter
 #'
-#' @description Finds the likelihood-based confidence limit
+#' @description Find the likelihood-based confidence bound
 #'  for one parameter.
 #'
-#' @details [ci_i_one()] calls a function ([ci_bound_wn_i()] by default)
-#'  once to find the bound (limit) for a confidence interval.
-#'  The default method is the Wu-Neale-2012 method. Please refer to
-#'  [ci_bound_wn_i()] for further information.
+#' @details
 #'
-#' This function is not supposed to be used directly by users. It is
-#' exported such that interested users can examine how a confidence bound it
-#' found.
+#' ## Important Notice
 #'
-#' @return A numeric vector of two elements. The first element is the
-#' lower bound, and the second element is the upper bound.
+#' This function is not supposed to be used directly by users in
+#' typical scenarios. Its interface is user-*unfriendly* because it
+#' should be used through [semlbci()]. It is exported such that
+#' interested users can examine how a confidence bound is found, or
+#' use it for experiments or simulations.
 #'
-#' The diagnostic information from the function called in finding the
-#' lower and upper founds are stored in the attributes `lb_diag` and
-#' `ub_diag`, for the lower bound and the upper bound, respectively.
+#' ## Usage
 #'
-#' @param i The position of the target parameters as appeared in the
-#'  parameter table of the [lavaan::lavaan-class] object.
+#' [ci_i_one()] is the link between [semlbci()] and the lowest level
+#' function (currently [ci_bound_wn_i()]). When called by [semlbci()]
+#' to find the bound of a parameter, [ci_i_one()] calls a function
+#' ([ci_bound_wn_i()] by default) one or more times to find the bound
+#' (limit) for an LBCI.
+#'
+#' @return A list of several elements.
+#'
+#' - `bound`: The bound located. `NA` if the search failed.
+#'
+#' - `diags`: Diagnostic information.
+#'
+#' - `method`: Method used. Currently only `"wn"` is the only possible
+#'             value.
+#'
+#' - `times`: Total time used in the search.
+#'
+#' - `sf_full`: The scaling and shift factors used.
+#'
+#' - `ci_bound_i_out`: The original output from [ci_bound_wn_i()].
+#'
+#' - `attempt_lb_var`: How many attempts used to reduce the lower
+#'                     bounds of free variances.
+#'
+#' - `attempt_more_times`: How many additional attempts used to search
+#'                         for the bounds. Controlled by
+#'                         `try_k_more_times`.
+#'
+#' @param i The position (row number) of the target parameters as
+#'  appeared in the parameter table of the [lavaan::lavaan-class]
+#'  object.
 #'
 #' @param which Whether the lower bound or the upper bound is to be
 #'  found. Must be `"lbound"` or `"ubound"`.
@@ -28,22 +53,23 @@
 #' @param sem_out The SEM output. Currently supports
 #'  [lavaan::lavaan-class] outputs only.
 #'
-#' @param method The approach to be used. Default is "wn"
-#'  (Wu-Neale-2012 Method). The other methods are disabled for now.
+#' @param method The approach to be used. Default is `"wn"`
+#'  (Wu-Neale-2012 Method), the only supported method.
 #'
-#' @param standardized Boolean. Whether the LBCI for the standardized
-#'  solution is to be searched. Default is `FALSE`.
+#' @param standardized Logical. Whether the bound of the LBCI of the
+#'  standardized solution is to be searched. Default is `FALSE`.
 #'
 #' @param robust Whether the LBCI based on robust likelihood ratio
-#'  test is to be found. Only "satorra.2000" in [lavaan] is supported
-#'  for now. If `"none"``, the default, then likelihood ratio test based
-#'  on maximum likelihood estimation will be used.
+#'  test is to be found. Only `"satorra.2000"` in
+#'  [lavaan::lavTestLRT()] is supported for now. If `"none"``, the
+#'  default, then likelihood ratio test based on maximum likelihood
+#'  estimation will be used.
 #'
-#' @param sf_full A list with the scaling factors. Ignored if `robust`
-#'  is `"none"`. If `robust` is `"satorra.2000"` and `sf_full` is
-#'  supplied, then its value will be used.
-#'  If `robust` is `"satorra.2000"` but `sf_full` is
-#'  `NA`, then scaling factors will be computed internally.
+#' @param sf_full A list with the scaling and shift factors. Ignored
+#'  if `robust` is `"none"`. If `robust` is `"satorra.2000"` and
+#'  `sf_full` is supplied, then its value will be used. If `robust` is
+#'  `"satorra.2000"` but `sf_full` is `NA`, then scaling factors will
+#'  be computed internally.
 #'
 #' @param sf_args The list of arguments to be used for computing scaling factors
 #'  if `robust` is `"satorra.2000"`. Used only by [semlbci()]. Ignored
@@ -53,8 +79,8 @@
 #'  by default. Originally used by some internal functions. No longer used
 #'  in the current version but kept for backward compatibility.
 #'
-#' @param try_k_more_times How many more times to try if the status code is not zero.
-#'                         Default is 0.
+#' @param try_k_more_times How many more times to try if the status
+#'  code is not zero. Default is 0.
 #'
 #' @param ... Arguments to be passed to the function corresponds to
 #'  the requested method ([ci_bound_wn_i()] for "wn").

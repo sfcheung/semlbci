@@ -5,7 +5,7 @@ library(semlbci)
 
 dat <- cfa_two_factors
 
-mod <- 
+mod <-
 "
 f1 =~ x1 + x2 + a*x3
 f2 =~ x4 + a*x5 + equal('f1=~x2')*x6
@@ -98,11 +98,11 @@ test_that("Check against the flags", {
       )
   })
 
-test_that("Check against the flags", {
-    expect_error(
-        semlbci(fit05)
-      )
-  })
+# test_that("Check against the flags", {
+#     expect_error(
+#         semlbci(fit05)
+#       )
+#   })
 
 test_that("Check against the flags", {
     expect_error(

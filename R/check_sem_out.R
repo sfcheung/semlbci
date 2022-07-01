@@ -1,44 +1,33 @@
-#' @title Pre-analysis Check For semlbci
+#' @title Pre-analysis Check For 'semlbci'
 #'
-#' @description Checks the output passed to semlbci
+#' @description Check the output passed to [semlbci()]
 #'
-#' @details Checks whether the model and the estimation method in the
-#'  `sem_out` object passed to [semlbci()] are supported by the
+#' @details It checks whether the model and the estimation method in
+#'  the `sem_out` object passed to [semlbci()] are supported by the
 #'  current version of [semlbci()]. This function is to be used by
 #'  [semlbci()] but is exported such that the compatibility of an SEM
-#'  output can be checked independently.
+#'  output can be checked directly.
 #'
 #' Estimation methods (`estimator` in [lavaan::lavaan()]) currently
 #'     supported:
 #'
-#'    - Maximum likelihood (`ML`)
+#'    - Maximum likelihood (`ML`) and its variants (e.g., `MLM`, `MLR`).
+#'      For methods with robust test statistics (e.g., `MLR`),
+#'      only robust LBCIs (`robust = "satorra.2000"` in calling [semlbci()])
+#'      can be requested.
 #'
-#'    - Full information maximum likelihood with missing data (`fiml`)
-#'
-#'    - Generalized least squares (`GLS`)
+#'    - Generalized least squares (`GLS`).
 #'
 #'    - Weighted least squares (a.k.a. asymptotically distribution
-#'         free) (`WLS`)
-#'
-#'    - Estimation done with robust test statistics is supported if `robust`
-#'        set to "satorra.2000":
-#'
-#'        - `MLR`, `MLMVS`, `MLM`, `MLMV`
+#'         free) (`WLS`) and its variants (e.g., `WLSMV`).
 #'
 #' Estimation methods not yet supported:
 #'
-#'    - Unweighted least squares (`ULS`)
+#'    - Unweighted least squares (`ULS`).
 #'
-#'    - Diagonally weighted least squares (`DWLS`)
+#'    - Diagonally weighted least squares (`DWLS`).
 #'
-#'    - Variants with robust standard errors and/or robust
-#'      test statistics:
-#'
-#'       - `MLF`.
-#'
-#'       - `WLSM`, `WLSMV`.
-#'
-#'       - `ULSM`, `ULSMV`.
+#'    - Other methods not listed.
 #'
 #' Models supported:
 #'
@@ -54,7 +43,7 @@
 #'
 #'    - Models with formative factors.
 #'
-#'    - Multilevel models
+#'    - Multilevel models.
 #'
 #' @return A numeric vector of one element. If 0, the model and
 #'  estimation method are officially supported. If larger than zero,
@@ -70,9 +59,9 @@
 #'  supports a [lavaan::lavaan-class] object.
 #'
 #' @param robust Whether the LBCI based on robust likelihood ratio
-#'  test is to be found. Only "satorra.2000" in [lavaan] is supported
-#'  for now. If `"none"`, the default, then likelihood ratio test based
-#'  on maximum likelihood estimation will be used.
+#'  test is to be found. Only "satorra.2000" in [lavaan::lavTestLRT()]
+#'  is supported for now. If `"none"`, the default, then likelihood
+#'  ratio test based on maximum likelihood estimation will be used.
 #'
 #' @param multigroup_ok If `TRUE`, will not check whether the model is a
 #'  multiple-group model. Default is `TRUE`.
@@ -110,8 +99,10 @@
 #'
 #' @export
 
-check_sem_out <- function(sem_out, robust = "none",
+check_sem_out <- function(sem_out,
+                          robust = c("none", "satorra.2000"),
                           multigroup_ok = TRUE) {
+    robust <- match.arg(robust)
     p_table <- lavaan::parameterTable(sem_out)
 
     sem_options <- lavaan::lavInspect(sem_out, "options")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/confint_semlbci.R
 \name{confint.semlbci}
 \alias{confint.semlbci}
-\title{Confidence Intervals for a smelbci-Class Object}
+\title{Confidence Intervals for a 'smelbci' Object}
 \usage{
 \method{confint}{semlbci}(object, parm, level = 0.95, ...)
 }
@@ -10,7 +10,9 @@
 \item{object}{The output of \code{\link[=semlbci]{semlbci()}}.}
 
 \item{parm}{The parameters for which the confidence
-intervals are returned. Not used.}
+intervals are returned. Not used because parameters
+are defined by three or more columns (\code{lhs}, \code{op},
+\code{rhs}, and \code{group} for multisample models).}
 
 \item{level}{Ignored. The level of confidence is determined
 when calling \code{\link[=semlbci]{semlbci()}} and cannot be changed.}
@@ -21,7 +23,7 @@ when calling \code{\link[=semlbci]{semlbci()}} and cannot be changed.}
 A two-column matrix of the confidence intervals.
 }
 \description{
-Return the confidence interval of the parameters
+Return the confidence intervals of the parameters
 in the output of \code{\link[=semlbci]{semlbci()}}.
 }
 \details{
@@ -47,6 +49,9 @@ lbci_med
 
 confint(lbci_med)
 
+}
+\seealso{
+\code{\link[=semlbci]{semlbci()}}
 }
 \author{
 Shu Fai Cheung \url{https://orcid.org/0000-0002-9871-9448}

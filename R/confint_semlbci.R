@@ -1,6 +1,6 @@
-#' @title Confidence Intervals for a smelbci-Class Object
+#' @title Confidence Intervals for a 'smelbci' Object
 #'
-#' @description Return the confidence interval of the parameters
+#' @description Return the confidence intervals of the parameters
 #'              in the output of [semlbci()].
 #'
 #' @details Return the likelihood-based confidence intervals
@@ -10,13 +10,20 @@
 #'  A two-column matrix of the confidence intervals.
 #'
 #' @param object The output of [semlbci()].
+#'
 #' @param parm The parameters for which the confidence
-#'             intervals are returned. Not used.
+#'             intervals are returned. Not used because parameters
+#'             are defined by three or more columns (`lhs`, `op`,
+#'             `rhs`, and `group` for multisample models).
+#'
 #' @param level Ignored. The level of confidence is determined
 #'              when calling [semlbci()] and cannot be changed.
+#'
 #' @param ...  Optional arguments. Ignored.
 #'
 #' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
+#'
+#' @seealso [semlbci()]
 #'
 #' @examples
 #'

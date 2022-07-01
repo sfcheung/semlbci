@@ -1,0 +1,35 @@
+
+reference:
+- title: Forming LBCIs
+  desc:  >
+    Form LBCIs for selected parameters in a model fitted by [lavaan::lavaan()]
+    or related functions such as [lavaan::sem()] and [lavaan::cfa()].
+- contents:
+  - semlbci
+- title: Helper Functions
+- contents:
+  - check_sem_out
+  - syntax_to_i
+  - loglike_range
+  - loglike_point
+  - loglike_quad_range
+  - loglike_quad_point
+  - loglike_compare
+  - plot.loglike_compare
+- title: Methods
+  desc: >
+    Methods of `semlbci-class` objects (output of [semlbci()])
+- contents:
+  - confint.semlbci
+  - print.semlbci
+- title: Advanced Functions
+  desc: Low level functions for advanced users.
+- contents:
+  - ci_bound_wn_i
+  - ci_i_one
+  - set_constraint
+  - print.cibound
+- title: Datasets
+  desc: Datasets used in examples.
+- contents:
+  - has_keyword("datasets")
