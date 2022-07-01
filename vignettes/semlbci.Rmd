@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{quick_start}
+  %\VignetteIndexEntry{Quick Start}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -75,7 +75,7 @@ The output is the parameter table of the fitted `lavaan` object, with two column
 out
 ```
 
-In this example, the point estimate of the unstandardized coefficient from `x` to `m` is `r out[out$id == 1, "est"]`, and the LBCI is `r out[out$id == 1, "lbci_lb"]` to `r out[out$id == 1, "lbci_ub"]`.  
+In this example, the point estimate of the unstandardized coefficient from `x` to `m` is `r out[out$id == 1, "est"]`, and the LBCI is `r out[out$id == 1, "lbci_lb"]` to `r out[out$id == 1, "lbci_ub"]`.
 
 ## Find the LBCI for a user-defined parameter
 
@@ -87,7 +87,7 @@ out <- semlbci(sem_out = fit,
 out
 ```
 
-In this example, the point estimate of the indirect effect is `r out[out$lhs == "ab", "est"]`, and the LBCI is `r out[out$lhs == "ab", "lbci_lb"]` to `r out[out$lhs == "ab", "lbci_ub"]`.  
+In this example, the point estimate of the indirect effect is `r out[out$lhs == "ab", "est"]`, and the LBCI is `r out[out$lhs == "ab", "lbci_lb"]` to `r out[out$lhs == "ab", "lbci_ub"]`.
 
 ## Find the LBCI for the parameters in the standardized metric
 
@@ -136,7 +136,7 @@ If time is not a concern, for example, when users want to explore the LBCIs for 
 
 ## `ciperc`: The level of confidence
 
-By default, the 95% LBCIs for the unstandardized solution will be formed. To change the level of confidence, set the argument `ciperc` to the desired coverage probability, e.g., .95 for 95%, .90 for 90%. 
+By default, the 95% LBCIs for the unstandardized solution will be formed. To change the level of confidence, set the argument `ciperc` to the desired coverage probability, e.g., .95 for 95%, .90 for 90%.
 
 ## `standardized`: Whether standardized solution is used
 
@@ -152,7 +152,7 @@ For detailed documentation of other argumetns, please refer to its help page, as
 
 # Diagnostic information
 
-Columns with diagnostic information will always be appended to the output of `semlbci()`. This feature cannot be turned off because we believe it is important to check the diagnostic information to see if there are any anomalies in the search. Unlike Wald-type CIs, LBCIs are searched by optimization rather than by closed-form equations. It is possible that the bounds are difficult to find for some situations. 
+Columns with diagnostic information will always be appended to the output of `semlbci()`. This feature cannot be turned off because we believe it is important to check the diagnostic information to see if there are any anomalies in the search. Unlike Wald-type CIs, LBCIs are searched by optimization rather than by closed-form equations. It is possible that the bounds are difficult to find for some situations.
 
 ## `status_lb` and `status_ub`
 
@@ -191,7 +191,7 @@ The function `semlbci()` currently supports `lavaan::lavaan()` results estimated
 Officially, this package currently supports single group models with continuous variables. It *may* work for multiple group models but it has not been tested for these models.
 
 ## Methods
- 
+
 The current and preferred method is the one proposed by Wu and Neale (2012). The current implementation in `semlbci()` does not check whether a parameter is near its boundary. The more advanced methods by Pritikin, Rappaport, and Neale (2017) will be considered in future development. The method by Neale and Miller (1997, `"nm"` `semlbci()`) was also attempted but only tested in a few simple scenarios.
 
 # References
