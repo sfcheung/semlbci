@@ -57,9 +57,10 @@ values may lead to errors in the first few iterations. Default is
 .90. This argument is ignored if \code{wald_ci_start} is `TRUE.}
 
 \item{lb_var}{The lower bound for free parameters that are
-variances. Default is \code{-Inf}. This is not an admissible value but
-seems to be necessary when we need to find the LBCI bound for a
-user-defined parameter.}
+variances. If equal to \code{-Inf}, the default, \code{lb_prop} and \code{lb_se_k}
+will be used to set the lower bounds for free variances. If it is
+a number, it will be used to set the lower bounds for all free
+variances.}
 
 \item{standardized}{If \code{TRUE}, the LBCI is for the requested
 estimate in the standardized solution. Default is \code{FALSE}.}
