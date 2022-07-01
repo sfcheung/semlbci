@@ -32,7 +32,6 @@ find_variance_in_free <- function(sem_out) {
         stop("sem_out is not a supported object.")
       }
     ptable <- lavaan::parameterTable(sem_out)
-    # Do not check for
     i_id <- ptable$id
     i_free <- ptable$free > 0
     id_free <- i_id[find_free(sem_out)]
@@ -41,12 +40,20 @@ find_variance_in_free <- function(sem_out) {
     id_free %in% id_var
   }
 
+#' @param prop Default is .05, setting the lower bound to .05 *
+#'                estimate.
+#'
+#' @param se_k Default is 3, the estimate minus 3 standard error. If
+#'                negative, the lower bound is set using `lb_prop`.
+#' @noRd
+
 find_variance_in_free_lb <- function(sem_out, prop = .05, se_k = 3) {
+    # Find the free variances and generate lower bounds
+    # Used by ci_bound_wn_i
     if (!inherits(sem_out, "lavaan")) {
         stop("sem_out is not a supported object.")
       }
     ptable <- lavaan::parameterTable(sem_out)
-    # Do not check for
     i_id <- ptable$id
     i_free <- ptable$free > 0
     id_free <- i_id[find_free(sem_out)]
