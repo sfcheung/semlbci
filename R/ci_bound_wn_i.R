@@ -54,9 +54,10 @@
 #'  .90. This argument is ignored if `wald_ci_start` is `TRUE.
 #'
 #' @param lb_var The lower bound for free parameters that are
-#'  variances. Default is `-Inf`. This is not an admissible value but
-#'  seems to be necessary when we need to find the LBCI bound for a
-#'  user-defined parameter.
+#'  variances. If equal to `-Inf`, the default, `lb_prop` and `lb_se_k`
+#'  will be used to set the lower bounds for free variances. If it is
+#'  a number, it will be used to set the lower bounds for all free
+#'  variances.
 #'
 #' @param wald_ci_start If `TRUE` and there are no equality
 #'  constraints in the model, and the target parameter is not a
@@ -166,42 +167,41 @@
 #' @export
 
 ci_bound_wn_i <- function(i = NULL,
-                       npar = NULL,
-                       sem_out = NULL,
-                       f_constr = NULL,
-                       which = NULL,
-                       history = FALSE,
-                       perturbation_factor = .9,
-                       lb_var = -Inf,
-                       standardized = FALSE,
-                       wald_ci_start = !standardized,
-                       opts = list(),
-                       ciperc = .95,
-                       ci_limit_ratio_tol = 1.5,
-                       verbose = FALSE,
-                       sf = 1,
-                       sf2 = 0,
-                       p_tol = 5e-4,
-                       std_method = "internal",
-                       bounds = "none",
-                       xtol_rel_factor = 1,
-                       ftol_rel_factor = 1,
-                       lb_prop = .05,
-                       lb_se_k = 3,
-                       ...) {
+                          npar = NULL,
+                          sem_out = NULL,
+                          f_constr = NULL,
+                          which = NULL,
+                          history = FALSE,
+                          perturbation_factor = .9,
+                          lb_var = -Inf,
+                          standardized = FALSE,
+                          wald_ci_start = !standardized,
+                          opts = list(),
+                          ciperc = .95,
+                          ci_limit_ratio_tol = 1.5,
+                          verbose = FALSE,
+                          sf = 1,
+                          sf2 = 0,
+                          p_tol = 5e-4,
+                          std_method = "internal",
+                          bounds = "none",
+                          xtol_rel_factor = 1,
+                          ftol_rel_factor = 1,
+                          lb_prop = .05,
+                          lb_se_k = 3,
+                          ...) {
     k <- switch(which,
                 lbound = 1,
                 ubound = -1)
     # Check if the parameter is a user-defined parameter
     p_table <- lavaan::parameterTable(sem_out)
     i_op <- p_table[i, "op"]
-    # This should be fixed at package level. There are
-    # two ids for a parametr, the id in the parameter table,
-    # and the id in the vector of free parameters.
+    # The id in the vector of free parameters
     i_in_free <- p_table[i, "free"]
 
-    # Get original point estiamte and CI
+    # Get original point estimate and CI
     if (standardized) {
+        ## Standardized solution
         p_est <- lavaan::standardizedSolution(sem_out,
                     type = "std.all",
                     se = TRUE,
@@ -252,6 +252,7 @@ ci_bound_wn_i <- function(i = NULL,
               }
           }
       } else {
+        ## Unstandardized solution
         p_est <- lavaan::parameterEstimates(sem_out,
                                             se = TRUE,
                                             ci = TRUE,
@@ -265,6 +266,8 @@ ci_bound_wn_i <- function(i = NULL,
         i_org_ci_upper <- p_est[i, "ci.upper"]
       }
 
+    # Create the objective function and the gradient function
+    ## Standardized solution
     if (standardized && (i_op %in% c("=~", "~", "~~", ":="))) {
         if (!(std_method %in% c("lavaan", "internal"))) {
             stop(paste0("std_method must be either ",
@@ -353,8 +356,11 @@ ci_bound_wn_i <- function(i = NULL,
                                     )
           }
       }
+    ## Unstandardized solution
     if (i_op == ":=") {
+        ## User-defined parameter
         if (standardized) {
+            # Not used
           } else {
             # Get the name of the defined parameter
             i_name <- p_table[i, "label"]
@@ -373,9 +379,12 @@ ci_bound_wn_i <- function(i = NULL,
               }
           }
       } else {
+        ## Free parameter
         if (standardized) {
+            # Not used
           } else {
             # The function to be minimized.
+            # force() may not be needed but does not harm to keep them.
             lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
                 force(k)
                 force(i_in_free)
@@ -389,6 +398,8 @@ ci_bound_wn_i <- function(i = NULL,
               }
           }
       }
+
+    # Set the starting values of the parameters
     if (wald_ci_start) {
         xstart <- set_start_wn(i, sem_out,
                                which = which,
@@ -398,16 +409,22 @@ ci_bound_wn_i <- function(i = NULL,
       } else {
         xstart <- perturbation_factor * lavaan::coef(sem_out)
       }
+
+    # Set lower bounds
     fit_lb <- rep(-Inf, npar)
     if (isTRUE(identical(lb_var, -Inf))) {
+        # Override lb_var = -Inf for free variances
         fit_lb[find_variance_in_free(sem_out)] <- find_variance_in_free_lb(sem_out,
                                                       prop = lb_prop,
                                                       se_k = lb_se_k)
       } else {
         fit_lb[find_variance_in_free(sem_out)] <- lb_var
       }
+
+    # Set upper bounds
     fit_ub <- rep(+Inf, npar)
-    # Need further test on using lavaan bounds
+
+    # Need further testing on using lavaan bounds
     # if (!is.null(p_table$lower)) {
     #     fit_lb <- p_table$lower[p_table$free > 0]
     #   } else {
@@ -429,6 +446,10 @@ ci_bound_wn_i <- function(i = NULL,
     #         fit_ub <- p_bounds$upper[p_bounds$free > 0]
     #       }
     #   }
+
+    # Optimization
+
+    # Default options in nloptr
     opts_final <- utils::modifyList(list("algorithm" = "NLOPT_LD_SLSQP",
                         # "xtol_rel" = 1.0e-10,
                         "xtol_rel" = 1.0e-5 * xtol_rel_factor,
@@ -449,15 +470,19 @@ ci_bound_wn_i <- function(i = NULL,
                         debug = FALSE,
                         sf = sf,
                         sf2 = sf2)
+
+    # Process the results
+
     bound <- k * out$objective
     bound_unchecked <- bound
 
     # Initialize the status code
+    ## Any values other than 0 denotes a problem
     status <- 0
 
     # Check convergence
     if (out$status < 0) {
-        # Verify the range that denotes error
+        # Verify the range of nloptr that denotes an error
         status <- 1
         bound <- NA
       }
@@ -490,9 +515,7 @@ ci_bound_wn_i <- function(i = NULL,
     if (!fit_post_check) {
         status <- 1
         bound <- NA
-        # The warning should be raised by the calling function, not this one
-        # warning("Optimization converged but the final solution is not
-        # admissible.")
+        # The warning should be raised by the calling function, not this one.
       }
 
     # Achieved level of confidence
@@ -510,6 +533,7 @@ ci_bound_wn_i <- function(i = NULL,
         bound <- NA
       }
 
+    ## Collect diagnostic information
     diag <- list(status = status,
                  est_org = i_est,
                  ci_org_limit = i_org_ci_limit,
