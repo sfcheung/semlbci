@@ -13,7 +13,7 @@ loglike_range(
   sem_out,
   par_i,
   confidence = 0.95,
-  n_points = 20,
+  n_points = 21,
   interval = NULL,
   verbose = FALSE,
   start = "default",
@@ -36,7 +36,7 @@ loglike_quad_range(
   sem_out,
   par_i,
   confidence = 0.95,
-  n_points = 20,
+  n_points = 21,
   interval = NULL,
   parallel = FALSE,
   ncpus = parallel::detectCores(logical = FALSE) - 1,
@@ -72,7 +72,7 @@ interval. If \code{interval} is \code{NULL}, this
 confidence is used as the interval.}
 
 \item{n_points}{The number of points to be evaluated in the
-interval.}
+interval. Default is 21.}
 
 \item{interval}{A vector of numbers. If provided and has two
 elements, this will be used as the end points of
@@ -132,7 +132,7 @@ parameter fixed to theta.
 
 \code{\link[=loglike_quad_point]{loglike_quad_point()}} returns a single number of the class
 \code{lavaan.vector} because it is the output out
-\verb{lavann:;fitMeasures()}. This number is the quadratic
+\code{lavann::fitMeasures()}. This number is the quadratic
 approximation of the log-likelihood when the parameter is
 fixed to \code{theta0}.
 
