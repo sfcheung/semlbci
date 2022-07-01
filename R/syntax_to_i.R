@@ -80,12 +80,14 @@ syntax_to_i <- function(syntax,
     l_model <- lavaan::lavParseModelString(syntax, as.data.frame = TRUE)
     if (nrow(l_model) > 0) {
         if (ngroups == 1) {
+            # Single-sample
             l_model$req <- TRUE
             p_out <- merge(ptable, l_model[, c("lhs", "op", "rhs", "req")],
                           by = c("lhs", "op", "rhs"), all.x = TRUE, sort = FALSE)
             p_out <- p_out[match(ptable$id, p_out$id), ]
             i_par <- which(p_out$req)
           } else {
+            # Multi-sample
             l_model$group <- NA
             tmp0 <- list()
             for (i in seq_len(nrow(l_model))) {
@@ -124,7 +126,7 @@ syntax_to_i <- function(syntax,
       } else {
         i_par <- NULL
       }
-    # User defined parameter
+    # User-defined parameter
     syntax_def <- syntax[grepl(":=", syntax)]
     if (length(syntax_def) > 0) {
         l_def <- strsplit(syntax_def, ":=")
