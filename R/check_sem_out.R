@@ -214,8 +214,7 @@ check_sem_out <- function(sem_out, robust = "none",
 
     if (!missing_ok) {
           out <- ifelse(out >= 0, -1, out - 1)
-          # Fix. Should be sem_missing
-          msg <- c(msg, paste("Missing handling method", sem_estimator,
+          msg <- c(msg, paste("Missing handling method", sem_missing,
                                 "is not yet supported."))
         }
 
