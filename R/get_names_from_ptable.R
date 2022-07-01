@@ -31,7 +31,7 @@ get_names_from_ptable <- function(ptable) {
     if (!all(c("lhs", "rhs", "label", "plabel") %in% names(ptable))) {
         stop("At least one of these columns are absent. \n
               lhs, rhs, label, plabel.\n
-              Check whethere ptable is a parameter table.")
+              Check whether ptable is a parameter table.")
       }
     out <- unique(c(ptable$lhs,
                     ptable$rhs,

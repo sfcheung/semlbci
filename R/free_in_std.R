@@ -1,9 +1,8 @@
 #' @noRd
 
-# Find parameters free in the standardized solution
-
 free_in_std <- function(pars,
                       sem_out) {
+    # Find free parameters in the standardized solution
     ptable <- lavaan::parameterTable(sem_out)
     ptable$rowid <- seq_len(nrow(ptable))
     stable <- lavaan::standardizedSolution(sem_out)

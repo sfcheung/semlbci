@@ -1,6 +1,7 @@
 #' @noRd
 
-# Remove parameters that are variances or error variances
+# Remove from a vector of row ids parameters that are variances or error
+# variances.
 
 remove_variances <- function(pars,
                       sem_out) {

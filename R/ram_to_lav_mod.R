@@ -9,7 +9,7 @@
 #'
 #' @param lav_mod A list of lavaan model matrices for one
 #'   group. They will be used as holders of the output.
-#' 
+#'
 #' @param standardized If `TRUE`, the `psi` and `beta` matrices
 #'  contain the correlations. Default is `FALSE`.
 #'
@@ -28,8 +28,7 @@ ram_to_lav_mod <- function(ram, lav_mod, standardized = FALSE) {
         lav_mod$lambda[] <- 0
         lambda_rnames <- rownames(lav_mod$lambda)
         lambda_cnames <- colnames(lav_mod$lambda)
-        lav_mod$lambda <- mA[lambda_rnames,
-                              lambda_cnames]
+        lav_mod$lambda <- mA[lambda_rnames, lambda_cnames]
         lambda1 <- lambda_rnames[lambda_rnames %in% lambda_cnames]
         lav_mod$lambda[lambda1, ] <- 0
         lav_mod$lambda[lambda1, lambda1] <- 1

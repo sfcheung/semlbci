@@ -127,27 +127,26 @@ check_sem_out <- function(sem_out, robust = "none",
     sem_nlevels <- lavaan::lavInspect(sem_out, "nlevels")
     sem_max_nclusters <- max(unlist(lavaan::lavInspect(sem_out, "nclusters")))
 
+    # Only check against methods explicitly supported
+    # Note that it checks the `estimator` in options.
+    # E.g., if estimator = "MLM" in the call, the `estimator` in options is
+    # still "ML".
+    # Therefore, variants of ML, e.g., MLR and mLR, are supported.
+    # Documented estimator: DLS, DWLS, GLS, ML, PML, ULS, WLS
     estimators_supported <- c("ML",
                               "GLS",
                               "WLS")
-    estimators_unsupported <- c("ULS",
+    estimators_unsupported <- c("DLS",
                                 "DWLS",
-                                "MLM",
-                                "MLMV",
-                                "MLMVS",
-                                "MLF",
-                                "MLR",
-                                "WLSM",
-                                "WLSMV",
-                                "ULSM",
-                                "ULSMV",
+                                "ULS",
                                 "PML")
+    # Documented se: standard, robust.huber.white, robust.se, boot
+    # If robust LBCI requested, this will be ignored.
+    # Not used. Included just in case this need to be checked in the future.
     se_supported <- c("standard")
-    se_unsupported <- c("robust.sem",
-                        "robust.huber.white",
-                        "robust",
-                        "boot",
-                        "bootstrap")
+
+    # If normal LBCI is requested, test must be "standard".
+    # If robust LBCI is requested, another test will be conducted.
     test_supported <- c("standard")
     test_unsupported <- c("Satorra.Bentler",
                           "Yuan.Bentler",
@@ -156,6 +155,8 @@ check_sem_out <- function(sem_out, robust = "none",
                           "boot",
                           "bootstrap",
                           "Bollen.Stine")
+
+    # Note that it checks the `missing` in options.
     missing_supported <- c("listwise",
                            "ml", "fiml", "direct",
                            "ml.x", "fiml.x", "direct.x")
@@ -166,9 +167,10 @@ check_sem_out <- function(sem_out, robust = "none",
 
     estimator_ok <- (tolower(sem_estimator) %in% tolower(estimators_supported))
     missing_ok <- (tolower(sem_missing) %in% tolower(missing_supported))
+    # se checked but not used
     se_ok <- (tolower(sem_se) %in% tolower(se_supported))
 
-    scaled <- any(names(sem_out@test) %in%
+    scaled <- any(names(lavaan::lavInspect(sem_out, "test")) %in%
                         c("satorra.bentler",
                           "yuan.bentler",
                           "yuan.bentler.mplus",
@@ -176,6 +178,7 @@ check_sem_out <- function(sem_out, robust = "none",
                           "scaled.shifted"))
 
     if (robust == "satorra.2000") {
+        # If robust LBCI requested, at least one scaled test must be used.
         if (scaled) {
           robust_ok <- TRUE
           test_ok <- TRUE
@@ -184,6 +187,7 @@ check_sem_out <- function(sem_out, robust = "none",
           test_ok <- FALSE
         }
       } else {
+        # If normal LBCI requested, the test must be "standard".
         robust_ok <- NA
         test_ok <- (tolower(sem_test) %in% tolower(test_supported))
       }
@@ -198,6 +202,7 @@ check_sem_out <- function(sem_out, robust = "none",
     optim_converged <- sem_converged
     optim_admissible <- sem_post_check
 
+    # out < 0 if there is at least one problem
     out <- 0
     msg <- NULL
 
@@ -209,15 +214,9 @@ check_sem_out <- function(sem_out, robust = "none",
 
     if (!missing_ok) {
           out <- ifelse(out >= 0, -1, out - 1)
-          msg <- c(msg, paste("Missing handling method", sem_estimator,
+          msg <- c(msg, paste("Missing handling method", sem_missing,
                                 "is not yet supported."))
         }
-
-    # if (!se_ok) {
-    #       out <- ifelse(out >= 0, -1, out - 1)
-    #       msg <- c(msg, paste("Standard error method", sem_se,
-    #                             "is not yet supported."))
-    #     }
 
     if (robust == "satorra.2000") {
         if (!test_ok) {

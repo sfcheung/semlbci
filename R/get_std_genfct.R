@@ -1,6 +1,6 @@
 #' @title Standardized Estimate of a Parameter
 #'
-#' @description Generates a function to get the standardized estiamte
+#' @description Generates a function to get the standardized estimate
 #'  of a parameter.
 #'
 #' @details This function is used in tests.
@@ -26,7 +26,7 @@ get_std_genfct <- function(fit, i) {
                         )
         fit_pt2 <- fit_pt
         nfree <- sum(fit_pt$free > 0)
-        fit_pt2[fit_pt$free > 0, "est"]  <- 
+        fit_pt2[fit_pt$free > 0, "est"]  <-
                                       .x.[seq_len(nfree)]
         fit@ParTable <- as.list(fit_pt2)
         std <- lavaan::standardizedSolution(

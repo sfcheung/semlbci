@@ -9,6 +9,7 @@
   digits = 3,
   annotation = TRUE,
   time = FALSE,
+  verbose = FALSE,
   verbose_if_needed = TRUE,
   drop_no_lbci = TRUE,
   ...
@@ -22,8 +23,12 @@ passed to \code{\link[=round]{round()}}. Default is 3.}
 
 \item{annotation}{If \code{TRUE}, print table notes. Default is \code{TRUE}.}
 
-\item{time}{If \code{TRUE}, print the time spent on each limit. Default
+\item{time}{If \code{TRUE}, print the time spent on each bound. Default
 is \code{FALSE}.}
+
+\item{verbose}{If \code{TRUE}, additional diagnostic information will
+always be printed. This argument override \code{verbose_if_needed}.
+Default is \code{FALSE}.}
 
 \item{verbose_if_needed}{If \code{TRUE}, additional diagnostic
 information will be printed if necessary. If \code{FALSE}, additional

@@ -18,9 +18,9 @@
 #'
 #' @param ci_out The output from the ci_bound_*_i function.
 #'
-#' @param semfct The sem function to be used.
+#' @param semfct The lavaan function to be used.
 #'
-#' @param ... Other arguments to be passed to the sem function
+#' @param ... Other arguments to be passed to the lavaan function.
 #'
 #'
 #' @noRd

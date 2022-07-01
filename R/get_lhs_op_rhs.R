@@ -29,7 +29,7 @@ get_lhs_op_rhs <- function(i, sem_out, more = FALSE) {
         stop("sem_out is not a supported object.")
       }
     ptable <- lavaan::parameterTable(sem_out)
-    # more is added to maintain compatibility with existing functions.
+    # 'more' is added to maintain compatibility with existing functions.
     # They may assume that the output has only three columns.
     if (more) {
         return(as.data.frame(

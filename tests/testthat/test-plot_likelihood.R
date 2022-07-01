@@ -1,4 +1,4 @@
-skip("WIP")
+skip("Plots: Test in interactive sections")
 
 options_old <- options(width = 132)
 library(testthat)

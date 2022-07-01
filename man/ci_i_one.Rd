@@ -46,10 +46,12 @@ If \code{robust} is \code{"satorra.2000"} but \code{sf_full} is
 \code{NA}, then scaling factors will be computed internally.}
 
 \item{sf_args}{The list of arguments to be used for computing scaling factors
-if \code{robust} is \code{"satorra.2000"}. Used only by \code{\link[=semlbci]{semlbci()}}.}
+if \code{robust} is \code{"satorra.2000"}. Used only by \code{\link[=semlbci]{semlbci()}}. Ignored
+if \code{robust} is not \code{"satorra.2000"}.}
 
 \item{sem_out_name}{The name of the object supplied to \code{sem_out}. \code{NULL}
-by default. To be used by internal functions.}
+by default. Originally used by some internal functions. No longer used
+in the current version but kept for backward compatibility.}
 
 \item{try_k_more_times}{How many more times to try if the status code is not zero.
 Default is 0.}

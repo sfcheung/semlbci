@@ -12,10 +12,14 @@
 #' @param digits The number of digits after decimal point. To be
 #'  passed to [round()]. Default is 3.
 #'
-#' @param time If `TRUE`, print the time spent on each limit. Default
+#' @param time If `TRUE`, print the time spent on each bound. Default
 #'  is `FALSE`.
 #'
 #' @param annotation If `TRUE`, print table notes. Default is `TRUE`.
+#'
+#' @param verbose If `TRUE`, additional diagnostic information will
+#'  always be printed. This argument override `verbose_if_needed`.
+#'  Default is `FALSE`.
 #'
 #' @param verbose_if_needed If `TRUE`, additional diagnostic
 #'  information will be printed if necessary. If `FALSE`, additional
@@ -50,9 +54,11 @@ print.semlbci <- function(x,
                           digits = 3,
                           annotation = TRUE,
                           time = FALSE,
+                          verbose = FALSE,
                           verbose_if_needed = TRUE,
                           drop_no_lbci = TRUE,
                           ...) {
+    if (verbose) verbose_if_needed <- FALSE
     out <- x
     if (max(out$group) == 1) {
         out$group <- NULL
@@ -124,8 +130,6 @@ print.semlbci <- function(x,
     out$method <- NULL
 
     out_names <- colnames(out)
-    # out_names <- gsub("lbci_lb", "lb", out_names, fixed = TRUE)
-    # out_names <- gsub("lbci_ub", "ub", out_names, fixed = TRUE)
     out_names <- gsub("ci_org_lb", "lb", out_names, fixed = TRUE)
     out_names <- gsub("ci_org_ub", "ub", out_names, fixed = TRUE)
     out_names <- gsub("status_lb", "ok_l", out_names, fixed = TRUE)
@@ -145,7 +149,7 @@ print.semlbci <- function(x,
     if (annotation) {
         msg <- NULL
         msg <- c(msg,
-              "* lbci_lb, lbci_ub: The lower and upper likelihood-based limits.")
+              "* lbci_lb, lbci_ub: The lower and upper likelihood-based bounds.")
         if (standardized) {
             msg <- c(msg,
                   paste0("* est.std: ",
@@ -166,7 +170,7 @@ print.semlbci <- function(x,
         if (standardized) {
             msg <- c(msg,
                   paste0("* lb, ub: ",
-                  "The original lower and upper limits,",
+                  "The original lower and upper bounds,",
                       " extracted from the original lavaan standardized",
                       " solution output.",
                       " Usually the delta method CIs for the",
@@ -174,7 +178,7 @@ print.semlbci <- function(x,
           } else {
             msg <- c(msg,
                   paste0("* lb, ub: ",
-                  "The original lower and upper limits,",
+                  "The original lower and upper bounds,",
                       " extracted from the original lavaan output.",
                       " Usually Wald CIs for free parameters and",
                       " delta method CIs for user-defined parameters"))
@@ -182,7 +186,7 @@ print.semlbci <- function(x,
         msg <- c(msg,
               paste0("* cl_lb, cl_ub: ",
               "One minus the p-values of chi-square difference tests",
-                   " at the limits.",
+                   " at the bounds.",
                    " Should be close to the requested level of confidence,",
                    " e.g., .95 for 95% confidence intervals."))
         if (ratio_note) {
@@ -190,33 +194,33 @@ print.semlbci <- function(x,
               paste0("* ratio_l, ratio_u: ",
                   "Ratio of a to b, ",
                   "a = Distance from the point estimate to the likelihood-based",
-                  " limit, b = Distance from the point estimate to the original",
-                  " limit. A limit should be interpreted with caution if",
+                  " bound, b = Distance from the point estimate to the original",
+                  " bound. A bound should be interpreted with caution if",
                   " the ratio is too large or too small, indicating a large",
                   " difference between the original interval and the",
                   " likelihood-based interval."))
           }
         if (post_check_note) {
           msg <- c(msg,
-            paste0("* check_l, check_u:", "Whether the final solution of ",
-                  "a limit passed the post optimization check of lavaan ",
+            paste0("* check_l, check_u: ", "Whether the final solution of ",
+                  "a bound passed the post optimization check of lavaan ",
                   "by lavaan::lavInspect(fit, 'post.check'), where ",
                   "fit is the final solution."))
           }
         if ("sec_l" %in% colnames(out)) {
           msg <- c(msg,
-            "* sec_l, sec_u: The time (in seconds) used to search a limit.")
+            "* sec_l, sec_u: The time (in seconds) used to search a bound.")
           }
         if ("robust" %in% colnames(out)) {
           msg <- c(msg,
               paste0("* robust: ",
               "The robust method used in the likelihood ratio ",
                      "test of lavaan in searching the robust ",
-                     "likelihood-based limits."))
+                     "likelihood-based bounds."))
           }
         if ("method" %in% colnames(out)) {
           msg <- c(msg,
-              "* method: The method used to search the limits.")
+              "* method: The method used to search the bounds.")
           }
         cat("\nAnnotation:\n")
         cat(strwrap(msg, exdent = 4), sep = "\n")

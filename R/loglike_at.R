@@ -39,7 +39,7 @@
 #'                   confidence is used as the interval.
 #'
 #' @param n_points The number of points to be evaluated in the
-#'                 interval.
+#'                 interval. Default is 21.
 #'
 #' @param interval A vector of numbers. If provided and has two
 #'                 elements, this will be used as the end points of
@@ -104,7 +104,7 @@ NULL
 
 loglike_range <- function(sem_out, par_i,
                           confidence = .95,
-                          n_points = 20,
+                          n_points = 21,
                           interval = NULL,
                           verbose = FALSE,
                           start = "default",
@@ -112,8 +112,6 @@ loglike_range <- function(sem_out, par_i,
                           parallel = FALSE,
                           ncpus = parallel::detectCores(logical = FALSE) - 1,
                           use_pbapply = TRUE) {
-    # Parallel processing not yet supported
-    # parallel <- FALSE
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -122,6 +120,7 @@ loglike_range <- function(sem_out, par_i,
       }
     ptable <- lavaan::parameterTable(sem_out)
     if (is.null(interval)) {
+        # Use Wald-type CI to determine the interval
         est <- ptable$est[par_i]
         se <- ptable$se[par_i]
         z <- stats::qnorm(1 - (1 - confidence) / 2)
@@ -129,13 +128,17 @@ loglike_range <- function(sem_out, par_i,
         thetas <- est + se * zs
       } else {
         if (length(interval) == 2) {
+            # Form n_points points in the interval
             thetas <- seq(interval[1], interval[2], length.out = n_points)
           } else {
+            # Use the interval as-is
             thetas <- interval
           }
       }
     if (parallel) {
+        # Parallel
         cl <- parallel::makeCluster(ncpus)
+        # Rebuild the environment
         pkgs <- .packages()
         pkgs <- rev(pkgs)
         parallel::clusterExport(cl, "pkgs", envir = environment())
@@ -146,8 +149,9 @@ loglike_range <- function(sem_out, par_i,
                                        envir = parent.frame())
         parallel::clusterExport(cl, ls(envir = environment()),
                                        envir = environment())
-        if (requireNamespace("pbapply", quietly = TRUE) &
+        if (requireNamespace("pbapply", quietly = TRUE) &&
                     use_pbapply) {
+            # Use pbapply
             cat("\n", "Finding p-values for LR test", "\n",
                 sep = "")
             utils::flush.console()
@@ -160,6 +164,7 @@ loglike_range <- function(sem_out, par_i,
                                      try_k_more = try_k_more,
                                      cl = cl)
           } else {
+            # No progress bar
             out <- parallel::parLapplyLB(cl = cl,
                                          thetas,
                                          semlbci::loglike_point,
@@ -171,8 +176,10 @@ loglike_range <- function(sem_out, par_i,
           }
         parallel::stopCluster(cl)
       } else {
+        # Serial
         if (requireNamespace("pbapply", quietly = TRUE) &
                     use_pbapply) {
+            # Use pbapply
             cat("\n", "Finding p-values for LR test", "\n",
                 sep = "")
             utils::flush.console()
@@ -184,6 +191,7 @@ loglike_range <- function(sem_out, par_i,
                                      start = start,
                                      try_k_more = try_k_more)
           } else {
+            # No progress bar
             out <- lapply(thetas, loglike_point, sem_out = sem_out,
                                             par_i = par_i,
                                             verbose = verbose,
@@ -239,6 +247,7 @@ loglike_point <- function(theta0,
     slot_opt3$do.fit <- FALSE
     slot_opt3$se <- "none"
     if (ptable$label[par_i] == "") {
+        # par_i has no label
         ptable_i <- ptable
         ptable_i[par_i, "free"] <- 0
         ptable_i[par_i, "start"] <- theta0
@@ -249,8 +258,9 @@ loglike_point <- function(theta0,
                                slotOptions = slot_opt3,
                                slotSampleStats = slot_smp2,
                                slotData = slot_dat2))
-        suppressWarnings(fit_i <- try_more(fit_i, attempts = 5))
+        suppressWarnings(fit_i <- try_more(fit_i, attempts = try_k_more))
       } else {
+        # par_i is labelled
         par_plabel <- ptable$label[par_i]
         ptable_i <- lavaan::lav_partable_merge(ptable,
                                 lavaan::lavaanify(paste0(par_plabel,
@@ -266,7 +276,7 @@ loglike_point <- function(theta0,
                                slotData = slot_dat2))
         suppressWarnings(fit_i <- try_more(fit_i, attempts = try_k_more))
       }
-    # Suppress the warning that may occur if theta0 is close the
+    # Suppress the warning that may occur if theta0 is close to the
     # the estimate in sem_out
     lrt <- suppressWarnings(lavaan::lavTestLRT(fit_i, sem_out))
     if (verbose) print(lrt)
@@ -297,7 +307,7 @@ loglike_point <- function(theta0,
 loglike_quad_range <- function(sem_out,
                                par_i,
                                confidence = .95,
-                               n_points = 20,
+                               n_points = 21,
                                interval = NULL,
                                parallel = FALSE,
                                ncpus = parallel::detectCores(logical = FALSE) - 1,
@@ -327,7 +337,9 @@ loglike_quad_range <- function(sem_out,
     out <- sapply(thetas, loglike_quad_point,
                   sem_out = sem_out, par_i = par_i)
     if (parallel) {
+        # Parallel
         cl <- parallel::makeCluster(ncpus)
+        # Rebuild the environment
         pkgs <- .packages()
         pkgs <- rev(pkgs)
         parallel::clusterExport(cl, "pkgs", envir = environment())
@@ -340,6 +352,7 @@ loglike_quad_range <- function(sem_out,
                                        envir = environment())
         if (requireNamespace("pbapply", quietly = TRUE) &
                     use_pbapply) {
+            # Use pbapply
             cat("\n", "Finding p-values for quadratic approximation", "\n",
                 sep = "")
             utils::flush.console()
@@ -361,6 +374,7 @@ loglike_quad_range <- function(sem_out,
                                 try_k_more = try_k_more,
                                 cl = cl)
           } else {
+            # No progress bar
             pvalues <- parallel::parSapplyLB(cl = cl,
                                   thetas,
                                   function(x,
@@ -381,8 +395,10 @@ loglike_quad_range <- function(sem_out,
           }
         parallel::stopCluster(cl)
       } else {
+        # Serial
         if (requireNamespace("pbapply", quietly = TRUE) &
                     use_pbapply) {
+            # Use pbapply
             cat("\n", "Finding p-values for quadratic approximation", "\n",
                 sep = "")
             utils::flush.console()
@@ -394,6 +410,7 @@ loglike_quad_range <- function(sem_out,
                                                 try_k_more = try_k_more)$lrt[2, "Pr(>Chisq)"]
                                 })
           } else {
+            # No progress bar
             pvalues <- sapply(thetas, function(x) {
                                   loglike_point(x,
                                                 sem_out = sem_out,
@@ -412,7 +429,7 @@ loglike_quad_range <- function(sem_out,
 
 #' @return [loglike_quad_point()] returns a single number of the class
 #'         `lavaan.vector` because it is the output out
-#'         `lavann:;fitMeasures()`. This number is the quadratic
+#'         `lavann::fitMeasures()`. This number is the quadratic
 #'         approximation of the log-likelihood when the parameter is
 #'         fixed to `theta0`.
 #' @describeIn loglikelihood Description of this function
@@ -429,7 +446,6 @@ loglike_quad_point <- function(theta0,
             stop("par_i must denote one parameter only.")
           }
       }
-    # p_info <- 1 / lavaan::lavInspect(fit, "vcov")[par_i, par_i]
     est <- lavaan::parameterEstimates(sem_out)[par_i, "est"]
     p_info <- 1 / lavaan::parameterEstimates(sem_out)[par_i, "se"]^2
     -.5 * p_info * (theta0 - est) ^ 2 + lavaan::fitMeasures(sem_out, "logl")
@@ -473,6 +489,7 @@ loglike_compare <- function(sem_out,
     z <- stats::qnorm(1 - (1 - confidence) / 2)
     zs <- seq(-z, z, length.out = n_points)
     thetas_q <- est + se * zs
+    # Find LBCI
     lbci_i <- semlbci(sem_out, pars = par_i, ciperc = confidence)
     lbci_range <- unlist(unname(stats::confint(lbci_i)[1, ]))
     thetas_l <- seq(lbci_range[1], lbci_range[2], length.out = n_points)
@@ -714,8 +731,6 @@ try_more <- function(object, attempts = 5, seed = NULL, rmin = .25, rmax = 1) {
                       ptable_i[i_free_p, "est"] <- ptable[i_free_p, "est"] * y
                       ptable_i[i_free_p, "start"] <- ptable[i_free_p, "est"] * y
                       ptable_i[i_free_p, "ustart"] <- ptable[i_free_p, "est"] * y
-                      # Should do something to reject "bad" starting values
-                      # slot_opt3$start <- ptable_i
                       out <- tryCatch(
                               fit2 <- suppressWarnings(lavaan::lavaan(
                                         model = ptable_i,

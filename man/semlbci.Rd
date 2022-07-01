@@ -16,6 +16,7 @@ semlbci(
   robust = "none",
   try_k_more_times = 2,
   semlbci_out = NULL,
+  check_fit = TRUE,
   ...,
   parallel = FALSE,
   ncpus = 2,
@@ -69,6 +70,13 @@ Default is 2.}
 
 \item{semlbci_out}{An \code{semlbci-class} object. If provided, parameters already
 with LBCIs formed will be excluded.}
+
+\item{check_fit}{If \code{TRUE} (default), the input (\code{sem_out}) will
+be checked by \code{\link[=check_sem_out]{check_sem_out()}}. If not
+supported, an error will be raised. If \code{FALSE},
+the check will be skipped and the LBCIs will be
+searched even for a model or parameter not
+supported. Set to \code{TRUE} only for testing.}
 
 \item{...}{Arguments to be passed to \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.}
 

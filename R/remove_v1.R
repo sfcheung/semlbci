@@ -1,6 +1,7 @@
 #' @noRd
 
-# Remove parameters that are fixed in the standardized solution
+# Remove from a vector of row ids parameters that are fixed in the
+# standardized solution
 
 remove_v1 <- function(pars,
                       sem_out) {
