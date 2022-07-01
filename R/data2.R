@@ -3,7 +3,7 @@
 #' @description Generated from a three-factor model with nine variables, n = 150
 #'
 #'
-#' @format A data frame with 150 rows and six variables:
+#' @format A data frame with 150 rows and nine variables:
 #' \describe{
 #'    \item{x1}{x1}
 #'    \item{x2}{x2}
@@ -31,5 +31,11 @@
 #' "
 #' fit <- lavaan::sem(mod, mediation_latent)
 #' ```
+#'
+#' @examples
+#'
+#' print(head(mediation_latent), digits = 3)
+#' nrow(mediation_latent)
+#'
 #'
 "mediation_latent"

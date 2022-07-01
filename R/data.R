@@ -15,13 +15,18 @@
 #'
 #' @format A data frame with 500 rows and six variables, `x1` to `x6`.
 #'
+#' @examples
+#'
+#' print(head(cfa_two_factors), digits = 3)
+#' nrow(cfa_two_factors)
+#'
 "cfa_two_factors"
 
 #' @title Dataset (Simple Mediation Model)
 #'
-#' @description Generated from a simple mediation model, n = 500
+#' @description Generated from a simple mediation model, n = 200
 #'
-#' @format A data frame with 500 rows and three variables:
+#' @format A data frame with 200 rows and three variables:
 #' \describe{
 #'    \item{x}{x, the independent variable}
 #'    \item{m}{m, the mediator}
@@ -38,6 +43,12 @@
 #' fit <- cfa(mod, simple_med)
 #' summary(fit)
 #' ```
+#'
+#' @examples
+#'
+#' print(head(simple_med), digits = 3)
+#' nrow(simple_med)
+#'
 #'
 "simple_med"
 
@@ -65,15 +76,21 @@
 #' cor(reg_cor_near_one[, c("x4", "x5")])
 #' ```
 #'
+#' @examples
+#'
+#' print(head(reg_cor_near_one), digits = 3)
+#' nrow(reg_cor_near_one)
+#'
+#'
 "reg_cor_near_one"
 
-#' @title Dataset (CFA, Two Factors, One Standardied Error Variance
+#' @title Dataset (CFA, Two Factors, One Standardized Error Variance
 #'  Close to Zero)
 #'
 #' @description Generated from a two-factor model, with one
 #'  standardized error variance close to zero.
 #'
-#' @format A data frame with 100 rows and six variables, `x1` to `x6`
+#' @format A data frame with 120 rows and six variables, `x1` to `x6`
 #'
 #' @details
 #' Supposed to be tested using this example:
@@ -89,5 +106,11 @@
 #' fit <- cfa(mod, cfa_evar_near_zero)
 #' summary(fit, standardized = TRUE, rsquare = TRUE)
 #' ```
+#' @examples
+#'
+#' print(head(cfa_evar_near_zero), digits = 3)
+#' nrow(cfa_evar_near_zero)
+#'
+#'
 #'
 "cfa_evar_near_zero"
