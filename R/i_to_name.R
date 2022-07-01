@@ -1,6 +1,6 @@
 #' @noRd
 
-# Create parameter name from row number in the parameter table
+# Create the parameter name from a row number in the parameter table
 
 i_to_name <- function(par_i,
                        sem_out) {
