@@ -1,4 +1,4 @@
-#' @title Print Method of a semlbci Object
+#' @title Print Method of a 'semlbci' Object
 #'
 #' @description Prints the results of a `semlbci` object, the output
 #'  of [semlbci()].
@@ -9,8 +9,8 @@
 #'
 #' @param x The output of [semlbci()].
 #'
-#' @param digits The number of digits after decimal point. To be
-#'  passed to [round()]. Default is 3.
+#' @param digits The number of digits after the decimal point. To be
+#'  passed to [formatC()]. Default is 3.
 #'
 #' @param time If `TRUE`, print the time spent on each bound. Default
 #'  is `FALSE`.
@@ -18,17 +18,22 @@
 #' @param annotation If `TRUE`, print table notes. Default is `TRUE`.
 #'
 #' @param verbose If `TRUE`, additional diagnostic information will
-#'  always be printed. This argument override `verbose_if_needed`.
+#'  always be printed. This argument overrides `verbose_if_needed`.
 #'  Default is `FALSE`.
 #'
 #' @param verbose_if_needed If `TRUE`, additional diagnostic
-#'  information will be printed if necessary. If `FALSE`, additional
-#'  diagnostic information will always be printed. Default is `TRUE`.
+#'  information will be printed only if necessary. If `FALSE`,
+#'  additional diagnostic information will always be printed. Default
+#'  is `TRUE`.
 #'
-#' @param drop_no_lbci If `TRUE`, parameters not included in the
-#'  search will be removed. Default is `TRUE`.
+#' @param drop_no_lbci If `TRUE`, parameters without LBCIs will be
+#' removed. Default is `TRUE`.
 #'
 #' @param ... Other arguments. They will be ignored.
+#'
+#' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
+#'
+#' @seealso [semlbci()]
 #'
 #' @examples
 #'
@@ -47,6 +52,14 @@
 #' lbci_med
 #'
 #' print(lbci_med, verbose_if_needed = FALSE)
+#'
+#' print(lbci_med, verbose = TRUE)
+#'
+#' print(lbci_med, time = TRUE)
+#'
+#' print(lbci_med, annotation = FALSE)
+#'
+#' print(lbci_med, digits = 4)
 #'
 #' @export
 
