@@ -12,9 +12,6 @@
 #' @param standardized If `TRUE`, the limit to be found is for the
 #'  standardized solution. Default is `FALSE`.
 #'
-#' @param pertubation_factor `NULL`. Not used. Included to maintain compatibility
-#'  with older version.
-#'
 #' @param update_args  `NULL`. Not used. Included to maintain compatibility
 #'  with older versions.
 #'
@@ -34,7 +31,6 @@
 scaling_factor3 <- function(sem_out,
                            i,
                            standardized = FALSE,
-                           pertubation_factor = NULL,
                            update_args = NULL,
                            force_converged = NULL,
                            std_method = "lavaan",
@@ -56,10 +52,10 @@ scaling_factor3 <- function(sem_out,
     v <- lavaan::lavTech(sem_out, "WLS.V")
     py <- lavaan::lavTech(sem_out, "delta")
     p <- lavaan::lavTech(sem_out, "information")
-    # .Machine$double.eps^(3/4)) to reproduce the results of lavaan 0.6-9
+    # .Machine$double.eps^(3 / 4)) to reproduce the results of lavaan 0.6-9
     pinv <- MASS::ginv(lavaan::lavInspect(sem_out,
               "augmented.information"),
-              tol = .Machine$double.eps^(3/4))[seq_len(npar), seq_len(npar)]
+              tol = .Machine$double.eps^(3 / 4))[seq_len(npar), seq_len(npar)]
     if (standardized) {
         p_std <- lavaan::parameterEstimates(
                               sem_out,
@@ -116,7 +112,6 @@ scaling_factor3 <- function(sem_out,
     tr_ug2 <- ugs[2]
 
     # Satorra-2000
-    # Asparouhov & Muthen (2010)
     # Asparouhov, T., & Muthén, B. O. (2010). Simple second order chi-square
     #     correction. Obtained from
     #     https://www.statmodel.com/download/WLSMV_new_chi21.pdf
