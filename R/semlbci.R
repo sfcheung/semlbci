@@ -124,6 +124,8 @@
 #' *Structural Equation Modeling: A Multidisciplinary Journal, 24*(3), 395-401.
 #' \doi{10.1080/10705511.2016.1275969}
 #'
+#' @seealso [print.semlbci()], [confint.semlbci()], [ci_i_one()], [ci_bound_wn_i()]
+#'
 #' @examples
 #'
 #' library(lavaan)

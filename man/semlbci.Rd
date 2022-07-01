@@ -167,6 +167,9 @@ confidence intervals for a parameter with an upper or lower bound.
 \emph{Structural Equation Modeling: A Multidisciplinary Journal, 24}(3), 395-401.
 \doi{10.1080/10705511.2016.1275969}
 }
+\seealso{
+\code{\link[=print.semlbci]{print.semlbci()}}, \code{\link[=confint.semlbci]{confint.semlbci()}}, \code{\link[=ci_i_one]{ci_i_one()}}, \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}
+}
 \author{
 Shu Fai Cheung \url{https://orcid.org/0000-0002-9871-9448}
 }
