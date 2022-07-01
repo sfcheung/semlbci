@@ -2,55 +2,19 @@
 % Please edit documentation in R/semlbci-package.R
 \docType{package}
 \name{semlbci-package}
+\alias{semlbci}
 \alias{semlbci-package}
 \title{semlbci: Likelihood Based Confidence Interval for SEM}
 \description{
-This package is for forming the likelihood-based confidence
-intervals (LBCIs) for parameters in structural equation modeling.
-
-The main function is \code{\link[=semlbci]{semlbci()}}, which receives an SEM output and
-finds the LBCIs for selected parameters. It will call \code{\link[=ci_i_one]{ci_i_one()}} for each
-parameter. \code{\link[=ci_i_one]{ci_i_one()}} will then call \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} twice, each time
-find one of the two confidence limits (lower and upper limits).
-
-Currently, the supported approach is the one proposed by Wu and
-Neale (2012, see also Pek & Wu, 2015). This method is easy to
-program and the illustration by Pek and Wu (2015) is one of the
-factor that motivates this project.
-
-Another package, \link[OpenMx:OpenMx]{OpenMx::OpenMx}, natively support LBCIs
-(Pritikin, Rappaport, & Neale, 2017). However, it is not yet
-available in \link{lavaan}, another popular SEM package.
-
-This package is for users who are using \link{lavaan} to do SEM and want
-to find the LBCIs for selected parameters (e.g., the indirect
-effect of a variable on another variable), but do not plan to
-migrate to \link[OpenMx:OpenMx]{OpenMx::OpenMx}. The present package is slower than
-\link[OpenMx:OpenMx]{OpenMx::OpenMx}, but should be sufficient for this purpose when
-the cost to learn another package does not justify the benefit.
+Find the likelihood based confidence intervals (LBCIs) for parameters in structural equation modeling, including standardized estimates such as correlatiosn and user-defined parameters such as indirect effect. Also support robust LBCIs.
 }
-\references{
-Falk, C. F. (2018). Are robust standard errors the best approach
-for interval estimation with nonnormal data in structural equation
-modeling? \emph{Structural Equation Modeling: A Multidisciplinary
-Journal, 25}(2), 244-266.
-\doi{10.1080/10705511.2017.1367254}
+\author{
+\strong{Maintainer}: Shu Fai Cheung \email{shufai.cheung@gmail.com} (\href{https://orcid.org/0000-0002-9871-9448}{ORCID})
 
-Pek, J., & Wu, H. (2015). Profile likelihood-based confidence
-intervals and regions for structural equation models.
-\emph{Psychometrika, 80}(4), 1123-1145.
-\doi{10.1007/s11336-015-9461-1}
-
-Pritikin, J. N., Rappaport, L. M., & Neale, M. C. (2017).
-Likelihood-based confidence intervals for a parameter with an
-upper or lower bound. \emph{Structural Equation Modeling: A
-Multidisciplinary Journal, 24}(3), 395-401.
-\doi{10.1080/10705511.2016.1275969}
-
-Wu, H., & Neale, M. C. (2012). Adjusted confidence intervals for a
-bounded parameter. \emph{Behavior Genetics, 42}(6), 886-898.
-\doi{10.1007/s10519-012-9560-z}
+Other contributors:
+\itemize{
+  \item Ivan Jacob Agaloos Pesigan \email{i.j.a.pesigan@connect.um.edu.mo} (\href{https://orcid.org/0000-0003-4818-8420}{ORCID}) [contributor]
 }
-\seealso{
-\code{\link[=semlbci]{semlbci()}}
+
 }
+\keyword{internal}
