@@ -2,8 +2,8 @@
 % Please edit documentation in R/semlbci-package.R
 \docType{package}
 \name{semlbci-package}
-\alias{semlbci}
 \alias{semlbci-package}
+\alias{_PACKAGE}
 \title{semlbci: Likelihood Based Confidence Interval for SEM}
 \description{
 Find the likelihood based confidence intervals (LBCIs) for parameters in structural equation modeling, including standardized estimates such as correlatiosn and user-defined parameters such as indirect effect. Also support robust LBCIs.

@@ -1,3 +1,4 @@
+#' @aliases semlbci-package
 #' @keywords internal
 "_PACKAGE"
 

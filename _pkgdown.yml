@@ -6,7 +6,6 @@ reference:
     or related functions such as [lavaan::sem()] and [lavaan::cfa()].
 - contents:
   - semlbci
-  - semlbci-package
 - title: Helper Functions
 - contents:
   - check_sem_out
