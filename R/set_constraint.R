@@ -66,6 +66,7 @@ set_constraint <- function(sem_out, ciperc = .95) {
     # Check if there are any equality constraints
     if (sem_out@Model@eq.constraints ||
         !is.null(body(sem_out@Model@ceq.function))) {
+        # The model has at least one equality constraint
         fn_constraint <- function(param,
                                   sem_out = NULL,
                                   debug = FALSE,
@@ -77,15 +78,10 @@ set_constraint <- function(sem_out, ciperc = .95) {
                 cat(ls())
                 cat(ls(globalenv()))
                 }
-            # start0 <- lavaan::parameterTable(sem_out)
-            # start0[p_free, "est"] <- param
             slot_mod3 <- lavaan::lav_model_set_parameters(slot_mod2, param)
             eq_out <- sem_out@Model@ceq.function(param)
             eq_jac <- sem_out@Model@con.jac
             if (lav_warn) {
-                    # fit2 <- lavaan::update(sem_out,
-                    #                        start = start0,
-                    #                        do.fit = FALSE)
                     fit2 <- lavaan::lavaan(
                               slotOptions = slot_opt3,
                               slotParTable = slot_pat2,
@@ -93,9 +89,6 @@ set_constraint <- function(sem_out, ciperc = .95) {
                               slotSampleStats = slot_smp2,
                               slotData = slot_dat2)
                 } else {
-                    # suppressWarnings(fit2 <- lavaan::update(sem_out,
-                    #                                         start = start0,
-                    #                                         do.fit = FALSE))
                     suppressWarnings(fit2 <- lavaan::lavaan(
                                               slotOptions = slot_opt3,
                                               slotParTable = slot_pat2,
@@ -123,6 +116,7 @@ set_constraint <- function(sem_out, ciperc = .95) {
                   parameterTable = lavaan::parameterTable(fit2))
           }
       } else {
+        # The model has no equality constraint
         fn_constraint <- function(param,
                                   sem_out = NULL,
                                   debug = FALSE,
@@ -134,13 +128,8 @@ set_constraint <- function(sem_out, ciperc = .95) {
                 cat(ls())
                 cat(ls(globalenv()))
                 }
-            # start0 <- lavaan::parameterTable(sem_out)
-            # start0[p_free, "est"] <- param
             slot_mod3 <- lavaan::lav_model_set_parameters(slot_mod2, param)
             if (lav_warn) {
-                    # fit2 <- lavaan::update(sem_out,
-                    #                        start = start0,
-                    #                        do.fit = FALSE)
                     fit2 <- lavaan::lavaan(
                               slotOptions = slot_opt3,
                               slotParTable = slot_pat2,
@@ -148,9 +137,6 @@ set_constraint <- function(sem_out, ciperc = .95) {
                               slotSampleStats = slot_smp2,
                               slotData = slot_dat2)
                 } else {
-                    # suppressWarnings(fit2 <- lavaan::update(sem_out,
-                    #                                         start = start0,
-                    #                                         do.fit = FALSE))
                     suppressWarnings(fit2 <- lavaan::lavaan(
                                               slotOptions = slot_opt3,
                                               slotParTable = slot_pat2,
@@ -167,7 +153,6 @@ set_constraint <- function(sem_out, ciperc = .95) {
                     suppressWarnings(fit2_jacobian <-
                                     rbind(lavaan::lavTech(fit2, "gradient")))
                 }
-            # fit2@implied <- lavaan::lav_model_implied(slot_mod3)
             list(
                   objective = lavaan::lavTech(fit2, "optim")$fx,
                   gradient = fit2_gradient,
