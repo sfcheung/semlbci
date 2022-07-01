@@ -30,4 +30,11 @@ summary(out)
 cor(reg_cor_near_one[, c("x4", "x5")])
 }\if{html}{\out{</div>}}
 }
+\examples{
+
+print(head(reg_cor_near_one), digits = 3)
+nrow(reg_cor_near_one)
+
+
+}
 \keyword{datasets}

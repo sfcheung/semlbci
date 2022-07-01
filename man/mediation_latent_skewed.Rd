@@ -5,7 +5,7 @@
 \alias{mediation_latent_skewed}
 \title{Dataset (SEM, Three Factors, Nine Variables, Mediation, Skewed)}
 \format{
-A data frame with 150 rows and six variables:
+A data frame with 150 rows and nine variables:
 \describe{
 \item{x1}{x1}
 \item{x2}{x2}
@@ -39,5 +39,13 @@ ab := a*b
 "
 fit <- lavaan::sem(mod, mediation_latent)
 }\if{html}{\out{</div>}}
+}
+\examples{
+
+print(head(mediation_latent_skewed), digits = 3)
+nrow(mediation_latent_skewed)
+
+
+
 }
 \keyword{datasets}

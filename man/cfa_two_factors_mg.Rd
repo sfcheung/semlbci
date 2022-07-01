@@ -25,4 +25,11 @@ fit <- cfa(mod, cfa_two_factors_mg, group = "gp")
 summary(fit)
 }\if{html}{\out{</div>}}
 }
+\examples{
+
+print(head(cfa_two_factors_mg), digits = 3)
+nrow(cfa_two_factors_mg)
+table(cfa_two_factors_mg$gp)
+
+}
 \keyword{datasets}

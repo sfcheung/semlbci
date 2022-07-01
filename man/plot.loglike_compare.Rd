@@ -11,14 +11,12 @@
 
 \item{y}{Not used.}
 
-\item{type}{Character. If \code{"ggplot2"}, will use \link{ggplot2} to plot
-the graph. If \code{"default"}, will use R base graphics,
-The \code{ggplot2} version prints more information.
-Default is \code{"ggplot2"}.}
+\item{type}{Character. If \code{"ggplot2"}, will use \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}
+to plot the graph. If \code{"default"}, will use R base graphics, The
+\code{ggplot2} version plots more information. Default is \code{"ggplot2"}.}
 
-\item{add_pvalues}{If \code{TRUE}, likelihood ratio test \emph{p}-values will be
-plot for the confidence limits. Only available if
-\code{type = "ggplot2"}.}
+\item{add_pvalues}{If \code{TRUE}, likelihood ratio test \emph{p}-values will
+be included for the confidence limits. Only available if \code{type = "ggplot2"}.}
 
 \item{...}{Optional arguments. Ignored.}
 }
@@ -27,38 +25,37 @@ Nothing if \code{type = "default"}, the generated \code{\link[ggplot2:ggplot]{gg
 graph if \code{type = "ggplot2"}.
 }
 \description{
-Visualize the likelihood of a model with a parameter
+Visualize the log profile likelihood of a parameter
 fixed to values in a range.
 }
 \details{
-Given the output of \code{\link[=loglike_compare]{loglike_compare()}}, it plots the
-log-likelihood based on quadratic approximation and that
-based on the "true" log-likelihood. The log-likelihood is
-scaled to have a maximum of zero as suggested by Pawitan
-(2013).
+Given the output of \code{\link[=loglike_compare]{loglike_compare()}}, it plots the log
+profile likelihood based on quadratic approximation and that
+based on the original log-likelihood. The log profile likelihood
+is scaled to have a maximum of zero (at the point estimate) as
+suggested by Pawitan (2013).
 }
 \examples{
 
+## loglike_compare
+
 library(lavaan)
 data(simple_med)
+dat <- simple_med
 mod <-
 "
-m ~ a*x
-y ~ b*m
-ab:= a*b
-asq:= a^2
+m ~ a * x
+y ~ b * m
+ab := a * b
 "
-fit_med <- sem(mod, simple_med, fixed.x = FALSE)
-p_table <- parameterTable(fit_med)
+fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
-pars <- c("m ~ x",
-          "y ~ m",
-          "asq := 1",
-          "ab  := 2",
-          "not in table")
-out <- syntax_to_i(pars, fit_med)
-out
-p_table[out, ]
+# Five points are used just for illustration
+# At least 21 points should be used for a smooth plot
+ll_all <- loglike_compare(fit, par_i = "ab := ", n_points = 5)
+plot(ll_all)
+plot(ll_all, add_pvalues = TRUE)
+
 }
 \references{
 Pawitan, Y. (2013). \emph{In all likelihood: Statistical
