@@ -66,6 +66,13 @@
 #' @param semlbci_out An `semlbci-class` object. If provided, parameters already
 #'                    with LBCIs formed will be excluded.
 #'
+#' @param check_fit If `TRUE` (default), the input (`sem_out`) will
+#'                    be checked by [check_sem_out()]. If not
+#'                    supported, an error will be raised. If `FALSE`,
+#'                    the check will be skipped and the LBCIs will be
+#'                    searched even for a model or parameter not
+#'                    supported. Set to `TRUE` only for testing.
+#'
 #' @param ... Arguments to be passed to [ci_bound_wn_i()].
 #'
 #' @param parallel If `TRUE`, will use `parallel` to parallelize the search.
@@ -125,6 +132,7 @@ semlbci <- function(sem_out,
                     robust = "none",
                     try_k_more_times = 2,
                     semlbci_out = NULL,
+                    check_fit = TRUE,
                     ...,
                     parallel = FALSE,
                     ncpus = 2,
@@ -138,15 +146,18 @@ semlbci <- function(sem_out,
           }
       }
     sem_out_name <- deparse(substitute(sem_out))
+
     # Check sem_out
-    sem_out_check <- check_sem_out(sem_out = sem_out, robust = robust)
-    if (sem_out_check > 0) {
-        msg <- paste0(paste(attr(sem_out_check, "info"), collapse = "\n"), "\n")
-        warning(msg, immediate. = TRUE)
-      }
-    if (sem_out_check < 0) {
-        msg <- paste0(paste(attr(sem_out_check, "info"), collapse = "\n"), "\n")
-        stop(msg)
+    if (check_fit) {
+        sem_out_check <- check_sem_out(sem_out = sem_out, robust = robust)
+        if (sem_out_check > 0) {
+            msg <- paste0(paste(attr(sem_out_check, "info"), collapse = "\n"), "\n")
+            warning(msg, immediate. = TRUE)
+          }
+        if (sem_out_check < 0) {
+            msg <- paste0(paste(attr(sem_out_check, "info"), collapse = "\n"), "\n")
+            stop(msg)
+          }
       }
 
     ptable <- as.data.frame(lavaan::parameterTable(sem_out))
