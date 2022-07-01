@@ -46,10 +46,12 @@
 #'  `NA`, then scaling factors will be computed internally.
 #'
 #' @param sf_args The list of arguments to be used for computing scaling factors
-#'  if `robust` is `"satorra.2000"`. Used only by [semlbci()].
+#'  if `robust` is `"satorra.2000"`. Used only by [semlbci()]. Ignored
+#'  if `robust` is not `"satorra.2000"`.
 #'
 #' @param sem_out_name The name of the object supplied to `sem_out`. `NULL`
-#'  by default. To be used by internal functions.
+#'  by default. Originally used by some internal functions. No longer used
+#'  in the current version but kept for backward compatibility.
 #'
 #' @param try_k_more_times How many more times to try if the status code is not zero.
 #'                         Default is 0.
@@ -87,23 +89,27 @@
 #'@export
 
 ci_i_one <- function(i,
-                 which = NULL,
-                 sem_out,
-                 method = "wn",
-                 standardized = FALSE,
-                 robust = "none",
-                 sf_full = NA,
-                 sf_args = list(),
-                 sem_out_name = NULL,
-                 try_k_more_times = 0,
-                 ...) {
+                     which = NULL,
+                     sem_out,
+                     method = "wn",
+                     standardized = FALSE,
+                     robust = "none",
+                     sf_full = NA,
+                     sf_args = list(),
+                     sem_out_name = NULL,
+                     try_k_more_times = 0,
+                     ...) {
+    if (!(which %in% c("lbound", "ubound"))) {
+        stop("Must be 'lbound' or 'ubound' for the 'which' argument.")
+      }
     # It should be the job of the calling function to check whether it is
     # appropriate to use the robust method.
-    if (!(which %in% c("lbound", "ubound"))) {
-        stop("Must be 'lbound' or 'ubound' for the which argument.")
-      }
     if (tolower(robust) == "satorra.2000") {
+        # Robust LBCI
         if (all(is.na(sf_full))) {
+            # Compute the scaling and shift factors
+            # sem_out_name no longer used but kept here for
+            # backward compatibility.
             if (is.null(sem_out_name)) {
                 sem_out_name <- deparse(substitute(sem_out))
               }
@@ -115,14 +121,20 @@ ci_i_one <- function(i,
                                          sem_out_name = sem_out_name))
             sf_full <- do.call(scaling_factor3, sf_args_final)
           }
+        # Use caller-supplied scaling and shift factors
         sf <- sf_full$c_r
         sf2 <- sf_full$c_rb
       } else {
+        # Normal LBCI
         sf_full <- NA
         sf <- 1
         sf2 <- 0
       }
+
     if (method == "wn") {
+        # Wu-Neale-2012 method.
+        # The only method supported for now.
+        ## Attempt 1
         wald_ci_start <- !standardized
         std_method_i <- "internal"
         b_time <- system.time(b <- try(suppressWarnings(ci_bound_wn_i(i,
@@ -134,6 +146,7 @@ ci_i_one <- function(i,
                                                    std_method = std_method_i,
                                                    wald_ci_start = wald_ci_start,
                                                     ...)), silent = TRUE))
+        ## If "internal" failed, switches to "lavaan".
         if (inherits(b, "try-error")) {
             std_method_i <- "lavaan"
             b_time <- b_time + system.time(b <- suppressWarnings(ci_bound_wn_i(i,
@@ -146,8 +159,9 @@ ci_i_one <- function(i,
                                                         ...)))
           }
         attempt_lb_var <- 0
+        # Attempt 2
         if (b$diag$status != 0) {
-            # Try changing the lower bounds of free variances
+            ## Successively reduce the positive lower bounds for free variances
             lb_se_k0 <- 10
             lb_prop0 <- .11
             lb_prop1 <- .01
@@ -167,8 +181,11 @@ ci_i_one <- function(i,
                                                         ...)))
                 }
           }
+        # Attempt 3
         attempt_more_times <- 0
         if (b$diag$status != 0) {
+            # Try k more times
+            # Successively change the tolerance for convergence
             ki <- try_k_more_times
             fxi <- 1
             fti <- 1
@@ -200,6 +217,9 @@ ci_i_one <- function(i,
     if (method == "nm") {
         stop("The method 'nm' is no longer supported.")
       }
+    # MAY-FIX:
+    # Should not name the elements based on the bound (lower/upper).
+    # But this is not an issue for now.
     if (which == "lbound") {
         out <- list(bounds = c(lbound = b$bound),
                     diags = list(lb_diag = b$diag),
