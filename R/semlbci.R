@@ -163,37 +163,45 @@ semlbci <- function(sem_out,
     ptable <- as.data.frame(lavaan::parameterTable(sem_out))
     pars_lbci_yes <- rep(FALSE, nrow(ptable))
     if (!is.null(semlbci_out)) {
+        # Check whether semlbci_out and sem_out match
         tmp0 <- ptable[, c("id", "lhs", "op", "rhs", "group", "label")]
         tmp1 <- as.data.frame(semlbci_out)[, c("id", "lhs", "op", "rhs", "group", "label")]
         if (!identical(tmp0, tmp1)) {
             stop("semblci_out and the parameter table of sem_out do not match.")
           }
-        # pars with both lbci_lb and lbci_ub
+        # Find pars with both lbci_lb and lbci_ub
         pars_lbci_yes <- !sapply(semlbci_out$lbci_lb, is.na) &
                          !sapply(semlbci_out$lbci_ub, is.na)
       }
-    # Do not check for
     i <- ptable$free > 0
-    #i_id <- ptable$id[i]
     i_id <- ptable$id
     i_id_free <- i_id[i]
     i_id_user <- i_id[(ptable$free == 0) & (ptable$op == ":=")]
-    # pars must be the position as in the lavaan parameterTable.
+    # pars must be the row numbers as in the lavaan parameterTable.
     if (!is.null(pars)) {
+        # Parameters supplied
         if (is.character(pars)) {
+            # Convert syntax to row numbers.
             pars <- syntax_to_i(pars, sem_out)
           }
         if (standardized) {
+            # Always exclude variances fixed in the standardized solution
             pars <- remove_v1(pars, sem_out)
           }
+        # Remove parameters already with LBCIs in semlbci_out.
         pars <- pars[!pars %in% i_id[pars_lbci_yes]]
+        # Ids in the vector of free parameters
         i_selected <- i_id[pars]
       } else {
-        # pars <- seq_len(sum(i))
+        # Start with all free parameters
         pars <- i_id_free
         if (standardized) {
+            # Intercepts and means not supported for standardized solution
             remove_intercepts <- TRUE
+            # Always exclude variances fixed in the standardized solution
             pars <- remove_v1(pars, sem_out)
+            # Include parameters free in the standardized solution,
+            # e.g., fixed loadings.
             pars <- sort(unique(c(pars, free_in_std(i_id, sem_out))))
           }
         if (include_user_pars && length(i_id_user) > 0) {
@@ -205,7 +213,9 @@ semlbci <- function(sem_out,
         if (remove_intercepts) {
             pars <- remove_variances(pars, sem_out)
           }
+        # Remove parameters already with LBCIs in semlbci_out.
         pars <- pars[!pars %in% i_id[pars_lbci_yes]]
+        # Ids in the vector of free parameters
         i_selected <- i_id[pars]
       }
     if (length(pars) == 0) {
@@ -236,8 +246,11 @@ semlbci <- function(sem_out,
       } else {
         sf_full_list <- rep(NA, length(pars))
       }
+
     if (parallel) {
+        # Parallel
         cl <- parallel::makeCluster(ncpus)
+        # Rebuild the environment
         pkgs <- .packages()
         pkgs <- rev(pkgs)
         parallel::clusterExport(cl, "pkgs", envir = environment())
@@ -246,8 +259,9 @@ semlbci <- function(sem_out,
                       })
         parallel::clusterExport(cl, ls(envir = parent.frame()),
                                        envir = environment())
-        if (requireNamespace("pbapply", quietly = TRUE) &
+        if (requireNamespace("pbapply", quietly = TRUE) &&
             use_pbapply) {
+            # Use pbapply
             args_final <- utils::modifyList(list(...),
                                     list(npar = npar,
                                         sem_out = sem_out,
@@ -259,13 +273,6 @@ semlbci <- function(sem_out,
                                         robust = robust,
                                         try_k_more_times = try_k_more_times,
                                         sem_out_name = sem_out_name))
-            # out_raw <- pbapply::pbmapply(
-            #                     semlbci::ci_i,
-            #                     i = pars,
-            #                     sf_full = sf_full_list,
-            #                     MoreArgs = args_final,
-            #                     SIMPLIFY = FALSE,
-            #                     cl = cl)
             pars2 <- rep(pars, each = 2)
             sf_full_list2 <- rep(sf_full_list, each = 2)
             which2 <- rep(c("lbound", "ubound"), times = length(pars))
@@ -280,15 +287,8 @@ semlbci <- function(sem_out,
             out_raw2 <- pbapply::pblapply(plist,
                                           tmpfct,
                                           cl = cl)
-            # out_raw2 <- pbapply::pbmapply(
-            #                     semlbci::ci_i_one,
-            #                     i = pars2,
-            #                     sf_full = sf_full_list2,
-            #                     which = which2,
-            #                     MoreArgs = args_final,
-            #                     SIMPLIFY = FALSE,
-            #                     cl = cl)
           } else {
+            # No progress bar
             args_final <- utils::modifyList(list(...),
                                     list(npar = npar,
                                         sem_out = sem_out,
@@ -300,12 +300,6 @@ semlbci <- function(sem_out,
                                         robust = robust,
                                         try_k_more_times = try_k_more_times,
                                         sem_out_name = sem_out_name))
-            # out_raw <- parallel::clusterMap(cl,
-            #                   semlbci::ci_i,
-            #                   i = pars,
-            #                   sf_full = sf_full_list,
-            #                   MoreArgs = args_final,
-            #                   SIMPLIFY = FALSE)
             pars2 <- rep(pars, each = 2)
             sf_full_list2 <- rep(sf_full_list, each = 2)
             which2 <- rep(c("lbound", "ubound"), times = length(pars))
@@ -319,6 +313,8 @@ semlbci <- function(sem_out,
           }
         parallel::stopCluster(cl)
       } else {
+        # Serial
+        # Progress bar not support when ran in serial.
         args_final <- utils::modifyList(list(...),
                                 list(npar = npar,
                                     sem_out = sem_out,
@@ -330,12 +326,6 @@ semlbci <- function(sem_out,
                                     robust = robust,
                                     try_k_more_times = try_k_more_times,
                                     sem_out_name = sem_out_name))
-        # out_raw <- mapply(
-        #               ci_i,
-        #               i = pars,
-        #               sf_full = sf_full_list,
-        #               MoreArgs = args_final,
-        #               SIMPLIFY = FALSE)
         pars2 <- rep(pars, each = 2)
         sf_full_list2 <- rep(sf_full_list, each = 2)
         which2 <- rep(c("lbound", "ubound"), times = length(pars))
@@ -360,8 +350,8 @@ semlbci <- function(sem_out,
                       out_raw2[tmp2],
                       SIMPLIFY = FALSE)
     out <- do.call(rbind, lapply(out_raw, function(x) x$bounds))
-    # out <- do.call(rbind, out_raw)
     if (is.null(semlbci_out)) {
+        # Build the output
         out_p <- ptable[, c("id", "lhs", "op", "rhs", "group", "label")]
         if (standardized) {
             pstd <- lavaan::standardizedSolution(sem_out)
@@ -377,6 +367,7 @@ semlbci <- function(sem_out,
         out_p$lbci_lb <- NA
         out_p$lbci_ub <- NA
       } else {
+        # Use existing output
         out_p <- semlbci_out
       }
 
@@ -385,6 +376,7 @@ semlbci <- function(sem_out,
 
     # Collect diagnostic info
     if (is.null(semlbci_out)) {
+        # Create the holder
         q <- length(i_id)
         lb_diag <- as.list(rep(NA, q))
         ub_diag <- as.list(rep(NA, q))
@@ -395,6 +387,7 @@ semlbci <- function(sem_out,
         ci_method <- as.character(rep(NA, q))
         scaling_factor <- as.list(rep(NA, q))
       } else {
+        # Retrieve from existing output
         q <- length(i_id)
         lb_diag <- attr(semlbci_out, "lb_diag")
         ub_diag <- attr(semlbci_out, "ub_diag")
@@ -405,6 +398,7 @@ semlbci <- function(sem_out,
         ci_method <- attr(semlbci_out, "ci_method")
         scaling_factor <- attr(semlbci_out, "scaling_factor")
       }
+    # Update the output
     lb_diag[pars] <- lapply(out_raw, function(x) x$diags$lb_diag)
     ub_diag[pars] <- lapply(out_raw, function(x) x$diags$ub_diag)
     lb_time[pars] <- sapply(out_raw, function(x) x$times$lb_time)
@@ -413,10 +407,6 @@ semlbci <- function(sem_out,
     ub_out[pars] <- lapply(out_raw, function(x) x$ci_bound_i_out$ub_out)
     ci_method[pars] <- sapply(out_raw, function(x) x$method)
     scaling_factor[pars] <- lapply(out_raw, function(x) x$sf_full)
-    # p_names <- mapply(paste0, out_p[pars, "lhs"],
-    #                           out_p[pars, "op"],
-    #                           out_p[pars, "rhs"],
-    #                   USE.NAMES = FALSE)
     p_names <- sapply(pars, i_to_name, sem_out = sem_out)
     names(lb_diag)[pars] <- p_names
     names(ub_diag)[pars] <- p_names
