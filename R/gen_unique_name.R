@@ -33,6 +33,6 @@ gen_unique_name <- function(source_names) {
             return(out)
           }
       }
-    # The loop is quaranteered to be finite
+    # The loop is guaranteed to be finite
     stop("Something's wrong. A unique name cannot be generated.")
   }
