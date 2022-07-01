@@ -8,7 +8,7 @@
 #'  of them. For the technical details, please see [ci_i_one()] and
 #'  the functions it calls to find a confidence bound (currently
 #'  [ci_bound_wn_i()]). [ci_bound_wn_i()] uses the approach proposed by
-#'  Wu and Neales (2012) and illustrated by Pek and Wu (2015).
+#'  Wu and Neale (2012) and illustrated by Pek and Wu (2015).
 #'
 #' It supports updating an output of [semlbci()] by setting
 #' `semlbci_out`. This allows forming LBCIs for some parameters after
@@ -115,9 +115,10 @@
 #'  *Psychometrika, 80*(4), 1123-1145.
 #'  \doi{10.1007/s11336-015-9461-1}
 #'
-#' Neale, M. C., & Miller, M. B. (1997). The use of likelihood-based confidence
-#' intervals in genetic models. *Behavior Genetics, 27*(2), 113-120.
-#' \doi{10.1023/A:1025681223921}
+#' Wu, H., & Neale, M. C. (2012). Adjusted confidence intervals for a
+#'  bounded parameter. *Behavior Genetics, 42*(6), 886-898.
+#'  \doi{10.1007/s10519-012-9560-z}
+#'
 #'
 #' Pritikin, J. N., Rappaport, L. M., & Neale, M. C. (2017). Likelihood-based
 #' confidence intervals for a parameter with an upper or lower bound.
