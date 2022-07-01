@@ -1,6 +1,6 @@
 #' @noRd
 
-# Remove parameters that are intercepts
+# Remove from a vector of row ids parameters that are intercepts
 
 remove_intercepts <- function(pars,
                       sem_out) {
