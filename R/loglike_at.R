@@ -183,7 +183,7 @@ loglike_range <- function(sem_out, par_i,
         parallel::stopCluster(cl)
       } else {
         # Serial
-        if (requireNamespace("pbapply", quietly = TRUE) &
+        if (requireNamespace("pbapply", quietly = TRUE) &&
                     use_pbapply) {
             # Use pbapply
             cat("\n", "Finding p-values for LR test", "\n",
@@ -396,7 +396,7 @@ loglike_quad_range <- function(sem_out,
                                        envir = parent.frame())
         parallel::clusterExport(cl, ls(envir = environment()),
                                        envir = environment())
-        if (requireNamespace("pbapply", quietly = TRUE) &
+        if (requireNamespace("pbapply", quietly = TRUE) &&
                     use_pbapply) {
             # Use pbapply
             cat("\n", "Finding p-values for quadratic approximation", "\n",
@@ -442,7 +442,7 @@ loglike_quad_range <- function(sem_out,
         parallel::stopCluster(cl)
       } else {
         # Serial
-        if (requireNamespace("pbapply", quietly = TRUE) &
+        if (requireNamespace("pbapply", quietly = TRUE) &&
                     use_pbapply) {
             # Use pbapply
             cat("\n", "Finding p-values for quadratic approximation", "\n",
