@@ -1,102 +1,108 @@
-#' @title Log-likelihood When a Parameter is Fixed to a Value
+#' @title Log Profile likelihood of a Parameter
 #'
-#' @description These functions compute the log-likelihood of a model
-#'              when a parameter is fixed to a value or a range of
-#'              values
+#' @description These functions compute the log profile likelihood of
+#'  a parameter when it is fixed to a value or a range of values
 #'
 #' @details The methods presented in Pawitan (2013) are used to
-#'          compute and visualize the log-likelihood of a structural
-#'          equation model when a parameter is fixed to a value.
-#'          [loglike_range()] and [loglike_point()] compute the
-#'          so-called "true" log-likelihood, while
-#'          [loglike_quad_range()] and [loglike_quad_point()] compute
-#'          the log-likelihood using quadratic assumption.
+#'  compute and visualize the log profile likelihood of a parameter in
+#'  a structural equation model when it is fixed to a value or a range
+#'  of values. [loglike_range()] and [loglike_point()] compute the
+#'  so-called "true" log profile likelihood, while
+#'  [loglike_quad_range()] and [loglike_quad_point()] approximate the log
+#'  profile likelihood by a quadratic function.
 #'
-#' These functions are for the purpose of illustration and learning.
-#' Therefore, they are not a versatile as [semlbci()] in the types of
-#' models and parameters supported. They can be used for free
-#' parameters and user-defined parameters not involved in any
-#' constraints. Only a model fitted by maximum likelihood is
-#' supported.
+#' These functions are for creating illustrative examples and learning
+#' only, not for research use. Therefore, they are not as versatile as
+#' [semlbci()] in the types of models and parameters supported. They
+#' can be used for free parameters and user-defined parameters not
+#' involved in any constraints. Only a model fitted by maximum
+#' likelihood is supported.
+#'
+#' They will not check whether the computation is appropriate for a
+#' model. It is the responsibility of the users to ensure that the
+#' computation is appropriate for the model and parameter.
 #'
 #' @return [loglike_range()] returns a data frame with these columns:
 #'
 #' - `theta`: The values to which the parameter is fixed to.
-#' - `loglike`: The log-likelihood values of the model.
+#' - `loglike`: The log profile likelihood at theta.
 #' - `pvalue`: The *p*-values based on the likelihood ratio difference
 #'             test between the original model and model with the
 #'             parameter fixed to theta.
 #'
-#' @param sem_out The SEM output. Currently \code{lavaan} output only.
+#' @param sem_out The SEM output. Currently the outputs
+#'   of [lavaan::lavaan()] or its wrappers, such as [lavaan::sem()]
+#'   and [lavaan::cfa()] are supported.
 #'
 #' @param par_i The row number of the parameter in the output of
-#'              [lavaan::parameterTable()]. Can also be a [lavaan::model.syntax]
-#'              specification for a parameter, e.g., `"y ~ x"`. It will be
-#'              converted to the row number by [syntax_to_i()].
+#'   [lavaan::parameterTable()]. Can also be a [lavaan::model.syntax]
+#'   specification for a parameter, e.g., `"y ~ x"` or `ab := `.
+#'   It will be converted to the row number by [syntax_to_i()]. Refer to
+#'   [syntax_to_i()] for details.
 #'
-#' @param confidence The level of confidence of the Wald confidence
-#'                   interval. If `interval` is `NULL`, this
-#'                   confidence is used as the interval.
+#' @param confidence The level of confidence of the Wald-type
+#'   confidence interval. If `interval` is `NULL`, this confidence is
+#'   used to form the interval.
 #'
 #' @param n_points The number of points to be evaluated in the
-#'                 interval. Default is 21.
+#'   interval. Default is 21.
 #'
 #' @param interval A vector of numbers. If provided and has two
-#'                 elements, this will be used as the end points of
-#'                 the interval. If it has more than two elements, the
-#'                 elements will be used directly to form the range of
-#'                 values in the interval. Default is `NULL`.
+#'   elements, this will be used as the end points of the interval. If
+#'   it has more than two elements, the elements will be used directly
+#'   to form the values in the interval. Default is `NULL`.
 #'
 #' @param verbose Whether some diagnostic information will be printed.
-#'                Default is `FALSE`.
+#'   Default is `FALSE`.
 #'
 #' @param start How the start values are set in [lavaan::lavaan()].
-#'              See [lavaan::lavOptions()] on this argument.
-#'              Default is `"default"`. If the plot is too irregular,
-#'              try setting it to `"simple"`.
+#'   See [lavaan::lavOptions()] on this argument. Default is
+#'   `"default"`. If the plot is too irregular, try setting it to
+#'   `"simple"`.
 #'
 #' @param try_k_more How many more times to try finding the p-values,
-#'                   by randomizing the starting values. Default is 5.
+#'   by randomizing the starting values. Default is 5. Try increasing
+#'   this number if the plot is too irregular.
 #'
-#' @param parallel If `TRUE`, will use parallel processing.
-#'                 A cluster will be created by [parallel::makeCluster()],
-#'                 with the number of workers equal to `ncpus`.
+#' @param parallel If `TRUE`, parallel processing will be used. A
+#'   cluster will be created by [parallel::makeCluster()], with the
+#'   number of workers equal to `ncpus`. Parallel processing, though
+#'   not enabled by default, is recommended because it can speed up
+#'   the computation a lot.
 #'
-#' @param ncpus The number of workers if `parallel` is `TRUE`.
-#'              Default is `parallel::detectCores(logical = FALSE) - 1`.
+#' @param ncpus The number of workers if `parallel` is `TRUE`. Default
+#'   is `parallel::detectCores(logical = FALSE) - 1`, the number of
+#'   physical cores minus 1.
 #'
-#' @param use_pbapply If `TRUE` and `pbapply`
-#'  is installed, `pbapply` will be used to display a
-#'  progress bar when finding the intervals. Default is `TRUE`.
+#' @param use_pbapply If `TRUE` and [pbapply::pbapply] is installed,
+#'  [pbapply::pbapply] will be used to display the progress in
+#'  computing the log profile likelihood. Default is `TRUE`.
 #'
 #' @references Pawitan, Y. (2013). *In all likelihood: Statistical
 #' modelling and inference using likelihood*. Oxford University Press.
 #'
-#' @examples
-#'
-#' library(lavaan)
-#' data(simple_med)
-#' mod <-
-#' "
-#' m ~ a*x
-#' y ~ b*m
-#' ab:= a*b
-#' asq:= a^2
-#' "
-#' fit_med <- sem(mod, simple_med, fixed.x = FALSE)
-#' p_table <- parameterTable(fit_med)
-#'
-#' pars <- c("m ~ x",
-#'           "y ~ m",
-#'           "asq := 1",
-#'           "ab  := 2",
-#'           "not in table")
-#' out <- syntax_to_i(pars, fit_med)
-#' out
-#' p_table[out, ]
 #' @name loglikelihood
 NULL
 
+#' @examples
+#'
+#' ## loglike_range
+#'
+#' library(lavaan)
+#' data(simple_med)
+#' dat <- simple_med
+#' mod <-
+#' "
+#' m ~ a * x
+#' y ~ b * m
+#' ab := a * b
+#' "
+#' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+#'
+#' # Five points are used just for illustration
+#' ll_1 <- loglike_range(fit, par_i = "y ~ m", n_points = 5)
+#' head(ll_1)
+#'
 #' @describeIn loglikelihood Description of this function
 #' @order 1
 #' @export
@@ -209,16 +215,36 @@ loglike_range <- function(sem_out, par_i,
 #'
 #' @return [loglike_point()] returns a list with these elements:
 #'
-#' - `loglike`: The log-likelihood of the model when the parameter is
+#' - `loglike`: The log profile likelihood of the parameter when it is
 #'              fixed to `theta0`.
 #' - `pvalue`: The *p*-values based on the likelihood ratio difference
-#'             test between the original model and model with the
+#'             test between the original model and the model with the
 #'             parameter fixed to `theta0`.
 #' - `fit`: A [lavaan::lavaan-class] object. The original model with
 #'          the parameter fixed to `theta0`.
 #' - `lrt`: The output of [lavaan::lavTestLRT()], comparing the
-#'          original model with the model with the parameter fixed to
+#'          original model to the model with the parameter fixed to
 #'          `theta0`.
+#' @examples
+#'
+#' ## loglike_point
+#'
+#' library(lavaan)
+#' data(simple_med)
+#' dat <- simple_med
+#' mod <-
+#' "
+#' m ~ a * x
+#' y ~ b * m
+#' ab := a * b
+#' "
+#' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+#'
+#' llp_1 <- loglike_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
+#' llp_1$loglike
+#' llp_1$pvalue
+#' llp_1$lrt
+#'
 #'
 #' @describeIn loglikelihood Description of this function
 #' @order 2
@@ -293,11 +319,31 @@ loglike_point <- function(theta0,
 #' columns:
 #'
 #' - `theta`: The values to which the parameter is fixed to.
-#' - `loglike`: The log-likelihood values of the model using quadratic
-#'              approximation.
+#' - `loglike`: The log profile likelihood values of the parameter
+#'              using quadratic approximation.
 #' - `pvalue`: The *p*-values based on the likelihood ratio difference
-#'             test between the original model and model with the
+#'             test between the original model and the model with the
 #'             parameter fixed to theta.
+#'
+#' @examples
+#'
+#' ## loglike_quad_range
+#'
+#' library(lavaan)
+#' data(simple_med)
+#' dat <- simple_med
+#' mod <-
+#' "
+#' m ~ a * x
+#' y ~ b * m
+#' ab := a * b
+#' "
+#' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+#'
+#' # Five points are used just for illustration
+#' lq_1 <- loglike_quad_range(fit, par_i = "y ~ m", n_points = 5)
+#' head(lq_1)
+#'
 #'
 #' @describeIn loglikelihood Description of this function
 #' @order 3
@@ -428,10 +474,31 @@ loglike_quad_range <- function(sem_out,
   }
 
 #' @return [loglike_quad_point()] returns a single number of the class
-#'         `lavaan.vector` because it is the output out
-#'         `lavann::fitMeasures()`. This number is the quadratic
-#'         approximation of the log-likelihood when the parameter is
+#'         `lavaan.vector` (because it is the output of
+#'         [lavaan::fitMeasures()]). This number is the quadratic
+#'         approximation of the log profile likelihood when the parameter is
 #'         fixed to `theta0`.
+#'
+#'
+#' @examples
+#'
+#' ## loglike_quad_point
+#'
+#' library(lavaan)
+#' data(simple_med)
+#' dat <- simple_med
+#' mod <-
+#' "
+#' m ~ a * x
+#' y ~ b * m
+#' ab := a * b
+#' "
+#' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+#'
+#' lqp_1 <- loglike_quad_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
+#' lqp_1
+#'
+#'
 #' @describeIn loglikelihood Description of this function
 #' @order 4
 #' @export
@@ -452,16 +519,42 @@ loglike_quad_point <- function(theta0,
   }
 
 #' @return [loglike_compare()] calls [loglike_range()] and
-#'          [loglike_quad_range()] and return their results as a list
+#'          [loglike_quad_range()] and returns their results in a
+#'          `loglike_compare`-class object, a list
 #'          with these elements:
 #'
 #' - `quadratic`: The output of [loglike_quad_range()].
 #' - `loglikelihood`: The output of [loglike_range()].
 #' - `pvalue_quadratic`: The likelihood ratio test *p*-values at the
-#'                       quadratic approximation confidence limits.
+#'                       quadratic approximation confidence bounds.
 #' - `pvalue_loglikelihood`: The likelihood ratio test *p*-values at
-#'                           the likelihood-based confidence limits.
-#' - `est`: The estimate of the parameter in `sem_out`.
+#'                           the likelihood-based confidence bounds.
+#' - `est`: The point estimate of the parameter in `sem_out`.
+#'
+#' `loglike_compare`-class object has a plot method ([plot.loglike_compare()])
+#' that can be used to plot the log profile likelihood.
+#'
+#' @examples
+#'
+#' ## loglike_compare
+#'
+#' library(lavaan)
+#' data(simple_med)
+#' dat <- simple_med
+#' mod <-
+#' "
+#' m ~ a * x
+#' y ~ b * m
+#' ab := a * b
+#' "
+#' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+#'
+#' # Five points are used just for illustration
+#' # At least 21 points should be used for a smooth plot
+#' ll_all <- loglike_compare(fit, par_i = "ab := ", n_points = 5)
+#' plot(ll_all)
+#'
+#' @seealso [plot.loglike_compare()]
 #'
 #' @describeIn loglikelihood Description of this function
 #' @order 5
@@ -540,14 +633,14 @@ loglike_compare <- function(sem_out,
 
 #' @title Plot the Output of 'loglike_compare()'
 #'
-#' @description Visualize the likelihood of a model with a parameter
+#' @description Visualize the log profile likelihood of a parameter
 #'              fixed to values in a range.
 #'
-#' @details Given the output of [loglike_compare()], it plots the
-#'          log-likelihood based on quadratic approximation and that
-#'          based on the "true" log-likelihood. The log-likelihood is
-#'          scaled to have a maximum of zero as suggested by Pawitan
-#'          (2013).
+#' @details Given the output of [loglike_compare()], it plots the log
+#'   profile likelihood based on quadratic approximation and that
+#'   based on the original log-likelihood. The log profile likelihood
+#'   is scaled to have a maximum of zero (at the point estimate) as
+#'   suggested by Pawitan (2013).
 #'
 #' @return Nothing if `type = "default"`, the generated [ggplot2::ggplot()]
 #'         graph if `type = "ggplot2"`.
@@ -556,14 +649,13 @@ loglike_compare <- function(sem_out,
 #'
 #' @param y Not used.
 #'
-#' @param type Character. If `"ggplot2"`, will use [ggplot2] to plot
-#'             the graph. If `"default"`, will use R base graphics,
-#'             The `ggplot2` version prints more information.
-#'             Default is `"ggplot2"`.
+#' @param type Character. If `"ggplot2"`, will use [ggplot2::ggplot()]
+#'   to plot the graph. If `"default"`, will use R base graphics, The
+#'   `ggplot2` version plots more information. Default is `"ggplot2"`.
 #'
-#' @param add_pvalues If `TRUE`, likelihood ratio test *p*-values will be
-#'                    plot for the confidence limits. Only available if
-#'                    `type = "ggplot2"`.
+#' @param add_pvalues If `TRUE`, likelihood ratio test *p*-values will
+#'    be included for the confidence limits. Only available if `type =
+#'    "ggplot2"`.
 #'
 #' @param ... Optional arguments. Ignored.
 #'
@@ -572,26 +664,25 @@ loglike_compare <- function(sem_out,
 #'
 #' @examples
 #'
+#' ## loglike_compare
+#'
 #' library(lavaan)
 #' data(simple_med)
+#' dat <- simple_med
 #' mod <-
 #' "
-#' m ~ a*x
-#' y ~ b*m
-#' ab:= a*b
-#' asq:= a^2
+#' m ~ a * x
+#' y ~ b * m
+#' ab := a * b
 #' "
-#' fit_med <- sem(mod, simple_med, fixed.x = FALSE)
-#' p_table <- parameterTable(fit_med)
+#' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 #'
-#' pars <- c("m ~ x",
-#'           "y ~ m",
-#'           "asq := 1",
-#'           "ab  := 2",
-#'           "not in table")
-#' out <- syntax_to_i(pars, fit_med)
-#' out
-#' p_table[out, ]
+#' # Five points are used just for illustration
+#' # At least 21 points should be used for a smooth plot
+#' ll_all <- loglike_compare(fit, par_i = "ab := ", n_points = 5)
+#' plot(ll_all)
+#' plot(ll_all, add_pvalues = TRUE)
+#'
 #' @export
 
 plot.loglike_compare <- function(x, y,
