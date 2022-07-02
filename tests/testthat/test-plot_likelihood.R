@@ -79,7 +79,7 @@ out <- loglike_compare(fit, par_i = i, n_points = 21, parallel = TRUE, try_k_mor
 out
 plot(out, type = "default")
 plot(out, type = "ggplot2")
-p <- plot(out, type = "ggplot2", add_pvalues = TRUE)
+p <- plot(out, type = "ggplot2", add_pvalues = TRUE, size_theta = 6, size_pvalue = 5)
 p
 
 # User Parameters

@@ -4,7 +4,15 @@
 \alias{plot.loglike_compare}
 \title{Plot the Output of 'loglike_compare()'}
 \usage{
-\method{plot}{loglike_compare}(x, y, type = c("ggplot2", "default"), add_pvalues = FALSE, ...)
+\method{plot}{loglike_compare}(
+  x,
+  y,
+  type = c("ggplot2", "default"),
+  size_theta = 4,
+  size_pvalue = 4,
+  add_pvalues = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{The output of \code{\link[=loglike_compare]{loglike_compare()}}.}
@@ -14,6 +22,12 @@
 \item{type}{Character. If \code{"ggplot2"}, will use \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}
 to plot the graph. If \code{"default"}, will use R base graphics, The
 \code{ggplot2} version plots more information. Default is \code{"ggplot2"}.}
+
+\item{size_theta}{The relative size of the parameter values in the
+plot, determined by \code{\link[ggplot2:element]{ggplot2::rel()}}. Default is 4.}
+
+\item{size_pvalue}{The relative size of the \emph{p}-values in the
+plot, determined by \code{\link[ggplot2:element]{ggplot2::rel()}}. Default is 4.}
 
 \item{add_pvalues}{If \code{TRUE}, likelihood ratio test \emph{p}-values will
 be included for the confidence limits. Only available if \code{type = "ggplot2"}.}
