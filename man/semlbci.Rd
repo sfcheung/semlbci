@@ -86,10 +86,10 @@ supported. Set to \code{TRUE} only for testing.}
 Default is 2. This number should not be larger than the number CPU
 cores.}
 
-\item{use_pbapply}{If \code{TRUE}, \code{parallel} is \code{TRUE}, and \code{pbapply}
+\item{use_pbapply}{If \code{TRUE} and \code{pbapply}
 is installed, \code{\link[pbapply:pbapply]{pbapply::pbapply()}} will be used to display a
 progress bar when finding the intervals. Default is \code{TRUE}.
-Ignored if \code{parallel} is \code{FALSE} or \code{pbapply} is not installed.}
+Ignored if \code{pbapply} is not installed.}
 }
 \value{
 A \code{semlbci}-class object similar to the parameter table

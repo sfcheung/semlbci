@@ -95,10 +95,10 @@
 #'  Default is 2. This number should not be larger than the number CPU
 #'  cores.
 #'
-#' @param use_pbapply If `TRUE`, `parallel` is `TRUE`, and `pbapply`
+#' @param use_pbapply If `TRUE` and `pbapply`
 #'  is installed, [pbapply::pbapply()] will be used to display a
 #'  progress bar when finding the intervals. Default is `TRUE`.
-#'  Ignored if `parallel` is `FALSE` or `pbapply` is not installed.
+#'  Ignored if `pbapply` is not installed.
 #'
 #' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
 #'
@@ -357,13 +357,24 @@ semlbci <- function(sem_out,
         pars2 <- rep(pars, each = 2)
         sf_full_list2 <- rep(sf_full_list, each = 2)
         which2 <- rep(c("lbound", "ubound"), times = length(pars))
-        out_raw2 <- mapply(
-                      ci_i_one,
-                      i = pars2,
-                      sf_full = sf_full_list2,
-                      which = which2,
-                      MoreArgs = args_final,
-                      SIMPLIFY = FALSE)
+        if (requireNamespace("pbapply", quietly = TRUE) &&
+            use_pbapply) {
+              out_raw2 <- pbapply::pbmapply(
+                            ci_i_one,
+                            i = pars2,
+                            sf_full = sf_full_list2,
+                            which = which2,
+                            MoreArgs = args_final,
+                            SIMPLIFY = FALSE)
+            } else {
+              out_raw2 <- mapply(
+                            ci_i_one,
+                            i = pars2,
+                            sf_full = sf_full_list2,
+                            which = which2,
+                            MoreArgs = args_final,
+                            SIMPLIFY = FALSE)
+            }
       }
     tmpfct2 <- function(x, y) {
         out <- mapply(c, x, y, SIMPLIFY = FALSE)
