@@ -37,10 +37,22 @@
     <loc>/reference/ci_i_one.html</loc>
   </url>
   <url>
-    <loc>/reference/get_i_from_lor.html</loc>
+    <loc>/reference/confint.semlbci.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/loglikelihood.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mediation_latent.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mediation_latent_skewed.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot.loglike_compare.html</loc>
   </url>
   <url>
     <loc>/reference/print.cibound.html</loc>

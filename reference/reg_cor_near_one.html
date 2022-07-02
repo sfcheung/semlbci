@@ -18,7 +18,7 @@ x4~~x5 correlation close to one."><!-- mathjax --><script src="https://cdnjs.clo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semlbci</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.10.0</span>
       </span>
     </div>
 
@@ -52,7 +52,7 @@ x4~~x5 correlation close to one.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="va">reg_cor_near_one</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="va">reg_cor_near_one</span></span></code></pre></div>
     </div>
 
     <div id="format">
@@ -79,12 +79,29 @@ x4~~x5 correlation close to one.</p>
 </dl></div>
     <div id="details">
     <h2>Details</h2>
-    <p>Supposed to be tested using this example:</p><div class="sourceCode"><pre><code><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x5</span>, <span class="va">reg_cor_near_one</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">reg_cor_near_one</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x4"</span>, <span class="st">"x5"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-
+    <p>Supposed to be tested using this example:</p>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1"></a>out &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>x3 <span class="op">+</span><span class="st"> </span>x4 <span class="op">+</span><span class="st"> </span>x5, reg_cor_near_one)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">summary</span>(out)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">cor</span>(reg_cor_near_one[, <span class="kw">c</span>(<span class="st">"x4"</span>, <span class="st">"x5"</span>)])</span></code></pre><p></p></div>
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">reg_cor_near_one</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       x1     x2      x3      x4      x5      y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -0.687 -0.266  1.1400  0.2151  0.2368  0.305</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1.651 -0.447  0.0955 -0.8698 -0.9360 -0.481</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  0.909  1.106 -1.1913  0.0804  0.0891  0.799</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.598  1.710 -0.6715 -1.4201 -1.4841 -0.236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.122 -0.689 -0.2420 -0.7906 -0.8070 -0.390</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.923  1.041 -0.4671 -2.1551 -2.1470 -0.788</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">reg_cor_near_one</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 100</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -97,7 +114,7 @@ x4~~x5 correlation close to one.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

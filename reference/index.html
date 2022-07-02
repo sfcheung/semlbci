@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">semlbci</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.10.0</span>
       </span>
     </div>
 
@@ -44,13 +44,73 @@
     </div>
 
     <table class="ref-index"><colgroup><col class="alias"><col class="title"></colgroup><tbody><tr><th colspan="2">
-          <h2 id="all-functions">All functions <a href="#all-functions" class="anchor" aria-hidden="true"></a></h2>
+          <h2 id="forming-lbcis">Forming LBCIs <a href="#forming-lbcis" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Form LBCIs for selected parameters in a model fitted by [lavaan::lavaan()] or related functions such as [lavaan::sem()] and [lavaan::cfa()].</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="semlbci.html">semlbci()</a></code> </p>
+        </td>
+        <td><p>Likelihood-Based Confidence Interval</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="helper-functions">Helper Functions <a href="#helper-functions" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="check_sem_out.html">check_sem_out()</a></code> </p>
+        </td>
+        <td><p>Pre-analysis Check For 'semlbci'</p></td>
+      </tr><tr><td>
+          <p><code><a href="syntax_to_i.html">syntax_to_i()</a></code> </p>
+        </td>
+        <td><p>Parameter Positions From lavaan Syntax</p></td>
+      </tr><tr><td>
+          <p><code><a href="loglikelihood.html">loglike_range()</a></code> <code><a href="loglikelihood.html">loglike_point()</a></code> <code><a href="loglikelihood.html">loglike_quad_range()</a></code> <code><a href="loglikelihood.html">loglike_quad_point()</a></code> <code><a href="loglikelihood.html">loglike_compare()</a></code> </p>
+        </td>
+        <td><p>Log Profile likelihood of a Parameter</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot.loglike_compare.html">plot(<i>&lt;loglike_compare&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the Output of 'loglike_compare()'</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="methods">Methods <a href="#methods" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Methods of <code>semlbci-class</code> objects (output of [semlbci()])</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="confint.semlbci.html">confint(<i>&lt;semlbci&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Confidence Intervals for a 'smelbci' Object</p></td>
+      </tr><tr><td>
+          <p><code><a href="print.semlbci.html">print(<i>&lt;semlbci&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print Method of a 'semlbci' Object</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="advanced-functions">Advanced Functions <a href="#advanced-functions" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Low level functions for advanced users.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="ci_bound_wn_i.html">ci_bound_wn_i()</a></code> </p>
+        </td>
+        <td><p>Likelihood-based Confidence Bound For One parameter</p></td>
+      </tr><tr><td>
+          <p><code><a href="ci_i_one.html">ci_i_one()</a></code> </p>
+        </td>
+        <td><p>Likelihood-Based Confidence Bound for One Parameter</p></td>
+      </tr><tr><td>
+          <p><code><a href="set_constraint.html">set_constraint()</a></code> </p>
+        </td>
+        <td><p>Equality Constraint for Finding the LBCI by Wu-Neale-2012</p></td>
+      </tr><tr><td>
+          <p><code><a href="print.cibound.html">print(<i>&lt;cibound&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print Method of a 'cibound'-class Object</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="datasets">Datasets <a href="#datasets" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Datasets used in examples.</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="cfa_evar_near_zero.html">cfa_evar_near_zero</a></code> </p>
         </td>
-        <td><p>Dataset (CFA, Two Factors, One Standardied Error Variance
+        <td><p>Dataset (CFA, Two Factors, One Standardized Error Variance
 Close to Zero)</p></td>
       </tr><tr><td>
           <p><code><a href="cfa_two_factors.html">cfa_two_factors</a></code> </p>
@@ -61,41 +121,17 @@ Close to Zero)</p></td>
         </td>
         <td><p>Dataset (CFA, Two Factors, Six Variables, Two Groups)</p></td>
       </tr><tr><td>
-          <p><code><a href="check_sem_out.html">check_sem_out()</a></code> </p>
+          <p><code><a href="mediation_latent.html">mediation_latent</a></code> </p>
         </td>
-        <td><p>Pre-analysis Check For semlbci</p></td>
+        <td><p>Dataset (SEM, Three Factors, Nine Variables, Mediation)</p></td>
       </tr><tr><td>
-          <p><code><a href="ci_bound_wn_i.html">ci_bound_wn_i()</a></code> </p>
+          <p><code><a href="mediation_latent_skewed.html">mediation_latent_skewed</a></code> </p>
         </td>
-        <td><p>Likelihood-based confidence bound for one parameter</p></td>
-      </tr><tr><td>
-          <p><code><a href="ci_i_one.html">ci_i_one()</a></code> </p>
-        </td>
-        <td><p>LB Confidence Limit for One Parameter</p></td>
-      </tr><tr><td>
-          <p><code><a href="print.cibound.html">print(<i>&lt;cibound&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print Method of a cibound Object</p></td>
-      </tr><tr><td>
-          <p><code><a href="print.semlbci.html">print(<i>&lt;semlbci&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print Method of a semlbci Object</p></td>
+        <td><p>Dataset (SEM, Three Factors, Nine Variables, Mediation, Skewed)</p></td>
       </tr><tr><td>
           <p><code><a href="reg_cor_near_one.html">reg_cor_near_one</a></code> </p>
         </td>
         <td><p>Dataset (Six Variables, One Correlation Close to One)</p></td>
-      </tr><tr><td>
-          <p><code><a href="semlbci-package.html">semlbci-package</a></code> </p>
-        </td>
-        <td><p>semlbci: Likelihood Based Confidence Interval for SEM</p></td>
-      </tr><tr><td>
-          <p><code><a href="semlbci.html">semlbci()</a></code> </p>
-        </td>
-        <td><p>Likelihood-Based Confidence Interval</p></td>
-      </tr><tr><td>
-          <p><code><a href="set_constraint.html">set_constraint()</a></code> </p>
-        </td>
-        <td><p>Constraint for Finding the LBCI by the Wu-Neale-2012 Approach</p></td>
       </tr><tr><td>
           <p><code><a href="simple_med.html">simple_med</a></code> </p>
         </td>
@@ -104,10 +140,6 @@ Close to Zero)</p></td>
           <p><code><a href="simple_med_mg.html">simple_med_mg</a></code> </p>
         </td>
         <td><p>Dataset (Simple Mediation Model, Two Groups)</p></td>
-      </tr><tr><td>
-          <p><code><a href="syntax_to_i.html">syntax_to_i()</a></code> </p>
-        </td>
-        <td><p>Parameter Positions From lavaan Syntax</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -121,7 +153,7 @@ Close to Zero)</p></td>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>
