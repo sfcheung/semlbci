@@ -37,7 +37,6 @@ find_free <- function(sem_out) {
         stop("sem_out is not a supported object.")
       }
     ptable <- lavaan::parameterTable(sem_out)
-    # Do not check for
     i <- ptable$free > 0
     i
   }

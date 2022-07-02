@@ -15,6 +15,8 @@
 
 set_bounds <- function(sem_out = NULL,
                       bounds = NULL) {
+    # Support the bounds argument in lavaan.
+    # Not ready. Not used for now.
     sem_out_b <- lavaan::update(sem_out,
                               bounds = bounds,
                               do.fit = FALSE)

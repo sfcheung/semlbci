@@ -2,13 +2,13 @@
 % Please edit documentation in R/print_cibound.R
 \name{print.cibound}
 \alias{print.cibound}
-\title{Print Method of a cibound Object}
+\title{Print Method of a 'cibound'-class Object}
 \usage{
 \method{print}{cibound}(x, digits = 5, ...)
 }
 \arguments{
-\item{x}{The output of a \code{ci_bound_xx_i} function. Currently the only
-such function is \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.}
+\item{x}{The output of a \code{ci_bound_xx_i} function. Currently the
+only such function is \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.}
 
 \item{digits}{The number of digits after the decimal point. To be
 passed to \code{\link[=round]{round()}}. Default is 5.}
@@ -16,15 +16,18 @@ passed to \code{\link[=round]{round()}}. Default is 5.}
 \item{...}{Other arguments. They will be ignored.}
 }
 \value{
-Nothing. It is used for its side effect (printing the information).
+Nothing. It is used for its side effect (printing the
+information).
 }
 \description{
-Prints the diagnostic information of a \code{cibound} object.
+Print the diagnostic information of a \code{cibound}-class
+object.
 }
 \details{
 This is the print method for the output of
-\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}, a \code{cibound} object. It prints the diagnostic
-information on the bound being found and the search process.
+\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}, an \code{cibound}-class object. It prints the
+diagnostic information on the bound being found and the search
+process.
 }
 \examples{
 data(simple_med)

@@ -7,7 +7,6 @@
 #'
 #' @param lav_mod A list of lavaan model matrices for one group.
 #'
-#'
 #' @noRd
 
 lav_mod_to_ram <- function(lav_mod) {

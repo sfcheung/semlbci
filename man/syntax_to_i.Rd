@@ -12,34 +12,54 @@ syntax_to_i(syntax, sem_out)
 \item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
 }
 \value{
-A vector of positions in the parameter table.
+A vector of positions (row numbers) in the parameter table.
 }
 \description{
-Converts lavaan syntax to positions in the fit object
-parameter table
+Converts lavaan syntax to positions in the model
+parameter table.
 }
 \details{
 \code{\link[=syntax_to_i]{syntax_to_i()}} converts a vector of strings, in lavaan syntax, to the
 positions in the parameter table of a \link[lavaan:lavaan-class]{lavaan::lavaan} fit object.
 
 Each element in the vector should have left hand side (\code{lhs}),
-operator (\code{op}), and/or right hand side (\code{rhs}). For example, "m ~ x"
-denotes the coefficient of the path from \code{x} to \code{m}. "y ~~ x"
-denotes the covariance between \code{y} and \code{x}.
+operator (\code{op}), and/or right hand side (\code{rhs}). For example:all.x
+\itemize{
+\item \code{"m ~ x"} denotes the coefficient of the path from \code{x} to \code{m}.
+\item \code{"y ~~ x"}  denotes the covariance between \code{y} and \code{x}.
+}
 
 For user-defined parameters, only \code{lhs} and \code{op} will be
-interpreted. For example, to specify the user parameter \code{ab}, "ab
-:= x" will do. The right hand side will be ignored.
+interpreted. For example:
+\itemize{
+\item To specify the user parameter \code{ab}, both \code{"ab := ..."} and \code{"ab :="}
+will do, \code{...} the definition of \code{ab} in the model. The
+right-hand side will be ignored.
+}
 
-To denote a labelled parameters, e.g., "y ~ a*x", treat it as a user-defined
-parameters us use \verb{:=}, e.g., "a :=" in this example.
+To denote a labelled parameters, such as \code{"y ~ a*x"}, treat it as a
+user-defined parameters and use \verb{:=}, e.g., \code{"a :="} in this example.
 
-For multiple-group models, if a parameter is specified as in a single-group
-models, then this parameter in all groups will be selected. For example,
-if a model has three groups, "y ~ x" denotes this path parameter in all
-three groups, and it will be converted to three row numbers. To select
-the parameter in a specific group, label the parameter and select it using
-\verb{:=} as described above.
+For multiple-group models, if a parameter is specified as in a
+single-group models, then this parameter in all groups will be
+selected. For example:all.x
+\itemize{
+\item If a model has three groups, \code{"y ~ x"} denotes this path parameter
+in all three groups, and it will be converted to three row numbers.
+}
+
+To select the parameter in a specific group, "multiply" the
+right-hand-side variable by the group number. For example:
+\itemize{
+\item \code{"y ~ 2*x"} denotes the path coefficient from \code{x} to \code{y} in Group 2.
+}
+
+To denote the parameters in more than one group, multiply the
+right-hand side variable by a vector of number. For example:all.x
+\itemize{
+\item \code{"f1 =~ c(2,3)*x2"} denotes the factor loading of \code{x2} on \code{f1} in Group 2
+and Group 3.
+}
 
 Elements that cannot be converted to a parameter in the parameter table will
 be ignored.

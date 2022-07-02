@@ -17,12 +17,18 @@
 #' @format A data frame with 500 rows, one grouping variable, `gp`,
 #'  six variables, `x1` to `x6`.
 #'
+#' @examples
+#'
+#' print(head(cfa_two_factors_mg), digits = 3)
+#' nrow(cfa_two_factors_mg)
+#' table(cfa_two_factors_mg$gp)
+#'
 "cfa_two_factors_mg"
 
 #' @title Dataset (Simple Mediation Model, Two Groups)
 #'
-#' @description Generated from a simple mediation model, n = 500, two groups,
-#'  n = 250 each.
+#' @description Generated from a simple mediation model, n = 200, two groups,
+#'  n = 100 each.
 #'
 #' @format A data frame with 500 rows and four variables:
 #' \describe{
@@ -42,5 +48,11 @@
 #' fit <- sem(mod, simple_med_mg, gp = "group")
 #' summary(fit)
 #' ```
+#'
+#' @examples
+#'
+#' print(head(simple_med_mg), digits = 3)
+#' nrow(simple_med_mg)
+#' table(simple_med_mg$gp)
 #'
 "simple_med_mg"

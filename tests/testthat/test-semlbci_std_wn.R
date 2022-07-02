@@ -1,4 +1,5 @@
-skip("Skip due to speed or other issues")
+skip_on_cran()
+skip("To be run in an interactive session")
 
 library(testthat)
 library(semlbci)
@@ -10,7 +11,7 @@ library(semlbci)
 library(lavaan)
 data(simple_med)
 dat <- simple_med
-mod <- 
+mod <-
 "
 m ~ x
 y ~ m
@@ -57,7 +58,7 @@ test_p <- function(fit0, fit1, ciperc, tol) {
 
 geteststd <- get_std_genfct(fit = fit, i = 1)
 
-modc0 <- 
+modc0 <-
 "
 m ~ a*x
 y ~ b*m
@@ -86,7 +87,7 @@ fitc_out1u <- fitc
 
 geteststd <- get_std_genfct(fit = fit, i = 2)
 
-modc0 <- 
+modc0 <-
 "
 m ~ a*x
 y ~ b*m

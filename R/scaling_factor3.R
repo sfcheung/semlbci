@@ -12,33 +12,25 @@
 #' @param standardized If `TRUE`, the limit to be found is for the
 #'  standardized solution. Default is `FALSE`.
 #'
-#' @param pertubation_factor `NULL`. Not used. Included to maintain compatibility
-#'  with older version.
-#'
 #' @param update_args  `NULL`. Not used. Included to maintain compatibility
-#'  with older version.
+#'  with older versions.
 #'
 #' @param force_converged  `NULL`. Not used. Included to maintain compatibility
-#'  with older version.
+#'  with older versions.
 #'
-#' @param std_method The method used to find the standardized solution.
-#'  If equal to `"lavaan"``, [lavaan::standardizedSolution()] will be used.
-#'  If equal to `"internal"`, an internal function of this package will be used.
-#'  The `"lavaan"` method should work in all situations, but the `"internal"`
-#'  method can be faster. Default is `"lavaan"` for now, but may be changed to
-#'  `"internal"` if it is confirmed to work in all situations tested.
+#' @param std_method Not used. Included to maintain compatibility
+#'  with older versions.
 #'
 #' @param sem_out_name  `NULL`. Not used. Included to maintain compatibility
-#'  with older version.
+#'  with older versions.
 #'
-#' @param debug Print debug information. Default is `FALSE`.
+#' @param debug Print debug information, if any. Default is `FALSE`.
 #'
 #' @noRd
 
 scaling_factor3 <- function(sem_out,
                            i,
                            standardized = FALSE,
-                           pertubation_factor = NULL,
                            update_args = NULL,
                            force_converged = NULL,
                            std_method = "lavaan",
@@ -60,10 +52,10 @@ scaling_factor3 <- function(sem_out,
     v <- lavaan::lavTech(sem_out, "WLS.V")
     py <- lavaan::lavTech(sem_out, "delta")
     p <- lavaan::lavTech(sem_out, "information")
-    # .Machine$double.eps^(3/4)) to reproduce the results of lavaan 0.6-9
+    # .Machine$double.eps^(3 / 4)) to reproduce the results of lavaan 0.6-9
     pinv <- MASS::ginv(lavaan::lavInspect(sem_out,
               "augmented.information"),
-              tol = .Machine$double.eps^(3/4))[seq_len(npar), seq_len(npar)]
+              tol = .Machine$double.eps^(3 / 4))[seq_len(npar), seq_len(npar)]
     if (standardized) {
         p_std <- lavaan::parameterEstimates(
                               sem_out,
@@ -120,7 +112,9 @@ scaling_factor3 <- function(sem_out,
     tr_ug2 <- ugs[2]
 
     # Satorra-2000
-    # Asparouhov & Muthen (2000)
+    # Asparouhov, T., & Muthén, B. O. (2010). Simple second order chi-square
+    #     correction. Obtained from
+    #     https://www.statmodel.com/download/WLSMV_new_chi21.pdf
     a <- sqrt(1 / tr_ug2)
     b <- 1 - tr_ug / sqrt(tr_ug2)
     out <-

@@ -1,4 +1,5 @@
-skip("Skip due to speed or other issues")
+skip_on_cran()
+skip("To be run in an interactive session")
 
 library(testthat)
 library(semlbci)
@@ -8,14 +9,14 @@ library(semlbci)
 library(lavaan)
 data(simple_med)
 dat <- simple_med
-mod <- 
+mod <-
 "
 m ~ a*x
 y ~ b*m
 ab:= a*b
 "
 fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
-lavaan::parameterTable(fit_med)
+lavaan::parameterTable(fit)
 
 # Fit by semlbci
 
@@ -37,15 +38,15 @@ system.time(
                        opts0 = opts0,
                        verbose = TRUE)
   )
-
+pars_i <- syntax_to_i(c("m~x","ab:="), fit)
 out1l <- list(bound = lbci_fit$lbci_lb[6],
-              diag = (list(history = attr(lbci_fit, "lb_diag")[[2]]$history)))
+              diag = (list(history = attr(lbci_fit, "lb_diag")[[pars_i[2]]]$history)))
 out1u <- list(bound = lbci_fit$lbci_ub[6],
-              diag = (list(history = attr(lbci_fit, "ub_diag")[[2]]$history)))
+              diag = (list(history = attr(lbci_fit, "ub_diag")[[pars_i[2]]]$history)))
 out2l <- list(bound = lbci_fit$lbci_lb[1],
-              diag = (list(history = attr(lbci_fit, "lb_diag")[[1]]$history)))
+              diag = (list(history = attr(lbci_fit, "lb_diag")[[pars_i[1]]]$history)))
 out2u <- list(bound = lbci_fit$lbci_ub[1],
-              diag = (list(history = attr(lbci_fit, "ub_diag")[[1]]$history)))
+              diag = (list(history = attr(lbci_fit, "ub_diag")[[pars_i[1]]]$history)))
 
 
 # Check the results
@@ -58,7 +59,7 @@ test_p <- function(fit0, fit1, ciperc, tol) {
 
 geteststd <- get_std_genfct(fit = fit, i = 6)
 
-modc0 <- 
+modc0 <-
 "
 m ~ a*x
 y ~ b*m
@@ -88,7 +89,7 @@ fitc_out1u <- fitc
 
 geteststd <- get_std_genfct(fit = fit, i = 1)
 
-modc0 <- 
+modc0 <-
 "
 m ~ a*x
 y ~ b*m

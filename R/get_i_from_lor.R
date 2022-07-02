@@ -27,7 +27,7 @@
 #'
 #' # TODO
 #'
-#' @keywords internal
+#' @noRd
 
 get_i_from_lor <- function(ptable,
                            lor = NULL,
@@ -56,7 +56,7 @@ get_i_from_lor <- function(ptable,
       } else {
         block_group <- FALSE
       }
-    if (is.null(lor) && any(missing(lhs), 
+    if (is.null(lor) && any(missing(lhs),
                             missing(op),
                             missing(rhs))) {
         stop("If lor is not supplied, then lhs, op, and rhs must be supplied.")

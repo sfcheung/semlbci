@@ -2,7 +2,7 @@
 % Please edit documentation in R/ci_i_one.R
 \name{ci_i_one}
 \alias{ci_i_one}
-\title{LB Confidence Limit for One Parameter}
+\title{Likelihood-Based Confidence Bound for One Parameter}
 \usage{
 ci_i_one(
   i,
@@ -14,12 +14,14 @@ ci_i_one(
   sf_full = NA,
   sf_args = list(),
   sem_out_name = NULL,
+  try_k_more_times = 0,
   ...
 )
 }
 \arguments{
-\item{i}{The position of the target parameters as appeared in the
-parameter table of the \link[lavaan:lavaan-class]{lavaan::lavaan} object.}
+\item{i}{The position (row number) of the target parameters as
+appeared in the parameter table of the \link[lavaan:lavaan-class]{lavaan::lavaan}
+object.}
 
 \item{which}{Whether the lower bound or the upper bound is to be
 found. Must be \code{"lbound"} or \code{"ubound"}.}
@@ -27,53 +29,77 @@ found. Must be \code{"lbound"} or \code{"ubound"}.}
 \item{sem_out}{The SEM output. Currently supports
 \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.}
 
-\item{method}{The approach to be used. Default is "wn"
-(Wu-Neale-2012 Method). The other methods are disabled for now.}
+\item{method}{The approach to be used. Default is \code{"wn"}
+(Wu-Neale-2012 Method), the only supported method.}
 
-\item{standardized}{Boolean. Whether the LBCI for the standardized
-solution is to be searched. Default is \code{FALSE}.}
+\item{standardized}{Logical. Whether the bound of the LBCI of the
+standardized solution is to be searched. Default is \code{FALSE}.}
 
 \item{robust}{Whether the LBCI based on robust likelihood ratio
-test is to be found. Only "satorra.2000" in \link{lavaan} is supported
-for now. If `"none"``, the default, then likelihood ratio test based
-on maximum likelihood estimation will be used.}
+test is to be found. Only \code{"satorra.2000"} in
+\code{\link[lavaan:lavTestLRT]{lavaan::lavTestLRT()}} is supported for now. If `"none"``, the
+default, then likelihood ratio test based on maximum likelihood
+estimation will be used.}
 
-\item{sf_full}{A list with the scaling factors. Ignored if \code{robust}
-is \code{"none"}. If \code{robust} is \code{"satorra.2000"} and \code{sf_full} is
-supplied, then its value will be used.
-If \code{robust} is \code{"satorra.2000"} but \code{sf_full} is
-\code{NA}, then scaling factors will be computed internally.}
+\item{sf_full}{A list with the scaling and shift factors. Ignored
+if \code{robust} is \code{"none"}. If \code{robust} is \code{"satorra.2000"} and
+\code{sf_full} is supplied, then its value will be used. If \code{robust} is
+\code{"satorra.2000"} but \code{sf_full} is \code{NA}, then scaling factors will
+be computed internally.}
 
 \item{sf_args}{The list of arguments to be used for computing scaling factors
-if \code{robust} is \code{"satorra.2000"}. Used only by \code{\link[=semlbci]{semlbci()}}.}
+if \code{robust} is \code{"satorra.2000"}. Used only by \code{\link[=semlbci]{semlbci()}}. Ignored
+if \code{robust} is not \code{"satorra.2000"}.}
 
 \item{sem_out_name}{The name of the object supplied to \code{sem_out}. \code{NULL}
-by default. To be used by internal functions.}
+by default. Originally used by some internal functions. No longer used
+in the current version but kept for backward compatibility.}
+
+\item{try_k_more_times}{How many more times to try if the status
+code is not zero. Default is 0.}
 
 \item{...}{Arguments to be passed to the function corresponds to
 the requested method (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} for "wn").}
 }
 \value{
-A numeric vector of two elements. The first element is the
-lower bound, and the second element is the upper bound.
-
-The diagnostic information from the function called in finding the
-lower and upper founds are stored in the attributes \code{lb_diag} and
-\code{ub_diag}, for the lower bound and the upper bound, respectively.
+A list of several elements.
+\itemize{
+\item \code{bound}: The bound located. \code{NA} if the search failed.
+\item \code{diags}: Diagnostic information.
+\item \code{method}: Method used. Currently only \code{"wn"} is the only possible
+value.
+\item \code{times}: Total time used in the search.
+\item \code{sf_full}: The scaling and shift factors used.
+\item \code{ci_bound_i_out}: The original output from \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.
+\item \code{attempt_lb_var}: How many attempts used to reduce the lower
+bounds of free variances.
+\item \code{attempt_more_times}: How many additional attempts used to search
+for the bounds. Controlled by
+\code{try_k_more_times}.
+}
 }
 \description{
-Finds the likelihood-based confidence limit
+Find the likelihood-based confidence bound
 for one parameter.
 }
 \details{
-\code{\link[=ci_i_one]{ci_i_one()}} calls a function (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} by default)
-once to find the bound (limit) for a confidence interval.
-The default method is the Wu-Neale-2012 method. Please refer to
-\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} for further information.
+\subsection{Important Notice}{
 
-This function is not supposed to be used directly by users. It is
-exported such that interested users can examine how a confidence bound it
-found.
+This function is not supposed to be used directly by users in
+typical scenarios. Its interface is user-\emph{unfriendly} because it
+should be used through \code{\link[=semlbci]{semlbci()}}. It is exported such that
+interested users can examine how a confidence bound is found, or
+use it for experiments or simulations.
+}
+
+\subsection{Usage}{
+
+\code{\link[=ci_i_one]{ci_i_one()}} is the link between \code{\link[=semlbci]{semlbci()}} and the lowest level
+function (currently \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}). When called by \code{\link[=semlbci]{semlbci()}}
+to find the bound of a parameter, \code{\link[=ci_i_one]{ci_i_one()}} calls a function
+(\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} by default) one or more times to find the bound
+(limit) for an LBCI.
+}
 }
 \examples{
 

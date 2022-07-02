@@ -28,7 +28,7 @@ set_start_wn <- function(i = NULL,
                       standardized = FALSE,
                       ciperc = .95) {
     ptable <- as.data.frame(sem_out@ParTable, stringsAsFactors = FALSE)
-    est    <- lavaan::parameterEstimates(sem_out)
+    est <- lavaan::parameterEstimates(sem_out)
     p_free <- ptable$free > 0
     i_free <- which(p_free)
     id_free <- ptable$id[i_free]
@@ -40,7 +40,8 @@ set_start_wn <- function(i = NULL,
               ubound = ptable[i, "est"] + qcrit * ratio * ptable[i, "se"])
       }
     if (standardized) {
-        # If standardized solution is requested
+        # Standardized solution
+        # Will exist in this block
         p_std <- lavaan::standardizedSolution(sem_out,
                                               type = "std.all",
                                               se = FALSE,
@@ -51,7 +52,6 @@ set_start_wn <- function(i = NULL,
                                               remove.ineq = FALSE,
                                               remove.def = FALSE,
                                               output = "data.frame")
-        # TODO: Check how to work with multigroup SEM
         p_std$id <- seq_len(nrow(p_std))
         if (lavaan::lavTech(sem_out, "ngroups") > 1) {
             i_lor <- get_lhs_op_rhs(i, sem_out, more = TRUE)
@@ -87,7 +87,7 @@ set_start_wn <- function(i = NULL,
             std0[i_std, "est.std"]
           }
         # NOTE: g_i0 is of the same length as the parameter vector
-        g_i0 <- lavaan::lav_func_gradient_simple(tmp_fct, 
+        g_i0 <- lavaan::lav_func_gradient_simple(tmp_fct,
                                                  lavaan::coef(sem_out),
                                                  sem_out = sem_out)
         start_free <- rep(NA, npar)
@@ -103,8 +103,10 @@ set_start_wn <- function(i = NULL,
         return(ptable2_final)
       }
     if (ptable[i, "op"] %in% c("~", "~~", ":=", "=~")) {
-        # If the target is not a user-defined parameter
-        # Can handle equality constraints by label
+        # Unstandardized solution
+        # Will exist in this block
+        # If the target is not a user-defined parameter,
+        # can handle equality constraints by label
         i_label <- ptable[i, "label"]
         if (i_label == "") {
             i_label <- gen_unique_name(get_names_from_ptable(ptable))
@@ -129,7 +131,7 @@ set_start_wn <- function(i = NULL,
             return(ptable)
           }
         ptable2_final <- lavaan::parameterTable(sem_out2)
-        i_con <- get_i_from_lor(ptable2_final, 
+        i_con <- get_i_from_lor(ptable2_final,
                                 lhs = i_label,
                                 op = "==",
                                 rhs = i_est_fix2)

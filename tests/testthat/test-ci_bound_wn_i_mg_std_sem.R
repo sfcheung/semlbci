@@ -1,4 +1,4 @@
-skip("Skip due to speed or other issues")
+# skip("Skip due to speed or other issues")
 # To be tested in interactive sessions only due to scoping or speed issues
 # To fix: Do not use saved data
 
@@ -11,7 +11,7 @@ library(lavaan)
 
 data(cfa_two_factors_mg)
 dat <- cfa_two_factors_mg
-mod <- 
+mod <-
 "
 f1 =~ x1 + x2 + x3
 f2 =~ x4 + x5 + x6
@@ -34,11 +34,12 @@ opts0 <- list(#ftol_abs = 1e-7,
               # tol_constraints_eq = 1e-10
               )
 time1l <- system.time(out1l <- ci_bound_wn_i(25, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
-time1u <- system.time(out1u <- ci_bound_wn_i(25, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
-time2l <- system.time(out2l <- ci_bound_wn_i(30, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
+# time1u <- system.time(out1u <- ci_bound_wn_i(25, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
+# time2l <- system.time(out2l <- ci_bound_wn_i(30, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 time2u <- system.time(out2u <- ci_bound_wn_i(30, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 
-timexx <- rbind(time1l, time1u, time2l, time2u)
+# timexx <- rbind(time1l, time1u, time2l, time2u)
+timexx <- rbind(time1l, time2u)
 timexx
 colSums(timexx)
 
@@ -53,7 +54,7 @@ test_p <- function(fit0, fit1, ciperc, tol) {
 gen_test_data <- FALSE
 if (gen_test_data) {
 
-modc0 <- 
+modc0 <-
 "
 f1 =~ x1 + x2 + x3
 f2 =~ x4 + x5 + x6
@@ -118,8 +119,8 @@ load(system.file("testdata", "test-ci_bound_wn_i_mg_std_sem.RData",
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))
-    expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-4))
-    expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-4))
+    # expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-4))
+    # expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-4))
     expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-4))
   })
 

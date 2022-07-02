@@ -1,7 +1,7 @@
 skip("Skip due to speed or other issues")
 # To be tested in interactive sessions
 library(testthat)
-options(Ncpus = 9)
+options(Ncpus = 13)
 
 Sys.setenv("SEMLBCI_TEST_COMPREHENSIVE" = "TRUE")
 

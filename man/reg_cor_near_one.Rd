@@ -23,9 +23,18 @@ Generated from a regression model six variables,
 x4~~x5 correlation close to one.
 }
 \details{
-Supposed to be tested using this example:\preformatted{out <- lm(y ~ x1 + x2 + x3 + x4 + x5, reg_cor_near_one)
+Supposed to be tested using this example:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{out <- lm(y ~ x1 + x2 + x3 + x4 + x5, reg_cor_near_one)
 summary(out)
 cor(reg_cor_near_one[, c("x4", "x5")])
+}\if{html}{\out{</div>}}
 }
+\examples{
+
+print(head(reg_cor_near_one), digits = 3)
+nrow(reg_cor_near_one)
+
+
 }
 \keyword{datasets}

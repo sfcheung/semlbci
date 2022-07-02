@@ -17,15 +17,24 @@ A data frame with 500 rows and four variables:
 simple_med_mg
 }
 \description{
-Generated from a simple mediation model, n = 500, two groups,
-n = 250 each.
+Generated from a simple mediation model, n = 200, two groups,
+n = 100 each.
 }
 \details{
-Supposed to be tested using this example:\preformatted{library(lavaan)
+Supposed to be tested using this example:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{library(lavaan)
 mod <- "m ~ x
         y ~ m"
 fit <- sem(mod, simple_med_mg, gp = "group")
 summary(fit)
+}\if{html}{\out{</div>}}
 }
+\examples{
+
+print(head(simple_med_mg), digits = 3)
+nrow(simple_med_mg)
+table(simple_med_mg$gp)
+
 }
 \keyword{datasets}

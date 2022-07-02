@@ -24,13 +24,15 @@ std_lav <- function(param, sem_out) {
                                                       param)
 
     # Get the list of lavaan matrices with changed parameters
-    # Adapted from lavaan::lav_object_inspect_modelmatrices
+    # Adapted from lavaan:::lav_object_inspect_modelmatrices()
     # This block works regardless of the number of groups
 
     glist_new <- lav_model_new@GLIST
     for (i in seq_len(length(glist_new))) {
         dimnames(glist_new[[i]]) <- lav_model@dimNames[[i]]
       }
+    # Access the slot directly because this function will be
+    # called many times in the optimization
     ng <- lav_model@nblocks
     nmat <- lav_model@nmat
     gp_labels <- sem_out@Data@group.label

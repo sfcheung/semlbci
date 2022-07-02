@@ -1,4 +1,4 @@
-skip_on_cran()
+# skip_on_cran()
 library(testthat)
 library(semlbci)
 
@@ -8,7 +8,7 @@ library(lavaan)
 
 data(cfa_two_factors_mg)
 dat <- cfa_two_factors_mg
-mod <- 
+mod <-
 "
 f1 =~ x1 + c(a1, a2)*x2 + x3
 f2 =~ x4 + x5 + x6
@@ -41,7 +41,7 @@ colSums(timexx)
 
 # Check the results
 
-modc0 <- 
+modc0 <-
 "
 f1 =~ x1 + c(a1, a2)*x2 + x3
 f2 =~ x4 + x5 + x6

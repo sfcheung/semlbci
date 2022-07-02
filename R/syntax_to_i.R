@@ -1,7 +1,7 @@
 #' @title Parameter Positions From lavaan Syntax
 #'
-#' @description Converts lavaan syntax to positions in the fit object
-#'  parameter table
+#' @description Converts lavaan syntax to positions in the model
+#'   parameter table.
 #'
 #' @details
 #'
@@ -9,30 +9,46 @@
 #' positions in the parameter table of a [lavaan::lavaan-class] fit object.
 #'
 #' Each element in the vector should have left hand side (`lhs`),
-#' operator (`op`), and/or right hand side (`rhs`). For example, "m ~ x"
-#' denotes the coefficient of the path from `x` to `m`. "y ~~ x"
-#' denotes the covariance between `y` and `x`.
+#' operator (`op`), and/or right hand side (`rhs`). For example:all.x
+#'
+#' - `"m ~ x"` denotes the coefficient of the path from `x` to `m`.
+#'
+#' - `"y ~~ x"`  denotes the covariance between `y` and `x`.
 #'
 #' For user-defined parameters, only `lhs` and `op` will be
-#' interpreted. For example, to specify the user parameter `ab`, "ab
-#' := x" will do. The right hand side will be ignored.
+#' interpreted. For example:
 #'
-#' To denote a labelled parameters, e.g., "y ~ a*x", treat it as a user-defined
-#' parameters us use `:=`, e.g., "a :=" in this example.
+#' - To specify the user parameter `ab`, both `"ab := ..."` and `"ab :="`
+#'   will do, `...` the definition of `ab` in the model. The
+#'   right-hand side will be ignored.
 #'
-#' For multiple-group models, if a parameter is specified as in a single-group
-#' models, then this parameter in all groups will be selected. For example,
-#' if a model has three groups, "y ~ x" denotes this path parameter in all
-#' three groups, and it will be converted to three row numbers. To select
-#' the parameter in a specific group, label the parameter and select it using
-#' `:=` as described above.
+#' To denote a labelled parameters, such as `"y ~ a*x"`, treat it as a
+#' user-defined parameters and use `:=`, e.g., `"a :="` in this example.
+#'
+#' For multiple-group models, if a parameter is specified as in a
+#' single-group models, then this parameter in all groups will be
+#' selected. For example:all.x
+#'
+#' - If a model has three groups, `"y ~ x"` denotes this path parameter
+#' in all three groups, and it will be converted to three row numbers.
+#'
+#' To select the parameter in a specific group, "multiply" the
+#' right-hand-side variable by the group number. For example:
+#'
+#' - `"y ~ 2*x"` denotes the path coefficient from `x` to `y` in Group 2.
+#'
+#' To denote the parameters in more than one group, multiply the
+#' right-hand side variable by a vector of number. For example:all.x
+#'
+#' - `"f1 =~ c(2,3)*x2"` denotes the factor loading of `x2` on `f1` in Group 2
+#' and Group 3.
 #'
 #' Elements that cannot be converted to a parameter in the parameter table will
 #' be ignored.
 #'
 #' Currently supports [lavaan::lavaan-class] outputs only.
 #'
-#' @return A vector of positions in the parameter table.
+#' @return A vector of positions (row numbers) in the parameter table.
 #'
 #' @param syntax A vector of parameters, defined as in lavaan.
 #'
@@ -69,17 +85,57 @@ syntax_to_i <- function(syntax,
         stop("sem_out is not a supported object.")
       }
     ptable <- lavaan::parameterTable(sem_out)
+    ngroups <- lavaan::lavTech(sem_out, "ngroups")
     l_model <- lavaan::lavParseModelString(syntax, as.data.frame = TRUE)
     if (nrow(l_model) > 0) {
-        l_model$req <- TRUE
-        p_out <- merge(ptable, l_model[, c("lhs", "op", "rhs", "req")], 
-                      by = c("lhs", "op", "rhs"), all.x = TRUE, sort = FALSE)
-        p_out <- p_out[match(ptable$id, p_out$id), ]
-        i_par <- which(p_out$req)
+        if (ngroups == 1) {
+            # Single-sample
+            l_model$req <- TRUE
+            p_out <- merge(ptable, l_model[, c("lhs", "op", "rhs", "req")],
+                          by = c("lhs", "op", "rhs"), all.x = TRUE, sort = FALSE)
+            p_out <- p_out[match(ptable$id, p_out$id), ]
+            i_par <- which(p_out$req)
+          } else {
+            # Multi-sample
+            l_model$group <- NA
+            tmp0 <- list()
+            for (i in seq_len(nrow(l_model))) {
+                if (l_model[i, "fixed"] == "") {
+                    l_model[i, "group"] <- 1
+                    tmp <- do.call(rbind, replicate(ngroups - 1,
+                                                    l_model[i, ],
+                                                    simplify = FALSE))
+                    tmp$group <- seq(2, ngroups)
+                    tmp0[[i]] <- tmp
+                  } else {
+                    x_i <- as.numeric(strsplit(l_model[i, "fixed"], ";")[[1]])
+                    x_k <- length(x_i)
+                    if (x_k == 1) {
+                        l_model[i, "group"] <- x_i
+                      } else {
+                        l_model[i, "group"] <- x_i[1]
+                        tmp <- do.call(rbind, replicate(x_k - 1,
+                                                        l_model[i, ],
+                                                        simplify = FALSE))
+                        tmp$group <- x_i[-1]
+                        tmp0[[i]] <- tmp
+                      }
+                  }
+              }
+            l_model <- rbind(l_model, do.call(rbind, tmp0))
+            l_model$req <- TRUE
+            p_out <- merge(ptable,
+                           l_model[, c("lhs", "op", "rhs", "group", "req")],
+                           by = c("lhs", "op", "rhs", "group"),
+                           all.x = TRUE,
+                           sort = FALSE)
+            p_out <- p_out[match(ptable$id, p_out$id), ]
+            i_par <- which(p_out$req)
+          }
       } else {
         i_par <- NULL
       }
-    # User defined parameter
+    # User-defined parameter
     syntax_def <- syntax[grepl(":=", syntax)]
     if (length(syntax_def) > 0) {
         l_def <- strsplit(syntax_def, ":=")

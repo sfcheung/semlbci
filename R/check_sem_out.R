@@ -1,44 +1,33 @@
-#' @title Pre-analysis Check For semlbci
+#' @title Pre-analysis Check For 'semlbci'
 #'
-#' @description Checks the output passed to semlbci
+#' @description Check the output passed to [semlbci()]
 #'
-#' @details Checks whether the model and the estimation method in the
-#'  `sem_out` object passed to [semlbci()] are supported by the
+#' @details It checks whether the model and the estimation method in
+#'  the `sem_out` object passed to [semlbci()] are supported by the
 #'  current version of [semlbci()]. This function is to be used by
 #'  [semlbci()] but is exported such that the compatibility of an SEM
-#'  output can be checked independently.
+#'  output can be checked directly.
 #'
 #' Estimation methods (`estimator` in [lavaan::lavaan()]) currently
 #'     supported:
 #'
-#'    - Maximum likelihood (`ML`)
+#'    - Maximum likelihood (`ML`) and its variants (e.g., `MLM`, `MLR`).
+#'      For methods with robust test statistics (e.g., `MLR`),
+#'      only robust LBCIs (`robust = "satorra.2000"` in calling [semlbci()])
+#'      can be requested.
 #'
-#'    - Full information maximum likelihood with missing data (`fiml`)
-#'
-#'    - Generalized least squares (`GLS`)
+#'    - Generalized least squares (`GLS`).
 #'
 #'    - Weighted least squares (a.k.a. asymptotically distribution
-#'         free) (`WLS`)
-#'
-#'    - Estimation done with robust test statistics is supported if `robust`
-#'        set to "satorra.2000":
-#'
-#'        - `MLR`, `MLMVS`, `MLM`, `MLMV`
+#'         free) (`WLS`) and its variants (e.g., `WLSMV`).
 #'
 #' Estimation methods not yet supported:
 #'
-#'    - Unweighted least squares (`ULS`)
+#'    - Unweighted least squares (`ULS`).
 #'
-#'    - Diagonally weighted least squares (`DWLS`)
+#'    - Diagonally weighted least squares (`DWLS`).
 #'
-#'    - Variants with robust standard errors and/or robust
-#'      test statistics:
-#'
-#'       - `MLF`.
-#'
-#'       - `WLSM`, `WLSMV`.
-#'
-#'       - `ULSM`, `ULSMV`.
+#'    - Other methods not listed.
 #'
 #' Models supported:
 #'
@@ -54,7 +43,7 @@
 #'
 #'    - Models with formative factors.
 #'
-#'    - Multilevel models
+#'    - Multilevel models.
 #'
 #' @return A numeric vector of one element. If 0, the model and
 #'  estimation method are officially supported. If larger than zero,
@@ -70,14 +59,14 @@
 #'  supports a [lavaan::lavaan-class] object.
 #'
 #' @param robust Whether the LBCI based on robust likelihood ratio
-#'  test is to be found. Only "satorra.2000" in [lavaan] is supported
-#'  for now. If `"none"`, the default, then likelihood ratio test based
-#'  on maximum likelihood estimation will be used.
-#' 
+#'  test is to be found. Only "satorra.2000" in [lavaan::lavTestLRT()]
+#'  is supported for now. If `"none"`, the default, then likelihood
+#'  ratio test based on maximum likelihood estimation will be used.
+#'
 #' @param multigroup_ok If `TRUE`, will not check whether the model is a
 #'  multiple-group model. Default is `TRUE`.
 #'
-#' @seealso 
+#' @seealso
 #' [semlbci()], [ci_i_one()]
 #'
 #' @examples
@@ -110,8 +99,10 @@
 #'
 #' @export
 
-check_sem_out <- function(sem_out, robust = "none",
+check_sem_out <- function(sem_out,
+                          robust = c("none", "satorra.2000"),
                           multigroup_ok = TRUE) {
+    robust <- match.arg(robust)
     p_table <- lavaan::parameterTable(sem_out)
 
     sem_options <- lavaan::lavInspect(sem_out, "options")
@@ -127,27 +118,26 @@ check_sem_out <- function(sem_out, robust = "none",
     sem_nlevels <- lavaan::lavInspect(sem_out, "nlevels")
     sem_max_nclusters <- max(unlist(lavaan::lavInspect(sem_out, "nclusters")))
 
+    # Only check against methods explicitly supported
+    # Note that it checks the `estimator` in options.
+    # E.g., if estimator = "MLM" in the call, the `estimator` in options is
+    # still "ML".
+    # Therefore, variants of ML, e.g., MLR and mLR, are supported.
+    # Documented estimator: DLS, DWLS, GLS, ML, PML, ULS, WLS
     estimators_supported <- c("ML",
                               "GLS",
                               "WLS")
-    estimators_unsupported <- c("ULS",
+    estimators_unsupported <- c("DLS",
                                 "DWLS",
-                                "MLM",
-                                "MLMV",
-                                "MLMVS",
-                                "MLF",
-                                "MLR",
-                                "WLSM",
-                                "WLSMV",
-                                "ULSM",
-                                "ULSMV",
+                                "ULS",
                                 "PML")
+    # Documented se: standard, robust.huber.white, robust.se, boot
+    # If robust LBCI requested, this will be ignored.
+    # Not used. Included just in case this need to be checked in the future.
     se_supported <- c("standard")
-    se_unsupported <- c("robust.sem",
-                        "robust.huber.white",
-                        "robust",
-                        "boot",
-                        "bootstrap")
+
+    # If normal LBCI is requested, test must be "standard".
+    # If robust LBCI is requested, another test will be conducted.
     test_supported <- c("standard")
     test_unsupported <- c("Satorra.Bentler",
                           "Yuan.Bentler",
@@ -156,6 +146,8 @@ check_sem_out <- function(sem_out, robust = "none",
                           "boot",
                           "bootstrap",
                           "Bollen.Stine")
+
+    # Note that it checks the `missing` in options.
     missing_supported <- c("listwise",
                            "ml", "fiml", "direct",
                            "ml.x", "fiml.x", "direct.x")
@@ -166,9 +158,10 @@ check_sem_out <- function(sem_out, robust = "none",
 
     estimator_ok <- (tolower(sem_estimator) %in% tolower(estimators_supported))
     missing_ok <- (tolower(sem_missing) %in% tolower(missing_supported))
+    # se checked but not used
     se_ok <- (tolower(sem_se) %in% tolower(se_supported))
 
-    scaled <- any(names(sem_out@test) %in%
+    scaled <- any(names(lavaan::lavInspect(sem_out, "test")) %in%
                         c("satorra.bentler",
                           "yuan.bentler",
                           "yuan.bentler.mplus",
@@ -176,6 +169,7 @@ check_sem_out <- function(sem_out, robust = "none",
                           "scaled.shifted"))
 
     if (robust == "satorra.2000") {
+        # If robust LBCI requested, at least one scaled test must be used.
         if (scaled) {
           robust_ok <- TRUE
           test_ok <- TRUE
@@ -184,6 +178,7 @@ check_sem_out <- function(sem_out, robust = "none",
           test_ok <- FALSE
         }
       } else {
+        # If normal LBCI requested, the test must be "standard".
         robust_ok <- NA
         test_ok <- (tolower(sem_test) %in% tolower(test_supported))
       }
@@ -198,6 +193,7 @@ check_sem_out <- function(sem_out, robust = "none",
     optim_converged <- sem_converged
     optim_admissible <- sem_post_check
 
+    # out < 0 if there is at least one problem
     out <- 0
     msg <- NULL
 
@@ -209,15 +205,9 @@ check_sem_out <- function(sem_out, robust = "none",
 
     if (!missing_ok) {
           out <- ifelse(out >= 0, -1, out - 1)
-          msg <- c(msg, paste("Missing handling method", sem_estimator,
+          msg <- c(msg, paste("Missing handling method", sem_missing,
                                 "is not yet supported."))
         }
-
-    # if (!se_ok) {
-    #       out <- ifelse(out >= 0, -1, out - 1)
-    #       msg <- c(msg, paste("Standard error method", sem_se,
-    #                             "is not yet supported."))
-    #     }
 
     if (robust == "satorra.2000") {
         if (!test_ok) {
@@ -235,7 +225,7 @@ check_sem_out <- function(sem_out, robust = "none",
 
     if (model_formative_factor) {
           out <- ifelse(out >= 0, -1, out - 1)
-          msg <- c(msg, 
+          msg <- c(msg,
                     "Models with formative factor(s) are not yet supported.")
         }
 

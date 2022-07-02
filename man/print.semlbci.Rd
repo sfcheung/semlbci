@@ -2,13 +2,14 @@
 % Please edit documentation in R/print_semlbci.R
 \name{print.semlbci}
 \alias{print.semlbci}
-\title{Print Method of a semlbci Object}
+\title{Print Method of a 'semlbci' Object}
 \usage{
 \method{print}{semlbci}(
   x,
   digits = 3,
   annotation = TRUE,
   time = FALSE,
+  verbose = FALSE,
   verbose_if_needed = TRUE,
   drop_no_lbci = TRUE,
   ...
@@ -17,20 +18,25 @@
 \arguments{
 \item{x}{The output of \code{\link[=semlbci]{semlbci()}}.}
 
-\item{digits}{The number of digits after decimal point. To be
-passed to \code{\link[=round]{round()}}. Default is 3.}
+\item{digits}{The number of digits after the decimal point. To be
+passed to \code{\link[=formatC]{formatC()}}. Default is 3.}
 
 \item{annotation}{If \code{TRUE}, print table notes. Default is \code{TRUE}.}
 
-\item{time}{If \code{TRUE}, print the time spent on each limit. Default
+\item{time}{If \code{TRUE}, print the time spent on each bound. Default
 is \code{FALSE}.}
 
-\item{verbose_if_needed}{If \code{TRUE}, additional diagnostic
-information will be printed if necessary. If \code{FALSE}, additional
-diagnostic information will always be printed. Default is \code{TRUE}.}
+\item{verbose}{If \code{TRUE}, additional diagnostic information will
+always be printed. This argument overrides \code{verbose_if_needed}.
+Default is \code{FALSE}.}
 
-\item{drop_no_lbci}{If \code{TRUE}, parameters not included in the
-search will be removed. Default is \code{TRUE}.}
+\item{verbose_if_needed}{If \code{TRUE}, additional diagnostic
+information will be printed only if necessary. If \code{FALSE},
+additional diagnostic information will always be printed. Default
+is \code{TRUE}.}
+
+\item{drop_no_lbci}{If \code{TRUE}, parameters without LBCIs will be
+removed. Default is \code{TRUE}.}
 
 \item{...}{Other arguments. They will be ignored.}
 }
@@ -62,4 +68,18 @@ lbci_med
 
 print(lbci_med, verbose_if_needed = FALSE)
 
+print(lbci_med, verbose = TRUE)
+
+print(lbci_med, time = TRUE)
+
+print(lbci_med, annotation = FALSE)
+
+print(lbci_med, digits = 4)
+
+}
+\seealso{
+\code{\link[=semlbci]{semlbci()}}
+}
+\author{
+Shu Fai Cheung \url{https://orcid.org/0000-0002-9871-9448}
 }

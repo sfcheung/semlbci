@@ -14,11 +14,19 @@ cfa_two_factors
 Generated from a two-factor model with six variables, n = 500
 }
 \details{
-Supposed to be tested using this example:\preformatted{library(lavaan)
+Supposed to be tested using this example:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{library(lavaan)
 mod <- "f1 =~ x1 + x2 + x3
         f2 =~ x4 + x5 + x6"
 fit <- cfa(mod, cfa_two_factors)
 summary(fit)
+}\if{html}{\out{</div>}}
 }
+\examples{
+
+print(head(cfa_two_factors), digits = 3)
+nrow(cfa_two_factors)
+
 }
 \keyword{datasets}
