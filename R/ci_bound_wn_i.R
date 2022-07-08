@@ -519,19 +519,21 @@ ci_bound_wn_i <- function(i = NULL,
     start0 <- lavaan::parameterTable(sem_out)
     i_free <- find_free(sem_out)
     start0[i_free, "est"] <- out$solution
+    start0[i_free, "start"] <- out$solution
     tmp <- sem_out@Options
-    tmp$check.start = TRUE
-    tmp$check.post = TRUE
-    tmp$check.vcov = TRUE
-    tmp$warn = FALSE
-    tmp$do.fit = FALSE
-    tmp$start = start0
-    fit_final <- lavaan::lavaan(slotOptions = tmp,
-                                slotParTable = sem_out@ParTable,
-                                slotModel = sem_out@Model,
+    tmp$check.start <- TRUE
+    tmp$check.post <- TRUE
+    tmp$check.vcov <- TRUE
+    tmp$warn <- FALSE
+    tmp$do.fit <- FALSE
+    tmp$start <- start0
+    fit_final <- lavaan::lavaan(model = start0,
+                                slotOptions = tmp,
+                                # slotParTable = tmp2,
+                                # slotModel = tmp3,
                                 slotSampleStats = sem_out@SampleStats,
                                 slotData = sem_out@Data)
-    # fit_final <- lavaan::update(sem_out, start = start0, do.fit = FALSE,
+    # fit_final2 <- lavaan::update(sem_out, start = start0, do.fit = FALSE,
     #                             check.start = TRUE,
     #                             check.post = TRUE,
     #                             check.vcov = TRUE)
