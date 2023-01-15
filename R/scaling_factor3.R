@@ -39,6 +39,12 @@ scaling_factor3 <- function(sem_out,
                            ) {
     # This function will NOT check whether the SEM was done with robust model
     # test. This check should be done before calling this function.
+    lavaan_v <- packageVersion("lavaan")
+    if (lavaan_v < "0.6.13") {
+        stop(paste("This function is not compatible lavaan version before",
+                   "0.6-13.",
+                   "Please update lavaan first."))
+      }
     p_table <- lavaan::parameterTable(sem_out)
     npar <- sum(p_table$free > 0)
     i_op <- p_table[i, "op"]
@@ -97,19 +103,35 @@ scaling_factor3 <- function(sem_out,
 
     gd <- lavaan::lav_func_jacobian_complex(gfct, lavaan::coef(sem_out))
 
-    # Satorra-2000, p. 240
+    # Old code. Obsolete but compatible with lavaan before 0.9-13
+    # # Satorra-2000, p. 240
+    # x <- pinv %*% t(gd) %*% MASS::ginv(gd %*% pinv %*% t(gd)) %*% gd %*% pinv
+    # ng <- lavaan::lavTech(sem_out, "ngroups")
+    # fg <- lavaan::lavTech(sem_out, "nobs") / lavaan::lavTech(sem_out, "ntotal")
+    # tmpfct <- function(v_i, gamma_i, py_i) {
+    #     # Satorra-2000, Eq. 23
+    #     tmp <- v_i %*% gamma_i %*% v_i %*% (py_i %*% x %*% t(py_i))
+    #     c(tr_ug = sum(diag(tmp)),
+    #       tr_ug2 = sum(diag(tmp %*% tmp)))
+    #   }
+    # ugs <- as.vector(mapply(tmpfct, v, gamma, py) %*% matrix(fg, ng, 1))
+    # tr_ug <- ugs[1]
+    # tr_ug2 <- ugs[2]
+
     x <- pinv %*% t(gd) %*% MASS::ginv(gd %*% pinv %*% t(gd)) %*% gd %*% pinv
     ng <- lavaan::lavTech(sem_out, "ngroups")
     fg <- lavaan::lavTech(sem_out, "nobs") / lavaan::lavTech(sem_out, "ntotal")
-    tmpfct <- function(v_i, gamma_i, py_i) {
-        # Satorra-2000, Eq. 23
-        tmp <- v_i %*% gamma_i %*% v_i %*% (py_i %*% x %*% t(py_i))
-        c(tr_ug = sum(diag(tmp)),
-          tr_ug2 = sum(diag(tmp %*% tmp)))
+    gamma_fg <- gamma
+    for (i in seq_along(gamma)) {
+        gamma_fg[[i]] <- fg[[i]] * gamma[[i]]
       }
-    ugs <- as.vector(mapply(tmpfct, v, gamma, py) %*% matrix(fg, ng, 1))
-    tr_ug <- ugs[1]
-    tr_ug2 <- ugs[2]
+    v_big <- lavaan::lav_matrix_bdiag(v)
+    gamma_big <- lavaan::lav_matrix_bdiag(gamma_fg)
+    py_big <- do.call(rbind, py)
+    ug <- (v_big %*% gamma_big %*% v_big) %*% (py_big %*% x %*% t(py_big))
+    ug2 <- ug %*% ug
+    tr_ug <- sum(diag(ug))
+    tr_ug2 <- sum(diag(ug2))
 
     # Satorra-2000
     # Asparouhov, T., & Muthén, B. O. (2010). Simple second order chi-square
