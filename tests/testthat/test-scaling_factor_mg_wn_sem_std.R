@@ -25,14 +25,24 @@ fit <- lavaan::cfa(mod, cfa_two_factors_mg, test = "satorra.bentler", group = "g
 
 sc1 <- scaling_factor3(fit, i = 2, standardized = TRUE)
 
-# Pre-computed answer
-sc1_ans <- structure(list(chisq_2 = 24.4342136814431, chisq_1 = 23.2151878626046, 
+# Pre-computed answer:
+
+sc1_ans <- structure(list(chisq_2 = 24.4342136814431, chisq_1 = 23.2151878626046,
     chisq_0 = 23.1807714515506, chisq_diff_c_1 = 0.0344164110539502,
-    chisq_diff_c_2 = 1.25344222989243, chisq_diff_r_1 = 0.318461595541362,
-    chisq_diff_r_2 = 1.22409092825278, chisq_diff_p_1 = 0.318461595541362,
-    chisq_diff_p_2 = 1.22409092825278, c_p = 1.34605381562539,
-    c_pb = 0.292893218813452, c_r = 1.34605381562539, c_rb = 0.292893218813452),
-    class = "data.frame", row.names = c(NA, -1L))
+    chisq_diff_c_2 = 1.25344222989243, chisq_diff_r_1 = 0.0361591451364737,
+    chisq_diff_r_2 = 1.31691242993986, chisq_diff_p_1 = 0.0361591451364737,
+    chisq_diff_p_2 = 1.31691242993986, c_p = 0.951803780870742,
+    c_pb = -7.21644966006352e-16, c_r = 0.951803780870742, c_rb = -6.66133814775094e-16), class = "data.frame", row.names = c(NA,
+-1L))
+
+# Pre-computed answer: Pre 0.6-13
+# sc1_ans <- structure(list(chisq_2 = 24.4342136814431, chisq_1 = 23.2151878626046,
+#     chisq_0 = 23.1807714515506, chisq_diff_c_1 = 0.0344164110539502,
+#     chisq_diff_c_2 = 1.25344222989243, chisq_diff_r_1 = 0.318461595541362,
+#     chisq_diff_r_2 = 1.22409092825278, chisq_diff_p_1 = 0.318461595541362,
+#     chisq_diff_p_2 = 1.22409092825278, c_p = 1.34605381562539,
+#     c_pb = 0.292893218813452, c_r = 1.34605381562539, c_rb = 0.292893218813452),
+#     class = "data.frame", row.names = c(NA, -1L))
 
 test_that("Check scaling factor (MV)", {
     expect_equal(sc1$c_r, sc1_ans$c_r)
@@ -74,7 +84,7 @@ test_that("Check scaling factor (MV)", {
 #     c_pb <- chisq_diff_p_1 - (chisq_1 - chisq_0) / c_p
 #     c_r  <- (chisq_2 - chisq_1) / (chisq_diff_r_2 - chisq_diff_r_1)
 #     c_rb <- chisq_diff_r_1 - (chisq_1 - chisq_0) / c_r
-#     out <- 
+#     out <-
 #       data.frame(
 #         chisq_2 = chisq_2,
 #         chisq_1 = chisq_1,
