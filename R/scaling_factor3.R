@@ -39,7 +39,7 @@ scaling_factor3 <- function(sem_out,
                            ) {
     # This function will NOT check whether the SEM was done with robust model
     # test. This check should be done before calling this function.
-    lavaan_v <- packageVersion("lavaan")
+    lavaan_v <- utils::packageVersion("lavaan")
     if (lavaan_v < "0.6.13") {
         stop(paste("This function is not compatible lavaan version before",
                    "0.6-13.",
