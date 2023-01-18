@@ -49,10 +49,10 @@ test_that("Check scaling factor", {
 # Find chisq diff
 
 # get_scaling_factor <- function(lrt_out) {
-#     data.frame(c_p = 1 / attr(lrt_out_a, "scale")[2],
-#                c_pb = attr(lrt_out_a, "shift")[2],
-#                c_r = 1 / attr(lrt_out_a, "scale")[2],
-#                c_rb = attr(lrt_out_a, "shift")[2])
+#     data.frame(c_p = 1 / attr(lrt_out, "scale")[2],
+#                c_pb = attr(lrt_out, "shift")[2],
+#                c_r = 1 / attr(lrt_out, "scale")[2],
+#                c_rb = attr(lrt_out, "shift")[2])
 #   }
 
 # modc0 <-
