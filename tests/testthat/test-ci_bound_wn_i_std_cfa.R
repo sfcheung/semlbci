@@ -1,5 +1,3 @@
-skip_on_cran()
-
 library(testthat)
 library(semlbci)
 
@@ -9,7 +7,7 @@ library(lavaan)
 
 data(cfa_two_factors)
 dat <- cfa_two_factors
-mod <- 
+mod <-
 "
 f1 =~ x1 + x2 + x3
 f2 =~ x4 + x5 + x6
@@ -47,9 +45,6 @@ test_that("Check against precomputed answers", {
     expect_equal(out1l$bound, 0.6745196, tolerance = 1e-5)
     expect_equal(out2u$bound, 0.8769257, tolerance = 1e-5)
     expect_equal(out3l$bound, 0.4039171, tolerance = 1e-5)
-    # expect_equal(out1u$bound, 0.8669971, tolerance = 1e-5)
-    # expect_equal(out2l$bound, 0.7460543, tolerance = 1e-5)
-    # expect_equal(out3u$bound, 0.615133, tolerance = 1e-5)
   })
 
 skip("Run only if data changed")
@@ -65,7 +60,7 @@ test_p <- function(fit0, fit1, ciperc, tol) {
 
 geteststd <- get_std_genfct(fit = fit, i = 2)
 
-modc0 <- 
+modc0 <-
 "
 f1 =~ x1 + a*x2 + b*x3
 f2 =~ x4 + c*x5 + d*x6
@@ -94,7 +89,7 @@ fitc_out1u <- fitc
 
 geteststd <- get_std_genfct(fit = fit, i = 6)
 
-modc0 <- 
+modc0 <-
 "
 f1 =~ x1 + a*x2 + b*x3
 f2 =~ x4 + c*x5 + d*x6
@@ -125,7 +120,7 @@ fitc_out2u <- fitc
 
 geteststd <- get_std_genfct(fit = fit, i = 15)
 
-modc0 <- 
+modc0 <-
 "
 f1 =~ x1 + a*x2 + b*x3
 f2 =~ x4 + c*x5 + d*x6

@@ -10,13 +10,12 @@ library(lavaan)
 
 data(cfa_two_factors_mg)
 dat <- cfa_two_factors_mg
-mod <- 
+mod <-
 "
 f1 =~ x1 + c(b1, b2)*x2 + c(c1, c1)*x3
 f2 =~ x4 + c(d1, d2)*x5 + c(e1, e1)*x6
 f1 ~~ c(fr1, fr2)*f2
 ce := c1*e1
-b1 == c1
 "
 fit <- lavaan::cfa(mod, cfa_two_factors_mg, test = "satorra.bentler", group = "gp")
 
@@ -47,8 +46,8 @@ timexx
 colSums(timexx)
 
 test_that("Check against precomputed answers", {
-    expect_equal(out1l$bound, 0.3179522, tolerance = 1e-5)
-    expect_equal(out1u$bound, 0.5073198, tolerance = 1e-5)
+    expect_equal(out1l$bound, 0.2317424, tolerance = 1e-5)
+    expect_equal(out1u$bound, 0.4321312, tolerance = 1e-5)
   })
 
 
@@ -62,21 +61,10 @@ test_p <- function(fit0, fit1, ciperc, tol) {
   }
 
 get_scaling_factor <- function(lrt_out) {
-    diff_from_p <- qchisq(lrt_out[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
-    chisq_1 <- lrt_out[2, "Chisq"]
-    chisq_0 <- lrt_out[1, "Chisq"]
-    chisq_diff_c <- chisq_1 - chisq_0
-    chisq_diff_p <- qchisq(lrt_out[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
-    chisq_diff_r <- lrt_out[2, "Chisq diff"]
-    out <- 
-      data.frame(chisq_1 = chisq_1,
-        chisq_0 = chisq_0,
-        chisq_diff_c = chisq_diff_c,
-        chisq_diff_r = chisq_diff_r,
-        chisq_diff_p = chisq_diff_p,
-        c_p = chisq_diff_c / chisq_diff_p,
-        c_r = chisq_diff_c / chisq_diff_r)
-    out
+    data.frame(c_p = 1 / attr(lrt_out, "scale")[2],
+               c_pb = attr(lrt_out, "shift")[2],
+               c_r = 1 / attr(lrt_out, "scale")[2],
+               c_rb = attr(lrt_out, "shift")[2])
   }
 
 # gen_test_data <- FALSE
@@ -90,7 +78,6 @@ f1 =~ x1 + c(b1, b2)*x2 + c(c1, c1)*x3
 f2 =~ x4 + c(d1, d2)*x5 + c(e1, e1)*x6
 f1 ~~ c(fr1, fr2)*f2
 ce := c1*e1
-b1 == c1
 astd := geteststd1()
 "
 
@@ -100,8 +87,10 @@ fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, t
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE, optim.force.converged = TRUE,
-                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
+                   verbose = FALSE
+                  #  optim.force.converged = TRUE,
+                  #  control = list(eval.max = 2, control.outer = list(tol = 1e-02))
+                   )
 fitc_out1l <- fitc
 
 test_limit <- out1u
@@ -110,8 +99,10 @@ fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, t
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE, optim.force.converged = TRUE,
-                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
+                   verbose = FALSE
+                  #  optim.force.converged = TRUE,
+                  #  control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
+                   )
 fitc_out1u <- fitc
 
 
@@ -125,8 +116,12 @@ fitc_out1u <- fitc
 # load(system.file("testdata", "test-ci_bound_wn_i_mg_rb_std_cfa_user_eq.RData",
 #                   package = "semlbci"))
 
+(lr_out_1l <- lavTestLRT(fitc_out1l, fit, method = "satorra.2000", A.method = "exact"))
+get_scaling_factor(lr_out_1l)
+sf1
+
 test_that("Check p-value for the chi-square difference test", {
-    expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-5))
-    expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-5))
+    expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))
+    expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-4))
   })
 

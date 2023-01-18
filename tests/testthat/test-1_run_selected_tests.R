@@ -1,4 +1,4 @@
-skip("Skip due to speed or other issues")
+skip("To be run in an interactive session")
 # To be tested in interactive sessions
 library(testthat)
 options(Ncpus = 13)
