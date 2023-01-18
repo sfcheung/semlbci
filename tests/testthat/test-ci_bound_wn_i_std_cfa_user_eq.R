@@ -1,5 +1,4 @@
 skip_on_cran()
-# To fix: Do not use saved data
 
 library(testthat)
 library(semlbci)
@@ -43,9 +42,9 @@ time2u <- system.time(out2u <- ci_bound_wn_i(2, 13, sem_out = fit, f_constr = fn
 time3l <- system.time(out3l <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 # time3u <- system.time(out3u <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 
-timexx <- rbind(time1l, time2u, time3l)
-timexx
-colSums(timexx)
+# timexx <- rbind(time1l, time2u, time3l)
+# timexx
+# colSums(timexx)
 
 test_that("Check against precomputed answers", {
     expect_equal(out1l$bound, 0.5252068, tolerance = 1e-5)
