@@ -31,7 +31,7 @@ Suggests:
 Depends:
     R (>= 4.0.0)
 Imports:
-    lavaan,
+    lavaan (>= 0.6.13),
     nloptr,
     stats,
     utils,
