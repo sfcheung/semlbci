@@ -1,6 +1,10 @@
+skip_on_cran()
+# skip_if_not(Sys.getenv("SEMLBCI_TEST_COMPREHENSIVE") == "TRUE")
+
+# Updated for lavaan 0.6-13
+
 library(testthat)
 library(semlbci)
-
 
 # Fit the model
 
