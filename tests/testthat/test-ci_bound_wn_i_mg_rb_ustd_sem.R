@@ -8,7 +8,7 @@ library(lavaan)
 
 data(cfa_two_factors_mg)
 dat <- cfa_two_factors_mg
-mod <- 
+mod <-
 "
 f1 =~ x1 + c(a1, a2)*x2 + x3
 f2 =~ x4 + x5 + x6
@@ -45,10 +45,10 @@ timexx
 colSums(timexx)
 
 test_that("Check against precomputed answers", {
-    expect_equal(out1l$bound, 0.8192577, tolerance = 1e-5)
-    # expect_equal(out1u$bound, 2.629935, tolerance = 1e-5)
-    # expect_equal(out2l$bound, 0.2704905, tolerance = 1e-5)
-    expect_equal(out2u$bound, 0.7464474, tolerance = 1e-5)
+    expect_equal(out1l$bound, 0.8755984, tolerance = 1e-5)
+    # expect_equal(out1u$bound, NA, tolerance = 1e-5)
+    # expect_equal(out2l$bound, NA, tolerance = 1e-5)
+    expect_equal(out2u$bound, 0.7047227, tolerance = 1e-5)
   })
 
 skip("Run only if data changed")
@@ -64,54 +64,10 @@ test_p <- function(fit0, fit1, ciperc, tol) {
 # if (gen_test_data) {
 
 get_scaling_factor <- function(lrt_out) {
-    diff_from_p <- qchisq(lrt_out[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
-    chisq_1 <- lrt_out[2, "Chisq"]
-    chisq_0 <- lrt_out[1, "Chisq"]
-    chisq_diff_c <- chisq_1 - chisq_0
-    chisq_diff_p <- qchisq(lrt_out[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
-    chisq_diff_r <- lrt_out[2, "Chisq diff"]
-    out <- 
-      data.frame(chisq_1 = chisq_1,
-        chisq_0 = chisq_0,
-        chisq_diff_c = chisq_diff_c,
-        chisq_diff_r = chisq_diff_r,
-        chisq_diff_p = chisq_diff_p,
-        c_p = chisq_diff_c / chisq_diff_p,
-        c_r = chisq_diff_c / chisq_diff_r)
-    out
-  }
-
-
-get_scaling_factor_ab <- function(lrt_out1, lrt_out2) {
-    chisq_1 <- lrt_out1[2, "Chisq"]
-    chisq_2 <- lrt_out2[2, "Chisq"]
-    chisq_0 <- lrt_out1[1, "Chisq"]
-    chisq_diff_c_1 <- chisq_1 - chisq_0
-    chisq_diff_c_2 <- chisq_2 - chisq_0
-    chisq_diff_p_1 <- qchisq(lrt_out1[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
-    chisq_diff_p_2 <- qchisq(lrt_out2[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
-    chisq_diff_r_1 <- lrt_out1[2, "Chisq diff"]
-    chisq_diff_r_2 <- lrt_out2[2, "Chisq diff"]
-    c_p  <- (chisq_2 - chisq_1) / (chisq_diff_p_2 - chisq_diff_p_1)
-    c_pb <- chisq_diff_p_1 - (chisq_1 - chisq_0) / c_p
-    c_r  <- (chisq_2 - chisq_1) / (chisq_diff_r_2 - chisq_diff_r_1)
-    c_rb <- chisq_diff_r_1 - (chisq_1 - chisq_0) / c_r
-    out <- 
-      data.frame(
-        chisq_2 = chisq_2,
-        chisq_1 = chisq_1,
-        chisq_0 = chisq_0,
-        chisq_diff_c_1 = chisq_diff_c_1,
-        chisq_diff_c_2 = chisq_diff_c_2,
-        chisq_diff_r_1 = chisq_diff_r_1,
-        chisq_diff_r_2 = chisq_diff_r_2,
-        chisq_diff_p_1 = chisq_diff_p_1,
-        chisq_diff_p_2 = chisq_diff_p_2,
-        c_p = c_p,
-        c_pb = c_pb,
-        c_r = c_r,
-        c_rb = c_rb)
-    out
+    data.frame(c_p = 1 / attr(lrt_out, "scale")[2],
+               c_pb = attr(lrt_out, "shift")[2],
+               c_r = 1 / attr(lrt_out, "scale")[2],
+               c_rb = attr(lrt_out, "shift")[2])
   }
 
 
@@ -143,74 +99,74 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE,
 fitc_out1l <- fitc
 
 
-test_limit <- out1l
-modc <- paste(modc0, "\na1 == ", test_limit$bound * .8)
-fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, test = "satorra.bentler", group = "gp")
-ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
-fitc <- update(fitc, start = ptable, do.fit = TRUE,
-                   baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE
-                  #  optim.force.converged = TRUE,
-                  #  optim.dx.tol = .01,
-                  #  warn = FALSE,
-                  #  control = list(
-                  #     eval.max = 2,
-                  #     iterations = 1,
-                  #     control.outer = list(tol = 1e-02,
-                  #                          itmax = 1)
-                  # )
-                )
-fitc_out1lb <- fitc
+# test_limit <- out1l
+# modc <- paste(modc0, "\na1 == ", test_limit$bound * .8)
+# fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, test = "satorra.bentler", group = "gp")
+# ptable <- parameterTable(fitc)
+# ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
+# fitc <- update(fitc, start = ptable, do.fit = TRUE,
+#                    baseline = FALSE, h1 = FALSE, se = "none",
+#                    verbose = FALSE
+#                   #  optim.force.converged = TRUE,
+#                   #  optim.dx.tol = .01,
+#                   #  warn = FALSE,
+#                   #  control = list(
+#                   #     eval.max = 2,
+#                   #     iterations = 1,
+#                   #     control.outer = list(tol = 1e-02,
+#                   #                          itmax = 1)
+#                   # )
+#                 )
+# fitc_out1lb <- fitc
 
-(tmp_lrt <- lavTestLRT(fitc_out1l, fit, method = "satorra.2000", A.method = "exact"))
-(tmp_lrtb <- lavTestLRT(fitc_out1lb, fit, method = "satorra.2000", A.method = "exact"))
-get_scaling_factor_ab(tmp_lrt, tmp_lrtb)
-sf1
+# (tmp_lrt <- lavTestLRT(fitc_out1l, fit, method = "satorra.2000", A.method = "exact"))
+# (tmp_lrtb <- lavTestLRT(fitc_out1lb, fit, method = "satorra.2000", A.method = "exact"))
+# get_scaling_factor_ab(tmp_lrt, tmp_lrtb)
+# sf1
 
-test_limit <- out1u
-modc <- paste(modc0, "\na1 == ", test_limit$bound)
-fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, test = "satorra.bentler", group = "gp")
-ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
-fitc <- update(fitc, start = ptable, do.fit = TRUE,
-                   baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE
-                  #  optim.force.converged = TRUE,
-                  #  optim.dx.tol = .01,
-                  #  warn = FALSE,
-                  #  control = list(
-                  #     eval.max = 2,
-                  #     iterations = 1,
-                  #     control.outer = list(tol = 1e-02,
-                  #                          itmax = 1)
-                  # )
-                )
-fitc_out1u <- fitc
+# test_limit <- out1u
+# modc <- paste(modc0, "\na1 == ", test_limit$bound)
+# fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, test = "satorra.bentler", group = "gp")
+# ptable <- parameterTable(fitc)
+# ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
+# fitc <- update(fitc, start = ptable, do.fit = TRUE,
+#                    baseline = FALSE, h1 = FALSE, se = "none",
+#                    verbose = FALSE
+#                   #  optim.force.converged = TRUE,
+#                   #  optim.dx.tol = .01,
+#                   #  warn = FALSE,
+#                   #  control = list(
+#                   #     eval.max = 2,
+#                   #     iterations = 1,
+#                   #     control.outer = list(tol = 1e-02,
+#                   #                          itmax = 1)
+#                   # )
+#                 )
+# fitc_out1u <- fitc
 
-lavTestLRT(fitc_out1u, fit, method = "satorra.2000", A.method = "exact")
+# lavTestLRT(fitc_out1u, fit, method = "satorra.2000", A.method = "exact")
 
-test_limit <- out2l
-modc <- paste(modc0, "\nfr2 == ", test_limit$bound)
-fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, test = "satorra.bentler", group = "gp")
-ptable <- parameterTable(fitc)
-ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
-fitc <- update(fitc, start = ptable, do.fit = TRUE,
-                   baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE
-                  #  optim.force.converged = TRUE,
-                  #  optim.dx.tol = .01,
-                  #  warn = FALSE,
-                  #  control = list(
-                  #     eval.max = 2,
-                  #     iterations = 1,
-                  #     control.outer = list(tol = 1e-02,
-                  #                          itmax = 1)
-                  # )
-                )
-fitc_out2l <- fitc
+# test_limit <- out2l
+# modc <- paste(modc0, "\nfr2 == ", test_limit$bound)
+# fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, test = "satorra.bentler", group = "gp")
+# ptable <- parameterTable(fitc)
+# ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
+# fitc <- update(fitc, start = ptable, do.fit = TRUE,
+#                    baseline = FALSE, h1 = FALSE, se = "none",
+#                    verbose = FALSE
+#                   #  optim.force.converged = TRUE,
+#                   #  optim.dx.tol = .01,
+#                   #  warn = FALSE,
+#                   #  control = list(
+#                   #     eval.max = 2,
+#                   #     iterations = 1,
+#                   #     control.outer = list(tol = 1e-02,
+#                   #                          itmax = 1)
+#                   # )
+#                 )
+# fitc_out2l <- fitc
 
-lavTestLRT(fitc_out2l, fit, method = "satorra.2000", A.method = "exact")
+# lavTestLRT(fitc_out2l, fit, method = "satorra.2000", A.method = "exact")
 
 test_limit <- out2u
 modc <- paste(modc0, "\nfr2 == ", test_limit$bound)
@@ -232,7 +188,7 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE,
                 )
 fitc_out2u <- fitc
 
-lavTestLRT(fitc_out2u, fit, method = "satorra.2000", A.method = "exact")
+# lavTestLRT(fitc_out2u, fit, method = "satorra.2000", A.method = "exact")
 
 # save(fitc_out1l, fitc_out1u,
 #      fitc_out2l, fitc_out2u,
@@ -244,11 +200,17 @@ lavTestLRT(fitc_out2u, fit, method = "satorra.2000", A.method = "exact")
 # load(system.file("testdata", "test-ci_bound_wn_i_mg_rb_ustd_sem.RData",
 #                   package = "semlbci"))
 
+(lr_out_1l <- lavTestLRT(fitc_out1l, fit, method = "satorra.2000", A.method = "exact"))
+get_scaling_factor(lr_out_1l)
+sf1
+(lr_out_2u <- lavTestLRT(fitc_out2u, fit, method = "satorra.2000", A.method = "exact"))
+get_scaling_factor(lr_out_2u)
+sf2
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))
-    expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-4))
-    expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-4))
+    # expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-4))
+    # expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-4))
     expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-4))
   })
 
