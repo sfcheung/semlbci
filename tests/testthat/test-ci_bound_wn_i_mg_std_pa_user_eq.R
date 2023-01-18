@@ -1,6 +1,4 @@
-skip("Skip due to speed or other issues")
-# To be tested in interactive sessions only due to scoping or speed issues
-# To fix: Do not use saved data
+skip_on_cran()
 
 library(testthat)
 library(semlbci)

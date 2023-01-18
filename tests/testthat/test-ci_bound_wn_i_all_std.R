@@ -1,4 +1,4 @@
-skip("Skip due to speed or other issues")
+skip("To be run in an interactive session")
 # To be tested in interactive sessions only due to scoping or speed issues
 # Not yet work. Passed in interactive sessions but failed in test_file().
 

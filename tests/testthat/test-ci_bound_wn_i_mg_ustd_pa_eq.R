@@ -43,7 +43,7 @@ time3u <- system.time(out3u <- ci_bound_wn_i(17,16, sem_out = fit, f_constr = fn
 
 test_that("Check against precomputed answers", {
     expect_equal(out1l$bound, 0.8130598, tolerance = 1e-5)
-    expect_equal(out2u$bound, 0.7953846, tolerance = 1e-5)
+    expect_equal(out3u$bound, 0.4656131, tolerance = 1e-5)
   })
 
 skip("Run only if data changed")
@@ -100,11 +100,11 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE,
                   #                          itmax = 1)
                   # )
                 )
-fitc_out2u <- fitc
+fitc_out3u <- fitc
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))
-    expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-4))
+    expect_true(test_p(fitc_out3u, fit, ciperc = ciperc, tol = 1e-4))
   })
 
 

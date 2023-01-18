@@ -46,7 +46,7 @@ time4u <- system.time(out4u <- ci_bound_wn_i(15, 13, sem_out = fit, which = "ubo
 
 test_that("Check against precomputed answers", {
     expect_equal(out1l$bound, 0.5211573, tolerance = 1e-5)
-    expect_equal(out2u$bound, 1.391671, tolerance = 1e-5)
+    expect_equal(out4u$bound, 1.614919, tolerance = 1e-5)
   })
 
 skip("Run only if data changed")

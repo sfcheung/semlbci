@@ -29,21 +29,27 @@ opts0 <- list()
 opts0 <- list(#ftol_abs = 1e-7,
               ftol_rel = 1e-4,
               # xtol_abs = 1e-7,
-              xtol_rel = 1e-7,
+              xtol_rel = 1e-7
               # tol_constraints_eq = 1e-10
               )
 time1l <- system.time(out1l <- ci_bound_wn_i(47, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal"))
 # time1u <- system.time(out1u <- ci_bound_wn_i(47, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal"))
-# time2l <- system.time(out2l <- ci_bound_wn_i( 7, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal"))
-time2u <- system.time(out2u <- ci_bound_wn_i( 7, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal"))
+opts0 <- list(#ftol_abs = 1e-7,
+              ftol_rel = 1e-7,
+              # xtol_abs = 1e-7,
+              xtol_rel = 1e-7
+              # tol_constraints_eq = 1e-10
+              )
+time2l <- system.time(out2l <- ci_bound_wn_i( 7, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal", wald_ci_start = FALSE))
+# time2u <- system.time(out2u <- ci_bound_wn_i( 7, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal", wald_ci_start = FALSE))
 
 # timexx <- rbind(time1l, time1u, time2l, time2u)
 # timexx
 # colSums(timexx)
 
 test_that("Check against precomputed answers", {
-    expect_equal(out1l$bound, 0.3778761, tolerance = 1e-5)
-    expect_equal(out2u$bound, 0.6099081, tolerance = 1e-5)
+    expect_equal(out1l$bound, 0.37788, tolerance = 1e-5)
+    expect_equal(out2l$bound, 0.2786241, tolerance = 1e-5)
   })
 
 skip("Run only if data changed")
@@ -93,17 +99,7 @@ fitc_out1l <- fitc
 
 geteststd <- get_std_genfct(fit = fit, i = 7)
 
-# test_limit <- out2l
-# modc <- paste(modc0, "\ntstd == ", test_limit$bound, "\n0 < 1")
-# fitc <- lavaan::sem(modc, dat, do.fit = FALSE, group = "gp")
-# ptable <- parameterTable(fitc)
-# ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
-# fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-#                    verbose = FALSE, optim.force.converged = TRUE,
-#                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
-# fitc_out2l <- fitc
-
-test_limit <- out2u
+test_limit <- out2l
 modc <- paste(modc0, "\ntstd == ", test_limit$bound, "\n0 < 1")
 fitc <- lavaan::sem(modc, dat, do.fit = FALSE, group = "gp")
 ptable <- parameterTable(fitc)
@@ -111,7 +107,17 @@ ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
                    verbose = FALSE, optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
-fitc_out2u <- fitc
+fitc_out2l <- fitc
+
+# test_limit <- out2u
+# modc <- paste(modc0, "\ntstd == ", test_limit$bound, "\n0 < 1")
+# fitc <- lavaan::sem(modc, dat, do.fit = FALSE, group = "gp")
+# ptable <- parameterTable(fitc)
+# ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
+# fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
+#                    verbose = FALSE, optim.force.converged = TRUE,
+#                    control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
+# fitc_out2u <- fitc
 
 # save(fitc_out1l, fitc_out1u,
 #      fitc_out2l, fitc_out2u,
@@ -126,7 +132,7 @@ fitc_out2u <- fitc
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))
     # expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-4))
-    # expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-4))
-    expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-4))
+    expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-4))
+    # expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-4))
   })
 
