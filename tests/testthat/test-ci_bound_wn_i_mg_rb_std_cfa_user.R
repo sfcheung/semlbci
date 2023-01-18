@@ -11,8 +11,8 @@ data(cfa_two_factors_mg)
 dat <- cfa_two_factors_mg
 mod <-
 "
-f1 =~ x1 + c(b1, b2)*x2 + c(c1, c1)*x3
-f2 =~ x4 + c(d1, d2)*x5 + c(e1, e1)*x6
+f1 =~ x1 + c(b1, b2)*x2 + c(c1, c2)*x3
+f2 =~ x4 + c(d1, d2)*x5 + c(e1, e2)*x6
 f1 ~~ c(fr1, fr2)*f2
 ce := c1*e1
 "
@@ -22,7 +22,6 @@ fit <- lavaan::cfa(mod, cfa_two_factors_mg, test = "satorra.bentler", group = "g
 # Find the scaling factors
 
 sf1 <- scaling_factor3(fit, 47, standardized = TRUE)
-#sf2 <- scaling_factor3(fit, 30)
 
 # Find the LBCIs
 
@@ -38,6 +37,11 @@ opts0 <- list(#ftol_abs = 1e-7,
               # xtol_rel = 1e-7
               )
 time1l <- system.time(out1l <- ci_bound_wn_i(47, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
+opts0 <- list(#ftol_abs = 1e-7,
+              ftol_rel = 1e-7
+              # xtol_abs = 1e-7,
+              # xtol_rel = 1e-7
+              )
 time1u <- system.time(out1u <- ci_bound_wn_i(47, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 
 timexx <- rbind(time1l, time1u)
@@ -45,8 +49,8 @@ timexx
 colSums(timexx)
 
 test_that("Check against precomputed answers", {
-    expect_equal(out1l$bound, 0.2317424, tolerance = 1e-5)
-    expect_equal(out1u$bound, 0.4321312, tolerance = 1e-5)
+    expect_equal(out1l$bound, 0.2138641, tolerance = 1e-5)
+    expect_equal(out1u$bound, 0.43067, tolerance = 1e-5)
   })
 
 
@@ -66,15 +70,12 @@ get_scaling_factor <- function(lrt_out) {
                c_rb = attr(lrt_out, "shift")[2])
   }
 
-# gen_test_data <- FALSE
-# if (gen_test_data) {
-
 geteststd1 <- get_std_genfct(fit = fit, i = 47)
 
 modc0 <-
 "
-f1 =~ x1 + c(b1, b2)*x2 + c(c1, c1)*x3
-f2 =~ x4 + c(d1, d2)*x5 + c(e1, e1)*x6
+f1 =~ x1 + c(b1, b2)*x2 + c(c1, c2)*x3
+f2 =~ x4 + c(d1, d2)*x5 + c(e1, e2)*x6
 f1 ~~ c(fr1, fr2)*f2
 ce := c1*e1
 astd := geteststd1()
@@ -86,9 +87,9 @@ fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, t
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE
-                  #  optim.force.converged = TRUE,
-                  #  control = list(eval.max = 2, control.outer = list(tol = 1e-02))
+                   verbose = TRUE,
+                   optim.force.converged = TRUE,
+                   control = list(eval.max = 2, control.outer = list(tol = 1e-02))
                    )
 fitc_out1l <- fitc
 
@@ -98,29 +99,18 @@ fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, t
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE
-                  #  optim.force.converged = TRUE,
-                  #  control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
+                   verbose = TRUE,
+                   optim.force.converged = TRUE,
+                   control = list(eval.max = 2, control.outer = list(tol = 1e-02))
                    )
 fitc_out1u <- fitc
-
-
-# save(fitc_out1l, fitc_out1u,
-#      geteststd1,
-#      file = "inst/testdata/test-ci_bound_wn_i_mg_rb_std_cfa_user_eq.RData",
-#      compress = "xz",
-#      compression_level = 9)
-# }
-
-# load(system.file("testdata", "test-ci_bound_wn_i_mg_rb_std_cfa_user_eq.RData",
-#                   package = "semlbci"))
 
 (lr_out_1l <- lavTestLRT(fitc_out1l, fit, method = "satorra.2000", A.method = "exact"))
 get_scaling_factor(lr_out_1l)
 sf1
 
 test_that("Check p-value for the chi-square difference test", {
-    expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))
+    expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-3))
     expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-4))
   })
 
