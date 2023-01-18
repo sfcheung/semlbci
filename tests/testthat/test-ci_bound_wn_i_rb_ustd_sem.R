@@ -1,4 +1,5 @@
 skip_on_cran()
+
 library(testthat)
 library(semlbci)
 

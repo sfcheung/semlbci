@@ -1,5 +1,5 @@
 skip_on_cran()
-skip_if_not(Sys.getenv("SEMLBCI_TEST_COMPREHENSIVE") == "TRUE")
+
 library(testthat)
 library(semlbci)
 
