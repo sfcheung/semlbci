@@ -17,8 +17,6 @@ ad := a1 * d1
 bc := b2 * c2
 "
 fit <- lavaan::cfa(mod, cfa_two_factors_mg, group = "gp")
-ptable <- parameterTable(fit)
-ptable
 
 # Find the LBCIs
 

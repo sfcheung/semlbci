@@ -6,6 +6,7 @@ library(semlbci)
 # Fit the model
 
 library(lavaan)
+
 data(cfa_two_factors_mg)
 dat <- cfa_two_factors_mg
 mod <-

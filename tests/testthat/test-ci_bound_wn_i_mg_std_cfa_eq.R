@@ -16,10 +16,6 @@ f2 =~ x4 + c(c1, c1)*x5 + c(d1, d1)*x6
 b1 == b2
 "
 fit <- lavaan::cfa(mod, cfa_two_factors_mg, group = "gp")
-ptable <- parameterTable(fit)
-ptable
-stable <- standardizedSolution(fit)
-stable
 
 # Find the LBCIs
 

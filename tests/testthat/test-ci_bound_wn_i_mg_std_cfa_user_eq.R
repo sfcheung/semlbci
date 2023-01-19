@@ -17,10 +17,6 @@ ad := a1 * c1
 b1 == b2
 "
 fit <- lavaan::cfa(mod, cfa_two_factors_mg, group = "gp")
-ptable <- parameterTable(fit)
-ptable
-stable <- standardizedSolution(fit)
-stable
 
 # Find the LBCIs
 

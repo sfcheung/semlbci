@@ -1,4 +1,4 @@
-lskip_on_cran()
+skip_on_cran()
 
 library(testthat)
 library(semlbci)
@@ -17,8 +17,6 @@ ad := a * d
 bc := b * c
 "
 fit <- lavaan::cfa(mod, cfa_two_factors)
-ptable <- parameterTable(fit)
-ptable
 
 # Find the LBCIs
 

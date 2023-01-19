@@ -7,6 +7,7 @@ library(semlbci)
 # context("Check semlbci: LBCI for derived parameters")
 
 library(lavaan)
+
 data(simple_med)
 dat <- simple_med
 mod <-
