@@ -39,30 +39,14 @@ opts0 <- list(#ftol_abs = 1e-7,
 time1l <- system.time(out1l <- ci_bound_wn_i(47, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
 time1u <- system.time(out1u <- ci_bound_wn_i(47, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
 
-timexx <- rbind(time1l)
-timexx
-colSums(timexx)
-
-
 test_that("Check against precomputed answers", {
     expect_equal(out1l$bound, 0.4942793, tolerance = 1e-5)
     expect_equal(out1u$bound, 1.408892, tolerance = 1e-5)
   })
 
 skip("Run only if data changed")
+
 # Check the results
-
-test_p <- function(fit0, fit1, ciperc, tol) {
-    out <- lavTestLRT(fit0, fit1, method = "satorra.2000", A.method = "exact")
-    abs(out[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
-  }
-
-get_scaling_factor <- function(lrt_out) {
-    data.frame(c_p = 1 / attr(lrt_out, "scale")[2],
-               c_pb = attr(lrt_out, "shift")[2],
-               c_r = 1 / attr(lrt_out, "scale")[2],
-               c_rb = attr(lrt_out, "shift")[2])
-  }
 
 modc0 <-
 "
@@ -79,7 +63,7 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE
+                   verbose = TRUE
                   #  optim.force.converged = TRUE,
                   #  optim.dx.tol = .01,
                   #  warn = FALSE,
@@ -99,7 +83,7 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE
+                   verbose = TRUE
                   #  optim.force.converged = TRUE,
                   #  optim.dx.tol = .01,
                   #  warn = FALSE,

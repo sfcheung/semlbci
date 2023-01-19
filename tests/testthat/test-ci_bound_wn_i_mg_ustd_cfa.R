@@ -29,12 +29,7 @@ opts0 <- list(ftol_abs = 1e-7,
               tol_constraints_eq = 1e-10
               )
 time1l <- system.time(out1l <- ci_bound_wn_i( 2, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
-# time1u <- system.time(out1u <- ci_bound_wn_i( 2, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
-# time2l <- system.time(out2l <- ci_bound_wn_i(30, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
 time2u <- system.time(out2u <- ci_bound_wn_i(30, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
-
-# timexx <- rbind(time1l, time1u, time2l, time2u)
-# timexx
 
 test_that("Check against precomputed answers", {
     expect_equal(out1l$bound, 0.8719076, tolerance = 1e-5)
@@ -43,13 +38,7 @@ test_that("Check against precomputed answers", {
 
 skip("Run only if data changed")
 
-
 # Check the results
-
-test_p <- function(fit0, fit1, ciperc, tol) {
-    out <- lavTestLRT(fit0, fit1)
-    abs(out[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
-  }
 
 modc0 <-
 "
@@ -65,7 +54,7 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE
+                   verbose = TRUE
                   #  optim.force.converged = TRUE,
                   #  optim.dx.tol = .01,
                   #  warn = FALSE,
@@ -85,7 +74,7 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE
+                   verbose = TRUE
                   #  optim.force.converged = TRUE,
                   #  optim.dx.tol = .01,
                   #  warn = FALSE,

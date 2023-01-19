@@ -41,10 +41,6 @@ opts0 <- list(#ftol_abs = 1e-7,
 time1l <- system.time(out1l <- ci_bound_wn_i(47, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 time1u <- system.time(out1u <- ci_bound_wn_i(47, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 
-timexx <- rbind(time1l, time1u)
-timexx
-colSums(timexx)
-
 test_that("Check against precomputed answers", {
     expect_equal(out1l$bound, 0.3551683, tolerance = 1e-4)
     expect_equal(out1u$bound, 0.6256496, tolerance = 1e-4)
@@ -53,18 +49,6 @@ test_that("Check against precomputed answers", {
 skip("Run only if data changed")
 
 # Check the results
-
-test_p <- function(fit0, fit1, ciperc, tol) {
-    out <- lavTestLRT(fit0, fit1, method = "satorra.2000", A.method = "exact")
-    abs(out[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
-  }
-
-get_scaling_factor <- function(lrt_out) {
-    data.frame(c_p = 1 / attr(lrt_out, "scale")[2],
-               c_pb = attr(lrt_out, "shift")[2],
-               c_r = 1 / attr(lrt_out, "scale")[2],
-               c_rb = attr(lrt_out, "shift")[2])
-  }
 
 geteststd1 <- get_std_genfct(fit = fit, i = 47)
 
@@ -83,8 +67,10 @@ fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, t
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE, optim.force.converged = TRUE,
-                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
+                   verbose = TRUE,
+                   optim.force.converged = TRUE,
+                   control = list(eval.max = 2, control.outer = list(tol = 1e-02))
+                   )
 fitc_out1l <- fitc
 
 test_limit <- out1u
@@ -93,10 +79,11 @@ fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, t
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE, optim.force.converged = TRUE,
-                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
+                   verbose = TRUE,
+                   optim.force.converged = TRUE,
+                   control = list(eval.max = 2, control.outer = list(tol = 1e-02))
+                   )
 fitc_out1u <- fitc
-
 
 (lr_out_1l <- lavTestLRT(fitc_out1l, fit, method = "satorra.2000", A.method = "exact"))
 get_scaling_factor(lr_out_1l)
@@ -106,4 +93,3 @@ test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))
     expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-4))
   })
-

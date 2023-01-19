@@ -19,22 +19,11 @@ ab := a * b
 0 == (c - d)^2
 "
 fit <- lavaan::sem(mod, cfa_two_factors, test = "satorra.bentler")
-ptable <- parameterTable(fit)
-ptable
 
 # Find the scaling factors
-update_args <- list(
-                    optim.dx.tol = .01,
-                    warn = TRUE,
-                    control = list(eval.max = 10,
-                                  iterations = 4,
-                                  control.outer = list(tol = 1e-02,
-                                  itmax = 10)
-                                  )
-                              )
 
-sf1 <- scaling_factor3(fit, i = 16, standardized = TRUE, update_args = update_args)
-sf2 <- scaling_factor3(fit, i =  6, standardized = TRUE, update_args = update_args)
+sf1 <- scaling_factor3(fit, i = 16, standardized = TRUE)
+sf2 <- scaling_factor3(fit, i =  6, standardized = TRUE)
 
 # Find the LBCIs
 
