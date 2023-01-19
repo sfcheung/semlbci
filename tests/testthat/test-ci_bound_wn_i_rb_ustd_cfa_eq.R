@@ -38,20 +38,7 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_rel = 1e-7
               )
 time1l <- system.time(out1l <- ci_bound_wn_i( 3, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
-# time1u <- system.time(out1u <- ci_bound_wn_i( 3, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
-# time2l <- system.time(out2l <- ci_bound_wn_i( 5, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf1$c_rb))
-# time2u <- system.time(out2u <- ci_bound_wn_i( 5, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf1$c_rb, wald_ci_start = FALSE))
-# time3l <- system.time(out3l <- ci_bound_wn_i( 6, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf3$c_r, sf2 = sf1$c_rb))
 time3u <- system.time(out3u <- ci_bound_wn_i( 6, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf3$c_r, sf2 = sf1$c_rb))
-# time4l <- system.time(out4l <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf4$c_r, sf2 = sf1$c_rb))
-# time4u <- system.time(out4u <- ci_bound_wn_i(15, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf4$c_r, sf2 = sf1$c_rb))
-
-# timexx <- rbind(time1l, time1u,
-#                 time2l, time2u,
-#                 time3l, time3u,
-#                 time4l, time4u)
-# timexx
-# colSums(timexx)
 
 test_that("Check against precomputed answers", {
     expect_equal(out1l$bound, 0.5235391, tolerance = 1e-5)
@@ -60,17 +47,7 @@ test_that("Check against precomputed answers", {
 
 skip("Run only if data changed")
 
-
-
 # Check the results
-
-test_p <- function(fit0, fit1, ciperc, tol) {
-    out <- lavTestLRT(fit0, fit1, method = "satorra.2000", A.method = "exact")
-    abs(out[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
-  }
-
-# gen_test_data <- FALSE
-# if (gen_test_data) {
 
 modc0 <-
 "
@@ -87,7 +64,7 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- suppressWarnings(update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE
+                   verbose = TRUE
                   #  optim.force.converged = TRUE,
                   #  optim.dx.tol = .01,
                   #  warn = FALSE,
@@ -99,95 +76,6 @@ fitc <- suppressWarnings(update(fitc, start = ptable, do.fit = TRUE,
                   # )
                 ))
 fitc_out1l <- fitc
-# lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact")
-
-# test_limit <- out1u
-# modc <- paste(modc0, "\nc == ", test_limit$bound)
-# fitc <- lavaan::cfa(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
-# ptable <- parameterTable(fitc)
-# ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
-# fitc <- suppressWarnings(update(fitc, start = ptable, do.fit = TRUE,
-#                    baseline = FALSE, h1 = FALSE, se = "none",
-#                    verbose = FALSE
-#                   #  optim.force.converged = TRUE,
-#                   #  optim.dx.tol = .01,
-#                   #  warn = FALSE,
-#                   #  control = list(
-#                   #     eval.max = 2,
-#                   #     iterations = 1,
-#                   #     control.outer = list(tol = 1e-02,
-#                   #                          itmax = 1)
-#                   # )
-#                 ))
-# fitc_out1u <- fitc
-# lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact")
-
-
-# test_limit <- out2l
-# modc <- paste(modc0, "\nd == ", test_limit$bound)
-# fitc <- lavaan::cfa(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
-# ptable <- parameterTable(fitc)
-# ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
-# fitc <- suppressWarnings(update(fitc, start = ptable, do.fit = TRUE,
-#                    baseline = FALSE, h1 = FALSE, se = "none",
-#                    verbose = FALSE
-#                   #  optim.force.converged = TRUE,
-#                   #  optim.dx.tol = .01,
-#                   #  warn = FALSE,
-#                   #  control = list(
-#                   #     eval.max = 2,
-#                   #     iterations = 1,
-#                   #     control.outer = list(tol = 1e-02,
-#                   #                          itmax = 1)
-#                   # )
-#                 ))
-# fitc_out2l <- fitc
-# lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact")
-
-# test_limit <- out2u
-# modc <- paste(modc0, "\nd == ", test_limit$bound)
-# fitc <- lavaan::cfa(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
-# ptable <- parameterTable(fitc)
-# ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
-# fitc <- suppressWarnings(update(fitc, start = ptable, do.fit = TRUE,
-#                    baseline = FALSE, h1 = FALSE, se = "none",
-#                    verbose = FALSE
-#                   #  optim.force.converged = TRUE,
-#                   #  optim.dx.tol = .01,
-#                   #  warn = FALSE,
-#                   #  control = list(
-#                   #     eval.max = 2,
-#                   #     iterations = 1,
-#                   #     control.outer = list(tol = 1e-02,
-#                   #                          itmax = 1)
-#                   # )
-#                 ))
-# fitc_out2u <- fitc
-# lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact")
-
-
-
-# test_limit <- out3l
-# modc <- paste(modc0, "\ne == ", test_limit$bound)
-# fitc <- lavaan::cfa(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
-# ptable <- parameterTable(fitc)
-# ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
-# fitc <- suppressWarnings(update(fitc, start = ptable, do.fit = TRUE,
-#                    baseline = FALSE, h1 = FALSE, se = "none",
-#                    verbose = FALSE
-#                   #  optim.force.converged = TRUE,
-#                   #  optim.dx.tol = .01,
-#                   #  warn = FALSE,
-#                   #  control = list(
-#                   #     eval.max = 2,
-#                   #     iterations = 1,
-#                   #     control.outer = list(tol = 1e-02,
-#                   #                          itmax = 1)
-#                   # )
-#                 ))
-# fitc_out3l <- fitc
-# lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact")
-
 
 test_limit <- out3u
 modc <- paste(modc0, "\ne == ", test_limit$bound)
@@ -196,7 +84,7 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- suppressWarnings(update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE
+                   verbose = TRUE
                   #  optim.force.converged = TRUE,
                   #  optim.dx.tol = .01,
                   #  warn = FALSE,
@@ -208,73 +96,9 @@ fitc <- suppressWarnings(update(fitc, start = ptable, do.fit = TRUE,
                   # )
                 ))
 fitc_out3u <- fitc
-# lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact")
-
-
-# test_limit <- out4l
-# modc <- paste(modc0, "\ng == ", test_limit$bound)
-# fitc <- lavaan::cfa(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
-# ptable <- parameterTable(fitc)
-# ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
-# fitc <- suppressWarnings(update(fitc, start = ptable, do.fit = TRUE,
-#                    baseline = FALSE, h1 = FALSE, se = "none",
-#                    verbose = FALSE
-#                   #  optim.force.converged = TRUE,
-#                   #  optim.dx.tol = .01,
-#                   #  warn = FALSE,
-#                   #  control = list(
-#                   #     eval.max = 2,
-#                   #     iterations = 1,
-#                   #     control.outer = list(tol = 1e-02,
-#                   #                          itmax = 1)
-#                   # )
-#                 ))
-# fitc_out4l <- fitc
-# lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact")
-
-# test_limit <- out4u
-# modc <- paste(modc0, "\ng == ", test_limit$bound)
-# fitc <- lavaan::cfa(modc, cfa_two_factors, do.fit = FALSE, test = "satorra.bentler")
-# ptable <- parameterTable(fitc)
-# ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
-# fitc <- suppressWarnings(update(fitc, start = ptable, do.fit = TRUE,
-#                    baseline = FALSE, h1 = FALSE, se = "none",
-#                    verbose = FALSE
-#                   #  optim.force.converged = TRUE,
-#                   #  optim.dx.tol = .01,
-#                   #  warn = FALSE,
-#                   #  control = list(
-#                   #     eval.max = 2,
-#                   #     iterations = 1,
-#                   #     control.outer = list(tol = 1e-02,
-#                   #                          itmax = 1)
-#                   # )
-#                 ))
-# fitc_out4u <- fitc
-# lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact")
-
-# save(fitc_out1l, fitc_out1u,
-#      fitc_out2l, fitc_out2u,
-#      fitc_out3l, fitc_out3u,
-#      fitc_out4l, fitc_out4u,
-#      file = "inst/testdata/test-ci_bound_wn_i_rb_ustd_cfa_eq.RData",
-#      compress = "xz",
-#      compression_level = 9)
-# }
-
-# load(system.file("testdata", "test-ci_bound_wn_i_rb_ustd_cfa_eq.RData",
-#                   package = "semlbci"))
-
-
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-3))
-    # expect_true(test_p(fitc_out1u, fit, ciperc = ciperc, tol = 1e-3))
-    # expect_true(test_p(fitc_out2l, fit, ciperc = ciperc, tol = 1e-3))
-    # expect_true(test_p(fitc_out2u, fit, ciperc = ciperc, tol = 1e-3))
-    # expect_true(test_p(fitc_out3l, fit, ciperc = ciperc, tol = 1e-3))
     expect_true(test_p(fitc_out3u, fit, ciperc = ciperc, tol = 1e-3))
-    # expect_true(test_p(fitc_out4l, fit, ciperc = ciperc, tol = 1e-3))
-    # expect_true(test_p(fitc_out4u, fit, ciperc = ciperc, tol = 1e-3))
   })
 

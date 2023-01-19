@@ -30,19 +30,7 @@ opts0 <- list(ftol_abs = 1e-7,
               xtol_rel = 1e-7
               )
 time1l <- system.time(out1l <- ci_bound_wn_i(3, 13, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
-# time1u <- system.time(out1u <- ci_bound_wn_i(3, 13, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
-# time2l <- system.time(out2l <- ci_bound_wn_i(5, 13, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
-# time2u <- system.time(out2u <- ci_bound_wn_i(5, 13, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
-# time3l <- system.time(out3l <- ci_bound_wn_i(6, 13, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
-# time3u <- system.time(out3u <- ci_bound_wn_i(6, 13, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
-# time4l <- system.time(out4l <- ci_bound_wn_i(15, 13, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
 time4u <- system.time(out4u <- ci_bound_wn_i(15, 13, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc))
-
-# timexx <- rbind(time1l, time1u,
-#                 time2l, time2u,
-#                 time3l, time3u,
-#                 time4l, time4u)
-# timexx
 
 test_that("Check against precomputed answers", {
     expect_equal(out1l$bound, 0.5211573, tolerance = 1e-5)
@@ -51,23 +39,7 @@ test_that("Check against precomputed answers", {
 
 skip("Run only if data changed")
 
-
-# system.time(out03l <- ci_bound_wn_i(3, 13, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0))
-# system.time(out03u <- ci_bound_wn_i(3, 13, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0))
-# system.time(out05l <- ci_bound_wn_i(5, 13, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0))
-# system.time(out05u <- ci_bound_wn_i(5, 13, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0))
-# system.time(out06l <- ci_bound_wn_i(6, 13, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0))
-# system.time(out06u <- ci_bound_wn_i(6, 13, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0))
-# system.time(out15l <- ci_bound_wn_i(15, 13, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0))
-# system.time(out15u <- ci_bound_wn_i(15, 13, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0))
-
 # Check the results
-
-test_p <- function(fit0, fit1, ciperc, tol) {
-    out <- lavTestLRT(fit0, fit1)
-    abs(out[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
-  }
-
 
 modc0 <-
 "
@@ -84,7 +56,7 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE,
+                   verbose = TRUE,
                    check.start = FALSE
                   #  optim.force.converged = TRUE,
                   #  optim.dx.tol = .01,
@@ -105,7 +77,7 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE,
+                   verbose = TRUE,
                    check.start = FALSE
                   #  optim.force.converged = TRUE,
                   #  optim.dx.tol = .01,
@@ -123,34 +95,3 @@ test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))
     expect_true(test_p(fitc_out4u, fit, ciperc = ciperc, tol = 1e-4))
   })
-
-
-# test_out1l <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "c == ", modc0 = modc0, ci_out = out1l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
-# test_out1u <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "c == ", modc0 = modc0, ci_out = out1u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
-# test_out2l <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "d == ", modc0 = modc0, ci_out = out2l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
-# test_out2u <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "d == ", modc0 = modc0, ci_out = out2u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
-# test_out3l <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "e == ", modc0 = modc0, ci_out = out3l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
-# test_out3u <- test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "e == ", modc0 = modc0, ci_out = out3u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE)
-
-# modc0 <-
-# "
-# f1 =~ x1 + b*x2 + c*x3
-# f2 =~ x4 + d*x5 + e*x6
-# f1 ~~ fr*f2
-# b == d
-# "
-
-# test_out4l <- suppressWarnings(test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "fr == ", modc0 = modc0, ci_out = out4l, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE))
-# test_out4u <- suppressWarnings(test_constr(fit = fit, dat = cfa_two_factors, ciperc = ciperc, parc = "fr == ", modc0 = modc0, ci_out = out4u, semfct = lavaan::cfa, tol = 1e-4, fixed.x = FALSE))
-
-# test_that("Check p-value for the chi-square difference test", {
-#     expect_true(test_out1l)
-#     expect_true(test_out1u)
-#     expect_true(test_out2l)
-#     expect_true(test_out2u)
-#     expect_true(test_out3l)
-#     expect_true(test_out3u)
-#     expect_true(test_out4l)
-#     expect_true(test_out4u)
-#   })
-
