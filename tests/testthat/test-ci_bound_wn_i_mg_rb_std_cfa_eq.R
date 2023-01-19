@@ -69,7 +69,7 @@ fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, t
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE,
+                   verbose = TRUE,
                    optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02))
                    )
@@ -81,7 +81,7 @@ fitc <- lavaan::sem(modc, cfa_two_factors_mg, fixed.x = FALSE, do.fit = FALSE, t
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = FALSE,
+                   verbose = TRUE,
                    optim.force.converged = TRUE,
                    control = list(eval.max = 2, control.outer = list(tol = 1e-02))
                    )
