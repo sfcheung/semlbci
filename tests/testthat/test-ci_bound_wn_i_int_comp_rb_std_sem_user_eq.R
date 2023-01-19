@@ -1,4 +1,4 @@
-skip("Run only if there is a major change in std_method")
+skip("Skip due to speed or other issues")
 # To be tested in interactive sessions only due to scoping or speed issues
 
 library(testthat)
@@ -10,7 +10,7 @@ library(lavaan)
 
 data(cfa_two_factors)
 dat <- cfa_two_factors
-mod <-
+mod <- 
 "
 f1 =~ x1 + a*x2 + c*x3
 f2 =~ x4 + b*x5 + d*x6
@@ -19,11 +19,22 @@ ab := a * b
 0 == (c - d)^2
 "
 fit <- lavaan::sem(mod, cfa_two_factors, test = "satorra.bentler")
+ptable <- parameterTable(fit)
+ptable
 
 # Find the scaling factors
+update_args <- list(
+                    optim.dx.tol = .01,
+                    warn = TRUE,
+                    control = list(eval.max = 10,
+                                  iterations = 4,
+                                  control.outer = list(tol = 1e-02,
+                                  itmax = 10)
+                                  )
+                              )
 
-sf1 <- scaling_factor3(fit, i = 16, standardized = TRUE)
-sf2 <- scaling_factor3(fit, i =  6, standardized = TRUE)
+sf1 <- scaling_factor3(fit, i = 16, standardized = TRUE, update_args = update_args)
+sf2 <- scaling_factor3(fit, i =  6, standardized = TRUE, update_args = update_args)
 
 # Find the LBCIs
 

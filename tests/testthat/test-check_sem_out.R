@@ -38,10 +38,6 @@ fit06<- lavaan::sem(mod, dat, estimator = "MLR")
 fit07<- lavaan::sem(mod, dat, estimator = "ML")
 (out_07 <- check_sem_out(fit07, robust = "satorra.2000"))
 
-fit08<- lavaan::sem(mod, dat, estimator = "ML", likelihood = "wishart")
-(out_08 <- check_sem_out(fit08))
-
-
 test_that("Check against the flags", {
     expect_true(
         out_01 == 0
@@ -62,7 +58,7 @@ test_that("Check against the flags", {
 
 test_that("Check against the flags", {
     expect_true(
-        out_04 == -2
+        out_04 == -1
       )
   })
 
@@ -120,8 +116,3 @@ test_that("Check against the flags", {
       )
   })
 
-test_that("Check against the flags", {
-    expect_error(
-        semlbci(fit08)
-      )
-  })

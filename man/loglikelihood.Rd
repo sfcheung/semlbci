@@ -194,17 +194,17 @@ computation is appropriate for the model and parameter.
 }
 \section{Functions}{
 \itemize{
-\item \code{loglike_range()}: Description of this function
+\item \code{loglike_range}: Description of this function
 
-\item \code{loglike_point()}: Description of this function
+\item \code{loglike_point}: Description of this function
 
-\item \code{loglike_quad_range()}: Description of this function
+\item \code{loglike_quad_range}: Description of this function
 
-\item \code{loglike_quad_point()}: Description of this function
+\item \code{loglike_quad_point}: Description of this function
 
-\item \code{loglike_compare()}: Description of this function
-
+\item \code{loglike_compare}: Description of this function
 }}
+
 \examples{
 
 ## loglike_range

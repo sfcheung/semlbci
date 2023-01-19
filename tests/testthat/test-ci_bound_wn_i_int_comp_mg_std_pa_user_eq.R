@@ -1,4 +1,4 @@
-skip("Run only if there is a major change in std_method")
+skip("Skip due to speed or other issues")
 # To be tested in interactive sessions only due to scoping or speed issues
 
 library(testthat)
@@ -10,7 +10,7 @@ library(lavaan)
 
 data(simple_med_mg)
 dat <- simple_med_mg
-mod <-
+mod <- 
 "
 m ~ c(a1, a2)*x
 y ~ c(b1, b2)*m

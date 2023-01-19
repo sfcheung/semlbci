@@ -50,13 +50,13 @@ supported:
 For methods with robust test statistics (e.g., \code{MLR}),
 only robust LBCIs (\code{robust = "satorra.2000"} in calling \code{\link[=semlbci]{semlbci()}})
 can be requested.
+\item Generalized least squares (\code{GLS}).
+\item Weighted least squares (a.k.a. asymptotically distribution
+free) (\code{WLS}) and its variants (e.g., \code{WLSMV}).
 }
 
 Estimation methods not yet supported:
 \itemize{
-\item Generalized least squares (\code{GLS}).
-\item Weighted least squares (a.k.a. asymptotically distribution
-free) (\code{WLS}) and its variants (e.g., \code{WLSMV}).
 \item Unweighted least squares (\code{ULS}).
 \item Diagonally weighted least squares (\code{DWLS}).
 \item Other methods not listed.

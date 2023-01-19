@@ -7,7 +7,6 @@ library(semlbci)
 # context("Check semlbci: With equality constraints")
 
 library(lavaan)
-
 data(simple_med)
 dat <- simple_med
 mod <-
@@ -50,6 +49,12 @@ out2u <- list(bound = lbci_fit$lbci_ub[2],
 
 # Check the results
 
+# Not yet have a way to find how to make test_constr work in standardized solution
+
+test_p <- function(fit0, fit1, ciperc, tol) {
+    abs(anova(fit0, fit1)[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
+  }
+
 geteststd <- get_std_genfct(fit = fit, i = 1)
 
 modc0 <-
@@ -65,10 +70,8 @@ fitc <- lavaan::sem(modc, simple_med, do.fit = FALSE, fixed.x = FALSE)
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = TRUE,
-                   optim.force.converged = TRUE,
-                   control = list(eval.max = 2, control.outer = list(tol = 1e-02))
-                   )
+                   verbose = FALSE, optim.force.converged = TRUE,
+                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out1l <- fitc
 
 test_limit <- out1u
@@ -77,10 +80,8 @@ fitc <- lavaan::sem(modc, simple_med, do.fit = FALSE, fixed.x = FALSE)
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = TRUE,
-                   optim.force.converged = TRUE,
-                   control = list(eval.max = 2, control.outer = list(tol = 1e-02))
-                   )
+                   verbose = FALSE, optim.force.converged = TRUE,
+                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out1u <- fitc
 
 geteststd <- get_std_genfct(fit = fit, i = 2)
@@ -98,10 +99,8 @@ fitc <- lavaan::sem(modc, simple_med, do.fit = FALSE, fixed.x = FALSE)
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = TRUE,
-                   optim.force.converged = TRUE,
-                   control = list(eval.max = 2, control.outer = list(tol = 1e-02))
-                   )
+                   verbose = FALSE, optim.force.converged = TRUE,
+                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out2l <- fitc
 
 test_limit <- out2u
@@ -110,10 +109,8 @@ fitc <- lavaan::sem(modc, simple_med, do.fit = FALSE, fixed.x = FALSE)
 ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <-  test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE, baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = TRUE,
-                   optim.force.converged = TRUE,
-                   control = list(eval.max = 2, control.outer = list(tol = 1e-02))
-                   )
+                   verbose = FALSE, optim.force.converged = TRUE,
+                   control = list(eval.max = 2, control.outer = list(tol = 1e-02)))
 fitc_out2u <- fitc
 
 test_that("Check p-value for the chi-square difference test", {
