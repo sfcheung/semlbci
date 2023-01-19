@@ -9,6 +9,7 @@ reference:
 - title: Helper Functions
 - contents:
   - check_sem_out
+  - get_cibound
   - syntax_to_i
   - loglike_range
   - loglike_point
