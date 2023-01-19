@@ -69,9 +69,18 @@ print.cibound <- function(x, digits = 5, ...) {
     cat(paste0("\nRatio to Wald Bound:\t", ifelse(is.na(x$bound), "Not valid",
                   round(out_diag$ci_limit_ratio, digits))))
     cat(paste0("\n\n-- Check --"))
+    # Get p_tol in call
+    p_tol_call <- call_org$p_tol
+    if (is.null(p_tol_call)) {
+        ci_method <- as.character(call_org[[1]])
+        p_tol_call <- formals(ci_method)$p_tol
+      }
     ciperc_diff <- abs(out_diag$ciperc - out_diag$ciperc_final)
     cat(paste0("\nLevel achieved?\t\t",
-            ifelse(ciperc_diff < 1e-5, "Yes", "No"), " (", ciperc_diff, ")"))
+            ifelse(ciperc_diff <= p_tol_call, "Yes", "No"),
+                   " (Difference: ",
+                   formatC(ciperc_diff, digits = digits), ";",
+                   " Tolerance: ", p_tol_call, ")"))
     cat(paste0("\nSolution admissible?\t",
             ifelse(out_diag$fit_post_check, "Yes", "No")))
     if (is.na(x$bound)) {
@@ -111,6 +120,10 @@ print.cibound <- function(x, digits = 5, ...) {
                 round(out_diag$bound_unchecked, digits)))
     cat(paste0("\nStatus Code:\t\t", out_diag$status))
     cat("\nCall: ")
-    print(call_org)
+    call_print <- call_org
+    if (!is.name(call_print$f_constr)) {
+        call_print$f_constr <- "<not printed>"
+      }
+    print(call_print)
     cat("\n")
   }
