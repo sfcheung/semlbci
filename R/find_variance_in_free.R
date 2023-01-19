@@ -59,7 +59,6 @@ find_variance_in_free_lb <- function(sem_out, prop = .05, se_k = 3) {
     id_free <- i_id[find_free(sem_out)]
     i_var <- (ptable$lhs == ptable$rhs) & (ptable$op == "~~")
     id_var <- i_id[i_var]
-    id_var <- intersect(id_var, id_free)
     out_est <- ptable$est[id_var]
     out_se <- ptable$se[id_var]
     out_min <- out_est * prop

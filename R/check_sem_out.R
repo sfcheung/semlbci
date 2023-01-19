@@ -16,12 +16,12 @@
 #'      only robust LBCIs (`robust = "satorra.2000"` in calling [semlbci()])
 #'      can be requested.
 #'
-#' Estimation methods not yet supported:
-#'
 #'    - Generalized least squares (`GLS`).
 #'
 #'    - Weighted least squares (a.k.a. asymptotically distribution
 #'         free) (`WLS`) and its variants (e.g., `WLSMV`).
+#'
+#' Estimation methods not yet supported:
 #'
 #'    - Unweighted least squares (`ULS`).
 #'
@@ -117,7 +117,6 @@ check_sem_out <- function(sem_out,
     sem_ngroups <- lavaan::lavInspect(sem_out, "ngroups")
     sem_nlevels <- lavaan::lavInspect(sem_out, "nlevels")
     sem_max_nclusters <- max(unlist(lavaan::lavInspect(sem_out, "nclusters")))
-    sem_likelihood <- sem_options$likelihood
 
     # Only check against methods explicitly supported
     # Note that it checks the `estimator` in options.
@@ -125,10 +124,10 @@ check_sem_out <- function(sem_out,
     # still "ML".
     # Therefore, variants of ML, e.g., MLR and mLR, are supported.
     # Documented estimator: DLS, DWLS, GLS, ML, PML, ULS, WLS
-    estimators_supported <- c("ML")
-    estimators_unsupported <- c("GLS",
-                                "WLS",
-                                "DLS",
+    estimators_supported <- c("ML",
+                              "GLS",
+                              "WLS")
+    estimators_unsupported <- c("DLS",
                                 "DWLS",
                                 "ULS",
                                 "PML")
@@ -263,12 +262,6 @@ check_sem_out <- function(sem_out,
           msg <- c(msg,
                 paste("The solution is not admissible by lavaan post.check.",
                         "Check the SEM results first."))
-        }
-
-    if (sem_likelihood != "normal") {
-          out <- ifelse(out >= 0, -1, out - 1)
-          msg <- c(msg,
-                paste("Only support models fitted with likelihood set to 'normal'."))
         }
 
     attr(out, "info") <- msg

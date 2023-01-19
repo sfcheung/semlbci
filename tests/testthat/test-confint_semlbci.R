@@ -1,5 +1,4 @@
-skip_on_cran()
-skip("To be run in an interactive session")
+skip("WIP")
 
 library(lavaan)
 mod <-

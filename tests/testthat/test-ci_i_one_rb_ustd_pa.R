@@ -5,7 +5,6 @@ library(semlbci)
 # Fit the model
 
 library(lavaan)
-
 data(simple_med)
 dat <- simple_med
 mod <-

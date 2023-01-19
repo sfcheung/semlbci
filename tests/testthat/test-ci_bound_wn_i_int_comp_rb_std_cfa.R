@@ -1,4 +1,4 @@
-skip("Run only if there is a major change in std_method")
+skip("Skip due to speed or other issues")
 # To be tested in interactive sessions only due to scoping or speed issues
 
 library(testthat)

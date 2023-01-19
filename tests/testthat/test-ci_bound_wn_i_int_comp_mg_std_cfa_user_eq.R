@@ -10,7 +10,7 @@ library(lavaan)
 
 data(cfa_two_factors_mg)
 dat <- cfa_two_factors_mg
-mod <-
+mod <- 
 "
 f1 =~ x1 + c(a1, a2)*x2 + c(b1, b2)*x3
 f2 =~ x4 + c(c1, c1)*x5 + c(d1, d2)*x6
@@ -18,6 +18,10 @@ ad := a1 * c1
 b1 == b2
 "
 fit <- lavaan::cfa(mod, cfa_two_factors_mg, group = "gp")
+ptable <- parameterTable(fit)
+ptable
+stable <- standardizedSolution(fit)
+stable
 
 # Find the LBCIs
 

@@ -1,5 +1,4 @@
 skip_on_cran()
-
 library(testthat)
 library(semlbci)
 
@@ -9,7 +8,7 @@ library(lavaan)
 
 data(cfa_two_factors)
 dat <- cfa_two_factors
-mod <-
+mod <- 
 "
 f1 =~ x1 + b*x2 + c*x3
 f2 =~ x4 + d*x5 + e*x6
@@ -39,16 +38,36 @@ opts0 <- list(ftol_abs = 1e-7,
 time1l <- system.time(out1l <- ci_bound_wn_i(16, 13, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
 time1u <- system.time(out1u <- ci_bound_wn_i(16, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb))
 
-test_that("Check against precomputed answers", {
-    expect_equal(out1l$bound, 0.622323, tolerance = 1e-5)
-    expect_equal(out1u$bound, 1.227961, tolerance = 1e-5)
-  })
-
-skip("Run only if data changed")
+timexx <- rbind(time1l, time1u)
+timexx
 
 # Check the results
 
-modc0 <-
+test_p <- function(fit0, fit1, ciperc, tol) {
+    out <- lavTestLRT(fit0, fit1, method = "satorra.2000", A.method = "exact")
+    abs(out[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
+  }
+
+get_scaling_factor <- function(lrt_out) {
+    diff_from_p <- qchisq(lrt_out[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
+    chisq_1 <- lrt_out[2, "Chisq"]
+    chisq_0 <- lrt_out[1, "Chisq"]
+    chisq_diff_c <- chisq_1 - chisq_0
+    chisq_diff_p <- qchisq(lrt_out[2, "Pr(>Chisq)"], 1, lower.tail = FALSE)
+    chisq_diff_r <- lrt_out[2, "Chisq diff"]
+    out <- 
+      data.frame(chisq_1 = chisq_1,
+        chisq_0 = chisq_0,
+        chisq_diff_c = chisq_diff_c,
+        chisq_diff_r = chisq_diff_r,
+        chisq_diff_p = chisq_diff_p,
+        c_p = chisq_diff_c / chisq_diff_p,
+        c_r = chisq_diff_c / chisq_diff_r)
+    out
+  }
+
+
+modc0 <- 
 "
 f1 =~ x1 + b*x2 + c*x3
 f2 =~ x4 + d*x5 + e*x6
@@ -64,7 +83,7 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = TRUE
+                   verbose = FALSE
                   #  optim.force.converged = TRUE,
                   #  optim.dx.tol = .01,
                   #  warn = FALSE,
@@ -76,6 +95,7 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE,
                   # )
                 )
 fitc_out1l <- fitc
+lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact")
 
 test_limit <- out1u
 modc <- paste(modc0, "\nce == ", test_limit$bound)
@@ -84,7 +104,7 @@ ptable <- parameterTable(fitc)
 ptable[ptable$free > 0, "est"] <- test_limit$diag$history$solution
 fitc <- update(fitc, start = ptable, do.fit = TRUE,
                    baseline = FALSE, h1 = FALSE, se = "none",
-                   verbose = TRUE
+                   verbose = FALSE
                   #  optim.force.converged = TRUE,
                   #  optim.dx.tol = .01,
                   #  warn = FALSE,
@@ -96,10 +116,8 @@ fitc <- update(fitc, start = ptable, do.fit = TRUE,
                   # )
                 )
 fitc_out1u <- fitc
+lavTestLRT(fitc, fit, method = "satorra.2000", A.method = "exact")
 
-(lr_out_1l <- lavTestLRT(fitc_out1l, fit, method = "satorra.2000", A.method = "exact"))
-get_scaling_factor(lr_out_1l)
-sf1
 
 test_that("Check p-value for the chi-square difference test", {
     expect_true(test_p(fitc_out1l, fit, ciperc = ciperc, tol = 1e-4))
