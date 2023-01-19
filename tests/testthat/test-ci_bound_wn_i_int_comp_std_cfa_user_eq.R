@@ -1,4 +1,4 @@
-skip("Skip due to speed or other issues")
+skip("Run only if there is a major change in std_method")
 # To be tested in interactive sessions only due to scoping or speed issues
 
 library(testthat)
@@ -10,7 +10,7 @@ library(lavaan)
 
 data(cfa_two_factors)
 dat <- cfa_two_factors
-mod <- 
+mod <-
 "
 f1 =~ x1 + a*x2 + b*x3
 f2 =~ x4 + b*x5 + d*x6
@@ -18,10 +18,6 @@ ad := a * d
 a == d
 "
 fit <- lavaan::cfa(mod, cfa_two_factors)
-ptable <- parameterTable(fit)
-ptable
-stable <- standardizedSolution(fit)
-stable
 
 # Find the LBCIs
 

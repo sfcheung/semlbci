@@ -5,6 +5,7 @@ library(semlbci)
 # Fit the model
 
 library(lavaan)
+
 data(simple_med)
 dat <- simple_med
 mod <-
@@ -36,12 +37,6 @@ out2l <- list(bound = lbci_fit[2, "lbci_lb"], diag = attr(lbci_fit, "lb_diag")[[
 out2u <- list(bound = lbci_fit[2, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[2]])
 
 # Check the results
-
-test_p <- function(fit0, fit1, ciperc, tol, debug = FALSE) {
-    out <- lavTestLRT(fit0, fit1, method = "satorra.2000", A.method = "exact")
-    if(debug) print(out)
-    abs(out[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
-  }
 
 modc0 <-
 "
