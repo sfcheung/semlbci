@@ -38,12 +38,6 @@ out2u <- list(bound = lbci_fit[2, "lbci_ub"], diag = attr(lbci_fit, "ub_diag")[[
 
 # Check the results
 
-test_p <- function(fit0, fit1, ciperc, tol, debug = FALSE) {
-    out <- lavTestLRT(fit0, fit1, method = "satorra.2000", A.method = "exact")
-    if(debug) print(out)
-    abs(out[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
-  }
-
 modc0 <-
 "
 m ~ a*x

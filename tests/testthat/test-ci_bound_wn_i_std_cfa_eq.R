@@ -40,7 +40,7 @@ test_that("Check against precomputed answers", {
 
 skip("Run only if data changed")
 
-# Not yet have a way to find how to make test_constr work in standardized solution
+# Check the results
 
 modc0 <-
 "

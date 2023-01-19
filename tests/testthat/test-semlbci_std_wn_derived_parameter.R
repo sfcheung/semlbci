@@ -49,14 +49,7 @@ out2l <- list(bound = lbci_fit$lbci_lb[1],
 out2u <- list(bound = lbci_fit$lbci_ub[1],
               diag = (list(history = attr(lbci_fit, "ub_diag")[[pars_i[1]]]$history)))
 
-
 # Check the results
-
-# Not yet have a way to find how to make test_constr work in standardized solution
-
-test_p <- function(fit0, fit1, ciperc, tol) {
-    abs(anova(fit0, fit1)[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol
-  }
 
 geteststd <- get_std_genfct(fit = fit, i = 6)
 
