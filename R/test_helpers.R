@@ -1,12 +1,12 @@
 #' @noRd
 
 test_p <- function(fit0, fit1, ciperc, tol) {
-    is_rb <- "satorra.bentler" %in% lavInspect(fit1, "options")$test
+    is_rb <- "satorra.bentler" %in% lavaan::lavInspect(fit1, "options")$test
     if (is_rb) {
-        out <- lavTestLRT(fit0, fit1, method = "satorra.2000", A.method = "exact")
+        out <- lavaan::lavTestLRT(fit0, fit1, method = "satorra.2000", A.method = "exact")
         return(abs(out[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol)
       } else {
-        return(abs(anova(fit0, fit1)[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol)
+        return(abs(stats::anova(fit0, fit1)[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol)
       }
   }
 
