@@ -181,7 +181,7 @@ check_sem_out <- function(sem_out,
       } else {
         # If normal LBCI requested, the test must be "standard".
         robust_ok <- NA
-        test_ok <- (tolower(sem_test) %in% tolower(test_supported))
+        test_ok <- identical(tolower(sem_test), "standard")
       }
 
 
@@ -214,13 +214,16 @@ check_sem_out <- function(sem_out,
         if (!test_ok) {
             out <- ifelse(out >= 0, -1, out - 1)
             msg <- c(msg, paste("Robust LBCIs are requested.",
-                                "However, test method", sem_test,
-                                "is not yet supported."))
+                                "However, test method(s)",
+                                paste0(sem_test, collapse = ", "),
+                                "is/are not yet supported."))
             }
       } else {
         if (!test_ok) {
             out <- ifelse(out >= 0, -1, out - 1)
-            msg <- c(msg, paste("Test method", sem_test, "is not yet supported."))
+            msg <- c(msg, paste("Test method(s)",
+                                paste0(sem_test, collapse = ", "),
+                                "is/are not yet supported when 'robust' is 'none'."))
             }
       }
 
