@@ -6,7 +6,7 @@ test_p <- function(fit0, fit1, ciperc, tol) {
         out <- lavaan::lavTestLRT(fit0, fit1, method = "satorra.2000", A.method = "exact")
         return(abs(out[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol)
       } else {
-        return(abs(stats::anova(fit0, fit1)[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol)
+        return(abs(lavaan::lavTestLRT(fit0, fit1)[2, "Pr(>Chisq)"] - (1 - ciperc)) < tol)
       }
   }
 
