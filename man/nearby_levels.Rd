@@ -49,7 +49,7 @@ y ~ b*m
 ab := a * b
 "
 fit_med <- sem(mod, simple_med, fixed.x = FALSE)
-
+lbci_fit <- semlbci(fit_med)
 lbci_fit_nb <- nearby_levels(lbci_fit,
                  ciperc_levels = c(-.050, .050))
 names(lbci_fit_nb)

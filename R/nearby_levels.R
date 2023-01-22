@@ -43,7 +43,7 @@
 #' ab := a * b
 #' "
 #' fit_med <- sem(mod, simple_med, fixed.x = FALSE)
-#'
+#' lbci_fit <- semlbci(fit_med)
 #' lbci_fit_nb <- nearby_levels(lbci_fit,
 #'                  ciperc_levels = c(-.050, .050))
 #' names(lbci_fit_nb)
@@ -71,8 +71,10 @@ nearby_levels <- function(x,
     # The following lines are inefficient
     # However, FUN = eval is preferred, to avoid
     # any potential scoping issues.
+    env <- parent.frame()
     out <- sapply(calls[-i0],
                   FUN = eval,
+                  envir = env,
                   simplify = FALSE,
                   USE.NAMES = TRUE)
     attr(x, which = "call") <- calls[[i0]]
@@ -107,7 +109,7 @@ nearby_levels <- function(x,
 #' ab := a * b
 #' "
 #' fit_med <- sem(mod, simple_med, fixed.x = FALSE)
-#'
+#' lbci_fit <- semlbci(fit_med)
 #' lbci_fit_nb <- nearby_levels(lbci_fit,
 #'                  ciperc_levels = c(-.050, .050))
 #' ci_order(lbci_fit_nb)
