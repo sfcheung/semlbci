@@ -496,7 +496,10 @@ ci_bound_wn_i <- function(i = NULL,
     if (out$status < 0) {
         # Verify the range of nloptr that denotes an error
         status <- 1
-        bound <- NA
+        check_optimization <- FALSE
+        # bound <- NA
+      } else {
+        check_optimization <-  TRUE
       }
 
     # Check the limit
@@ -540,8 +543,11 @@ ci_bound_wn_i <- function(i = NULL,
     fit_post_check <- lavaan::lavInspect(fit_final, "post.check")
     if (!fit_post_check) {
         status <- 1
-        bound <- NA
+        check_post_check <- FALSE
+        # bound <- NA
         # The warning should be raised by the calling function, not this one.
+      } else {
+        check_post_check <- TRUE
       }
 
     # Achieved level of confidence
@@ -556,6 +562,15 @@ ci_bound_wn_i <- function(i = NULL,
     ciperc_final <- stats::pchisq(chisq_diff, 1)
     if (abs(ciperc_final - ciperc) > p_tol) {
         status <- 1
+        check_level_of_confidence <- FALSE
+        # bound <- NA
+      } else {
+        check_level_of_confidence <- TRUE
+      }
+
+    if (!all(check_optimization,
+             check_post_check,
+             check_level_of_confidence)) {
         bound <- NA
       }
 
@@ -579,7 +594,10 @@ ci_bound_wn_i <- function(i = NULL,
                  optim_termination_conditions = out$termination_conditions,
                  method = "wn",
                  which = which,
-                 standardized = standardized
+                 standardized = standardized,
+                 check_optimization = check_optimization,
+                 check_post_check = check_post_check,
+                 check_level_of_confidence = check_level_of_confidence
                  )
     if (verbose) {
         diag$history <- out

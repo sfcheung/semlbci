@@ -83,13 +83,14 @@ print.cibound <- function(x, digits = 5, ...) {
                    " Tolerance: ", p_tol_call, ")"))
     cat(paste0("\nSolution admissible?\t",
             ifelse(out_diag$fit_post_check, "Yes", "No")))
-    if (is.na(x$bound)) {
+    bound_unchecked <- out_diag$bound_unchecked
+    if (is.na(bound_unchecked)) {
         direct_valid <- "Not valid"
       } else {
         direct_valid <- switch(out_diag$which,
-                          lbound = ifelse(x$bound < out_diag$est_org,
+                          lbound = ifelse(bound_unchecked < out_diag$est_org,
                                           "Yes", "No"),
-                          ubound = ifelse(x$bound > out_diag$est_org,
+                          ubound = ifelse(bound_unchecked > out_diag$est_org,
                                           "Yes", "No")
                         )
       }
