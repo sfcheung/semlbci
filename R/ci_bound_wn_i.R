@@ -511,7 +511,7 @@ ci_bound_wn_i <- function(i = NULL,
         ci_limit_ratio2 <- 1 / ci_limit_ratio
         if (any(ci_limit_ratio > ci_limit_ratio_tol,
                 ci_limit_ratio2 > ci_limit_ratio_tol)) {
-            status <- 1
+            # status <- 1
             # Do not set the bound to NA because the limit may still be valid.
           }
       } else {
