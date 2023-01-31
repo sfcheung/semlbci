@@ -11,12 +11,12 @@ Authors@R:
       person(given = "Ivan Jacob Agaloos",
            family = "Pesigan",
            role = "ctb",
-           email = "i.j.a.pesigan@connect.um.edu.mo",
+           email = "r.jeksterslab@gmail.com",
            comment = c(ORCID = "0000-0003-4818-8420"))
     )
 Description: Find the likelihood based confidence intervals (LBCIs) for
     parameters in structural equation modeling, including standardized
-    estimates such as correlatiosn and user-defined parameters such as
+    estimates such as correlations and user-defined parameters such as
     indirect effect. Also support robust LBCIs.
 License: GPL-3
 Encoding: UTF-8
