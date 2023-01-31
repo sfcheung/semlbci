@@ -10,6 +10,9 @@ reference:
 - contents:
   - check_sem_out
   - get_cibound
+  - nearby_levels
+  - ci_order
+  - print.ci_order
   - syntax_to_i
   - loglike_range
   - loglike_point

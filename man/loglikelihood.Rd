@@ -194,13 +194,13 @@ computation is appropriate for the model and parameter.
 }
 \section{Functions}{
 \itemize{
-\item \code{loglike_range()}: Description of this function
+\item \code{loglike_range()}: Find the log profile likelihood for a range of values.
 
-\item \code{loglike_point()}: Description of this function
+\item \code{loglike_point()}: Find the log likelihood at a value.
 
-\item \code{loglike_quad_range()}: Description of this function
+\item \code{loglike_quad_range()}: Find the approximated log likelihood for a range of values.
 
-\item \code{loglike_quad_point()}: Description of this function
+\item \code{loglike_quad_point()}: Find the approximated log likelihood at a value.
 
 \item \code{loglike_compare()}: Description of this function
 
