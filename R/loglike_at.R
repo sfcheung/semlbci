@@ -103,7 +103,7 @@ NULL
 #' ll_1 <- loglike_range(fit, par_i = "y ~ m", n_points = 5)
 #' head(ll_1)
 #'
-#' @describeIn loglikelihood Description of this function
+#' @describeIn loglikelihood Find the log profile likelihood for a range of values.
 #' @order 1
 #' @export
 
@@ -246,7 +246,7 @@ loglike_range <- function(sem_out, par_i,
 #' llp_1$lrt
 #'
 #'
-#' @describeIn loglikelihood Description of this function
+#' @describeIn loglikelihood Find the log likelihood at a value.
 #' @order 2
 #' @export
 
@@ -345,7 +345,7 @@ loglike_point <- function(theta0,
 #' head(lq_1)
 #'
 #'
-#' @describeIn loglikelihood Description of this function
+#' @describeIn loglikelihood Find the approximated log likelihood for a range of values.
 #' @order 3
 #' @export
 
@@ -499,7 +499,7 @@ loglike_quad_range <- function(sem_out,
 #' lqp_1
 #'
 #'
-#' @describeIn loglikelihood Description of this function
+#' @describeIn loglikelihood Find the approximated log likelihood at a value.
 #' @order 4
 #' @export
 
