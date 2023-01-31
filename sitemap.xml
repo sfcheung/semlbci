@@ -37,6 +37,9 @@
     <loc>/reference/ci_i_one.html</loc>
   </url>
   <url>
+    <loc>/reference/ci_order.html</loc>
+  </url>
+  <url>
     <loc>/reference/confint.semlbci.html</loc>
   </url>
   <url>
@@ -53,6 +56,9 @@
   </url>
   <url>
     <loc>/reference/mediation_latent_skewed.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nearby_levels.html</loc>
   </url>
   <url>
     <loc>/reference/plot.loglike_compare.html</loc>
