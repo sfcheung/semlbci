@@ -5,11 +5,11 @@ citEntry(entry = "Manual",
   author       = c(as.person("S. F. Cheung"),
                    as.person("I. J. A. Pesigan")),
   year         = "2023",
-  note         = "R package version 0.10.0.12",
+  note         = "R package version 0.10.0.13",
   url          = "https://github.com/sfcheung/semlbci/",
   textVersion  =
   paste("Cheung, S. F., & Pesigan, I. J. A. (2023).",
         "semlbci: An R package for forming likelihood-based confidence interval in structural equation models.",
-        "R package version 0.10.0.12",
+        "R package version 0.10.0.13",
         "https://github.com/sfcheung/semlbci/")
 )
