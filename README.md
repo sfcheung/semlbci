@@ -2,7 +2,7 @@
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Code size](https://img.shields.io/github/languages/code-size/sfcheung/semlbci.svg)](https://github.com/sfcheung/semlbci)
-[![Last Commit at Main](https://img.shields.io/github/last-commit/sfcheung/semlbci.svg)](https://github.com/sfcheung/semlbci/commits/main)
+[![Last Commit at Main](https://img.shields.io/github/last-commit/sfcheung/semlbci.svg)](https://github.com/sfcheung/semlbci/commits/master)
 [![R-CMD-check](https://github.com/sfcheung/semlbci/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sfcheung/semlbci/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
