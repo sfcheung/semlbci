@@ -1,3 +1,6 @@
+destination: docs
+
+url: https://sfcheung.github.io/semlbci/
 
 reference:
 - title: Forming LBCIs
@@ -22,7 +25,7 @@ reference:
   - plot.loglike_compare
 - title: Methods
   desc: >
-    Methods of `semlbci-class` objects (output of [semlbci()])
+    Methods of `semlbci-class` objects (output of [semlbci()]).
 - contents:
   - confint.semlbci
   - print.semlbci

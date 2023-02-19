@@ -6,14 +6,14 @@
 \alias{_PACKAGE}
 \title{semlbci: Likelihood Based Confidence Interval for SEM}
 \description{
-Find the likelihood based confidence intervals (LBCIs) for parameters in structural equation modeling, including standardized estimates such as correlatiosn and user-defined parameters such as indirect effect. Also support robust LBCIs.
+Functions for forming the likelihood-based confidence intervals (LBCIs) for parameters in structural equation modeling. Currently implements the algorithm illustrated by Pek and Wu (2018) \doi{10.1037/met0000163}, and supports the robust LBCI proposed by Falk (2018) \doi{10.1080/10705511.2017.1367254}.
 }
 \author{
 \strong{Maintainer}: Shu Fai Cheung \email{shufai.cheung@gmail.com} (\href{https://orcid.org/0000-0002-9871-9448}{ORCID})
 
 Other contributors:
 \itemize{
-  \item Ivan Jacob Agaloos Pesigan \email{i.j.a.pesigan@connect.um.edu.mo} (\href{https://orcid.org/0000-0003-4818-8420}{ORCID}) [contributor]
+  \item Ivan Jacob Agaloos Pesigan \email{r.jeksterslab@gmail.com} (\href{https://orcid.org/0000-0003-4818-8420}{ORCID}) [contributor]
 }
 
 }
