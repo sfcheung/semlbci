@@ -1,3 +1,4 @@
-# semlbci 0.10.0
+# semlbci 0.10.0.12
 
-- Initial release.
+- First public release (0.10.0.12).
+- Preparation for CRAN in progress.

@@ -17,19 +17,31 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(semlbci)
-```
-
 # Introduction
 
-This package includes functions for finding the likelihood based confidence intervals (LBCIs) of parameters in the output of a structural equation modeling (SEM) function. Currently, it supports the output from `lavaan::lavaan()` and its wrappers, such as `lavaan::sem()` and `lavaan::cfa()`.
+This package includes functions for finding the
+likelihood-based confidence intervals (LBCIs)
+of parameters in the output of a structural
+equation modeling (SEM) function.
+Currently, it supports the output from
+`lavaan::lavaan()` and its wrappers,
+such as `lavaan::sem()` and `lavaan::cfa()`.
 
-# Fit a model to a dataset
+The latest stable version can be installed from GitHub:
 
-The package has a dataset, `simple_med`, with three variables, `x`, `m`, and `y`. Let us fit a simple mediation model to this dataset.
+```r
+remotes::install_github("sfcheung/semlbci")
+```
+
+# Fit a Model to a Dataset
+
+The package has a dataset, `simple_med`,
+with three variables, `x`, `m`, and `y`.
+Let us fit a simple mediation model to
+this dataset.
 
 ```{r}
+library(semlbci)
 data(simple_med)
 dat <- simple_med
 head(dat)
@@ -45,7 +57,11 @@ ab := a * b
 fit <- sem(mod, simple_med, fixed.x = FALSE)
 ```
 
-To illustrate how to find the LBCIs for user-defined parameters, we labelled the `m ~ x` path by `a`, the `y ~ m` path by `b`, and defined the indirect effect, `ab`, by `a * b`.
+To illustrate how to find the LBCIs for
+user-defined parameters, we labelled the
+`m ~ x` path by `a`, the `y ~ m` path
+by `b`, and defined the indirect effect,
+`ab`, by `a * b`.
 
 This is the summary:
 
@@ -55,11 +71,23 @@ summary(fit, standardized = TRUE)
 
 # Examples
 
-The main function to find the LBCIs for free parameters is `semlbci()`. This should be the only function used by normal users. We will first illustrate its usage by some examples, and then present other technical details in the following section.
+The main function to find the LBCIs for
+free parameters is `semlbci()`. This
+should be the only function used by
+normal users. We will first illustrate
+its usage by some examples, and then
+present other technical details in the
+following section.
 
 ## Find the LBCI for a free parameter
 
-All free parameters can be specified in `lavaan` style. For example, the path from `m` to `y` is denoted by `"y ~ m"`, and the covariance or correlation between `x` and `m` (not in the example) is denoted by `"x ~~ m"` (order does not matter).
+All free parameters can be specified in
+`lavaan` style. For example, the path
+from `m` to `y` is denoted by `"y ~ m"`,
+and the covariance or correlation
+between `x` and `m` (not in the example)
+is denoted by `"x ~~ m"` (order does
+not matter).
 
 ```{r}
 out <- semlbci(sem_out = fit,
@@ -67,17 +95,33 @@ out <- semlbci(sem_out = fit,
                         "m ~ x"))
 ```
 
-The output is the parameter table of the fitted `lavaan` object, with two columns added, `lbci_lb` and `lbci_ub`, the likelihood-based lower bounds and upper bounds, respectively.
+The output is the parameter table of
+the fitted `lavaan` object, with two
+columns added, `lbci_lb` and `lbci_ub`,
+the likelihood-based lower bounds and
+upper bounds, respectively.
 
 ```{r}
 out
 ```
 
-In this example, the point estimate of the unstandardized coefficient from `x` to `m` is `r formatC(out[out$id == 1, "est"], 3, format = "f")`, and the LBCI is `r formatC(out[out$id == 1, "lbci_lb"], 3, format = "f")` to `r formatC(out[out$id == 1, "lbci_ub"], 3, format = "f")`.
+In this example, the point estimate of
+the unstandardized coefficient from `x`
+to `m` is
+`r formatC(out[out$id == 1, "est"], 3, format = "f")`,
+and the LBCI is
+`r formatC(out[out$id == 1, "lbci_lb"], 3, format = "f")`
+to
+`r formatC(out[out$id == 1, "lbci_ub"], 3, format = "f")`.
 
-## Find the LBCI for a user-defined parameter
+## Find the LBCI for a User-Defined Parameter
 
-To find the LBCI for a user-defined parameter, use `label :=`, where `label` is the label used in the model specification. The definition of this parameter can be omitted. The content after `:=` will be ignored by `semlbci()`.
+To find the LBCI for a user-defined
+parameter, use `label :=`, where `label`
+is the label used in the model
+specification. The definition of this
+parameter can be omitted. The content
+after `:=` will be ignored by `semlbci()`.
 
 ```{r}
 out <- semlbci(sem_out = fit,
@@ -85,13 +129,25 @@ out <- semlbci(sem_out = fit,
 print(out, annotation = FALSE)
 ```
 
-In this example, the point estimate of the indirect effect is `r formatC(out[out$lhs == "ab", "est"], 3, format = "f")`, and the LBCI is `r formatC(out[out$lhs == "ab", "lbci_lb"], 3, format = "f")` to `r formatC(out[out$lhs == "ab", "lbci_ub"], 3, format = "f")`.
+In this example, the point estimate of
+the indirect effect is
+`r formatC(out[out$lhs == "ab", "est"], 3, format = "f")`,
+and the LBCI is
+`r formatC(out[out$lhs == "ab", "lbci_lb"], 3, format = "f")`
+to
+`r formatC(out[out$lhs == "ab", "lbci_ub"], 3, format = "f")`.
 
-(Note: In some examples, we added `annotation = FALSE` to suppress the annotation to the printout.)
+(Note: In some examples, we added
+`annotation = FALSE` to suppress the
+annotation in the printout.)
 
-## Find the LBCI for the parameters in the standardized metric
+## Find the LBCI for the Parameters in the Standardized Metric
 
-By the default, the unstandardized solution is used by `semlbci()`. If the LBCIs for the standardized solution solution are desired, set `standardized = TRUE`.
+By the default, the unstandardized
+solution is used by `semlbci()`. If the
+LBCIs for the standardized solution
+solution are needed,
+set `standardized = TRUE`.
 
 ```{r}
 out <- semlbci(sem_out = fit,
@@ -101,7 +157,8 @@ out <- semlbci(sem_out = fit,
 print(out, annotation = FALSE)
 ```
 
-The LBCIs for standardized user-defined parameters can be requested similarly.
+The LBCIs for standardized user-defined
+parameters can be requested similarly.
 
 ```{r}
 out <- semlbci(sem_out = fit,
@@ -110,28 +167,84 @@ out <- semlbci(sem_out = fit,
 print(out, annotation = FALSE)
 ```
 
-# Basic arguments in `semlbci()`
+# Basic Arguments in `semlbci()`
 
 ## `sem_out` and `pars`: The fit object and the parameters
 
-The only required argument for `semlbci()` is `sem_out`, the fit object from `lavaan::lavaan()` or its wrappers (e.g., `lavann::cfa()` and `lavaan::sem()`). By default, `semlbci()` will find the LBCIs for all free parameters (except for variances and error variances) and user-defined parameters, which can take a long time for a model with many parameters. Moreover, LBCI is usually used when Wald-type confidence interval may not be suitable, such as an indirect effect or a parameter in the standardized solution. These parameters may have sampling distributions that are asymmetric or otherwise substantially nonnormal due to bounded parameter spaces or other reasons.
+The only required argument for
+`semlbci()` is `sem_out`, the fit
+object from `lavaan::lavaan()` or its
+wrappers (e.g., `lavann::cfa()` and
+`lavaan::sem()`). By default, `semlbci()`
+will find the LBCIs for all free
+parameters (except for variances and
+error variances) and user-defined
+parameters, which can take a long time
+for a model with many parameters.
+Moreover, LBCI is usually used when
+Wald-type confidence interval may not
+be suitable, such as an indirect
+effect or a parameter in the
+standardized solution. These parameters
+may have sampling distributions that
+are asymmetric or otherwise
+substantially nonnormal due to bounded
+parameter spaces or other reasons.
 
-Therefore, it is recommended to call `semlbci()` without specifying any parameters. If the time to run is long, then call `semlbci()`
-only for selected parameters. The argument `pars` should be a model syntax or a vector of strings which specifies the parameters for which LBCIs will be formed (detailed below).
+Therefore, it is recommended to call
+`semlbci()` without specifying any
+parameters. If the time to run is long,
+then call `semlbci()` only for selected
+parameters. The argument `pars`
+should be a model syntax or a vector of
+strings which specifies the parameters
+for which LBCIs will be formed
+(detailed below).
 
-If time is not a concern, for example, when users want to explore the LBCIs for all free and user-defined parameters in a final model, then `pars` can be omitted to request the LBCIs for all free parameters (except for variances and covariances) and user-defined parameters (if any) in a model.
+If time is not a concern, for example,
+when users want to explore the LBCIs
+for all free and user-defined parameters
+in a final model, then `pars` can be
+omitted to request the LBCIs for all
+free parameters (except for variances
+and covariances) and user-defined
+parameters (if any) in a model.
 
 ## `ciperc`: The level of confidence
 
-By default, the 95% LBCIs for the unstandardized solution will be formed. To change the level of confidence, set the argument `ciperc` to the desired coverage probability, e.g., .95 for 95%, .90 for 90%.
+By default, the 95% LBCIs for the
+unstandardized solution will be formed.
+To change the level of confidence, set
+the argument `ciperc` to the desired
+coverage probability, e.g., .95 for 95%,
+.90 for 90%.
 
 ## `standardized`: Whether standardized solution is used
 
-By default, the LBCIs for the unstandardized solution will be formed. If the LBCIs for the standardized solution are desired, set `standardized = TRUE`. Note that for some models it can be much slower to find the LBCIs for the standardized solution than for the unstandardized solution.
+By default, the LBCIs for the
+unstandardized solution will be formed.
+If the LBCIs for the standardized
+solution are desired, set
+`standardized = TRUE`. Note that for
+some models it can be much slower to
+find the LBCIs for the standardized
+solution than for the unstandardized
+solution.
 
 ## `parallel` and `ncpus`
 
-The search for the bounds needs to be done separately for each bound and this can take a long time for a model with many parameters and/or with equality constraints. Therefore, parallel processing should always be enabled by setting `parallel` to `TRUE` and `ncpus` to a number smaller than the number of available cores. For example, without parallel processing, the following search took about 28 seconds on Intel i7-8700:
+The search for the bounds needs to be
+done separately for each bound and this
+can take a long time for a model with
+many parameters and/or with equality
+constraints. Therefore, parallel
+processing should always be enabled by
+setting `parallel` to `TRUE` and `ncpus`
+to a number smaller than the number of
+available cores. For example, without
+parallel processing, the following
+search took about 28 seconds on
+Intel i7-8700:
 
 ```{r eval = FALSE}
 data(HolzingerSwineford1939)
@@ -141,29 +254,45 @@ visual  =~ x1 + x2 + x3
 textual =~ x4 + x5 + x6
 speed   =~ x7 + x8 + x9
 '
-fit_cfa <- cfa(model = mod_test, data = HolzingerSwineford1939)
+fit_cfa <- cfa(model = mod_test,
+               data = HolzingerSwineford1939)
 semlbci(fit_cfa)
 ```
 
-With parallel processing enabled and using 6 cores, it took about 20 seconds.
+With parallel processing enabled and
+using 6 cores, it took about 20 seconds.
 
 ```{r eval = FALSE}
-semlbci(fit_cfa, parallel = TRUE, ncpus = 6)
+semlbci(fit_cfa,
+        parallel = TRUE,
+        ncpus = 6)
 ```
 
-The speed difference can be much greater for a model with many parameters and some equality constraints.
+The speed difference can be much greater
+for a model with many parameters and
+some equality constraints.
 
-Enabling parallel processing also has the added benefit of showing the progress in real time.
+Enabling parallel processing also has
+the added benefit of showing the
+progress in real time.
 
 ## Other arguments
 
-For detailed documentation of other arguments, please refer to the help page of `semlbci()`. Advanced users who want to tweak the optimization options can check the help pages of `ci_bound_wn_i()` and `ci_i_one()`,
+For detailed documentation of other
+arguments, please refer to the help
+page of `semlbci()`. Advanced users
+who want to tweak the optimization
+options can check the help pages of
+`ci_bound_wn_i()` and `ci_i_one()`,
 
 # Additional Features
 
 ## Multiple-group Models
 
-`semlbci()` supports multiple-group models. For example, this is a two-group confirmatory factor analysis model with equality constraints:
+`semlbci()` supports multiple-group
+models. For example, this is a
+two-group confirmatory factor analysis
+model with equality constraints:
 
 ```{r}
 data(HolzingerSwineford1939)
@@ -173,61 +302,118 @@ visual  =~ x1 + v(lambda2, lambda2)*x2 + v(lambda3, lambda3)*x3
 textual =~ x4 + v(lambda5, lambda5)*x5 + v(lambda6, lambda6)*x6
 speed   =~ x7 + v(lambda8, lambda8)*x8 + v(lambda9, lambda9)*x9
 '
-fit_cfa <- cfa(model = mod_cfa, data = HolzingerSwineford1939,
-           group = "school")
+fit_cfa <- cfa(model = mod_cfa,
+               data = HolzingerSwineford1939,
+               group = "school")
 ```
 
-The factor correlations between group are not constrained to be equal.
+The factor correlations between group
+are not constrained to be equal.
 
 ```{r}
 parameterEstimates(fit_cfa)[c(22, 23, 58, 59), ]
 ```
 
-This is the LBCI for covariance between visual ability and textual ability:
+This is the LBCI for covariance between
+visual ability and textual ability:
 
 ```{r}
-fcov <- semlbci(fit_cfa, pars = c("visual ~~ textual"))
+fcov <- semlbci(fit_cfa,
+                pars = c("visual ~~ textual"))
 print(fcov, annotation = FALSE)
 ```
 
-This is the LBCI for correlation between visual ability and textual ability:
+This is the LBCI for correlation
+between visual ability and textual
+ability:
 
 ```{r}
-fcor <- semlbci(fit_cfa, pars = c("visual ~~ textual"))
+fcor <- semlbci(fit_cfa,
+                pars = c("visual ~~ textual"),
+                standardized = TRUE)
 print(fcor, annotation = FALSE)
 ```
 
 ## Robust LBCI
 
-`semlbci()` also supports the robust LBCI proposed by Falk (2018). To form robust LBCI, the model must be fitted with robust test statistics requested (e.g., `estimator = "MLR"`). To request robust LBCIs, add `robust = "satorra.2000"` when calling `semlbci()`.
+`semlbci()` also supports the robust
+LBCI proposed by Falk (2018). To form
+robust LBCI, the model must be fitted
+with robust test statistics requested
+(e.g., `estimator = "MLR"`). To
+request robust LBCIs, add
+`robust = "satorra.2000"` when
+calling `semlbci()`.
 
-We use the simple mediation model as an example:
+We use the simple mediation model as
+an example:
 
 ```{r}
-fit_robust <- sem(mod, simple_med, fixed.x = FALSE, estimator = "MLR")
-fit_lbci_ab_robust <- semlbci(fit_robust, pars = "ab := ", robust = "satorra.2000")
+fit_robust <- sem(mod, simple_med,
+                  fixed.x = FALSE,
+                  estimator = "MLR")
+fit_lbci_ab_robust <- semlbci(fit_robust,
+                              pars = "ab := ",
+                              robust = "satorra.2000")
 print(fit_lbci_ab_robust, annotation = FALSE)
 ```
 
 ## Latent level parameters
 
-`semlbci()` support forming the LBCIs for most free parameters. Not illustrated above but LBCIs can be formed for path coefficients between latent variables and also user-defined parameters based on latent-level parameters, such as an indirect effect from one latent variable to another.
+`semlbci()` support forming the LBCIs
+for most free parameters. Not
+illustrated above but LBCIs can be
+formed for path coefficients between
+latent variables and also user-defined
+parameters based on latent-level
+parameters, such as an indirect effect
+from one latent variable to another.
+
+## More examples
+
+More examples can be found
+in the "examples" folders in
+[the OSF page](https://osf.io/b9a2p/files/osfstorage)
+for this package.
 
 # Limitations
 
-The following is a summary of the limitations of `semlbci()`. Please refer to `check_sem_out()` for the full list of limitations. This function is called by `semlbci()` to check the `sem_out` object, and will raise warnings or errors as appropriate.
+The following is a summary of the
+limitations of `semlbci()`. Please
+refer to `check_sem_out()` for the full
+list of limitations. This function is
+called by `semlbci()` to check the
+`sem_out` object, and will raise
+warnings or errors as appropriate.
 
 ## Estimators
 
-The function `semlbci()` currently supports `lavaan::lavaan()` results estimated by maximum likelihood (`ML`), full information maximum likelihood for missing data (`fiml`), generalized least squares (`GLS`), weighted least squares (a.k.a. asymptotically distribution free) (`WLS`), and their robust variants (e.g., `MLM`).
+The function `semlbci()` currently
+supports `lavaan::lavaan()` results
+estimated by maximum likelihood (`ML`),
+full information maximum likelihood for
+missing data (`fiml`), and their robust
+variants (e.g., `MLM`).
 
 ## Models
 
-This package currently supports single and multiple group models with continuous variables. It *may* work for a model with ordered variables but this is not officially tested.
+This package currently supports single
+and multiple group models with
+continuous variables. It *may* work for
+a model with ordered variables but this
+is not officially tested.
 
 ## Methods
 
-The current and preferred method is the one proposed by Wu and Neale (2012). The current implementation in `semlbci()` does not check whether a parameter is near its boundary. The more advanced methods by Pritikin, Rappaport, and Neale (2017) will be considered in future development.
+The current and preferred method is the
+one proposed by Wu and Neale (2012),
+illustrated by Pek and Wu (2015).
+The current implementation in
+`semlbci()` does not check whether a
+parameter is near its boundary. The
+more advanced methods by Pritikin,
+Rappaport, and Neale (2017) will be
+considered in future development.
 
 # References
 
