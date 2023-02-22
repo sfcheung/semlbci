@@ -6,14 +6,20 @@
 [![R-CMD-check](https://github.com/sfcheung/semlbci/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sfcheung/semlbci/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-(Version 0.10.0.13, updated on 2023-02-20, [release history](https://sfcheung.github.io/semlbci/news/index.html))
+(Version 0.10.0.14, updated on 2023-02-22, [release history](https://sfcheung.github.io/semlbci/news/index.html))
 
 # semlbci
 
 This package includes functions for forming the
 likelihood-based confidence intervals (LBCIs) for parameters
 in structural equation modeling. It also supports the robust LBCI proposed
-by Falk (2018).
+by Falk (2018). It was described in the following manuscript:
+
+Cheung, S. F., & Pesigan, I. J. A. (Forthcoming). An R package
+for forming likelihood-based confidence intervals for parameter
+estimates, correlations, indirect Effects, and other derived
+parameters. *Structural Equation Modeling: A Multidisciplinary Journal*.
+Accepted for publication.
 
 More information on this package:
 

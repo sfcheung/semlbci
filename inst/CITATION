@@ -1,15 +1,15 @@
 citHeader("To cite the 'semlbci' package in publications use:")
 
-citEntry(entry = "Manual",
-  title        = "semlbci: An R package for forming likelihood-based confidence interval in structural equation models",
+citEntry(entry = "Article",
+  title        = "An R package for forming likelihood-based confidence intervals for parameter estimates, correlations, indirect Effects, and other derived parameters.",
   author       = c(as.person("S. F. Cheung"),
                    as.person("I. J. A. Pesigan")),
+  journal      = "Structural Equation Modeling: A Multidisciplinary Journal",
   year         = "2023",
-  note         = "R package version 0.10.0.13",
-  url          = "https://github.com/sfcheung/semlbci/",
   textVersion  =
-  paste("Cheung, S. F., & Pesigan, I. J. A. (2023).",
-        "semlbci: An R package for forming likelihood-based confidence interval in structural equation models.",
-        "R package version 0.10.0.13",
-        "https://github.com/sfcheung/semlbci/")
+  paste("Cheung, S. F., & Pesigan, I. J. A. (Forthcoming). An R package",
+        "for forming likelihood-based confidence intervals for parameter",
+        "estimates, correlations, indirect Effects, and other derived",
+        "parameters. Structural Equation Modeling: A Multidisciplinary Journal.",
+        "Accepted for publication.")
 )
