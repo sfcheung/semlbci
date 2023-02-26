@@ -95,6 +95,13 @@ nearby_levels <- function(x,
 #' @param semlbci_list An object of class `semlbci_list`,
 #'  such as the output of [nearby_levels()].
 #'
+#' @return
+#' A `ci_order`-class object with a [print.ci_order()]
+#' method. The number of rows is equal to the number of
+#' parameters in `semlbci_list`, and the columns stores the
+#' confidence limits from the list, ordered according to the
+#' level of confidence.
+#'
 #' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
 #'
 #' @seealso [nearby_levels()], [semlbci()]
@@ -140,6 +147,9 @@ ci_order <- function(semlbci_list) {
 #' @param digits The number of decimal places in the printout.
 #'
 #' @param ... Additional arguments. Not used.
+#'
+#' @return
+#' `x` is returned invisibly. Called for its side effect.
 #'
 #' @describeIn ci_order The print method of the output of
 #' [ci_order()].
