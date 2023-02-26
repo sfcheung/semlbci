@@ -5,7 +5,8 @@
 #'
 #' @details Prints the results of [semlbci()] as a table.
 #'
-#' @return Nothing. Its side effect is used (printing the results).
+#' @return
+#' `x` is returned invisibly. Called for its side effect.
 #'
 #' @param x The output of [semlbci()].
 #'
@@ -240,4 +241,5 @@ print.semlbci <- function(x,
         cat("\nCall:\n")
         print(call_org)
       }
+    invisible(x)
   }
