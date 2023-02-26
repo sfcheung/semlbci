@@ -222,9 +222,9 @@ ab := a * b
 "
 fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
-# Five points are used just for illustration
+# 4 points are used just for illustration
 # At least 21 points should be used for a smooth plot
-ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 5)
+ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4)
 plot(ll_a)
 
 # See the vignette "loglike" for an example for the
@@ -233,32 +233,40 @@ plot(ll_a)
 
 ## loglike_range
 
+# Usually not to be used directly.
+# Used by loglike_compare().
 # 3 points are used just for illustration
-ll_1 <- loglike_range(fit, par_i = "y ~ m", n_points = 3)
-head(ll_1)
+# ll_1 <- loglike_range(fit, par_i = "y ~ m", n_points = 3)
+# head(ll_1)
 
 
 ## loglike_point
 
-llp_1 <- loglike_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
-llp_1$loglike
-llp_1$pvalue
-llp_1$lrt
+# Usually not to be used directly.
+# Used by loglike_compare().
+# llp_1 <- loglike_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
+# llp_1$loglike
+# llp_1$pvalue
+# llp_1$lrt
 
 
 
 ## loglike_quad_range
 
+# Usually not to be used directly.
+# Used by loglike_compare().
 # 3 points are used just for illustration
-lq_1 <- loglike_quad_range(fit, par_i = "y ~ m", n_points = 3)
-head(lq_1)
+# lq_1 <- loglike_quad_range(fit, par_i = "y ~ m", n_points = 3)
+# head(lq_1)
 
 
 
 ## loglike_quad_point
 
-lqp_1 <- loglike_quad_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
-lqp_1
+# Usually not to be used directly.
+# Used by loglike_compare().
+# lqp_1 <- loglike_quad_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
+# lqp_1
 
 
 }

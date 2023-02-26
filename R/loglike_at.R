@@ -88,9 +88,11 @@ NULL
 #'
 #' ## loglike_range
 #'
+#' # Usually not to be used directly.
+#' # Used by loglike_compare().
 #' # 3 points are used just for illustration
-#' ll_1 <- loglike_range(fit, par_i = "y ~ m", n_points = 3)
-#' head(ll_1)
+#' # ll_1 <- loglike_range(fit, par_i = "y ~ m", n_points = 3)
+#' # head(ll_1)
 #'
 #' @describeIn loglikelihood Find the log profile likelihood for a range of values.
 #' @order 2
@@ -218,10 +220,12 @@ loglike_range <- function(sem_out, par_i,
 #'
 #' ## loglike_point
 #'
-#' llp_1 <- loglike_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
-#' llp_1$loglike
-#' llp_1$pvalue
-#' llp_1$lrt
+#' # Usually not to be used directly.
+#' # Used by loglike_compare().
+#' # llp_1 <- loglike_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
+#' # llp_1$loglike
+#' # llp_1$pvalue
+#' # llp_1$lrt
 #'
 #'
 #' @describeIn loglikelihood Find the log likelihood at a value.
@@ -307,9 +311,11 @@ loglike_point <- function(theta0,
 #'
 #' ## loglike_quad_range
 #'
+#' # Usually not to be used directly.
+#' # Used by loglike_compare().
 #' # 3 points are used just for illustration
-#' lq_1 <- loglike_quad_range(fit, par_i = "y ~ m", n_points = 3)
-#' head(lq_1)
+#' # lq_1 <- loglike_quad_range(fit, par_i = "y ~ m", n_points = 3)
+#' # head(lq_1)
 #'
 #'
 #' @describeIn loglikelihood Find the approximated log likelihood for a range of values.
@@ -451,8 +457,10 @@ loglike_quad_range <- function(sem_out,
 #'
 #' ## loglike_quad_point
 #'
-#' lqp_1 <- loglike_quad_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
-#' lqp_1
+#' # Usually not to be used directly.
+#' # Used by loglike_compare().
+#' # lqp_1 <- loglike_quad_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
+#' # lqp_1
 #'
 #'
 #' @describeIn loglikelihood Find the approximated log likelihood at a value.
@@ -505,9 +513,9 @@ loglike_quad_point <- function(theta0,
 #' "
 #' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 #'
-#' # Five points are used just for illustration
+#' # 4 points are used just for illustration
 #' # At least 21 points should be used for a smooth plot
-#' ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 5)
+#' ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4)
 #' plot(ll_a)
 #'
 #' # See the vignette "loglike" for an example for the
