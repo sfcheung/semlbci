@@ -41,7 +41,7 @@ removed. Default is \code{TRUE}.}
 \item{...}{Other arguments. They will be ignored.}
 }
 \value{
-Nothing. Its side effect is used (printing the results).
+\code{x} is returned invisibly. Called for its side effect.
 }
 \description{
 Prints the results of a \code{semlbci} object, the output

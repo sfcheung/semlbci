@@ -96,8 +96,9 @@ nearby_levels <- function(x,
 #'  such as the output of [nearby_levels()].
 #'
 #' @return
-#' A `ci_order`-class object with a [print.ci_order()]
-#' method. The number of rows is equal to the number of
+#' A `ci_order`-class object with a `print` method
+#' [print.ci_order()]. The number of rows is equal to the
+#' number of
 #' parameters in `semlbci_list`, and the columns stores the
 #' confidence limits from the list, ordered according to the
 #' level of confidence.

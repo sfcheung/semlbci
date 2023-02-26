@@ -16,8 +16,7 @@ passed to \code{\link[=round]{round()}}. Default is 5.}
 \item{...}{Other arguments. They will be ignored.}
 }
 \value{
-Nothing. It is used for its side effect (printing the
-information).
+\code{x} is returned invisibly. Called for its side effect.
 }
 \description{
 Print the diagnostic information of a \code{cibound}-class

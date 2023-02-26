@@ -133,7 +133,7 @@ columns:
 using quadratic approximation.
 \item \code{pvalue}: The \emph{p}-values based on the likelihood ratio difference
 test between the original model and the model with the
-parameter fixed to theta.
+parameter fixed to \code{theta}.
 }
 
 \code{\link[=loglike_quad_point]{loglike_quad_point()}} returns a single number of the class
@@ -156,16 +156,16 @@ the likelihood-based confidence bounds.
 \item \code{est}: The point estimate of the parameter in \code{sem_out}.
 }
 
-\code{loglike_compare}-class object has a plot method (\code{\link[=plot.loglike_compare]{plot.loglike_compare()}})
+\code{loglike_compare}-class object has a \code{plot} method (\code{\link[=plot.loglike_compare]{plot.loglike_compare()}})
 that can be used to plot the log profile likelihood.
 
 \code{\link[=loglike_range]{loglike_range()}} returns a data frame with these columns:
 \itemize{
 \item \code{theta}: The values to which the parameter is fixed to.
-\item \code{loglike}: The log profile likelihood at theta.
+\item \code{loglike}: The log profile likelihood at \code{theta}.
 \item \code{pvalue}: The \emph{p}-values based on the likelihood ratio difference
 test between the original model and model with the
-parameter fixed to theta.
+parameter fixed to \code{theta}.
 }
 }
 \description{

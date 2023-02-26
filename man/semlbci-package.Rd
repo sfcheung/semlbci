@@ -4,7 +4,7 @@
 \name{semlbci-package}
 \alias{semlbci-package}
 \alias{_PACKAGE}
-\title{semlbci: Likelihood Based Confidence Interval for SEM}
+\title{semlbci: Likelihood-Based Confidence Interval in Structrual Equation Models}
 \description{
 Functions for forming the likelihood-based confidence intervals (LBCIs) for parameters in structural equation modeling, introduced in Cheung and Pesigan (2023). Currently implements the algorithm illustrated by Pek and Wu (2018) \doi{10.1037/met0000163}, and supports the robust LBCI proposed by Falk (2018) \doi{10.1080/10705511.2017.1367254}.
 }

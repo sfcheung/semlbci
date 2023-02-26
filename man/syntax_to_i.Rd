@@ -12,7 +12,8 @@ syntax_to_i(syntax, sem_out)
 \item{sem_out}{The SEM output. Currently \code{lavaan} output only.}
 }
 \value{
-A vector of positions (row numbers) in the parameter table.
+A numeric vector of positions (row numbers) in
+the parameter table.
 }
 \description{
 Converts lavaan syntax to positions in the model

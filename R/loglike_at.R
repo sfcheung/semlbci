@@ -25,10 +25,10 @@
 #' @return [loglike_range()] returns a data frame with these columns:
 #'
 #' - `theta`: The values to which the parameter is fixed to.
-#' - `loglike`: The log profile likelihood at theta.
+#' - `loglike`: The log profile likelihood at `theta`.
 #' - `pvalue`: The *p*-values based on the likelihood ratio difference
 #'             test between the original model and model with the
-#'             parameter fixed to theta.
+#'             parameter fixed to `theta`.
 #'
 #' @param sem_out The SEM output. Currently the outputs
 #'   of [lavaan::lavaan()] or its wrappers, such as [lavaan::sem()]
@@ -323,7 +323,7 @@ loglike_point <- function(theta0,
 #'              using quadratic approximation.
 #' - `pvalue`: The *p*-values based on the likelihood ratio difference
 #'             test between the original model and the model with the
-#'             parameter fixed to theta.
+#'             parameter fixed to `theta`.
 #'
 #' @examples
 #'
@@ -531,7 +531,7 @@ loglike_quad_point <- function(theta0,
 #'                           the likelihood-based confidence bounds.
 #' - `est`: The point estimate of the parameter in `sem_out`.
 #'
-#' `loglike_compare`-class object has a plot method ([plot.loglike_compare()])
+#' `loglike_compare`-class object has a `plot` method ([plot.loglike_compare()])
 #' that can be used to plot the log profile likelihood.
 #'
 #' @examples

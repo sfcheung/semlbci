@@ -21,7 +21,7 @@
 #' ([ci_bound_wn_i()] by default) one or more times to find the bound
 #' (limit) for an LBCI.
 #'
-#' @return A list of several elements.
+#' @return A list of the following elements.
 #'
 #' - `bound`: The bound located. `NA` if the search failed.
 #'
