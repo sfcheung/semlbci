@@ -536,7 +536,7 @@ loglike_quad_point <- function(theta0,
 #' @export
 
 loglike_compare <- function(sem_out,
-                            semlbci_out,
+                            semlbci_out = NULL,
                             par_i,
                             confidence = .95,
                             n_points = 21,
@@ -559,13 +559,17 @@ loglike_compare <- function(sem_out,
     zs <- seq(-z, z, length.out = n_points)
     thetas_q <- est + se * zs
     # Find LBCI
-    if (missing(semlbci_out)) {
+    # lbci_i <- semlbci(sem_out, pars = par_i, ciperc = confidence,
+    #                   parallel = FALSE,
+    #                   use_pbapply = FALSE)
+    if (is.null(semlbci_out)) {
         lbci_i <- semlbci(sem_out,
                           pars = par_i,
                           ciperc = confidence,
-                          parallel = parallel,
-                          ncpus = ncpus,
+                          parallel = FALSE,
                           use_pbapply = use_pbapply)
+      } else {
+        lbci_i <- semlbci_out
       }
     lbci_range <- unlist(unname(stats::confint(lbci_i)[1, ]))
     thetas_l <- seq(lbci_range[1], lbci_range[2], length.out = n_points)
