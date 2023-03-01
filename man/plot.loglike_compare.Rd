@@ -64,11 +64,16 @@ ab := a * b
 "
 fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
-# Five points are used just for illustration
+# Four points are used just for illustration
 # At least 21 points should be used for a smooth plot
-ll_all <- loglike_compare(fit, par_i = "ab := ", n_points = 5)
-plot(ll_all)
-plot(ll_all, add_pvalues = TRUE)
+ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4,
+                        use_pbapply = FALSE)
+
+plot(ll_a)
+plot(ll_a, add_pvalues = TRUE)
+
+# See the vignette "loglike" for an example for the
+# indirect effect.
 
 }
 \references{

@@ -1,6 +1,15 @@
 destination: docs
 
 url: https://sfcheung.github.io/semlbci/
+template:
+  bootstrap: 5
+
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - semlbci
+  - loglike
 
 reference:
 - title: Forming LBCIs
