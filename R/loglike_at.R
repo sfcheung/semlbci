@@ -34,6 +34,10 @@
 #'   of [lavaan::lavaan()] or its wrappers, such as [lavaan::sem()]
 #'   and [lavaan::cfa()] are supported.
 #'
+#' @param semlbci_out The output of [semlbci::semlbci()].
+#'   If supplied, it will extract the likelihood-based confidence
+#'   interval from the output. If not, it will call [semlbci::semlbci()].
+#'
 #' @param par_i The row number of the parameter in the output of
 #'   [lavaan::parameterTable()]. Can also be a [lavaan::model.syntax]
 #'   specification for a parameter, e.g., `"y ~ x"` or `ab := `.
@@ -515,7 +519,8 @@ loglike_quad_point <- function(theta0,
 #'
 #' # 4 points are used just for illustration
 #' # At least 21 points should be used for a smooth plot
-#' ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4)
+#' ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4,
+#'                         use_pbapply = FALSE)
 #' plot(ll_a)
 #'
 #' # See the vignette "loglike" for an example for the
@@ -531,6 +536,7 @@ loglike_quad_point <- function(theta0,
 #' @export
 
 loglike_compare <- function(sem_out,
+                            semlbci_out,
                             par_i,
                             confidence = .95,
                             n_points = 21,
@@ -553,7 +559,14 @@ loglike_compare <- function(sem_out,
     zs <- seq(-z, z, length.out = n_points)
     thetas_q <- est + se * zs
     # Find LBCI
-    lbci_i <- semlbci(sem_out, pars = par_i, ciperc = confidence)
+    if (missing(semlbci_out)) {
+        lbci_i <- semlbci(sem_out,
+                          pars = par_i,
+                          ciperc = confidence,
+                          parallel = parallel,
+                          ncpus = ncpus,
+                          use_pbapply = use_pbapply)
+      }
     lbci_range <- unlist(unname(stats::confint(lbci_i)[1, ]))
     thetas_l <- seq(lbci_range[1], lbci_range[2], length.out = n_points)
     thetas_0 <- sort(c(thetas_q, thetas_l))
@@ -564,13 +577,15 @@ loglike_compare <- function(sem_out,
                                start = start,
                                try_k_more = try_k_more,
                                parallel = parallel,
-                               ncpus = ncpus)
+                               ncpus = ncpus,
+                               use_pbapply = use_pbapply)
     ll <- loglike_range(sem_out, par_i = par_i,
                         interval = int_l,
                         start = start,
                         try_k_more = try_k_more,
                         parallel = parallel,
-                        ncpus = ncpus)
+                        ncpus = ncpus,
+                        use_pbapply = use_pbapply)
     pvalue_q_lb <- loglike_point(ll_q[1, "theta"],
                                  sem_out = sem_out,
                                  par_i = par_i,
@@ -653,9 +668,10 @@ loglike_compare <- function(sem_out,
 #' "
 #' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 #'
-#' # Five points are used just for illustration
+#' # Four points are used just for illustration
 #' # At least 21 points should be used for a smooth plot
-#' ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 5)
+#' ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4,
+#'                         use_pbapply = FALSE)
 #'
 #' plot(ll_a)
 #' plot(ll_a, add_pvalues = TRUE)

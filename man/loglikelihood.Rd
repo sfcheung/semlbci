@@ -11,6 +11,7 @@
 \usage{
 loglike_compare(
   sem_out,
+  semlbci_out,
   par_i,
   confidence = 0.95,
   n_points = 21,
@@ -63,6 +64,10 @@ loglike_quad_point(theta0, sem_out, par_i)
 \item{sem_out}{The SEM output. Currently the outputs
 of \code{\link[lavaan:lavaan]{lavaan::lavaan()}} or its wrappers, such as \code{\link[lavaan:sem]{lavaan::sem()}}
 and \code{\link[lavaan:cfa]{lavaan::cfa()}} are supported.}
+
+\item{semlbci_out}{The output of \code{\link[=semlbci]{semlbci()}}.
+If supplied, it will extract the likelihood-based confidence
+interval from the output. If not, it will call \code{\link[=semlbci]{semlbci()}}.}
 
 \item{par_i}{The row number of the parameter in the output of
 \code{\link[lavaan:lavParTable]{lavaan::parameterTable()}}. Can also be a \link[lavaan:model.syntax]{lavaan::model.syntax}
@@ -224,7 +229,8 @@ fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
 # 4 points are used just for illustration
 # At least 21 points should be used for a smooth plot
-ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4)
+ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4,
+                        use_pbapply = FALSE)
 plot(ll_a)
 
 # See the vignette "loglike" for an example for the

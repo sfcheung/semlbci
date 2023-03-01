@@ -46,14 +46,13 @@ levels of confidence.
 library(lavaan)
 mod <-
 "
-m ~ a*x
-y ~ b*m
-ab := a * b
+m ~ x
+y ~ m
 "
 fit_med <- sem(mod, simple_med, fixed.x = FALSE)
 lbci_fit <- semlbci(fit_med)
 lbci_fit_nb <- nearby_levels(lbci_fit,
-                 ciperc_levels = c(-.050, .050))
+                             ciperc_levels = c(-.050, .050))
 ci_order(lbci_fit_nb)
 
 }
