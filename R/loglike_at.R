@@ -558,10 +558,6 @@ loglike_compare <- function(sem_out,
     z <- stats::qnorm(1 - (1 - confidence) / 2)
     zs <- seq(-z, z, length.out = n_points)
     thetas_q <- est + se * zs
-    # Find LBCI
-    # lbci_i <- semlbci(sem_out, pars = par_i, ciperc = confidence,
-    #                   parallel = FALSE,
-    #                   use_pbapply = FALSE)
     if (is.null(semlbci_out)) {
         lbci_i <- semlbci(sem_out,
                           pars = par_i,
