@@ -1,7 +1,7 @@
 ---
 title: "Log Profile likelihood of a Parameter"
 author: "Shu Fai Cheung"
-date: "2023-02-27"
+date: "2023-03-02"
 output:
   rmarkdown::html_vignette:
     number_sections: true
@@ -57,8 +57,6 @@ came with the package `semlbci`:
 
 ```r
 library(lavaan)
-#> This is lavaan 0.6-14
-#> lavaan is FREE software! Please report any bugs.
 library(semlbci)
 dat <- simple_med
 mod <-
@@ -92,10 +90,6 @@ parameter to `"a"`.
 ```r
 ll_a <- loglike_compare(fit,
                         par_i = "m ~ x")
-#> 
-#> Finding p-values for quadratic approximation
-#> 
-#> Finding p-values for LR test
 ```
 
 Although teh *a*-path is labelled, `par_i` requires the
@@ -127,10 +121,6 @@ effect. To specify it, we need to use `ab :=`:
 ```r
 ll_ab <- loglike_compare(fit,
                          par_i = "ab := ")
-#> 
-#> Finding p-values for quadratic approximation
-#> 
-#> Finding p-values for LR test
 ```
 
 Note that it usually take longer for parameter which is
@@ -166,5 +156,4 @@ directly.
 
 # Reference
 
-Pawitan, Y. (2013). *In all likelihood: Statistical
-#' modelling and inference using likelihood*. Oxford University Press.
+Pawitan, Y. (2013). *In all likelihood: Statistical modelling and inference using likelihood*. Oxford University Press.

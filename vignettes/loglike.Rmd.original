@@ -84,7 +84,7 @@ To generate the plot for, say, the *a*-path coefficient,
 we can simply call `loglike_compare()` and setting the
 parameter to `"a"`.
 
-```{r}
+```{r, results = "hide"}
 ll_a <- loglike_compare(fit,
                         par_i = "m ~ x")
 ```
@@ -111,7 +111,7 @@ well-approximated by the quadratic approximation.
 Let examine the log profile likelihood of the indirect
 effect. To specify it, we need to use `ab :=`:
 
-```{r}
+```{r, results = "hide"}
 ll_ab <- loglike_compare(fit,
                          par_i = "ab := ")
 ```
@@ -146,5 +146,4 @@ directly.
 
 # Reference
 
-Pawitan, Y. (2013). *In all likelihood: Statistical
-#' modelling and inference using likelihood*. Oxford University Press.
+Pawitan, Y. (2013). *In all likelihood: Statistical modelling and inference using likelihood*. Oxford University Press.
