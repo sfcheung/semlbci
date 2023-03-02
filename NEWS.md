@@ -1,4 +1,4 @@
-# semlbci 0.10.0.18
+# semlbci 0.10.0.19
 
 - First public release. (0.10.0.12)
 - Added R CMD Check GitHub actions. (0.10.0.13)
@@ -13,5 +13,9 @@
 - Fixed a bug that `loglike_compare()` does not pass
   `use_pbapply` to the helper functions. (0.10.0.18)
 - Added the `semlbci_out` argument to `loglike_compare()`. (0.10.0.18)
-- Updated the vignette for `loglike_compare()`. (0.10.0.18)
+- Added a few arguments to `plot.loglike_compare()` and
+  fixed the problems with labels. (0.10.0.19)
+- Added `rlang` to Imports to avoid the need to set global
+  variables (0.10.0.19)
+- Updated the vignette for `loglike_compare()`. (0.10.0.19)
 - Preparation for CRAN in progress.
