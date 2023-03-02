@@ -646,6 +646,11 @@ loglike_compare <- function(sem_out,
 #'   if *p*-values are requested in the
 #'   plot, determined by [ggplot2::rel()]. Default is 4.
 #'
+#' @param nd_theta The number of decimal places for the labels
+#'   of theta. Default is 3.
+#'
+#' @param nd_pvalue The number of decimal places for the labels
+#'   of *p*-values. Default is 3.
 #' @param size_theta Deprecated. No longer used.
 #'
 #' @param size_pvalue Deprecated. No longer used.
@@ -692,6 +697,8 @@ plot.loglike_compare <- function(x, y,
                                  type = c("ggplot2", "default"),
                                  size_label = 4,
                                  size_point = 4,
+                                 nd_theta = 3,
+                                 nd_pvalue = 3,
                                  size_theta = 4,
                                  size_pvalue = 4,
                                  add_pvalues = FALSE,
@@ -722,7 +729,10 @@ plot.loglike_compare <- function(x, y,
                                     color = "blue",
                                     shape = 4) +
                 ggplot2::annotate("text", x = x$est, y = min(dat$loglike),
-                                  label = formatC(x$est, 3, 4, format = "f"),
+                                  label = formatC(x$est,
+                                                  digits = nd_theta,
+                                                  width = nd_theta + 1,
+                                                  format = "f"),
                                   color = "blue",
                                   vjust = 1,
                                   size = ggplot2::rel(size_label)) +
@@ -738,13 +748,25 @@ plot.loglike_compare <- function(x, y,
         ll_max <- max(c(x$quadratic$loglike, x$loglike$loglike))
         dat_q <- x$quadratic[c(1, nrow(x$quadratic)), ]
         dat_q$loglike <- dat_q$loglike - ll_max
-        dat_q$pvalue <- paste0("p=",formatC(dat_q$pvalue, 3, 4, format = "f"))
+        # dat_q$pvalue <- paste0("p=",formatC(dat_q$pvalue, 3, 4, format = "f"))
+        dat_q$pvalue <- paste0("italic(p) == ",
+                                formatC(dat_q$pvalue,
+                                        digits = nd_pvalue,
+                                        width = nd_pvalue + 1, format = "f"))
         dat_l <- x$loglike[c(1, nrow(x$loglike)), ]
         dat_l$loglike <- dat_l$loglike - ll_max
-        dat_l$pvalue <- paste0("p=",formatC(dat_l$pvalue, 3, 4, format = "f"))
+        # dat_l$pvalue <- paste0("p=",formatC(dat_l$pvalue, 3, 4, format = "f"))
+        dat_l$pvalue <- paste0("italic(p) == ",
+                                formatC(dat_l$pvalue,
+                                        digits = nd_pvalue,
+                                        width = nd_pvalue + 1, format = "f"))
         dat_0 <- rbind(data.frame(dat_q, type = "quadratic"),
                         data.frame(dat_l, type = "true"))
-        dat_0$theta_str <- formatC(dat_0$theta, 3, 4, "f")
+        # dat_0$theta_str <- formatC(dat_0$theta, 3, 4, "f")
+        dat_0$theta_str <- paste0("theta1 == ",
+                                  formatC(dat_0$theta,
+                                          digits = nd_theta,
+                                          width = nd_theta + 1, "f"))
         dat_1 <- dat_0
         dat_0 <- dat_1[, c("type", "theta", "loglike", "theta_str")]
         colnames(dat_0)[which(colnames(dat_0) == "theta_str")] <- "value"
@@ -756,15 +778,15 @@ plot.loglike_compare <- function(x, y,
             dat_0 <- rbind(dat_0, dat_0a)
           }
         p <- p + ggrepel::geom_text_repel(data = dat_0,
-                                              ggplot2::aes(x = .data$theta,
-                                                           y = .data$loglike,
-                                                           label = .data$value,
-                                                           color = .data$type,
-                                                           size = .data$label_size),
-                                              # size = ggplot2::rel(size_theta),
-                                              box.padding = .5,
-                                              # nudge_y = -.5,
-                                              show.legend = FALSE) +
+                                          ggplot2::aes(x = .data$theta,
+                                                       y = .data$loglike,
+                                                       label = .data$value,
+                                                       color = .data$type),
+                                          size = ggplot2::rel(size_label),
+                                          box.padding = .5,
+                                          parse = TRUE,
+                                          # nudge_y = -.5,
+                                          show.legend = FALSE) +
                  ggplot2::ylim(-2.1, 0)
         if (add_pvalues) {
             # p <- p + ggrepel::geom_text_repel(data = dat_0,
@@ -777,13 +799,13 @@ plot.loglike_compare <- function(x, y,
             #                                   nudge_y = .25,
             #                                   show.legend = FALSE) +
             p <- p + ggplot2::geom_point(data = dat_1,
-                                          ggplot2::aes(x = .data$theta,
-                                                       y = .data$loglike,
-                                                       color = .data$type,
-                                                       shape = .data$type),
-                                          size = ggplot2::rel(size_point),
-                                          show.legend = c(color = FALSE,
-                                                          shape = TRUE)) +
+                                         ggplot2::aes(x = .data$theta,
+                                                      y = .data$loglike,
+                                                      color = .data$type,
+                                                      shape = .data$type),
+                                         size = ggplot2::rel(size_point),
+                                         show.legend = c(color = FALSE,
+                                                         shape = TRUE)) +
                       ggplot2::guides(color = ggplot2::guide_legend(order = 1),
                                       linetype = ggplot2::guide_legend(order = 1),
                                       shape = ggplot2::guide_legend(order = 2))

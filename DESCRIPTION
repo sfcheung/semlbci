@@ -40,7 +40,8 @@ Imports:
     utils,
     MASS,
     ggplot2,
-    ggrepel
+    ggrepel,
+    rlang
 VignetteBuilder: knitr
 Config/testthat/parallel: true
 Config/testthat/edition: 3

@@ -11,7 +11,7 @@
 \usage{
 loglike_compare(
   sem_out,
-  semlbci_out,
+  semlbci_out = NULL,
   par_i,
   confidence = 0.95,
   n_points = 21,
