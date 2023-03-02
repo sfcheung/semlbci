@@ -57,6 +57,8 @@ came with the package `semlbci`:
 
 ```r
 library(lavaan)
+#> This is lavaan 0.6-14
+#> lavaan is FREE software! Please report any bugs.
 library(semlbci)
 dat <- simple_med
 mod <-
@@ -104,7 +106,7 @@ the likelihood values:
 
 
 ```r
-plot(ll_a)
+plot(ll_a, add_pvalues = TRUE)
 ```
 
 ![a-path](loglike_plot_a-1.png)
@@ -131,7 +133,7 @@ This is the plot:
 
 
 ```r
-plot(ll_ab)
+plot(ll_ab, add_pvalues = TRUE)
 ```
 
 ![Indirect Effect](loglike_plot_ab-1.png)
