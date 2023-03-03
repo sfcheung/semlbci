@@ -3,6 +3,15 @@ destination: docs
 url: https://sfcheung.github.io/semlbci/
 template:
   bootstrap: 5
+  bootswatch: pulse
+  bslib:
+    pkgdown-nav-height: 100px
+  theme: arrow-light
+
+navbar:
+  structure:
+    left:  [intro, articles, reference, news]
+    right: [search, github]
 
 articles:
 - title: Articles
