@@ -1,4 +1,4 @@
-# semlbci 0.10.0.19
+# semlbci 0.10.0.20
 
 - First public release. (0.10.0.12)
 - Added R CMD Check GitHub actions. (0.10.0.13)
@@ -18,4 +18,6 @@
 - Added `rlang` to Imports to avoid the need to set global
   variables (0.10.0.19)
 - Updated the vignette for `loglike_compare()`. (0.10.0.19)
+- Set `try_k_more` to 0 such that the examples of
+  `loglike_compare()` and `plot.loglike_compare()` can run faster. (0.10.0.20)
 - Preparation for CRAN in progress.
