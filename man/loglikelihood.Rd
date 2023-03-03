@@ -11,7 +11,7 @@
 \usage{
 loglike_compare(
   sem_out,
-  semlbci_out,
+  semlbci_out = NULL,
   par_i,
   confidence = 0.95,
   n_points = 21,
@@ -229,7 +229,11 @@ fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
 # 4 points are used just for illustration
 # At least 21 points should be used for a smooth plot
+# Remove try_k_more in real applications. It is set
+# to run such that this example is not too slow.
+# use_pbapply can be removed or set to TRUE to show the progress.
 ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4,
+                        try_k_more = 0,
                         use_pbapply = FALSE)
 plot(ll_a)
 

@@ -100,7 +100,7 @@ Once finishes, we can simply use `plot()` to plot
 the likelihood values:
 
 ```{r loglike_plot_a, fig.cap = "a-path"}
-plot(ll_a)
+plot(ll_a, add_pvalues = TRUE)
 ```
 
 As expected, the log profile likelihood of the *a*-path is
@@ -123,7 +123,7 @@ indirect effect, which is the product of two other parameters.
 This is the plot:
 
 ```{r loglike_plot_ab, fig.cap = "Indirect Effect"}
-plot(ll_ab)
+plot(ll_ab, add_pvalues = TRUE)
 ```
 
 We can see that, as expected, the quadratic approximation is
