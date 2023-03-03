@@ -8,4 +8,4 @@
 ## usethis namespace: end
 NULL
 
-utils::globalVariables(c("theta", "loglike", "pvalue", "theta_str"))
+# utils::globalVariables(c("theta", "loglike", "pvalue", "theta_str"))

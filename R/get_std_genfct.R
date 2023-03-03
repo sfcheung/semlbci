@@ -5,7 +5,7 @@
 #'
 #' @details This function is used in tests.
 #'
-#' @return A function to be used in a lavaan model.
+#' @return A function to be used in a `lavaan` model.
 #'
 #' @param fit The source fit object.
 #'

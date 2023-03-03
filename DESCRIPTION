@@ -1,6 +1,6 @@
 Package: semlbci
-Title: Likelihood Based Confidence Interval for SEM
-Version: 0.10.0.15
+Title: Likelihood-Based Confidence Interval in Structrual Equation Models
+Version: 0.10.0.20
 Authors@R:
     c(
       person(given = "Shu Fai",
@@ -40,7 +40,8 @@ Imports:
     utils,
     MASS,
     ggplot2,
-    ggrepel
+    ggrepel,
+    rlang
 VignetteBuilder: knitr
 Config/testthat/parallel: true
 Config/testthat/edition: 3

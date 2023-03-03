@@ -25,14 +25,18 @@
 #' @return [loglike_range()] returns a data frame with these columns:
 #'
 #' - `theta`: The values to which the parameter is fixed to.
-#' - `loglike`: The log profile likelihood at theta.
+#' - `loglike`: The log profile likelihood at `theta`.
 #' - `pvalue`: The *p*-values based on the likelihood ratio difference
 #'             test between the original model and model with the
-#'             parameter fixed to theta.
+#'             parameter fixed to `theta`.
 #'
 #' @param sem_out The SEM output. Currently the outputs
 #'   of [lavaan::lavaan()] or its wrappers, such as [lavaan::sem()]
 #'   and [lavaan::cfa()] are supported.
+#'
+#' @param semlbci_out The output of [semlbci::semlbci()].
+#'   If supplied, it will extract the likelihood-based confidence
+#'   interval from the output. If not, it will call [semlbci::semlbci()].
 #'
 #' @param par_i The row number of the parameter in the output of
 #'   [lavaan::parameterTable()]. Can also be a [lavaan::model.syntax]
@@ -88,23 +92,14 @@ NULL
 #'
 #' ## loglike_range
 #'
-#' library(lavaan)
-#' data(simple_med)
-#' dat <- simple_med
-#' mod <-
-#' "
-#' m ~ a * x
-#' y ~ b * m
-#' ab := a * b
-#' "
-#' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
-#'
-#' # Five points are used just for illustration
-#' ll_1 <- loglike_range(fit, par_i = "y ~ m", n_points = 5)
-#' head(ll_1)
+#' # Usually not to be used directly.
+#' # Used by loglike_compare().
+#' # 3 points are used just for illustration
+#' # ll_1 <- loglike_range(fit, par_i = "y ~ m", n_points = 3)
+#' # head(ll_1)
 #'
 #' @describeIn loglikelihood Find the log profile likelihood for a range of values.
-#' @order 1
+#' @order 2
 #' @export
 
 
@@ -229,25 +224,16 @@ loglike_range <- function(sem_out, par_i,
 #'
 #' ## loglike_point
 #'
-#' library(lavaan)
-#' data(simple_med)
-#' dat <- simple_med
-#' mod <-
-#' "
-#' m ~ a * x
-#' y ~ b * m
-#' ab := a * b
-#' "
-#' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
-#'
-#' llp_1 <- loglike_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
-#' llp_1$loglike
-#' llp_1$pvalue
-#' llp_1$lrt
+#' # Usually not to be used directly.
+#' # Used by loglike_compare().
+#' # llp_1 <- loglike_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
+#' # llp_1$loglike
+#' # llp_1$pvalue
+#' # llp_1$lrt
 #'
 #'
 #' @describeIn loglikelihood Find the log likelihood at a value.
-#' @order 2
+#' @order 3
 #' @export
 
 loglike_point <- function(theta0,
@@ -323,30 +309,21 @@ loglike_point <- function(theta0,
 #'              using quadratic approximation.
 #' - `pvalue`: The *p*-values based on the likelihood ratio difference
 #'             test between the original model and the model with the
-#'             parameter fixed to theta.
+#'             parameter fixed to `theta`.
 #'
 #' @examples
 #'
 #' ## loglike_quad_range
 #'
-#' library(lavaan)
-#' data(simple_med)
-#' dat <- simple_med
-#' mod <-
-#' "
-#' m ~ a * x
-#' y ~ b * m
-#' ab := a * b
-#' "
-#' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
-#'
-#' # Five points are used just for illustration
-#' lq_1 <- loglike_quad_range(fit, par_i = "y ~ m", n_points = 5)
-#' head(lq_1)
+#' # Usually not to be used directly.
+#' # Used by loglike_compare().
+#' # 3 points are used just for illustration
+#' # lq_1 <- loglike_quad_range(fit, par_i = "y ~ m", n_points = 3)
+#' # head(lq_1)
 #'
 #'
 #' @describeIn loglikelihood Find the approximated log likelihood for a range of values.
-#' @order 3
+#' @order 4
 #' @export
 
 
@@ -484,23 +461,14 @@ loglike_quad_range <- function(sem_out,
 #'
 #' ## loglike_quad_point
 #'
-#' library(lavaan)
-#' data(simple_med)
-#' dat <- simple_med
-#' mod <-
-#' "
-#' m ~ a * x
-#' y ~ b * m
-#' ab := a * b
-#' "
-#' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
-#'
-#' lqp_1 <- loglike_quad_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
-#' lqp_1
+#' # Usually not to be used directly.
+#' # Used by loglike_compare().
+#' # lqp_1 <- loglike_quad_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
+#' # lqp_1
 #'
 #'
 #' @describeIn loglikelihood Find the approximated log likelihood at a value.
-#' @order 4
+#' @order 5
 #' @export
 
 
@@ -531,7 +499,7 @@ loglike_quad_point <- function(theta0,
 #'                           the likelihood-based confidence bounds.
 #' - `est`: The point estimate of the parameter in `sem_out`.
 #'
-#' `loglike_compare`-class object has a plot method ([plot.loglike_compare()])
+#' `loglike_compare`-class object has a `plot` method ([plot.loglike_compare()])
 #' that can be used to plot the log profile likelihood.
 #'
 #' @examples
@@ -549,18 +517,30 @@ loglike_quad_point <- function(theta0,
 #' "
 #' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 #'
-#' # Five points are used just for illustration
+#' # 4 points are used just for illustration
 #' # At least 21 points should be used for a smooth plot
-#' ll_all <- loglike_compare(fit, par_i = "ab := ", n_points = 5)
-#' plot(ll_all)
+#' # Remove try_k_more in real applications. It is set
+#' # to run such that this example is not too slow.
+#' # use_pbapply can be removed or set to TRUE to show the progress.
+#' ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4,
+#'                         try_k_more = 0,
+#'                         use_pbapply = FALSE)
+#' plot(ll_a)
+#'
+#' # See the vignette "loglike" for an example for the
+#' # indirect effect.
 #'
 #' @seealso [plot.loglike_compare()]
 #'
-#' @describeIn loglikelihood Description of this function
-#' @order 5
+#' @describeIn loglikelihood Generates points for log profile likelihood and
+#' quadratic approximation, by calling the helper functions `loglike_range()`
+#' and `loglike_quad_range()`.
+#'
+#' @order 1
 #' @export
 
 loglike_compare <- function(sem_out,
+                            semlbci_out = NULL,
                             par_i,
                             confidence = .95,
                             n_points = 21,
@@ -582,8 +562,15 @@ loglike_compare <- function(sem_out,
     z <- stats::qnorm(1 - (1 - confidence) / 2)
     zs <- seq(-z, z, length.out = n_points)
     thetas_q <- est + se * zs
-    # Find LBCI
-    lbci_i <- semlbci(sem_out, pars = par_i, ciperc = confidence)
+    if (is.null(semlbci_out)) {
+        lbci_i <- semlbci(sem_out,
+                          pars = par_i,
+                          ciperc = confidence,
+                          parallel = FALSE,
+                          use_pbapply = use_pbapply)
+      } else {
+        lbci_i <- semlbci_out
+      }
     lbci_range <- unlist(unname(stats::confint(lbci_i)[1, ]))
     thetas_l <- seq(lbci_range[1], lbci_range[2], length.out = n_points)
     thetas_0 <- sort(c(thetas_q, thetas_l))
@@ -594,13 +581,15 @@ loglike_compare <- function(sem_out,
                                start = start,
                                try_k_more = try_k_more,
                                parallel = parallel,
-                               ncpus = ncpus)
+                               ncpus = ncpus,
+                               use_pbapply = use_pbapply)
     ll <- loglike_range(sem_out, par_i = par_i,
                         interval = int_l,
                         start = start,
                         try_k_more = try_k_more,
                         parallel = parallel,
-                        ncpus = ncpus)
+                        ncpus = ncpus,
+                        use_pbapply = use_pbapply)
     pvalue_q_lb <- loglike_point(ll_q[1, "theta"],
                                  sem_out = sem_out,
                                  par_i = par_i,
@@ -653,11 +642,22 @@ loglike_compare <- function(sem_out,
 #'   to plot the graph. If `"default"`, will use R base graphics, The
 #'   `ggplot2` version plots more information. Default is `"ggplot2"`.
 #'
-#' @param size_theta The relative size of the parameter values in the
+#' @param size_label The relative size of the labels for thetas
+#'   (and *p*-values, if requested) in the
 #'   plot, determined by [ggplot2::rel()]. Default is 4.
 #'
-#' @param size_pvalue The relative size of the *p*-values in the
+#' @param size_point The relative size of the points to be added
+#'   if *p*-values are requested in the
 #'   plot, determined by [ggplot2::rel()]. Default is 4.
+#'
+#' @param nd_theta The number of decimal places for the labels
+#'   of theta. Default is 3.
+#'
+#' @param nd_pvalue The number of decimal places for the labels
+#'   of *p*-values. Default is 3.
+#' @param size_theta Deprecated. No longer used.
+#'
+#' @param size_pvalue Deprecated. No longer used.
 #'
 #' @param add_pvalues If `TRUE`, likelihood ratio test *p*-values will
 #'    be included for the confidence limits. Only available if `type =
@@ -683,16 +683,30 @@ loglike_compare <- function(sem_out,
 #' "
 #' fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 #'
-#' # Five points are used just for illustration
+#' # Four points are used just for illustration
 #' # At least 21 points should be used for a smooth plot
-#' ll_all <- loglike_compare(fit, par_i = "ab := ", n_points = 5)
-#' plot(ll_all)
-#' plot(ll_all, add_pvalues = TRUE)
+#' # Remove try_k_more in real applications. It is set
+#' # to run such that this example is not too slow.
+#' # use_pbapply can be removed or set to TRUE to show the progress.
+#' ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4,
+#'                         try_k_more = 0,
+#'                         use_pbapply = FALSE)
 #'
+#' plot(ll_a)
+#' plot(ll_a, add_pvalues = TRUE)
+#'
+#' # See the vignette "loglike" for an example for the
+#' # indirect effect.
+#'
+#' @importFrom rlang .data
 #' @export
 
 plot.loglike_compare <- function(x, y,
                                  type = c("ggplot2", "default"),
+                                 size_label = 4,
+                                 size_point = 4,
+                                 nd_theta = 3,
+                                 nd_pvalue = 3,
                                  size_theta = 4,
                                  size_pvalue = 4,
                                  add_pvalues = FALSE,
@@ -709,10 +723,10 @@ plot.loglike_compare <- function(x, y,
         dat$loglike <- dat$loglike - max(dat$loglike)
         p <- ggplot2::ggplot() +
                 ggplot2::geom_line(data = dat,
-                                   ggplot2::aes(x = theta,
-                                                y = loglike,
-                                                color = type,
-                                                linetype = type)) +
+                                   ggplot2::aes(x = .data$theta,
+                                                y = .data$loglike,
+                                                color = .data$type,
+                                                linetype = .data$type)) +
                 ggplot2::geom_segment(ggplot2::aes(x = x$est,
                                                    y = min(dat$loglike),
                                                    xend = x$est,
@@ -723,10 +737,13 @@ plot.loglike_compare <- function(x, y,
                                     color = "blue",
                                     shape = 4) +
                 ggplot2::annotate("text", x = x$est, y = min(dat$loglike),
-                                  label = formatC(x$est, 3, 4, format = "f"),
+                                  label = formatC(x$est,
+                                                  digits = nd_theta,
+                                                  width = nd_theta + 1,
+                                                  format = "f"),
                                   color = "blue",
                                   vjust = 1,
-                                  size = ggplot2::rel(size_theta)) +
+                                  size = ggplot2::rel(size_label)) +
                 ggplot2::scale_colour_manual(values = c(quadratic = "red",
                                                         true = "blue")) +
                 ggplot2::scale_linetype_manual(values = c(quadratic = "dashed",
@@ -739,41 +756,64 @@ plot.loglike_compare <- function(x, y,
         ll_max <- max(c(x$quadratic$loglike, x$loglike$loglike))
         dat_q <- x$quadratic[c(1, nrow(x$quadratic)), ]
         dat_q$loglike <- dat_q$loglike - ll_max
-        dat_q$pvalue <- paste0("p=",formatC(dat_q$pvalue, 3, 4, format = "f"))
+        # dat_q$pvalue <- paste0("p=",formatC(dat_q$pvalue, 3, 4, format = "f"))
+        dat_q$pvalue <- paste0("italic(p) == ",
+                                formatC(dat_q$pvalue,
+                                        digits = nd_pvalue,
+                                        width = nd_pvalue + 1, format = "f"))
         dat_l <- x$loglike[c(1, nrow(x$loglike)), ]
         dat_l$loglike <- dat_l$loglike - ll_max
-        dat_l$pvalue <- paste0("p=",formatC(dat_l$pvalue, 3, 4, format = "f"))
+        # dat_l$pvalue <- paste0("p=",formatC(dat_l$pvalue, 3, 4, format = "f"))
+        dat_l$pvalue <- paste0("italic(p) == ",
+                                formatC(dat_l$pvalue,
+                                        digits = nd_pvalue,
+                                        width = nd_pvalue + 1, format = "f"))
         dat_0 <- rbind(data.frame(dat_q, type = "quadratic"),
                         data.frame(dat_l, type = "true"))
-        dat_0$theta_str <- formatC(dat_0$theta, 3, 4, "f")
+        # dat_0$theta_str <- formatC(dat_0$theta, 3, 4, "f")
+        dat_0$theta_str <- paste0("theta1 == ",
+                                  formatC(dat_0$theta,
+                                          digits = nd_theta,
+                                          width = nd_theta + 1, "f"))
+        dat_1 <- dat_0
+        dat_0 <- dat_1[, c("type", "theta", "loglike", "theta_str")]
+        colnames(dat_0)[which(colnames(dat_0) == "theta_str")] <- "value"
+        dat_0$label_size <- ggplot2::rel(size_label)
+        if (add_pvalues) {
+            dat_0a <- dat_1[, c("type", "theta", "loglike", "pvalue")]
+            colnames(dat_0a)[which(colnames(dat_0a) == "pvalue")] <- "value"
+            dat_0a$label_size <- ggplot2::rel(size_label)
+            dat_0 <- rbind(dat_0, dat_0a)
+          }
         p <- p + ggrepel::geom_text_repel(data = dat_0,
-                                              ggplot2::aes(x = theta,
-                                                           y = loglike,
-                                                           label = theta_str,
-                                                           color = type),
-                                              size = ggplot2::rel(size_theta),
-                                              box.padding = .5,
-                                              nudge_y = -.5,
-                                              show.legend = FALSE) +
+                                          ggplot2::aes(x = .data$theta,
+                                                       y = .data$loglike,
+                                                       label = .data$value,
+                                                       color = .data$type),
+                                          size = ggplot2::rel(size_label),
+                                          box.padding = .5,
+                                          parse = TRUE,
+                                          # nudge_y = -.5,
+                                          show.legend = FALSE) +
                  ggplot2::ylim(-2.1, 0)
         if (add_pvalues) {
-            p <- p + ggrepel::geom_text_repel(data = dat_0,
-                                              ggplot2::aes(x = theta,
-                                                           y = loglike,
-                                                           label = pvalue,
-                                                           color = type),
-                                              size = ggplot2::rel(size_pvalue),
-                                              box.padding = .5,
-                                              nudge_y = .25,
-                                              show.legend = FALSE) +
-                      ggplot2::geom_point(data = dat_0,
-                                          ggplot2::aes(x = theta,
-                                                       y = loglike,
-                                                       color = type,
-                                                       shape = type),
-                                          size = ggplot2::rel(size_pvalue),
-                                          show.legend = c(color = FALSE,
-                                                          shape = TRUE)) +
+            # p <- p + ggrepel::geom_text_repel(data = dat_0,
+            #                                   ggplot2::aes(x = theta,
+            #                                                y = loglike,
+            #                                                label = pvalue,
+            #                                                color = type),
+            #                                   size = ggplot2::rel(size_pvalue),
+            #                                   box.padding = .5,
+            #                                   nudge_y = .25,
+            #                                   show.legend = FALSE) +
+            p <- p + ggplot2::geom_point(data = dat_1,
+                                         ggplot2::aes(x = .data$theta,
+                                                      y = .data$loglike,
+                                                      color = .data$type,
+                                                      shape = .data$type),
+                                         size = ggplot2::rel(size_point),
+                                         show.legend = c(color = FALSE,
+                                                         shape = TRUE)) +
                       ggplot2::guides(color = ggplot2::guide_legend(order = 1),
                                       linetype = ggplot2::guide_legend(order = 1),
                                       shape = ggplot2::guide_legend(order = 2))

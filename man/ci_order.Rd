@@ -20,6 +20,16 @@ such as the output of \code{\link[=nearby_levels]{nearby_levels()}}.}
 
 \item{...}{Additional arguments. Not used.}
 }
+\value{
+A \code{ci_order}-class object with a \code{print} method
+\code{\link[=print.ci_order]{print.ci_order()}}. The number of rows is equal to the
+number of
+parameters in \code{semlbci_list}, and the columns stores the
+confidence limits from the list, ordered according to the
+level of confidence.
+
+\code{x} is returned invisibly. Called for its side effect.
+}
 \description{
 Check whether the LBCIs in a list of
 \code{semlbci}-class of objects are consistent with their
@@ -36,14 +46,13 @@ levels of confidence.
 library(lavaan)
 mod <-
 "
-m ~ a*x
-y ~ b*m
-ab := a * b
+m ~ x
+y ~ m
 "
 fit_med <- sem(mod, simple_med, fixed.x = FALSE)
 lbci_fit <- semlbci(fit_med)
 lbci_fit_nb <- nearby_levels(lbci_fit,
-                 ciperc_levels = c(-.050, .050))
+                             ciperc_levels = c(-.050, .050))
 ci_order(lbci_fit_nb)
 
 }

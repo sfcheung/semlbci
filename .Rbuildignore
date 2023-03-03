@@ -7,3 +7,4 @@
 ^doc$
 ^Meta$
 ^\.github$
+^rebuild_vignettes.R$

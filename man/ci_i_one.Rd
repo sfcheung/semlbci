@@ -62,7 +62,7 @@ code is not zero. Default is 0.}
 the requested method (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} for "wn").}
 }
 \value{
-A list of several elements.
+A list of the following elements.
 \itemize{
 \item \code{bound}: The bound located. \code{NA} if the search failed.
 \item \code{diags}: Diagnostic information.

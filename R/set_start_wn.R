@@ -4,7 +4,7 @@
 #'
 #' @details Currently supports \code{lavaan} output only.
 #'
-#' @return A lavaan parameter table in which parameters estimated with
+#' @return A `lavaan` parameter table in which parameters estimated with
 #'  target fixed to its lower or upper Wald confidence limit.
 #'
 #' @param i The position of the target parameters as in the parameter

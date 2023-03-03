@@ -6,7 +6,8 @@
 #' @details To get the original output of [ci_bound_wn_i()]
 #'  for a bound. Usually for diagnosis.
 #'
-#' @return A `cibound`-class object.
+#' @return A `cibound`-class object. See [ci_bound_wn_i()]
+#' for details.
 #'
 #' @param x The output of [semlbci()].
 #'

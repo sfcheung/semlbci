@@ -8,8 +8,8 @@
 #'  diagnostic information on the bound being found and the search
 #'  process.
 #'
-#' @return Nothing. It is used for its side effect (printing the
-#'  information).
+#' @return
+#' `x` is returned invisibly. Called for its side effect.
 #'
 #' @param x The output of a `ci_bound_xx_i` function. Currently the
 #'  only such function is [ci_bound_wn_i()].
@@ -127,4 +127,5 @@ print.cibound <- function(x, digits = 5, ...) {
       }
     print(call_print)
     cat("\n")
+    invisible(x)
   }

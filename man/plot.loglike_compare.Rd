@@ -8,6 +8,10 @@
   x,
   y,
   type = c("ggplot2", "default"),
+  size_label = 4,
+  size_point = 4,
+  nd_theta = 3,
+  nd_pvalue = 3,
   size_theta = 4,
   size_pvalue = 4,
   add_pvalues = FALSE,
@@ -23,11 +27,23 @@
 to plot the graph. If \code{"default"}, will use R base graphics, The
 \code{ggplot2} version plots more information. Default is \code{"ggplot2"}.}
 
-\item{size_theta}{The relative size of the parameter values in the
+\item{size_label}{The relative size of the labels for thetas
+(and \emph{p}-values, if requested) in the
 plot, determined by \code{\link[ggplot2:element]{ggplot2::rel()}}. Default is 4.}
 
-\item{size_pvalue}{The relative size of the \emph{p}-values in the
+\item{size_point}{The relative size of the points to be added
+if \emph{p}-values are requested in the
 plot, determined by \code{\link[ggplot2:element]{ggplot2::rel()}}. Default is 4.}
+
+\item{nd_theta}{The number of decimal places for the labels
+of theta. Default is 3.}
+
+\item{nd_pvalue}{The number of decimal places for the labels
+of \emph{p}-values. Default is 3.}
+
+\item{size_theta}{Deprecated. No longer used.}
+
+\item{size_pvalue}{Deprecated. No longer used.}
 
 \item{add_pvalues}{If \code{TRUE}, likelihood ratio test \emph{p}-values will
 be included for the confidence limits. Only available if \code{type = "ggplot2"}.}
@@ -64,11 +80,20 @@ ab := a * b
 "
 fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 
-# Five points are used just for illustration
+# Four points are used just for illustration
 # At least 21 points should be used for a smooth plot
-ll_all <- loglike_compare(fit, par_i = "ab := ", n_points = 5)
-plot(ll_all)
-plot(ll_all, add_pvalues = TRUE)
+# Remove try_k_more in real applications. It is set
+# to run such that this example is not too slow.
+# use_pbapply can be removed or set to TRUE to show the progress.
+ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4,
+                        try_k_more = 0,
+                        use_pbapply = FALSE)
+
+plot(ll_a)
+plot(ll_a, add_pvalues = TRUE)
+
+# See the vignette "loglike" for an example for the
+# indirect effect.
 
 }
 \references{

@@ -48,7 +48,8 @@
 #'
 #' Currently supports [lavaan::lavaan-class] outputs only.
 #'
-#' @return A vector of positions (row numbers) in the parameter table.
+#' @return A numeric vector of positions (row numbers) in
+#' the parameter table.
 #'
 #' @param syntax A vector of parameters, defined as in lavaan.
 #'

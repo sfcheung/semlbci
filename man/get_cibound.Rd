@@ -17,7 +17,8 @@ may be omitted in the printout of \code{x}.}
 to be extracted. Either \verb{"lbound"`` or }"ubound"``.}
 }
 \value{
-A \code{cibound}-class object.
+A \code{cibound}-class object. See \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}
+for details.
 }
 \description{
 Get the \code{cibound} output of a bound from
