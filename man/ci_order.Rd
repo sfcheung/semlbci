@@ -53,6 +53,11 @@ fit_med <- sem(mod, simple_med, fixed.x = FALSE)
 lbci_fit <- semlbci(fit_med)
 lbci_fit_nb <- nearby_levels(lbci_fit,
                              ciperc_levels = c(-.050, .050))
+
+# Check the order of the confidence bounds.
+# A confidence interval with a higher level of confidence
+# should enclose a confidence interval with
+# a lower level of confidence.
 ci_order(lbci_fit_nb)
 
 }

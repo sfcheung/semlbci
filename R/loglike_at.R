@@ -521,7 +521,7 @@ loglike_quad_point <- function(theta0,
 #' # 4 points are used just for illustration
 #' # At least 21 points should be used for a smooth plot
 #' # Remove try_k_more in real applications. It is set
-#' # to run such that this example is not too slow.
+#' # to zero such that this example does not take too long to run.
 #' # use_pbapply can be removed or set to TRUE to show the progress.
 #' ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4,
 #'                         try_k_more = 0,

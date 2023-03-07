@@ -44,7 +44,7 @@ fit_med <- sem(mod, simple_med, fixed.x = FALSE)
 p_table <- parameterTable(fit_med)
 p_table
 lbci_med <- semlbci(fit_med,
-                    pars = c("ab :="))
+                    pars = "ab :=")
 lbci_med
 
 confint(lbci_med)

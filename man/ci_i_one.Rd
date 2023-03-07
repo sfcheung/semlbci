@@ -116,12 +116,19 @@ fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 parameterTable(fit_med)
 
 # Find the LBCI for the first parameter
-# THe method "wn" need the constraint function:
+# The method "wn" needs the constraint function.
+# Use set_constraint() to generate this function:
 fn_constr0 <- set_constraint(fit_med)
-# Call ci_i to find the bounds
-out <- ci_i_one(1, npar = 5, which = "lbound",
-            sem_out = fit_med, method = "wn",
-            f_constr = fn_constr0)
+
+# Call ci_i to find the bound, the lower bound in this example.
+# The constraint function, assigned to f_constr, is passed
+# to ci_bound_wn_i().
+# npar is an argument for ci_bound_wn_i().
+out <- ci_i_one(i = 1,
+                which = "lbound",
+                sem_out = fit_med,
+                npar = 5,
+                f_constr = fn_constr0)
 out$bounds
 
 }

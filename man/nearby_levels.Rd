@@ -52,10 +52,15 @@ lbci_fit <- semlbci(fit_med)
 lbci_fit_nb <- nearby_levels(lbci_fit,
                              ciperc_levels = c(-.050, .050))
 names(lbci_fit_nb)
+# Check the order of the confidence bounds.
+# A confidence interval with a higher level of confidence
+# should enclose a confidence interval with
+# a lower level of confidence.
+ci_order(lbci_fit_nb)
 
 }
 \seealso{
-\code{\link[=semlbci]{semlbci()}}
+\code{\link[=semlbci]{semlbci()}}, \code{\link[=ci_order]{ci_order()}}
 }
 \author{
 Shu Fai Cheung \url{https://orcid.org/0000-0002-9871-9448}

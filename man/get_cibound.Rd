@@ -44,7 +44,13 @@ lbci_med <- semlbci(fit_med,
                     pars = c("ab :="))
 lbci_med
 
-get_cibound(lbci_med, row_id = 6)
+# Get the output of ci_bound_wn_i() of the lower
+# bound of the LBCI for the indirect effect:
+get_cibound(lbci_med, row_id = 6, which = "lbound")
+
+# Get the output of ci_bound_wn_i() of the upper
+# bound of the LBCI for the indirect effect:
+get_cibound(lbci_med, row_id = 6, which = "ubound")
 
 }
 \seealso{
