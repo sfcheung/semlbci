@@ -27,7 +27,7 @@ Return the confidence intervals of the parameters
 in the output of \code{\link[=semlbci]{semlbci()}}.
 }
 \details{
-Return the likelihood-based confidence intervals
+It returns the likelihood-based confidence intervals
 in the output of \code{\link[=semlbci]{semlbci()}}.
 }
 \examples{

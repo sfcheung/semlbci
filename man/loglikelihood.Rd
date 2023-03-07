@@ -178,9 +178,10 @@ These functions compute the log profile likelihood of
 a parameter when it is fixed to a value or a range of values
 }
 \details{
-The methods presented in Pawitan (2013) are used to
+It uses the methods presented in Pawitan (2013) to
 compute and visualize the log profile likelihood of a parameter in
-a structural equation model when it is fixed to a value or a range
+a structural equation model when this parameter is fixed to a value or
+a range
 of values. \code{\link[=loglike_range]{loglike_range()}} and \code{\link[=loglike_point]{loglike_point()}} compute the
 so-called "true" log profile likelihood, while
 \code{\link[=loglike_quad_range]{loglike_quad_range()}} and \code{\link[=loglike_quad_point]{loglike_quad_point()}} approximate the log

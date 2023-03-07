@@ -16,7 +16,7 @@ Generated from a two-factor model, with one
 standardized error variance close to zero.
 }
 \details{
-Supposed to be tested using this example:
+This model is used for examples like this one:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{# If fitted by the following model, the standardized
 # error variance of `x3` is close to zero.

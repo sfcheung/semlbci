@@ -4,7 +4,7 @@
 #'  two groups, n = 250 each.
 #'
 #' @details
-#' Supposed to be tested using this example:
+#' This model is used for examples like this one:
 #'
 #' ```
 #' library(lavaan)
@@ -39,7 +39,7 @@
 #' }
 #'
 #' @details
-#' Supposed to be tested using this example:
+#' This model is used for examples like this one:
 #'
 #' ```
 #' library(lavaan)

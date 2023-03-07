@@ -2,7 +2,7 @@
 #'
 #' @description Sets the starting values for optimization
 #'
-#' @details Currently supports \code{lavaan} output only.
+#' @details It currently supports `lavaan` output only.
 #'
 #' @return A `lavaan` parameter table in which parameters estimated with
 #'  target fixed to its lower or upper Wald confidence limit.
@@ -10,7 +10,7 @@
 #' @param i The position of the target parameters as in the parameter
 #'  table of lavaan.
 #'
-#' @param sem_out The SEM output. Currently \code{lavaan} output only.
+#' @param sem_out The SEM output. Currently supports a `lavaan` output only.
 #'
 #' @param which Whether the lower bound or the upper bound is to be
 #'  found. Must be "lbound" or "ubound".

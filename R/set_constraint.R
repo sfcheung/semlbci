@@ -20,7 +20,7 @@
 #' optimized with an equality constraint. [set_constraint()] generates
 #' the equality constraint function to be used by [ci_bound_wn_i()].
 #'
-#' Currently supports [lavaan::lavaan-class] outputs only.
+#' It currently supports [lavaan::lavaan-class] outputs only.
 #'
 #' @return An equality constraint function to be used by [ci_bound_wn_i()].
 #'

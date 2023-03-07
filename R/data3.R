@@ -18,7 +18,8 @@
 #' }
 #'
 #' @details
-#' Supposed to be tested using this example:
+#' This model is used for examples like this one:
+#'
 #'
 #' ```
 #' mod <-

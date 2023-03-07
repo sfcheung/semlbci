@@ -25,7 +25,7 @@ Get the \code{cibound} output of a bound from
 a \code{semlbci} object, the output of \code{\link[=semlbci]{semlbci()}}.
 }
 \details{
-To get the original output of \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}
+It returns the original output of \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}
 for a bound. Usually for diagnosis.
 }
 \examples{

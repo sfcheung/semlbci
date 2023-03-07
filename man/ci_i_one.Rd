@@ -98,7 +98,7 @@ use it for experiments or simulations.
 function (currently \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}). When called by \code{\link[=semlbci]{semlbci()}}
 to find the bound of a parameter, \code{\link[=ci_i_one]{ci_i_one()}} calls a function
 (\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} by default) one or more times to find the bound
-(limit) for an LBCI.
+(limit) for a likelihood-based confidence interval.
 }
 }
 \examples{

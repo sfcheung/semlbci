@@ -19,7 +19,7 @@
 #' function (currently [ci_bound_wn_i()]). When called by [semlbci()]
 #' to find the bound of a parameter, [ci_i_one()] calls a function
 #' ([ci_bound_wn_i()] by default) one or more times to find the bound
-#' (limit) for an LBCI.
+#' (limit) for a likelihood-based confidence interval.
 #'
 #' @return A list of the following elements.
 #'

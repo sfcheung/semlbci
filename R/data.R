@@ -3,7 +3,7 @@
 #' @description Generated from a two-factor model with six variables, n = 500
 #'
 #' @details
-#' Supposed to be tested using this example:
+#' This model is used for examples like this one:
 #'
 #' ```
 #' library(lavaan)
@@ -34,7 +34,8 @@
 #' }
 #'
 #' @details
-#' Supposed to be tested using this example:
+#' This model is used for examples like this one:
+#'
 #'
 #' ```
 #' library(lavaan)
@@ -68,7 +69,8 @@
 #' }
 #'
 #' @details
-#' Supposed to be tested using this example:
+#' This model is used for examples like this one:
+#'
 #'
 #' ```
 #' out <- lm(y ~ x1 + x2 + x3 + x4 + x5, reg_cor_near_one)
@@ -93,7 +95,8 @@
 #' @format A data frame with 120 rows and six variables, `x1` to `x6`
 #'
 #' @details
-#' Supposed to be tested using this example:
+#' This model is used for examples like this one:
+#'
 #'
 #' ```
 #' # If fitted by the following model, the standardized

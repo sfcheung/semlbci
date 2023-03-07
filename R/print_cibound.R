@@ -4,7 +4,7 @@
 #'  object.
 #'
 #' @details This is the print method for the output of
-#'  [ci_bound_wn_i()], an `cibound`-class object. It prints the
+#'  [ci_bound_wn_i()], a `cibound`-class object. It prints the
 #'  diagnostic information on the bound being found and the search
 #'  process.
 #'

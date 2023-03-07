@@ -2,8 +2,7 @@
 #'
 #' @description Gets all the unique names form a [lavaan] parameter table.
 #'
-#' @details  These columns will be extracted: `lhs`, `rhs`, `label`,
-#'  and `plabel`.
+#' @details It currently supports `lavaan` output only.
 #'
 #' @return A vector of unique characters
 #'

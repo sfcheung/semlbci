@@ -3,7 +3,7 @@
 #' @description Gets lhs, op, rhs and other information necessary for
 #'   uniquely identifying a parameter from an SEM output
 #'
-#' @details Currently supports \code{lavaan} output only.
+#' @details It currently supports `lavaan` output only.
 #'
 #' @return A one row data frame of lhs, op, rhs, block, and group of
 #'  the parameter in the parameter table.
@@ -13,7 +13,7 @@
 #' @param i The position of the target parameters as in the parameter
 #'   table of lavaan.
 #'
-#' @param sem_out The SEM output. Currently \code{lavaan} output only.
+#' @param sem_out The SEM output. Currently `lavaan` output only.
 #'
 #' @param more If `TRUE`, block and group are also returned. Default
 #'  is `FALSE`.

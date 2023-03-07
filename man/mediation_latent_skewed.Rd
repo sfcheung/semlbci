@@ -26,7 +26,7 @@ Generated from a three-factor model with nine variables, n = 150,
 with some observed variables positively skewed.
 }
 \details{
-Supposed to be tested using this example:
+This model is used for examples like this one:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{mod <-
 "

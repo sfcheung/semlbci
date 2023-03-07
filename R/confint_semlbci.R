@@ -3,7 +3,7 @@
 #' @description Return the confidence intervals of the parameters
 #'              in the output of [semlbci()].
 #'
-#' @details Return the likelihood-based confidence intervals
+#' @details It returns the likelihood-based confidence intervals
 #'          in the output of [semlbci()].
 #'
 #' @return

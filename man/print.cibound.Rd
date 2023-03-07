@@ -24,7 +24,7 @@ object.
 }
 \details{
 This is the print method for the output of
-\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}, an \code{cibound}-class object. It prints the
+\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}, a \code{cibound}-class object. It prints the
 diagnostic information on the bound being found and the search
 process.
 }

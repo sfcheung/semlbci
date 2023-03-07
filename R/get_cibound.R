@@ -3,7 +3,7 @@
 #' @description Get the `cibound` output of a bound from
 #'  a `semlbci` object, the output of [semlbci()].
 #'
-#' @details To get the original output of [ci_bound_wn_i()]
+#' @details It returns the original output of [ci_bound_wn_i()]
 #'  for a bound. Usually for diagnosis.
 #'
 #' @return A `cibound`-class object. See [ci_bound_wn_i()]
