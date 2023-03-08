@@ -1,7 +1,7 @@
 ---
 title: "Log Profile likelihood of a Parameter"
 author: "Shu Fai Cheung"
-date: "2023-03-02"
+date: "2023-03-08"
 output:
   rmarkdown::html_vignette:
     number_sections: true
@@ -20,7 +20,7 @@ This vignette illustrates how to use
 log profile likelihood of a parameter
 in a structural equation model (SEM)
 when it is fixed to a range of values
-to that the log profile likelihood
+to the log profile likelihood
 approximated by a quadratic function,
 using the method by Pawitan (2013)
 
@@ -45,8 +45,7 @@ appropriate for the model and parameter.
 
 Despite these limitations, they are
 still useful for generating graphs for
-illustration and learning, their
-intended use.
+illustration and learning.
 
 # Fitting a Simple Mediation model
 
@@ -57,8 +56,6 @@ came with the package `semlbci`:
 
 ```r
 library(lavaan)
-#> This is lavaan 0.6-14
-#> lavaan is FREE software! Please report any bugs.
 library(semlbci)
 dat <- simple_med
 mod <-
@@ -84,7 +81,7 @@ parameterEstimates(fit)
 
 ## The *a*-path
 
-To generate the plot for, say, the *a*-path coefficient,
+To generate the plot for the *a*-path coefficient,
 we can simply call `loglike_compare()` and setting the
 parameter to `"a"`.
 
@@ -98,10 +95,10 @@ Although teh *a*-path is labelled, `par_i` requires the
 parameter specified in `lavaan::model.syntax`. Please
 refer to the help page of `loglike_compare`.
 
-By default, 21 values will used to generate the plot. This
+By default, 21 values will be used to generate the plot. This
 can be controlled by the argument `n_points`.
 
-Once finishes, we can simply use `plot()` to plot
+Once the run finishes, we can use `plot()` to plot
 the likelihood values:
 
 
@@ -116,7 +113,7 @@ well-approximated by the quadratic approximation.
 
 ## The indirect effect
 
-Let examine the log profile likelihood of the indirect
+Let us examine the log profile likelihood of the indirect
 effect. To specify it, we need to use `ab :=`:
 
 
