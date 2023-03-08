@@ -14,7 +14,7 @@ object."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mat
     
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.20</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.23</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,7 +104,7 @@ included.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="semlbci.html">semlbci()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="semlbci.html">semlbci()</a></code>, <code><a href="ci_order.html">ci_order()</a></code></p></div>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -126,6 +126,14 @@ included.</p>
 <span class="r-in"><span>                             ciperc_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">.050</span>, <span class="fl">.050</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">lbci_fit_nb</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "0.9"  "0.95" "0.99"</span>
+<span class="r-in"><span><span class="co"># Check the order of the confidence bounds.</span></span></span>
+<span class="r-in"><span><span class="co"># A confidence interval with a higher level of confidence</span></span></span>
+<span class="r-in"><span><span class="co"># should enclose a confidence interval with</span></span></span>
+<span class="r-in"><span><span class="co"># a lower level of confidence.</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ci_order.html">ci_order</a></span><span class="op">(</span><span class="va">lbci_fit_nb</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     lb_0.99 lb_0.95  lb_0.9  ub_0.9 ub_0.95 ub_0.99 Order</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> m~x   0.557 &lt; 0.828 ! 0.965 &lt; 2.387 ! 2.525 &lt; 2.795    OK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y~m   0.345 &lt; 0.391 ! 0.414 &lt; 0.656 ! 0.679 &lt; 0.725    OK</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

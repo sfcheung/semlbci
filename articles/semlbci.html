@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.20</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.23</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,7 +71,7 @@
                         <h4 data-toc-skip class="author">Shu Fai
 Cheung</h4>
             
-            <h4 data-toc-skip class="date">2023-02-27</h4>
+            <h4 data-toc-skip class="date">2023-03-08</h4>
       
       
       <div class="d-none name"><code>semlbci.Rmd</code></div>
@@ -231,7 +231,8 @@ The content after <code>:=</code> will be ignored by
 <p>In this example, the point estimate of the indirect effect is 0.897,
 and the LBCI is 0.427 to 1.464.</p>
 <p>(Note: In some examples, we added <code>annotation = FALSE</code> to
-suppress the annotation in the printout.)</p>
+suppress the annotation in the printout to minimize the length of this
+vignette.)</p>
 </div>
 <div class="section level3">
 <h3 id="find-the-lbci-for-the-parameters-in-the-standardized-metric">Find the LBCI for the Parameters in the Standardized Metric<a class="anchor" aria-label="anchor" href="#find-the-lbci-for-the-parameters-in-the-standardized-metric"></a>
@@ -278,11 +279,11 @@ or its wrappers (e.g., <code>lavann::cfa()</code> and
 find the LBCIs for all free parameters (except for variances and error
 variances) and user-defined parameters, which can take a long time for a
 model with many parameters. Moreover, LBCI is usually used when
-Wald-type confidence interval may not be suitable, such as an indirect
-effect or a parameter in the standardized solution. These parameters may
-have sampling distributions that are asymmetric or otherwise
-substantially nonnormal due to bounded parameter spaces or other
-reasons.</p>
+Wald-type confidence interval may not be suitable, for example, forming
+the confidence interval for an indirect effect or a parameter in the
+standardized solution. These parameters may have sampling distributions
+that are asymmetric or otherwise substantially nonnormal due to bounded
+parameter spaces or other reasons.</p>
 <p>Therefore, it is recommended to call <code><a href="../reference/semlbci.html">semlbci()</a></code> without
 specifying any parameters. If the time to run is long, then call
 <code><a href="../reference/semlbci.html">semlbci()</a></code> only for selected parameters. The argument
@@ -494,6 +495,14 @@ variables but this is not officially tested.</p>
 boundary. The more advanced methods by Pritikin, Rappaport, and Neale
 (2017) will be considered in future development.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="technical-details">Technical Details<a class="anchor" aria-label="anchor" href="#technical-details"></a>
+</h2>
+<p>A detailed presentation of the internal workflow of
+<code><a href="../reference/semlbci.html">semlbci()</a></code> can be found in the <a href="https://osf.io/q6e3h" class="external-link">technical appendix at OSF</a>. Users
+interested in calling the lowest level function,
+<code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>, can see some illustrative exmaples in <a href="https://osf.io/zjysd" class="external-link">this document at OSF</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

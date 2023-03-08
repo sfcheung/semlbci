@@ -12,7 +12,7 @@ for one parameter."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/aj
     
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.20</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.23</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -177,7 +177,7 @@ use it for experiments or simulations.</p>
 function (currently <code><a href="ci_bound_wn_i.html">ci_bound_wn_i()</a></code>). When called by <code><a href="semlbci.html">semlbci()</a></code>
 to find the bound of a parameter, <code>ci_i_one()</code> calls a function
 (<code><a href="ci_bound_wn_i.html">ci_bound_wn_i()</a></code> by default) one or more times to find the bound
-(limit) for an LBCI.</p>
+(limit) for a likelihood-based confidence interval.</p>
 </div>
 
     </div>
@@ -214,12 +214,19 @@ to find the bound of a parameter, <code>ci_i_one()</code> calls a function
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.094</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Find the LBCI for the first parameter</span></span></span>
-<span class="r-in"><span><span class="co"># THe method "wn" need the constraint function:</span></span></span>
+<span class="r-in"><span><span class="co"># The method "wn" needs the constraint function.</span></span></span>
+<span class="r-in"><span><span class="co"># Use set_constraint() to generate this function:</span></span></span>
 <span class="r-in"><span><span class="va">fn_constr0</span> <span class="op">&lt;-</span> <span class="fu"><a href="set_constraint.html">set_constraint</a></span><span class="op">(</span><span class="va">fit_med</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># Call ci_i to find the bounds</span></span></span>
-<span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">ci_i_one</span><span class="op">(</span><span class="fl">1</span>, npar <span class="op">=</span> <span class="fl">5</span>, which <span class="op">=</span> <span class="st">"lbound"</span>,</span></span>
-<span class="r-in"><span>            sem_out <span class="op">=</span> <span class="va">fit_med</span>, method <span class="op">=</span> <span class="st">"wn"</span>,</span></span>
-<span class="r-in"><span>            f_constr <span class="op">=</span> <span class="va">fn_constr0</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Call ci_i to find the bound, the lower bound in this example.</span></span></span>
+<span class="r-in"><span><span class="co"># The constraint function, assigned to f_constr, is passed</span></span></span>
+<span class="r-in"><span><span class="co"># to ci_bound_wn_i().</span></span></span>
+<span class="r-in"><span><span class="co"># npar is an argument for ci_bound_wn_i().</span></span></span>
+<span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">ci_i_one</span><span class="op">(</span>i <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>                which <span class="op">=</span> <span class="st">"lbound"</span>,</span></span>
+<span class="r-in"><span>                sem_out <span class="op">=</span> <span class="va">fit_med</span>,</span></span>
+<span class="r-in"><span>                npar <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span>                f_constr <span class="op">=</span> <span class="va">fn_constr0</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">out</span><span class="op">$</span><span class="va">bounds</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   lbound </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.827702 </span>

@@ -12,7 +12,7 @@ a parameter when it is fixed to a value or a range of values"><!-- mathjax --><s
     
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.20</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.23</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -241,9 +241,10 @@ parameter fixed to <code>theta</code>.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The methods presented in Pawitan (2013) are used to
+    <p>It uses the methods presented in Pawitan (2013) to
 compute and visualize the log profile likelihood of a parameter in
-a structural equation model when it is fixed to a value or a range
+a structural equation model when this parameter is fixed to a value or
+a range
 of values. <code>loglike_range()</code> and <code>loglike_point()</code> compute the
 so-called "true" log profile likelihood, while
 <code>loglike_quad_range()</code> and <code>loglike_quad_point()</code> approximate the log
@@ -298,7 +299,7 @@ modelling and inference using likelihood</em>. Oxford University Press.</p>
 <span class="r-in"><span><span class="co"># 4 points are used just for illustration</span></span></span>
 <span class="r-in"><span><span class="co"># At least 21 points should be used for a smooth plot</span></span></span>
 <span class="r-in"><span><span class="co"># Remove try_k_more in real applications. It is set</span></span></span>
-<span class="r-in"><span><span class="co"># to run such that this example is not too slow.</span></span></span>
+<span class="r-in"><span><span class="co"># to zero such that this example does not take too long to run.</span></span></span>
 <span class="r-in"><span><span class="co"># use_pbapply can be removed or set to TRUE to show the progress.</span></span></span>
 <span class="r-in"><span><span class="va">ll_a</span> <span class="op">&lt;-</span> <span class="fu">loglike_compare</span><span class="op">(</span><span class="va">fit</span>, par_i <span class="op">=</span> <span class="st">"m ~ x"</span>, n_points <span class="op">=</span> <span class="fl">4</span>,</span></span>
 <span class="r-in"><span>                        try_k_more <span class="op">=</span> <span class="fl">0</span>,</span></span>

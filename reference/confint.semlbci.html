@@ -12,7 +12,7 @@ in the output of semlbci()."><!-- mathjax --><script src="https://cdnjs.cloudfla
     
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.20</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.23</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,7 +91,7 @@ when calling <code><a href="semlbci.html">semlbci()</a></code> and cannot be cha
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Return the likelihood-based confidence intervals
+    <p>It returns the likelihood-based confidence intervals
 in the output of <code><a href="semlbci.html">semlbci()</a></code>.</p>
     </div>
     <div class="section level2">
@@ -132,7 +132,7 @@ in the output of <code><a href="semlbci.html">semlbci()</a></code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.094</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.261</span>
 <span class="r-in"><span><span class="va">lbci_med</span> <span class="op">&lt;-</span> <span class="fu"><a href="semlbci.html">semlbci</a></span><span class="op">(</span><span class="va">fit_med</span>,</span></span>
-<span class="r-in"><span>                    pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ab :="</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                    pars <span class="op">=</span> <span class="st">"ab :="</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">lbci_med</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Results:</span>
@@ -150,7 +150,7 @@ in the output of <code><a href="semlbci.html">semlbci()</a></code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     confidence, e.g., .95 for 95% confidence intervals.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> semlbci(sem_out = fit_med, pars = c("ab :="))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> semlbci(sem_out = fit_med, pars = "ab :=")</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">lbci_med</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        2.5 %   97.5 %</span>

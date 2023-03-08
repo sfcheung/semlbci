@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.20</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.23</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -155,11 +155,14 @@ free) (<code>WLS</code>) and its variants (e.g., <code>WLSMV</code>).</p></li>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Should be negative because MLR is supported only if</span></span></span>
 <span class="r-in"><span><span class="co"># robust is set to "satorra.2000"</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">check_sem_out</span><span class="op">(</span><span class="va">fit3</span>, robust <span class="op">=</span> <span class="st">"satorra.2000"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
+<span class="r-in"><span><span class="fu">check_sem_out</span><span class="op">(</span><span class="va">fit3</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"info")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Test method(s) yuan.bentler.mplus is/are not yet supported when 'robust' is 'none'."</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Should be zero because robust is set to "satorra.2000"</span></span></span>
+<span class="r-in"><span><span class="fu">check_sem_out</span><span class="op">(</span><span class="va">fit3</span>, robust <span class="op">=</span> <span class="st">"satorra.2000"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

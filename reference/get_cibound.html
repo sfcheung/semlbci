@@ -12,7 +12,7 @@ a semlbci object, the output of semlbci()."><!-- mathjax --><script src="https:/
     
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.20</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.23</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,7 +88,7 @@ to be extracted. Either <code>"lbound"`` or </code>"ubound"``.</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>To get the original output of <code><a href="ci_bound_wn_i.html">ci_bound_wn_i()</a></code>
+    <p>It returns the original output of <code><a href="ci_bound_wn_i.html">ci_bound_wn_i()</a></code>
 for a bound. Usually for diagnosis.</p>
     </div>
     <div class="section level2">
@@ -148,7 +148,9 @@ for a bound. Usually for diagnosis.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> semlbci(sem_out = fit_med, pars = c("ab :="))</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">get_cibound</span><span class="op">(</span><span class="va">lbci_med</span>, row_id <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Get the output of ci_bound_wn_i() of the lower</span></span></span>
+<span class="r-in"><span><span class="co"># bound of the LBCI for the indirect effect:</span></span></span>
+<span class="r-in"><span><span class="fu">get_cibound</span><span class="op">(</span><span class="va">lbci_med</span>, row_id <span class="op">=</span> <span class="fl">6</span>, which <span class="op">=</span> <span class="st">"lbound"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Target Parameter:	ab := a*b (group = 0, block = 0)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Position:		6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Which Bound:		Lower Bound</span>
@@ -182,6 +184,49 @@ for a bound. Usually for diagnosis.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change 0.08471 -0.00036 -0.13563  0.00042 0.00000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bound before check:	0.42653</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Status Code:		0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call: ci_bound_wn_i(i = i, npar = 5L, sem_out = sem_out, f_constr = "&lt;not printed&gt;", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     which = which, standardized = standardized, wald_ci_start = wald_ci_start, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ciperc = 0.95, sf = sf, sf2 = sf2, std_method = std_method_i, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     debug = FALSE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get the output of ci_bound_wn_i() of the upper</span></span></span>
+<span class="r-in"><span><span class="co"># bound of the LBCI for the indirect effect:</span></span></span>
+<span class="r-in"><span><span class="fu">get_cibound</span><span class="op">(</span><span class="va">lbci_med</span>, row_id <span class="op">=</span> <span class="fl">6</span>, which <span class="op">=</span> <span class="st">"ubound"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Target Parameter:	ab := a*b (group = 0, block = 0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Position:		6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Which Bound:		Upper Bound</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Method:			Wu-Neale-2012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Confidence Level:	0.95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Achieved Level:		0.950000073477154</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Standardized:		No</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Likelihood-Based Bound:	1.46404</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Wald Bound:		1.40883</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Point Estimate:		0.89687</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ratio to Wald Bound:	1.10784</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -- Check --</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Level achieved?		Yes (Difference: 7.3477e-08; Tolerance: 5e-04)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Solution admissible?	Yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Direction valid?	Yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -- Optimization Information --</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Solver Status:		3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Convergence Message:	NLOPT_FTOL_REACHED: Optimization stopped because ftol_rel or ftol_abs (above) was reached.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iterations:		6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Termination Conditions:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	xtol_rel: 1e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	ftol_rel: 1e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	maxeval:  500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -- Parameter Estimates --</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              a       b     m~~m     y~~y    x~~x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Start  2.32329 0.60639 35.10196 40.30883 0.93513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final  2.38407 0.61409 35.10928 40.31234 0.93513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change 0.06077 0.00770  0.00732  0.00352 0.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bound before check:	1.46404</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Status Code:		0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call: ci_bound_wn_i(i = i, npar = 5L, sem_out = sem_out, f_constr = "&lt;not printed&gt;", </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     which = which, standardized = standardized, wald_ci_start = wald_ci_start, </span>
