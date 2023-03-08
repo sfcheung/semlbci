@@ -6,7 +6,7 @@
 [![R-CMD-check](https://github.com/sfcheung/semlbci/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sfcheung/semlbci/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-(Version 0.10.0.20, updated on 2023-03-03, [release history](https://sfcheung.github.io/semlbci/news/index.html))
+(Version 0.10.0.23, updated on 2023-03-08, [release history](https://sfcheung.github.io/semlbci/news/index.html))
 
 # semlbci
 

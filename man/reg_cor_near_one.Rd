@@ -23,7 +23,7 @@ Generated from a regression model six variables,
 x4~~x5 correlation close to one.
 }
 \details{
-Supposed to be tested using this example:
+This model is used for examples like this one:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{out <- lm(y ~ x1 + x2 + x3 + x4 + x5, reg_cor_near_one)
 summary(out)

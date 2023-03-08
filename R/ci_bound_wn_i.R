@@ -172,8 +172,11 @@
 #'
 #' fn_constr0 <- set_constraint(fit_med)
 #'
-#' out1l <- ci_bound_wn_i(1, 5, sem_out = fit_med, f_constr =
-#'                     fn_constr0, which = "lbound")
+#' out1l <- ci_bound_wn_i(i = 1,
+#'                        npar = 5,
+#'                        sem_out = fit_med,
+#'                        f_constr = fn_constr0,
+#'                        which = "lbound")
 #' out1l
 #'
 #' @export

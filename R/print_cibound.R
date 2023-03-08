@@ -4,7 +4,7 @@
 #'  object.
 #'
 #' @details This is the print method for the output of
-#'  [ci_bound_wn_i()], an `cibound`-class object. It prints the
+#'  [ci_bound_wn_i()], a `cibound`-class object. It prints the
 #'  diagnostic information on the bound being found and the search
 #'  process.
 #'
@@ -33,8 +33,13 @@
 #'
 #' fn_constr0 <- set_constraint(fit_med)
 #'
-#' out1l <- ci_bound_wn_i(1, 5, sem_out = fit_med, f_constr =
-#'                     fn_constr0, which = "lbound")
+#' out1l <- ci_bound_wn_i(i = 1,
+#'                        npar = 5,
+#'                        sem_out = fit_med,
+#'                        f_constr = fn_constr0,
+#'                        which = "lbound")
+#'
+#' # Print the output
 #' out1l
 #'
 #' @export

@@ -21,7 +21,7 @@ Generated from a simple mediation model, n = 200, two groups,
 n = 100 each.
 }
 \details{
-Supposed to be tested using this example:
+This model is used for examples like this one:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{library(lavaan)
 mod <- "m ~ x

@@ -3,11 +3,10 @@
 #' @description Get the row number of a parameter in a parameter table
 #'              from lhs, op, rhs, block, and group
 #'
-#' @details
-#' These columns will be extracted: `lhs`, `rhs`, `label`, and `plabel`.
+#' @details It currently supports `lavaan` output only.
 #'
 #' @return
-#' A vector of unique characters
+#' A vector of unique characters.
 #'
 #' @param ptable A lavaan parameter table (e.g., an object returned by
 #'                [lavaan::parameterTable()])

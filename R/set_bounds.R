@@ -2,7 +2,7 @@
 #'
 #' @description Use the new `bounds` option in [lavaan()]
 #'
-#' @details Use [update()] to get the bounds.
+#' @details It uses [update()] to get the bounds.
 #'
 #' @return A lavaan parameter table in which the lower and upper bounds
 #'         are set.

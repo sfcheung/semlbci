@@ -36,7 +36,7 @@ The Wu-Neale-2012 method uses a simple objective function that is
 optimized with an equality constraint. \code{\link[=set_constraint]{set_constraint()}} generates
 the equality constraint function to be used by \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.
 
-Currently supports \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.
+It currently supports \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.
 }
 }
 \examples{

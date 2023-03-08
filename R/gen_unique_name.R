@@ -3,8 +3,8 @@
 #' @description Generates a unique name that does not duplicate with
 #'  elements in a vector of strings.
 #'
-#' @details User supplies a vector of strings and then a name is
-#'  generated that does not duplicate with elements in this vector.
+#' @details It receives a vector of strings and then generates a name
+#'  that does not duplicate with elements in this vector.
 #'
 #' A helper function for generating names for new parameters.
 #'

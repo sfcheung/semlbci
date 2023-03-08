@@ -19,7 +19,7 @@ simple_med
 Generated from a simple mediation model, n = 200
 }
 \details{
-Supposed to be tested using this example:
+This model is used for examples like this one:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{library(lavaan)
 mod <- "m ~ x

@@ -178,9 +178,10 @@ These functions compute the log profile likelihood of
 a parameter when it is fixed to a value or a range of values
 }
 \details{
-The methods presented in Pawitan (2013) are used to
+It uses the methods presented in Pawitan (2013) to
 compute and visualize the log profile likelihood of a parameter in
-a structural equation model when it is fixed to a value or a range
+a structural equation model when this parameter is fixed to a value or
+a range
 of values. \code{\link[=loglike_range]{loglike_range()}} and \code{\link[=loglike_point]{loglike_point()}} compute the
 so-called "true" log profile likelihood, while
 \code{\link[=loglike_quad_range]{loglike_quad_range()}} and \code{\link[=loglike_quad_point]{loglike_quad_point()}} approximate the log
@@ -230,7 +231,7 @@ fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 # 4 points are used just for illustration
 # At least 21 points should be used for a smooth plot
 # Remove try_k_more in real applications. It is set
-# to run such that this example is not too slow.
+# to zero such that this example does not take too long to run.
 # use_pbapply can be removed or set to TRUE to show the progress.
 ll_a <- loglike_compare(fit, par_i = "m ~ x", n_points = 4,
                         try_k_more = 0,

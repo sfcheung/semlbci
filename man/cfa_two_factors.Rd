@@ -14,7 +14,7 @@ cfa_two_factors
 Generated from a two-factor model with six variables, n = 500
 }
 \details{
-Supposed to be tested using this example:
+This model is used for examples like this one:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{library(lavaan)
 mod <- "f1 =~ x1 + x2 + x3

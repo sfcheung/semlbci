@@ -2,7 +2,7 @@
 #'
 #' @description Find the free parameters in an SEM output.
 #'
-#' @details Currently supports [lavaan::lavaan-class] outputs only.
+#' @details It currently supports [lavaan::lavaan-class] outputs only.
 #'
 #' @return A boolean vector of the same length as the number of rows
 #' of the \code{lavaan}. parameter tables. A position is `TRUE` if the

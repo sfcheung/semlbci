@@ -27,7 +27,7 @@ Return the confidence intervals of the parameters
 in the output of \code{\link[=semlbci]{semlbci()}}.
 }
 \details{
-Return the likelihood-based confidence intervals
+It returns the likelihood-based confidence intervals
 in the output of \code{\link[=semlbci]{semlbci()}}.
 }
 \examples{
@@ -44,7 +44,7 @@ fit_med <- sem(mod, simple_med, fixed.x = FALSE)
 p_table <- parameterTable(fit_med)
 p_table
 lbci_med <- semlbci(fit_med,
-                    pars = c("ab :="))
+                    pars = "ab :=")
 lbci_med
 
 confint(lbci_med)

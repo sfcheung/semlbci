@@ -6,8 +6,8 @@
 #' @details [semlbci()] finds the positions of the selected parameters
 #'  in the parameter table and then calls [ci_i_one()] once for each
 #'  of them. For the technical details, please see [ci_i_one()] and
-#'  the functions it calls to find a confidence bound (currently
-#'  [ci_bound_wn_i()]). [ci_bound_wn_i()] uses the approach proposed by
+#'  the functions it calls to find a confidence bound, currently
+#'  [ci_bound_wn_i()]. [ci_bound_wn_i()] uses the approach proposed by
 #'  Wu and Neale (2012) and illustrated by Pek and Wu (2015).
 #'
 #' It supports updating an output of [semlbci()] by setting

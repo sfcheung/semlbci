@@ -92,10 +92,10 @@
 #'
 #' # Should be negative because MLR is supported only if
 #' # robust is set to "satorra.2000"
-#'
-#' check_sem_out(fit3, robust = "satorra.2000")
+#' check_sem_out(fit3)
 #'
 #' # Should be zero because robust is set to "satorra.2000"
+#' check_sem_out(fit3, robust = "satorra.2000")
 #'
 #' @export
 

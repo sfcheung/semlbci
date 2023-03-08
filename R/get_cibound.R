@@ -3,7 +3,7 @@
 #' @description Get the `cibound` output of a bound from
 #'  a `semlbci` object, the output of [semlbci()].
 #'
-#' @details To get the original output of [ci_bound_wn_i()]
+#' @details It returns the original output of [ci_bound_wn_i()]
 #'  for a bound. Usually for diagnosis.
 #'
 #' @return A `cibound`-class object. See [ci_bound_wn_i()]
@@ -38,7 +38,13 @@
 #'                     pars = c("ab :="))
 #' lbci_med
 #'
-#' get_cibound(lbci_med, row_id = 6)
+#' # Get the output of ci_bound_wn_i() of the lower
+#' # bound of the LBCI for the indirect effect:
+#' get_cibound(lbci_med, row_id = 6, which = "lbound")
+#'
+#' # Get the output of ci_bound_wn_i() of the upper
+#' # bound of the LBCI for the indirect effect:
+#' get_cibound(lbci_med, row_id = 6, which = "ubound")
 #'
 #' @export
 
