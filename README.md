@@ -6,9 +6,9 @@
 [![R-CMD-check](https://github.com/sfcheung/semlbci/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sfcheung/semlbci/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-(Version 0.10.0.23, updated on 2023-03-08, [release history](https://sfcheung.github.io/semlbci/news/index.html))
+(Version 0.10.0.24, updated on 2023-03-11, [release history](https://sfcheung.github.io/semlbci/news/index.html))
 
-# semlbci
+# semlbci <img src="man/figures/logo.png" align="right" height="150" />
 
 This package includes functions for forming the
 likelihood-based confidence intervals (LBCIs) for parameters
