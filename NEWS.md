@@ -1,4 +1,4 @@
-# semlbci 0.10.0.23
+# semlbci 0.10.0.24
 
 - First public release. (0.10.0.12)
 - Added R CMD Check GitHub actions. (0.10.0.13)
@@ -23,4 +23,6 @@
 - Fixed `details` in documentation. (0.10.0.21)
 - Fixed some examples in documentation. (0.10.0.22)
 - Proofread the vignettes and recompute them. (0.10.0.23)
+- Fixed the pkgdown site. (0.10.0.24)
+- Used `bibentry()` in CITATION. (0.10.0.24)
 - Preparation for CRAN in progress.
