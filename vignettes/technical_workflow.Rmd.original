@@ -29,7 +29,7 @@ library(DiagrammeR)
 This vignette is a simplified version of the
 [technical appendix](https://osf.io/q6e3h)
 hosted at the [OSF project site](https://osf.io/b9a2p/)
-of the manuscript associated with the package
+of Cheung and Pesigan (2023), associated with the package
 `semlbci`.
 It presents the workflow used by
 `semlbci::ci_i_one()` and `semlbci::ci_bound_wn_i()`

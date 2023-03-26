@@ -19,7 +19,7 @@ csl: apa.csl
 This vignette is based on the
 [technical appendix](https://osf.io/zjysd)
 hosted at the [OSF project site](https://osf.io/b9a2p/)
-of the manuscript associated with the package
+of Cheung and Pesigan (2023), associated with the package
 `semlbci`.
 It presents how to use
 `semlbci::ci_bound_wn_i()` directly to search for one
@@ -517,11 +517,5 @@ lavTestLRT(fit, fit_chk)
 
 The *p*-value is .05 (1 - .95). Therefore, this bound,
 0.4265275 is correct by definition.
-
-
-
-```
-#> Error in options(old_width): object 'old_width' not found
-```
 
 # References
