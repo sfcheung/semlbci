@@ -1,0 +1,361 @@
+---
+title: "Searching for One Bound"
+author: "Shu Fai Cheung"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Searching for One Bound}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: semlbci_technical_references.bib
+csl: apa.csl
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = ""
+)
+```
+
+# Introduction
+
+This vignette is based on the
+[technical appendix](https://osf.io/zjysd)
+hosted at the [OSF project site](https://osf.io/b9a2p/)
+of the manuscript associated with the package
+`semlbci`.
+It presents how to use
+`semlbci::ci_bound_wn_i()` directly to search for one
+bound (limit) of a likelihood-based confidence
+interval (LBCI). This function is not to be used by
+common users. However, for advanced users interested
+in customizing the optimization, examining the search
+in details, or just to know more about the implementation,
+they can try `semlbci::ci_bound_wn_i()` directly.
+
+For the overall workflow of
+`semlbci::semlbci()` and the workflow of
+`semlbci::ci_bound_wn_i()`, please refer to
+`vignette("technical_workflow", package = "semlbci")`. This
+appendix only illustrates how to use
+`semlbci::ci_bound_wn_i()`.
+
+# Examples
+
+## A Simple Mediation Model
+
+The dataset `simple_med` from `semlbci` is used to fit
+a simple mediation model:
+
+```{r}
+library(semlbci)
+library(lavaan)
+dat <- simple_med
+mod <-
+"
+m ~ a*x
+y ~ b*m
+ab := a*b
+"
+fit <- sem(model = mod,
+           data = dat)
+```
+
+First, use `semlbci::set_constraint()` to set the constraint
+on the likelihood ratio test used by the method
+proposed by @wu_adjusted_2012 and adapted by
+@pek_profile_2015, with `ciperc` set to
+the level of confidence of the LBCI to be formed
+(.95 for 95%):
+
+```{r}
+fn_constraint <- set_constraint(fit,
+                                ciperc = .95)
+```
+
+### Find the LBCI of a Regression Coefficient
+
+To find the lower bound of the LBCI of, say, `y ~ m`,
+we first check the row number of this parameter in
+the parameter table:
+
+```{r}
+parameterTable(fit)
+```
+
+This parameter is in the 2^nd^ row.
+
+We then check the number of free parameters in this table,
+ignoring any
+equality constraints. In this model, the number of free
+parameters is 4.
+
+We can then call `semlbci::ci_bound_wn_i()`:
+
+
+```{r}
+out_lb <- ci_bound_wn_i(i = 2,
+                        npar = 4,
+                        sem_out = fit,
+                        f_constr = fn_constraint,
+                        which = "lbound",
+                        verbose = TRUE,
+                        ciperc = .95)
+```
+
+The output is a `cibound`-class object with a `print` method
+for printing diagnostic information.
+
+```{r}
+out_lb
+```
+
+```{r echo = FALSE}
+out_lb_print <- capture.output(print(out_lb))
+```
+
+The printout is explained briefly below:
+
+- `Target Parameter`:
+
+  The target parameter, in `lavaan` syntax form.
+
+- `Position`:
+
+  The position of the target parameter in the parameter table (the row
+ row number).
+
+- `Which Bound`:
+
+  Whether the lower bound (limit) or upper bound (limit) was
+  requested.
+
+- `Method`:
+
+  The method used. Currently, only the method proposed
+  by @wu_adjusted_2012 and adapted by @pek_profile_2015
+  is supported.
+
+- `Confidence Level`:
+
+  The level of confidence requested.
+
+- `Achieved Level`:
+
+  One minus the *p*-value of the likelihood ratio test when
+  the
+  target parameter (or function of parameter) is fixed to
+  the bound found. This
+  value should be close to `Confidence Level`, although
+  a small difference is expected and allowed.
+
+- `Standardized`:
+
+  Whether the bound in the standardized solution is requested.
+
+- `Likelihood-Based Bound`:
+
+  The bound found. Set to `NA` if the status code is not
+  equal to 1.
+
+- `Wald Bound`:
+
+  The original bound, which is the bound of the Wald
+  confidence
+  interval, or delta-method confidence for a user-defined
+  parameter or the standardized solution.
+
+- `Point Estimate`:
+
+  The point estimate in the original solution.
+
+- `Ratio to Wald Bound`:
+
+  The ratio of the distance of `Likelihood-Based Bound`
+  from `Point Estimate` to the distance of
+  `Wald Bound` from `Point Estimate`. If greater than
+  one, the `Likelihood-Based Bound` is farther away
+  from the point estimate than the `Wald Bound`. If
+  less than one, the `Likelihood-Based Bound` is closer
+  to the point estimate than the `Wald Bound`.
+
+- `Level achieved`:
+
+  Whether `Achieved Level` is close enough to `Confidence Level`,
+  defined by whether the absolute difference between the
+  *p*-value of
+  the likelihood ratio test and 1 - `ciperc` is less than
+  or equal to `p_tol` (default is 5e-4). If not, the status
+  code will be set to 1.
+
+- `Check`:
+
+  Whether the solution (see below) is admissible, defined by
+  setting in `lavaan` `check.post = TRUE` (all variances non-negative,
+  all model-implied covariance matrices are positive semidefinite),
+  `check.vcov = TRUE` (the variance-covariance matrix of free parameters
+  is positive definite), and `check.start = TRUE` (used to test
+  the consistency of the solution). If the solution fails any of these
+  tests, the status code will be set to 1.
+
+- `Direction valid?`:
+
+  Whether the direction of the bound is valid (the lower
+  bound is less than the point estimate, or the upper
+  bound is greater than the point estimate). If invalid,
+  the status code will be set to 1.
+
+- `Optimization Information`:
+
+  This section prints information returned by
+  `nloptr::nloptr()`, such as the status code, the convergence message
+  (which criterion was met), the number of iterations, and the termination
+  conditions set (`xtol_rel`, `ftol_rel`, and `maxevel` are arguments
+  of `nloptr::nloptr()`). If the status code of `nlopter::nlotpr()`
+  is less than zero, indicating a status other than `"success"`,
+  then the status code of this function will be set to 1.
+
+- `Parameter Estimates`:
+
+  The values of the free parameters. `Start` are the
+  staring values before the optimization. `Final` are the values at
+  convergence (the solution), and `Change` is `Final` - `Start`.
+
+- `Bound before check`:
+
+  The bound found before the checks presented above.
+  This is printed because if the bound fails any of the checks, `NA` will
+  be returned to prevent accidental use of the potentially invalid bound.
+  If needed for diagnosis, the
+  bound that fails the checks can be found here.
+
+- `Status Code`:
+
+  This code is either 0 or 1. If 0, it means that the bound
+  passes
+  all the checks presented above. If 1, it means that it fails at least one
+  of the checks.
+
+The `cibound`-class object has three elements:
+
+```{r}
+names(out_lb)
+```
+
+- `bound`:
+
+  The bound found. `NA` if status code is not equal to 0.
+
+- `diag`:
+
+  Diagnostic information. It stores all the information presented in
+  the printout described above, and more. If `verbose` is set to `TRUE`,
+  of if the status code of `nloptr::nloptr()` (not of this function) is less
+  than one, the original output of `nloptr::nloptr()` will also be stored
+  for further examination.
+
+- `call`: The original call.
+
+We can verify the definitional validity of the bound by doing a likelihood
+ratio test manually:
+
+```{r}
+mod_chk <-
+"
+m ~ a*x
+y ~ b*m
+ab := a*b
+b == 0.3907302
+"
+fit_chk <- sem(model = mod_chk,
+               data = dat)
+lavTestLRT(fit, fit_chk)
+```
+
+The *p*-value is .05 (1 - .95). Therefore, this bound,
+`r round(out_lb$bound, 7)` is *correct by definition*.
+
+This process can be repeated with `which = "ubound"` to
+find the upper bound:
+
+```{r}
+out_ub <- ci_bound_wn_i(i = 2,
+                        npar = 4,
+                        sem_out = fit,
+                        f_constr = fn_constraint,
+                        which = "ubound",
+                        verbose = TRUE,
+                        ciperc = .95)
+out_ub
+mod_chk <-
+"
+m ~ a*x
+y ~ b*m
+ab := a*b
+b == 0.679435
+"
+fit_chk <- sem(model = mod_chk,
+               data = dat)
+lavTestLRT(fit, fit_chk)
+```
+
+The *p*-value is again .05 (1 - .95). Therefore, this bound,
+`r round(out_ub$bound, 7)` is correct by definition.
+
+### Find the LBCI of a Function of Coefficients: The Indirect Effect.
+
+To find the bounds for a user-defined parameters, for example, the
+indirect effect in the model, the steps are the same.
+
+```{r}
+parameterTable(fit)
+```
+
+The indirect effect, `ab`, is on the 6^th^ row. Therefore,
+we set `i` to 6. All other arguments are the same as in the previous
+example.
+
+```{r}
+ind_lb <- ci_bound_wn_i(i = 6,
+                        npar = 4,
+                        sem_out = fit,
+                        f_constr = fn_constraint,
+                        which = "lbound",
+                        verbose = TRUE,
+                        ciperc = .95)
+```
+
+This is the printout:
+
+```{r}
+ind_lb
+```
+
+This bound passes all the checks. We can verify the
+bound using the likelihood ratio test:
+
+```{r}
+mod_chk <-
+"
+m ~ a*x
+y ~ b*m
+ab := a*b
+ab ==  0.4265275
+"
+fit_chk <- sem(model = mod_chk,
+               data = dat)
+lavTestLRT(fit, fit_chk)
+```
+
+The *p*-value is .05 (1 - .95). Therefore, this bound,
+`r round(ind_lb$bound, 7)` is correct by definition.
+
+
+```{r echo = FALSE}
+options(old_width)
+```
+
+# References

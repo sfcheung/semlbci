@@ -26,6 +26,12 @@ articles:
   contents:
   - semlbci
   - loglike
+- title: Technical Appendices
+  navbar: ~
+  desc: For advanced users and developers
+  contents:
+  - technical_workflow
+  - technical_searching_one_bound
 
 reference:
 - title: Forming LBCIs

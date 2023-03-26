@@ -1,0 +1,715 @@
+---
+title: "Internal Workflow of semlbci()"
+author: "Shu Fai Cheung"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Internal Workflow of semlbci()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: semlbci_technical_references.bib
+csl: apa.csl
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = ""
+)
+```
+
+```{r echo = FALSE}
+library(DiagrammeR)
+```
+
+# Introduction
+
+This vignette is a simplified version of the
+[technical appendix](https://osf.io/q6e3h)
+hosted at the [OSF project site](https://osf.io/b9a2p/)
+of the manuscript associated with the package
+`semlbci`.
+It presents the workflow used by
+`semlbci::ci_i_one()` and `semlbci::ci_bound_wn_i()`
+to find a bound of a likelihood-based confidence interval
+(LBCI) of a parameter in a fitted `lavaan` model.
+
+`semlbci::ci_i_one()` and `ci_bound_wn_i()`
+are internal functions used by
+`semlbci::semlbci()`. They are not supposed to be used by
+users. Nevertheless, developers can
+use them directly if so desired.
+
+# Purposes of the Functions
+
+`semlbci::ci_i_one()` is called by `semlbci::semlbci()`
+for each confidence bound (limit), twice for each selected
+parameter, once for the lower bound and once for the
+upper bound. It sets up necessary arguments and then
+call the lowest level function responsible for searching
+a bound.
+
+Currently, only one such function is available,
+`semlbci::ci_bound_wn_i()`, which implements the
+algorithm proposed by @wu_adjusted_2012,
+adapted by @pek_profile_2015, without the part for
+handling parameters with attainable bounds. To avoid
+confusion with the method by @wu_adjusted_2012
+for parameters with attainable bound,
+we denote this method WNPW (Wu-Neale-Pek-Wu)
+method in this document.
+
+# Overall Workflow
+
+We first present the overall workflow[^note_on_flow] of
+`semlbci::semlbci()`. We then present the workflow
+of `semlbci::ci_i_one()`, called by `semlbci::semlbci()`
+once for each bound of each parameter requested (twice for
+each parameter, once for the lower bound and once for
+the upper bound). Last, we present the workflows of
+the two stages of `semlbci::ci_bound_wn_i()`, the
+minimization stage and the checking stage.
+
+Details for the arguments mentioned in this section
+can be found from the help pages of `semlbci::semlbci()`,
+`semlbci::ci_i_one()`, and `semlbci::ci_bound_wn_i()`.
+
+[^note_on_flow]: Some steps are omitted for readability.
+
+## `semlbci::semlbci()`
+
+`semlbci::semlbci()` is the main function used by users.
+It is used to find the LBCI of selected parameters. It is
+also responsible for setting the equality constraint
+required by the WNPW method. If robust LBCI
+proposed by @falk_are_2018 is requested, it will also
+compute the
+scaling and shift factors to be used by the robust
+likelihood ratio test by @satorra_scaled_2000.
+
+The general workflow of `semlbci::semlbci()` is shown
+below:
+
+```{r fig-semlbci, fig.cap = "General Workflow of `semlbci::semlbci()`", echo = FALSE, fig.align = "center"}
+mermaid("
+graph TD
+  classDef default fill:#DADBFF;
+  A[\"Is <code>check_fit</code> <code>TRUE</code>?\"]
+  A -- Yes --> AYes[\"Are the model and<br/>estimation method supported?<br/>(Checked by <code>check_sem_out()</code>)\"]
+  A --No--> B
+  AYes -- No --> AYesNo[\"Terminate and raise an error\"]
+  AYes --Yes--> B
+  B[\"Find the ids of parameters requested\"]
+  B --> C
+  C[\"Call <code>set_constraint()</code> to set the equality constraint<br/>used by the WNPW method\"]
+  C --> D
+  D[\"Robust LBCI requested?\"]
+  D -- Yes --> DYes
+  DYes[\"For each parameter,<br/>call <code>scaling_factor3()</code><br/>to compute the scaling and shift factors\"]
+  D -- No --> E
+  DYes --> E
+  E[\"Call <code>ci_i_one()</code> once for<br/>each bound of each parameter\"]
+  E --> F
+  F[\"Combine the bounds to form the confidence intervals<br/>and return the results\"]
+", height = 840, width = 650)
+```
+
+We describe below the two functions called by `semlbci::semlbci()` in
+the workflow, `semlbci::set_constraint()` and `semlbci:::scaling_factor3()`.
+
+### `semlbci::set_constraint()`
+
+This function, called by `semlbci::semlbci()`, is used to
+set the equality constraint used by
+the WNPW method.
+
+As presented in @pek_profile_2015, to find the lower bound,
+$\theta_L$, of the 100(1-$\alpha$)% LBCI of $\hat{\theta}_j$,
+$\theta_L$ is minimized with respect to all parameters,
+$(\theta_L, \theta_q)$, $\theta_q$ being all parameters
+other than $\theta_L$, subject to the following constraint:
+
+$$
+0 = 2nF(\theta_L, \theta_q) - (2nF(\hat{\theta}) + \chi_{(1, 1 - \alpha)}^2)
+$$
+
+$F(\hat{\theta})$ is the value of the discrepancy function
+evaluated at the ML estimate $\hat{\theta}$.
+$\chi_{(1, 1 - \alpha)}^2$ is the $\chi^2$ critical value at
+$df = 1$ and level of significance = $\alpha$
+(about 3.84 with $\alpha = .05$), and $n$ is the sample size
+(total sample size in multisample models).
+
+This constraint means that model $\chi^2$ difference test
+between the model with $\theta_j$ fixed to $\theta_L$
+and the original model with $\theta_j$ freely estimated
+should have a *p*-value equal to $\alpha$.
+
+In `lavaan`, $F(\theta_L, \theta_q)$ is `"fmin"` in the
+output of `fitMeasures()`. When the estimator is `ML` and
+`likelihood = "normal"`, the default, multiplying `"fmin"`
+by $2n$ yields the model $\chi^2$.
+
+To find the upper bound, $\theta_U$, $-\theta_U$ is
+minimized (equivalently, $\theta_U$ is maximized). The
+final value will be multiplied by $-1$ to get the upper bound.
+
+The WNPW method can easily be used when a model
+has one or more equality constraints on the parameters.
+These constraints
+are simply extracted from the `lavaan` object and
+passed to `nloptr::nloptr()`, the function used
+to do the minimization,
+along with the
+constraint by the WNPW method when minimizing
+the objective function.
+
+The function `semlbci::set_constraint()` returns a general
+version of the constraint:
+
+$$
+0 = 2nF(\theta_L, \theta_q) - (2nF(\hat{\theta}) + \frac{\chi_{(1, 1 - \alpha)}^2 - b}{a})
+$$
+
+In this general form, $a$ is the scaling factor and $b$ is
+the shift factor. When $a = 1$ and $b = 0$, it is the
+constraint in the WNPW method. When robust LBCI
+is requested, the scaling and shift factors are computed
+as in the same way by `lavaan::lavTestLRT()` with
+`method = satorra.2000` and `A.method = "exact"`.[^sf]
+
+[^sf]: Internally, `sf = a^(-1)` is stored. To
+be consistent with `T_3` presented in @asparouhov_simple_2010,
+we used `a` instead of `a^(-1)` in the equation in this
+document.
+
+### `semlbci:::scaling_factors3()`
+
+This internal function, not exported, computes the
+scaling and shift factors used by `lavaan::lavTestLRT()`
+with `method = satorra.2000` and `A.method = "exact"`.
+This is the method proposed by @falk_are_2018 for robust
+LBCI. These factors can be used to do the robust
+likelihood ratio test proposed by @satorra_scaled_2000
+without directly calling `lavaan::lavTestLRT()` when
+doing the minimization. Because these factors depend only
+on the parameter for which the LBCI is to be searched, they
+can be computed once and reused during the minimization.
+
+Since version 0.6-13 of `lavaan`, `lavaan::lavTestLRT()`
+stores the
+scaling and shift factors in the output. Therefore, for
+future versions of `semlbci`, it is possible to remove
+`semlbci:::scaling_factor3()` and use `lavaan::lavTestLRT()`
+to get the scaling and shift factors directly.
+
+## `semlbci::ci_i_one()`
+
+The workflow of `semlbci::ci_i_one()` is presented below:
+
+```{r fig-ci-i-one, fig.cap = "General Workflow of `semlbci::ci_i_one()`", echo = FALSE, fig.align = "center"}
+mermaid("
+graph TD
+  classDef default fill:#F8DAFF;
+  B[\"Robust LBCI requested?\"]
+  B -- Yes --> C[\"Scaling and shift factors (<code>sf_full</code>)<br/>supplied by <code>semlbci()</code>?\"]
+  C -- No --> D[Compute scaling and shift factors]
+  D --> E
+  C -- Yes --> E[\"Call <code>ci_bound_wn_i()</code>\"]
+  B -- No --> E
+  E --> F[\"<code>status</code> == 0?\"]
+  F -- No --> G[\"Move the lower bounds<br/>of free variances closer to zero<br/>and call <code>ci_bound_wn_i()</code> again\"]
+  F -- Yes --> ZZ[\"Return the results to <code>semlbci()</code><br/>Bound set to <code>NA</code> if status != 0\"]
+  G --> H[\"<code>status</code> == 0?\"]
+  H -- Yes --> ZZ
+  H -- No --> I[\"Is <code>try_k_more_times</code> > 0?\"]
+  I -- No --> ZZ
+  I -- Yes --> J[\"Reduce the tolerance for convergence<br/>(Reduce <code>xtol_rel</code> and <code>ftol_rel</code>)\"]
+  J --> K[\"Call <code>ci_bound_wn_i()</code>\"]
+  K --> L[\"<code>status</code> == 0?\"]
+  L -- Yes --> ZZ
+  L -- No --> M[\"Tried<br/><code>try_k_more_times</code>?\"]
+  M -- No --> J
+  M -- Yes --> ZZ
+", height = 1300, width = 700)
+```
+
+Its job is to call `semlbci::ci_bound_wn_i()`
+once or more than once to find the bound of an LBCI of
+a parameter. It does not check the validity or plausibility
+of the bound. The lowest level function, `semlbci::ci_bound_wn_i()`,
+is responsible for doing the checks. If something is wrong,
+`semlbci::ci_bound_wn_i()` will set `status` to a non-zero
+value.
+
+The argument `try_k_more_times` is used to determine whether
+it will try "harder" for *k* more times if the first attempt
+failed (e.g., `status != 0`, meaning that the bound found
+fails one or more checks).
+
+## `semlbci::ci_bound_wn_i()`
+
+The function `semlbci::ci_bound_wn_i()` is the lowest level
+function that is responsible for searching the bound. It implements
+an optimization method (the WNPW method in this case)
+and takes care of all the technical details. It is not
+supposed to be used by users and the interface is not designed
+to be user-friendly. Nevertheless, interested users can use
+it directly to find a bound, bypassing `semlbci::semlbci()`.
+Examples can be found in the vignette (to be included).
+
+The workflow of `semlbci::ci_bound_wn_i()` can be separated into
+two stages, the *minimization stage* and the *checking stage*.
+
+### Minimization Stage
+
+The workflow of the minimization stage is presented below:
+
+```{r fig-ci-i-bound-wn-i-min, fig.cap = "Workflow of `semlbci::ci_bound_wn_i()` - Minimization Stage", echo = FALSE, fig.align = "center"}
+mermaid("
+graph TD
+  classDef default fill:#DAFFDA;
+  A[\"Store the point estimates and Wald or Delta CI\"]
+  A --> B[\"Define the function to be minimized [<code>lbci_b_f()</code>]<br/>and the gradient function of this function [<code>lbci_b_grad()</code>]\"]
+  B --> C[\"Is <code>wald_ci_start</code> TRUE?\"]
+  C -- Yes --> CYes[\"Call <code>set_start_wn()</code><br/>to set the starting values<br/>based on Wald or Delta CI\"]
+  C -- No --> CNo(\"Slighly pertubate<br/>the point estimates<br/> to set the starting values\")
+  CYes --> D[\"Set the lower bounds of free variances<br/>to a small positive value\"]
+  CNo --> D
+  D --> E[\"Call <code>>nloptr::nloptr()</code> to minimize the objective function,<br/>with the equality constraint <code>f_constr</code><br/>(created by <code>set_constraint()</code>)\"]
+  E --> F[\"Pass the results to the Checking Stage\"]
+", height = 650, width = 500)
+```
+
+#### Optimization Algorithm
+
+The function used to do the minimization
+is `nloptr::nloptr()`, using `NLOPT_LD_SLSQP` as the value for `algorithm`.
+The parameters (`x0`) are all free parameters in the model. The objective
+function, `eval_f` is set to `lbci_b_f()`, the function that returns
+the bound in each iteration. The gradient function, `eval_grad_f`, is
+`lbci_b_grad()`. The equality constraint(s), `eval_g_eq`, is the result
+of `set_constraint()`, supplied through the argument `f_constr` from
+`semlbci::semlbci()`, along with other equality constraints in the model,
+if any.
+
+The two functions created by `semlbci::ci_bound_wn_i()` in this stage,
+`lbci_b_f()` and `lbci_b_grad()`, are described below.
+
+##### `lbci_b_f()`
+
+In the WNPW method, if the parameter, $\theta_j$,
+is a free parameter, and the lower bound is to be searched,
+this function simply returns the value of
+$\theta_j$ (all other free parameters other than $\theta_j$
+are denoted by $\theta_q$):
+
+$$
+f(\theta_j, \theta_q) = \theta_j
+$$
+
+If the upper bound is to be searched, then this function is:
+
+$$
+f(\theta_j, \theta_q) = -\theta_j
+$$
+
+
+If the parameter is a function of some free parameters (e.g.,
+an indirect effect, or a standardized coefficient such as
+correlation), denoted by $h(\theta)$, $\theta$ being all
+free parameters (though some may not be used in $h$), and
+the lower bound is to be searched, then this function is:
+
+$$
+f(\theta) = h(\theta)
+$$
+
+Similarly, if the upper bound is to be searched, this
+function is:
+
+$$
+f(\theta) = -h(\theta)
+$$
+
+Therefore, in the optimization, minimization is conducted
+whether the lower or upper bound is to be searched.
+
+##### `lbci_b_grad()`
+
+The gradient of the object function, `lbci_b_f()`, is
+either precomputed (if the parameter for which the bound
+is being searched is a parameter)
+or computed by `lavaan::lav_func_gradient_complex()`.
+
+#### Tweaking the Optimization
+
+The first attempt of optimization may fail, especially when
+the target parameter is a function of free parameters (e.g., an
+indirect effect, or a parameter in the standardized solution).
+The arguments `xtol_rel`, `ftol_rel`, and
+`lb` are adjusted across attempts. This is done by
+`semlbci::ci_i_one()` for the second and subsequent calls to
+`semlbci::ci_bound_wn_i()`.
+
+### Checking Stage
+
+The workflow of the checking stage is presented below:
+
+```{r fig-ci-i-bound-wn-i-chk, fig.cap = "Workflow of `semlbci::ci_bound_wn_i()` - Checking Stage", echo = FALSE, fig.align = "center"}
+mermaid("
+graph TD
+  classDef default fill:#FFE1DA;
+  classDef statusNA fill:#ffdddd;
+  class DNo,FNo,GNo statusNA
+%%  DNo:::statusNA
+%%  FNo:::statusNA
+%%  GNo:::statusNA
+  A[\"Which bound is requested?\"]
+  A -- Upper --> AUpper[\"Multiply the value by -1\"]
+  AUpper --> B[\"Store the value to <code>bound</code>\"]
+  A -- Lower --> B
+  B --> C[\"Initialize <code>status</code> to 0\"]
+  C --> D[\"<b>Check <code>nloptr</code> Status</b>:<br/>Is status code from <code>nloptr</code> equal to 0?\"]
+  D -- No --> DNo[\"Set <code>status</code> to 1\"]
+  DNo --> F[\"<b>Check SEM Solution</b>:<br/>Is the <code>lavaan</code> results based on <code>nloptr</code> solution admissible?\"]
+  D -- Yes --> F
+  F -- No --> FNo[\"Set <code>status</code> to 1\"]
+  FNo --> G[\"<b>Check the Achieved Level of Significance</b>:<br/>Is the <i>p</i>-value of the 1-<i>df</i> likelihood ratio test<br/>close enough to 1 - Confidence Level? (.05 for 95%)<br/>(<code>p_tol</code> used as the tolerance) (For robust LBCI, scaling and shift factors are used)\"]
+  F -- Yes --> G
+  G -- No --> GNo[\"Set <code>status</code> to 1\"]
+  GNo --> E[\"Set <code>ci_limit_ratio</code> to the ratio of distances from the point estimate:<br/>(LBCI bound from point estimate) / (Wald or Delta bound to point estimate)\"]
+  G -- Yes --> E
+  E --> H[\"Is <code>status</code> equal to 0?\"]
+  H -- No --> HNo[\"Set <code>bound</code> to <code>NA</code>\"]
+  HNo --> I[\"Return the results\"]
+  H -- Yes --> I
+", height = 1200, width = 600)
+```
+
+It will do the following checks, in this order:
+
+1. Is the status code of `nloptr::nloptr()` equal to 0 ("success")?
+
+    If the status code of `nloptr::nloptr()` is not equal to 0,
+    then the
+    status code for `semlbci::ci_bound_wn_i()` will be set to 1.
+
+2. In final solution, do the values of the free parameters result
+  in an admissible solution? (Checked by `lavaan::lavInspect()` with
+  `what = "post.check"`).
+
+    The values of the parameters in the final solution is
+    used to fit the model, and then `lavaan::lavInspect()`
+    is called to check the solution. Examples of inadmissible
+    solution are negative variance and correlations greater
+    than one in magnitude.
+
+    If the solution is not admissible, then the
+    status code for `semlbci::ci_bound_wn_i()` will be set to 1.
+
+3. When the target parameter (free or derived, i.e., the function
+  of parameters, such as an indirect effect or a standardized
+  regression coefficient) is fixed to the bound found, is the
+  *p*-value of the likelihood ratio test between this
+  constrained model and the original model equal to
+  1 - confidence level (.05 for a 95% LBCI)?
+
+    If not, then the likelihood-based confidence bound is
+    by *definition* *invalid*. The
+    status code for `semlbci::ci_bound_wn_i()` will be set
+    to 1.
+
+    The check is equivalent to using `lavaan::lavTestLRT()`.
+    If robust LBCI is requested, then the check is equivalent
+    to using `lavaan::lavTestLRT()` with
+    `method = satorra.2000` and `A.method = "exact"`.
+
+The bound is set to `NA` if the solution fails any of the
+three checks presented above,
+to prevent users from accidentally using a bound that
+may be invalid.
+
+In sum, the bound returned, if not `NA`, has the following
+characteristics:
+
+- Noted as "success" in the optimization by `nloptr::nloptr()`.
+
+- The values of the parameters do not yield an inadmissible
+    solution.
+
+- The bound is *by definition* valid.
+
+# Main Arguments
+
+This section presents in details the arguments used by
+`semlbci::ci_i_one()` and `semlbci::ci_bound_wn_i()`.
+
+## `semlbci::ci_i_one()`
+
+`semlbci::ci_i_one()` is an interface between user
+functions such as `semlbci::semlbci()` and low level
+functions such as `semlbci::ci_bound_wn_i()`. It
+is responsible for setting necessary values to be used
+by `semlbci::ci_bound_wn_i()`.
+
+These are the main arguments of `semlbci::ci_i_one()`:
+
+- `i`:
+
+  The position (row number) of the target parameters
+  as appeared in the parameter table of the output of
+  `lavaan::lavaan()` and its wrappers, such as
+  `lavaan::sem()` and `lavaan::cfa()`. This uniquely
+  identify a parameter, which can be free, fixed, or
+  user-defined.
+
+- `which`:
+
+  Either `"lbound"` or `"ubound"`, denoting
+  lower bound and upper bound, respectively. The confidence
+  bound (limit) to be searched.
+
+- `sem_out`:
+
+  A `lavaan`-class object. the output of
+  `lavaan::lavaan()` and its wrappers, such as
+  `lavaan::sem()` and `lavaan::cfa()`.
+
+- `method`:
+
+  The method to be used to find a confidence
+  bound. Currently, only the modified Wu-Neale method
+  presented by Pek and Wu (2015) is supported (`"wn"`).
+  Separating the low level function from this function
+  allows for the possibility to develop low level functions
+  for other methods, without the need to change the
+  interface implemented in `semlbci::ci_i_one()`.
+
+- `standardized`:
+
+  Logical. Whether the confidence bound
+  of the parameter in the standardized solution is to be
+  searched. For example, for a covariance, whether the
+  covariance, or the correlation, is to be used in searching
+  the bound. Default is `FALSE`.
+
+- `robust`:
+
+  Whether robust likelihood-based confidence
+  bound is to be searched, and if yes, the method to be used.
+  Currently only support `"none"` (robust method not used)
+  or `"satorra.2000"`, proposed by @falk_are_2018.
+
+- `sf_full`:
+
+  Used when `robust` is `"satorra.2000"`. If
+  `NA`,  the scaling and shift factors used in the
+  likelihood ratio test will be computed internally. If supplied,
+  it should be a list with two scalar elements, `c_r`
+  and `c_rb`, the scaling factor and the shift factors.
+
+- `sf_args`:
+
+  If `robust` is `"satorra.2000"` and `sf_full`
+  is `NA`, this is a named list of arguments to be passed
+  to `semlbci:::scaling_factor3()`, an internal function
+  for computing the scaling and shift factors proposed
+  by @asparouhov_simple_2010.
+
+- `try_k_more_times`:
+
+  How many more times to try if the
+  status code is not zero.
+  Default is 0 but `semlbci::semlbci()` set this argument
+  to 2 when calling this function. If set to an
+  integer greater than zero,
+  it will call the low level function until the status
+  code is zero or until this number of additional calls
+  have been attempted. In each successive call, some values
+  will be modified to do the search using these new
+  settings.
+
+## `semlbci::ci_bound_wn_i()`
+
+`semlbci::ci_bound_wn_i()` is the low level function called
+by `semlbci::ci_i_one()`. This function implements the
+modified Wu-Neale method presented by @pek_profile_2015,
+named Wu-Neale-Pek-Wu (WNPW) method in this document.
+This function is not supposed to be used by users and the
+interface is not user-friendly. Interested users
+can refer to `vignette("technical_searching_one_bound", package = "semlbci")`
+to see how to use `semlbci::ci_bound_wn_i()`
+directly.
+
+These are the main arguments of `semlbci::ci_bound_wn_i()`:
+
+- `i`:
+
+  The position (row number) of the target parameters
+  as appeared in the parameter table of the output of
+  `lavaan::lavaan()` and its wrappers, such as
+  `lavaan::sem()` and `lavaan::cfa()`. This id uniquely
+  identifies a parameter, which can be free, fixed, or
+  user-defined.
+
+- `npar`:
+
+  The number of free parameters in the model,
+  including those constrained to be equal. To be supplied
+  by `semlbci::ci_i_one()`.
+
+- `sem_out`:
+
+  A `lavaan`-class object. the output of
+  `lavaan::lavaan()` and its wrappers, such as
+  `lavaan::sem()` and `lavaan::cfa()`.
+
+- `f_constr`:
+
+  The constraint function generated by
+  `set_constraint()`. Created by `semlbci::semlbci()`
+  and then passed to it through `semlbci::ci_i_one()`.
+
+- `which`:
+
+  Either `"lbound"` or `"ubound"`, denoting
+  lower bound and upper bound, respectively. The confidence
+  bound (limit) to be searched.
+
+- `perturbation_factor`:
+
+  The number by which the
+  parameter estimates in `sem_out` will be multiplied,
+  to set the starting values, because using the parameter
+  estimates as starting values may lead to errors in the
+  first few iterations. Default is .90. This argument is
+  ignored if `wald_ci_start`, described below, is `TRUE`.
+
+- `lb_var`:
+
+  The lower bound for free parameters that are
+  variances. If equal to `-Inf`, the default, `lb_prop` and
+  `lb_se_k`, described below, will be used to set the lower
+  bounds for free variances. If it is a number, it will be
+  used to set the lower bounds for all free variances.
+
+- `wald_ci_start`:
+
+  If `TRUE`, there are no equality
+  constraints in the model, and the target parameter is not
+  a user-defined parameter, the Wald or delta confidence
+  bounds will
+  be used as the starting values.
+
+- `standardized`:
+
+  Logical. Whether the confidence bound
+  of the parameter in the standardized solution is to be
+  searched. For example, for a covariance, whether the
+  covariance, or the correlation, is to be used in searching
+  the bound. Default is `FALSE`.
+
+- `opts`:
+
+  A named list of options to be passed to
+  `nloptr::nloptr()`, the function used for the optimization.
+  Default is `list()`. This argument can be used to override
+  internal settings used by `semlbci::ci_bound_wn_i()`.
+
+- `ciperc`:
+
+  The intended coverage probability for the
+  confidence interval. Default is .95, and the bound for
+  a 95% likelihood-based confidence interval will be sought.
+
+- `ci_limit_ratio_tol`:
+
+  The tolerance for the ratio of `a` to
+  `b`, where `a` is the distance between an bound of an LBCI
+  and the point estimate, and the `b` is the distance
+  between the original confidence bound (by default the Wald
+  or delta CI in `lavaan::lavaan()`) and the point estimate.
+  If the ratio
+  is larger than this value or smaller than the reciprocal
+  of this value, a warning is set in the status code.
+  Default is 1.5.
+
+- `verbose`:
+
+  If `TRUE`, the function will store more
+  diagnostic information in the attribute `diag`. Default
+  is `FALSE`.
+
+- `sf`:
+
+  A scaling factor. Used for robust confidence bounds.
+  Default is 1. Precomputed by an internal function called by
+  `semlbci::semlbci()` or `semlbci::ci_i_one()` when
+  `robust = "satorra.2000"`.
+
+- `sf2`:
+
+  A shift factor. Used for robust confidence bounds.
+  Default is 1. Precomputed by an internal function called by
+  `semlbci::semlbci()` or `semlbci::ci_i_one()` when
+  `robust = "satorra.2000"`.
+
+- `p_tol`:
+
+  The tolerance for checking the achieved level of
+  confidence, that is, the *p*-value of the likelihood
+  ratio test between the original model and the model with
+  the parameter fixed to the bound found. If the absolute
+  difference between the achieved level and `ciperc` is
+  greater than this number, a warning is set in the status
+  code and the bound is set to `NA`. Default is 5e-4.
+
+- `xtol_rel_factor`:
+
+  Multiply the internal default value
+  of `xtol_rel` for `nloptr::nloptr()` (1.0e-5) by
+  this number, usually a positive number equal to or less
+  than 1,
+  to change the default termination criterion. Default is 1.
+  This allows tweaking the settings for optimization without
+  knowing the internal default value.
+
+- `ftol_rel_factor`:
+
+  Multiply the internal default value
+  of `ftol_rel` for `nloptr::nloptr()` (1.0e-5) by this
+  number,
+  usually a positive number equal to or less than 1, to
+  change the default termination criterion. Default is 1.
+  This allows tweaking the settings for optimization without
+  knowing the internal default value.
+
+- `lb_prop`:
+
+  Used by an internal function to set the lower
+  bound for free variances. Default is .05, setting the
+  lower bound to (.05)(point estimate). Used only if the
+  lower bound set by `lb_se_k` is negative. This constraint
+  is used only in the optimization to prevent intermediate values
+  too far away from the point estimates. The final check done
+  by fitting the model in `lavaan` will not implement this
+  constraint.
+
+- `lb_se_k`
+
+  Used by an internal function to set the lower bound
+  for free variances. Default is 3, the estimate minus
+  (3)(standard error). If negative, the lower bound is set
+  using `lb_prop`. This constraint
+  is used only in the optimization to prevent intermediate values
+  too far away from the point estimates. The final check done
+  by fitting the model in `lavaan` will not implement this
+  constraint.
+
+Please refer to the help page of `semlbci::ci_bound_wn_i()`
+to learn about other arguments.
+
+# References
