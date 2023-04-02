@@ -26,7 +26,7 @@ This vignette is based on the
 [technical appendix](https://osf.io/zjysd)
 hosted at the [OSF project site](https://osf.io/b9a2p/)
 of Cheung and Pesigan (2023), associated with the package
-`semlbci`.
+[`semlbci`](https://sfcheung.github.io/semlbci/).
 It presents how to use
 `semlbci::ci_bound_wn_i()` directly to search for one
 bound (limit) of a likelihood-based confidence
@@ -36,11 +36,11 @@ in customizing the optimization, examining the search
 in details, or just to know more about the implementation,
 they can try `semlbci::ci_bound_wn_i()` directly.
 
-For the overall workflow of
-`semlbci::semlbci()` and the workflow of
-`semlbci::ci_bound_wn_i()`, please refer to
-`vignette("technical_workflow", package = "semlbci")`. This
-appendix only illustrates how to use
+For the workflows of
+`semlbci::semlbci()` and `semlbci::ci_bound_wn_i()`,
+please refer to
+[technical_workflow](https://sfcheung.github.io/semlbci/articles/technical_workflow.html).
+This vignette only illustrates how to use
 `semlbci::ci_bound_wn_i()`.
 
 # Examples
@@ -80,7 +80,7 @@ fn_constraint <- set_constraint(fit,
 
 To find the lower bound of the LBCI of, say, `y ~ m`,
 we first check the row number of this parameter in
-the parameter table:
+the *parameter table*:
 
 ```{r}
 parameterTable(fit)
@@ -90,11 +90,11 @@ This parameter is in the 2^nd^ row.
 
 We then check the number of free parameters in this table,
 ignoring any
-equality constraints. In this model, the number of free
-parameters is 4.
+equality constraints. This can be done by counting the
+number of nonzero entries in the column `free`.
+In this model, the number of free parameters is 4.
 
 We can then call `semlbci::ci_bound_wn_i()`:
-
 
 ```{r}
 out_lb <- ci_bound_wn_i(i = 2,
@@ -125,8 +125,8 @@ The printout is explained briefly below:
 
 - `Position`:
 
-  The position of the target parameter in the parameter table (the row
- row number).
+  The position of the target parameter in the parameter
+  table (the row number).
 
 - `Which Bound`:
 
@@ -203,9 +203,9 @@ The printout is explained briefly below:
 
 - `Direction valid?`:
 
-  Whether the direction of the bound is valid (the lower
+  Whether the direction of the bound is valid: the lower
   bound is less than the point estimate, or the upper
-  bound is greater than the point estimate). If invalid,
+  bound is greater than the point estimate. If invalid,
   the status code will be set to 1.
 
 - `Optimization Information`:
@@ -305,7 +305,7 @@ lavTestLRT(fit, fit_chk)
 The *p*-value is again .05 (1 - .95). Therefore, this bound,
 `r round(out_ub$bound, 7)` is correct by definition.
 
-### Find the LBCI of a Function of Coefficients: The Indirect Effect.
+### Find the LBCI of a Function of Coefficients: The Indirect Effect
 
 To find the bounds for a user-defined parameters, for example, the
 indirect effect in the model, the steps are the same.
