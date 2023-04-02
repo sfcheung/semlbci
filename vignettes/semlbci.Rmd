@@ -1,7 +1,7 @@
 ---
 title: "Quick Start"
 author: "Shu Fai Cheung"
-date: "2023-03-08"
+date: "2023-03-26"
 output:
   rmarkdown::html_vignette
 vignette: >
@@ -14,7 +14,7 @@ vignette: >
 
 # Introduction
 
-This package includes functions for finding the
+The package `semlbci` includes functions for finding the
 likelihood-based confidence intervals (LBCIs)
 of parameters in the output of a structural
 equation modeling (SEM) function.
@@ -27,6 +27,9 @@ The latest stable version can be installed from GitHub:
 ```r
 remotes::install_github("sfcheung/semlbci")
 ```
+
+Further information about `semlbci` can
+be found in Cheung and Pesigan (2023).
 
 # Fit a Model to a Dataset
 
@@ -49,7 +52,7 @@ head(dat)
 #> 5 -0.9628162  -4.015469 -7.288511
 #> 6 -1.0749302 -11.538140 -4.153572
 library(lavaan)
-#> This is lavaan 0.6-14
+#> This is lavaan 0.6-15
 #> lavaan is FREE software! Please report any bugs.
 mod <-
 "
@@ -73,7 +76,7 @@ This is the summary:
 
 ```r
 summary(fit, standardized = TRUE)
-#> lavaan 0.6.14 ended normally after 1 iteration
+#> lavaan 0.6.15 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -538,13 +541,19 @@ considered in future development.
 
 A detailed presentation of the internal
 workflow of `semlbci()` can be found
-in the [technical appendix at OSF](https://osf.io/q6e3h).
+in the `vignette("technical_workflow", package = "semlbci")`.
 Users interested in calling the lowest
 level function, `ci_bound_wn_i()`,
-can see some illustrative exmaples
-in [this document at OSF](https://osf.io/zjysd).
+can see some illustrative examples
+in `vignette("technical_searching_one_bound", package = "semlbci")`.
 
 # References
+
+Cheung, S. F., & Pesigan, I. J. A. (Forthcoming). An R package
+for forming likelihood-based confidence intervals for parameter
+estimates, correlations, indirect Effects, and other derived
+parameters. *Structural Equation Modeling: A Multidisciplinary Journal*.
+Accepted for publication.
 
 Falk, C. F. (2018). Are robust standard errors the best approach for interval estimation with nonnormal data in structural equation
 modeling? *Structural Equation Modeling: A Multidisciplinary Journal, 25*(2), 244-266. https://doi.org/10.1080/10705511.2017.1367254

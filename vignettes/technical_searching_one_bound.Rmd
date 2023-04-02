@@ -1,0 +1,521 @@
+---
+title: "Searching for One Bound"
+author: "Shu Fai Cheung"
+date: "2023-03-26"
+output:
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Searching for One Bound}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: semlbci_technical_references.bib
+csl: apa.csl
+---
+
+
+
+# Introduction
+
+This vignette is based on the
+[technical appendix](https://osf.io/zjysd)
+hosted at the [OSF project site](https://osf.io/b9a2p/)
+of Cheung and Pesigan (2023), associated with the package
+`semlbci`.
+It presents how to use
+`semlbci::ci_bound_wn_i()` directly to search for one
+bound (limit) of a likelihood-based confidence
+interval (LBCI). This function is not to be used by
+common users. However, for advanced users interested
+in customizing the optimization, examining the search
+in details, or just to know more about the implementation,
+they can try `semlbci::ci_bound_wn_i()` directly.
+
+For the overall workflow of
+`semlbci::semlbci()` and the workflow of
+`semlbci::ci_bound_wn_i()`, please refer to
+`vignette("technical_workflow", package = "semlbci")`. This
+appendix only illustrates how to use
+`semlbci::ci_bound_wn_i()`.
+
+# Examples
+
+## A Simple Mediation Model
+
+The dataset `simple_med` from `semlbci` is used to fit
+a simple mediation model:
+
+
+```r
+library(semlbci)
+library(lavaan)
+dat <- simple_med
+mod <-
+"
+m ~ a*x
+y ~ b*m
+ab := a*b
+"
+fit <- sem(model = mod,
+           data = dat)
+```
+
+First, use `semlbci::set_constraint()` to set the constraint
+on the likelihood ratio test used by the method
+proposed by @wu_adjusted_2012 and adapted by
+@pek_profile_2015, with `ciperc` set to
+the level of confidence of the LBCI to be formed
+(.95 for 95%):
+
+
+```r
+fn_constraint <- set_constraint(fit,
+                                ciperc = .95)
+```
+
+### Find the LBCI of a Regression Coefficient
+
+To find the lower bound of the LBCI of, say, `y ~ m`,
+we first check the row number of this parameter in
+the parameter table:
+
+
+```r
+parameterTable(fit)
+#>   id lhs op rhs user block group free ustart exo label plabel  start    est
+#> 1  1   m  ~   x    1     1     1    1     NA   0     a   .p1.  1.676  1.676
+#> 2  2   y  ~   m    1     1     1    2     NA   0     b   .p2.  0.535  0.535
+#> 3  3   m ~~   m    0     1     1    3     NA   0         .p3. 34.710 34.710
+#> 4  4   y ~~   y    0     1     1    4     NA   0         .p4. 40.119 40.119
+#> 5  5   x ~~   x    0     1     1    0     NA   1         .p5.  0.935  0.935
+#> 6  6  ab := a*b    1     0     0    0     NA   0    ab         0.000  0.897
+#>      se
+#> 1 0.431
+#> 2 0.073
+#> 3 3.471
+#> 4 4.012
+#> 5 0.000
+#> 6 0.261
+```
+
+This parameter is in the 2^nd^ row.
+
+We then check the number of free parameters in this table,
+ignoring any
+equality constraints. In this model, the number of free
+parameters is 4.
+
+We can then call `semlbci::ci_bound_wn_i()`:
+
+
+
+```r
+out_lb <- ci_bound_wn_i(i = 2,
+                        npar = 4,
+                        sem_out = fit,
+                        f_constr = fn_constraint,
+                        which = "lbound",
+                        verbose = TRUE,
+                        ciperc = .95)
+```
+
+The output is a `cibound`-class object with a `print` method
+for printing diagnostic information.
+
+
+```r
+out_lb
+#> Target Parameter:	y ~ m (group = 1, block = 1)
+#> Position:		2
+#> Which Bound:		Lower Bound
+#> Method:			Wu-Neale-2012
+#> Confidence Level:	0.95
+#> Achieved Level:		0.950000000016768
+#> Standardized:		No
+#> Likelihood-Based Bound:	0.39073
+#> Wald Bound:		0.39142
+#> Point Estimate:		0.53508
+#> Ratio to Wald Bound:	1.00482
+#> 
+#> -- Check --
+#> Level achieved?		Yes (Difference: 1.6768e-11; Tolerance: 5e-04)
+#> Solution admissible?	Yes
+#> Direction valid?	Yes
+#> 
+#> -- Optimization Information --
+#> Solver Status:		3
+#> Convergence Message:	NLOPT_FTOL_REACHED: Optimization stopped because ftol_rel or ftol_abs (above) was reached.
+#> Iterations:		3
+#> Termination Conditions:
+#> 	xtol_rel: 1e-05
+#> 	ftol_rel: 1e-05
+#> 	maxeval:  500
+#> 
+#> -- Parameter Estimates --
+#>              a        b    m~~m     y~~y
+#> Start  1.67613  0.39142 34.7103 40.88953
+#> Final  1.67613  0.39073 34.7103 40.88955
+#> Change 0.00000 -0.00069  0.0000  0.00002
+#> 
+#> Bound before check:	0.39073
+#> Status Code:		0
+#> Call: ci_bound_wn_i(i = 2, npar = 4, sem_out = fit, f_constr = fn_constraint, 
+#>     which = "lbound", ciperc = 0.95, verbose = TRUE)
+```
+
+
+
+The printout is explained briefly below:
+
+- `Target Parameter`:
+
+  The target parameter, in `lavaan` syntax form.
+
+- `Position`:
+
+  The position of the target parameter in the parameter table (the row
+ row number).
+
+- `Which Bound`:
+
+  Whether the lower bound (limit) or upper bound (limit) was
+  requested.
+
+- `Method`:
+
+  The method used. Currently, only the method proposed
+  by @wu_adjusted_2012 and adapted by @pek_profile_2015
+  is supported.
+
+- `Confidence Level`:
+
+  The level of confidence requested.
+
+- `Achieved Level`:
+
+  One minus the *p*-value of the likelihood ratio test when
+  the
+  target parameter (or function of parameter) is fixed to
+  the bound found. This
+  value should be close to `Confidence Level`, although
+  a small difference is expected and allowed.
+
+- `Standardized`:
+
+  Whether the bound in the standardized solution is requested.
+
+- `Likelihood-Based Bound`:
+
+  The bound found. Set to `NA` if the status code is not
+  equal to 1.
+
+- `Wald Bound`:
+
+  The original bound, which is the bound of the Wald
+  confidence
+  interval, or delta-method confidence for a user-defined
+  parameter or the standardized solution.
+
+- `Point Estimate`:
+
+  The point estimate in the original solution.
+
+- `Ratio to Wald Bound`:
+
+  The ratio of the distance of `Likelihood-Based Bound`
+  from `Point Estimate` to the distance of
+  `Wald Bound` from `Point Estimate`. If greater than
+  one, the `Likelihood-Based Bound` is farther away
+  from the point estimate than the `Wald Bound`. If
+  less than one, the `Likelihood-Based Bound` is closer
+  to the point estimate than the `Wald Bound`.
+
+- `Level achieved`:
+
+  Whether `Achieved Level` is close enough to `Confidence Level`,
+  defined by whether the absolute difference between the
+  *p*-value of
+  the likelihood ratio test and 1 - `ciperc` is less than
+  or equal to `p_tol` (default is 5e-4). If not, the status
+  code will be set to 1.
+
+- `Check`:
+
+  Whether the solution (see below) is admissible, defined by
+  setting in `lavaan` `check.post = TRUE` (all variances non-negative,
+  all model-implied covariance matrices are positive semidefinite),
+  `check.vcov = TRUE` (the variance-covariance matrix of free parameters
+  is positive definite), and `check.start = TRUE` (used to test
+  the consistency of the solution). If the solution fails any of these
+  tests, the status code will be set to 1.
+
+- `Direction valid?`:
+
+  Whether the direction of the bound is valid (the lower
+  bound is less than the point estimate, or the upper
+  bound is greater than the point estimate). If invalid,
+  the status code will be set to 1.
+
+- `Optimization Information`:
+
+  This section prints information returned by
+  `nloptr::nloptr()`, such as the status code, the convergence message
+  (which criterion was met), the number of iterations, and the termination
+  conditions set (`xtol_rel`, `ftol_rel`, and `maxevel` are arguments
+  of `nloptr::nloptr()`). If the status code of `nlopter::nlotpr()`
+  is less than zero, indicating a status other than `"success"`,
+  then the status code of this function will be set to 1.
+
+- `Parameter Estimates`:
+
+  The values of the free parameters. `Start` are the
+  staring values before the optimization. `Final` are the values at
+  convergence (the solution), and `Change` is `Final` - `Start`.
+
+- `Bound before check`:
+
+  The bound found before the checks presented above.
+  This is printed because if the bound fails any of the checks, `NA` will
+  be returned to prevent accidental use of the potentially invalid bound.
+  If needed for diagnosis, the
+  bound that fails the checks can be found here.
+
+- `Status Code`:
+
+  This code is either 0 or 1. If 0, it means that the bound
+  passes
+  all the checks presented above. If 1, it means that it fails at least one
+  of the checks.
+
+The `cibound`-class object has three elements:
+
+
+```r
+names(out_lb)
+#> [1] "bound" "diag"  "call"
+```
+
+- `bound`:
+
+  The bound found. `NA` if status code is not equal to 0.
+
+- `diag`:
+
+  Diagnostic information. It stores all the information presented in
+  the printout described above, and more. If `verbose` is set to `TRUE`,
+  of if the status code of `nloptr::nloptr()` (not of this function) is less
+  than one, the original output of `nloptr::nloptr()` will also be stored
+  for further examination.
+
+- `call`: The original call.
+
+We can verify the definitional validity of the bound by doing a likelihood
+ratio test manually:
+
+
+```r
+mod_chk <-
+"
+m ~ a*x
+y ~ b*m
+ab := a*b
+b == 0.3907302
+"
+fit_chk <- sem(model = mod_chk,
+               data = dat)
+lavTestLRT(fit, fit_chk)
+#> 
+#> Chi-Squared Difference Test
+#> 
+#>         Df    AIC    BIC  Chisq Chisq diff   RMSEA Df diff Pr(>Chisq)  
+#> fit      1 2590.9 2604.1 10.549                                        
+#> fit_chk  2 2592.8 2602.7 14.390     3.8415 0.11919       1       0.05 .
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+The *p*-value is .05 (1 - .95). Therefore, this bound,
+0.3907302 is *correct by definition*.
+
+This process can be repeated with `which = "ubound"` to
+find the upper bound:
+
+
+```r
+out_ub <- ci_bound_wn_i(i = 2,
+                        npar = 4,
+                        sem_out = fit,
+                        f_constr = fn_constraint,
+                        which = "ubound",
+                        verbose = TRUE,
+                        ciperc = .95)
+out_ub
+#> Target Parameter:	y ~ m (group = 1, block = 1)
+#> Position:		2
+#> Which Bound:		Upper Bound
+#> Method:			Wu-Neale-2012
+#> Confidence Level:	0.95
+#> Achieved Level:		0.950000000016757
+#> Standardized:		No
+#> Likelihood-Based Bound:	0.67944
+#> Wald Bound:		0.67874
+#> Point Estimate:		0.53508
+#> Ratio to Wald Bound:	1.00482
+#> 
+#> -- Check --
+#> Level achieved?		Yes (Difference: 1.6757e-11; Tolerance: 5e-04)
+#> Solution admissible?	Yes
+#> Direction valid?	Yes
+#> 
+#> -- Optimization Information --
+#> Solver Status:		3
+#> Convergence Message:	NLOPT_FTOL_REACHED: Optimization stopped because ftol_rel or ftol_abs (above) was reached.
+#> Iterations:		3
+#> Termination Conditions:
+#> 	xtol_rel: 1e-05
+#> 	ftol_rel: 1e-05
+#> 	maxeval:  500
+#> 
+#> -- Parameter Estimates --
+#>              a       b    m~~m     y~~y
+#> Start  1.67613 0.67874 34.7103 40.88953
+#> Final  1.67613 0.67944 34.7103 40.88955
+#> Change 0.00000 0.00069  0.0000  0.00002
+#> 
+#> Bound before check:	0.67944
+#> Status Code:		0
+#> Call: ci_bound_wn_i(i = 2, npar = 4, sem_out = fit, f_constr = fn_constraint, 
+#>     which = "ubound", ciperc = 0.95, verbose = TRUE)
+mod_chk <-
+"
+m ~ a*x
+y ~ b*m
+ab := a*b
+b == 0.679435
+"
+fit_chk <- sem(model = mod_chk,
+               data = dat)
+lavTestLRT(fit, fit_chk)
+#> 
+#> Chi-Squared Difference Test
+#> 
+#>         Df    AIC    BIC  Chisq Chisq diff   RMSEA Df diff Pr(>Chisq)  
+#> fit      1 2590.9 2604.1 10.549                                        
+#> fit_chk  2 2592.8 2602.7 14.390     3.8415 0.11919       1       0.05 .
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+The *p*-value is again .05 (1 - .95). Therefore, this bound,
+0.679435 is correct by definition.
+
+### Find the LBCI of a Function of Coefficients: The Indirect Effect.
+
+To find the bounds for a user-defined parameters, for example, the
+indirect effect in the model, the steps are the same.
+
+
+```r
+parameterTable(fit)
+#>   id lhs op rhs user block group free ustart exo label plabel  start    est
+#> 1  1   m  ~   x    1     1     1    1     NA   0     a   .p1.  1.676  1.676
+#> 2  2   y  ~   m    1     1     1    2     NA   0     b   .p2.  0.535  0.535
+#> 3  3   m ~~   m    0     1     1    3     NA   0         .p3. 34.710 34.710
+#> 4  4   y ~~   y    0     1     1    4     NA   0         .p4. 40.119 40.119
+#> 5  5   x ~~   x    0     1     1    0     NA   1         .p5.  0.935  0.935
+#> 6  6  ab := a*b    1     0     0    0     NA   0    ab         0.000  0.897
+#>      se
+#> 1 0.431
+#> 2 0.073
+#> 3 3.471
+#> 4 4.012
+#> 5 0.000
+#> 6 0.261
+```
+
+The indirect effect, `ab`, is on the 6^th^ row. Therefore,
+we set `i` to 6. All other arguments are the same as in the previous
+example.
+
+
+```r
+ind_lb <- ci_bound_wn_i(i = 6,
+                        npar = 4,
+                        sem_out = fit,
+                        f_constr = fn_constraint,
+                        which = "lbound",
+                        verbose = TRUE,
+                        ciperc = .95)
+```
+
+This is the printout:
+
+
+```r
+ind_lb
+#> Target Parameter:	ab := a*b (group = 0, block = 0)
+#> Position:		6
+#> Which Bound:		Lower Bound
+#> Method:			Wu-Neale-2012
+#> Confidence Level:	0.95
+#> Achieved Level:		0.950000001584309
+#> Standardized:		No
+#> Likelihood-Based Bound:	0.42653
+#> Wald Bound:		0.38491
+#> Point Estimate:		0.89687
+#> Ratio to Wald Bound:	0.9187
+#> 
+#> -- Check --
+#> Level achieved?		Yes (Difference: 1.5843e-09; Tolerance: 5e-04)
+#> Solution admissible?	Yes
+#> Direction valid?	Yes
+#> 
+#> -- Optimization Information --
+#> Solver Status:		4
+#> Convergence Message:	NLOPT_XTOL_REACHED: Optimization stopped because xtol_rel or xtol_abs (above) was reached.
+#> Iterations:		11
+#> Termination Conditions:
+#> 	xtol_rel: 1e-05
+#> 	ftol_rel: 1e-05
+#> 	maxeval:  500
+#> 
+#> -- Parameter Estimates --
+#>              a        b     m~~m     y~~y
+#> Start  0.77753  0.49504 35.46538 40.17887
+#> Final  0.86224  0.49467 35.32975 40.17929
+#> Change 0.08471 -0.00036 -0.13563  0.00042
+#> 
+#> Bound before check:	0.42653
+#> Status Code:		0
+#> Call: ci_bound_wn_i(i = 6, npar = 4, sem_out = fit, f_constr = fn_constraint, 
+#>     which = "lbound", ciperc = 0.95, verbose = TRUE)
+```
+
+This bound passes all the checks. We can verify the
+bound using the likelihood ratio test:
+
+
+```r
+mod_chk <-
+"
+m ~ a*x
+y ~ b*m
+ab := a*b
+ab ==  0.4265275
+"
+fit_chk <- sem(model = mod_chk,
+               data = dat)
+lavTestLRT(fit, fit_chk)
+#> 
+#> Chi-Squared Difference Test
+#> 
+#>         Df    AIC    BIC  Chisq Chisq diff   RMSEA Df diff Pr(>Chisq)  
+#> fit      1 2590.9 2604.1 10.549                                        
+#> fit_chk  2 2592.8 2602.7 14.390     3.8415 0.11919       1       0.05 .
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+The *p*-value is .05 (1 - .95). Therefore, this bound,
+0.4265275 is correct by definition.
+
+# References
