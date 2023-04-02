@@ -1,20 +1,21 @@
 ---
 title: "Internal Workflow of semlbci()"
 author: "Shu Fai Cheung"
-date: "2023-03-26"
-output:
-  rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Internal Workflow of semlbci()}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+date: "`r Sys.Date()`"
 bibliography: semlbci_technical_references.bib
 csl: apa.csl
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 
-
-
+```{r echo = FALSE}
+library(DiagrammeR)
+```
 
 # Introduction
 
@@ -84,7 +85,29 @@ likelihood ratio test by @satorra_scaled_2000.
 The general workflow of `semlbci::semlbci()` is shown
 below:
 
-<img src="fig-semlbci-1.png" alt="General Workflow of `semlbci::semlbci()`" style="display: block; margin: auto;" />
+```{r fig-semlbci, fig.cap = "General Workflow of `semlbci::semlbci()`", echo = FALSE, fig.align = "center"}
+mermaid("
+graph TD
+  classDef default fill:#DADBFF;
+  A[\"Is <code>check_fit</code> <code>TRUE</code>?\"]
+  A -- Yes --> AYes[\"Are the model and<br/>estimation method supported?<br/>(Checked by <code>check_sem_out()</code>)\"]
+  A --No--> B
+  AYes -- No --> AYesNo[\"Terminate and raise an error\"]
+  AYes --Yes--> B
+  B[\"Find the ids of parameters requested\"]
+  B --> C
+  C[\"Call <code>set_constraint()</code> to set the equality constraint<br/>used by the WNPW method\"]
+  C --> D
+  D[\"Robust LBCI requested?\"]
+  D -- Yes --> DYes
+  DYes[\"For each parameter,<br/>call <code>scaling_factor3()</code><br/>to compute the scaling and shift factors\"]
+  D -- No --> E
+  DYes --> E
+  E[\"Call <code>ci_i_one()</code> once for<br/>each bound of each parameter\"]
+  E --> F
+  F[\"Combine the bounds to form the confidence intervals<br/>and return the results\"]
+", height = 840, width = 650)
+```
 
 We describe below the two functions called by `semlbci::semlbci()` in
 the workflow, `semlbci::set_constraint()` and `semlbci:::scaling_factor3()`.
@@ -179,7 +202,32 @@ to get the scaling and shift factors directly.
 
 The workflow of `semlbci::ci_i_one()` is presented below:
 
-<img src="fig-ci-i-one-1.png" alt="General Workflow of `semlbci::ci_i_one()`" style="display: block; margin: auto;" />
+```{r fig-ci-i-one, fig.cap = "General Workflow of `semlbci::ci_i_one()`", echo = FALSE, fig.align = "center"}
+mermaid("
+graph TD
+  classDef default fill:#F8DAFF;
+  B[\"Robust LBCI requested?\"]
+  B -- Yes --> C[\"Scaling and shift factors (<code>sf_full</code>)<br/>supplied by <code>semlbci()</code>?\"]
+  C -- No --> D[Compute scaling and shift factors]
+  D --> E
+  C -- Yes --> E[\"Call <code>ci_bound_wn_i()</code>\"]
+  B -- No --> E
+  E --> F[\"<code>status</code> == 0?\"]
+  F -- No --> G[\"Move the lower bounds<br/>of free variances closer to zero<br/>and call <code>ci_bound_wn_i()</code> again\"]
+  F -- Yes --> ZZ[\"Return the results to <code>semlbci()</code><br/>Bound set to <code>NA</code> if status != 0\"]
+  G --> H[\"<code>status</code> == 0?\"]
+  H -- Yes --> ZZ
+  H -- No --> I[\"Is <code>try_k_more_times</code> > 0?\"]
+  I -- No --> ZZ
+  I -- Yes --> J[\"Reduce the tolerance for convergence<br/>(Reduce <code>xtol_rel</code> and <code>ftol_rel</code>)\"]
+  J --> K[\"Call <code>ci_bound_wn_i()</code>\"]
+  K --> L[\"<code>status</code> == 0?\"]
+  L -- Yes --> ZZ
+  L -- No --> M[\"Tried<br/><code>try_k_more_times</code>?\"]
+  M -- No --> J
+  M -- Yes --> ZZ
+", height = 1300, width = 700)
+```
 
 Its job is to call `semlbci::ci_bound_wn_i()`
 once or more than once to find the bound of an LBCI of
@@ -212,7 +260,21 @@ two stages, the *minimization stage* and the *checking stage*.
 
 The workflow of the minimization stage is presented below:
 
-<img src="fig-ci-i-bound-wn-i-min-1.png" alt="Workflow of `semlbci::ci_bound_wn_i()` - Minimization Stage" style="display: block; margin: auto;" />
+```{r fig-ci-i-bound-wn-i-min, fig.cap = "Workflow of `semlbci::ci_bound_wn_i()` - Minimization Stage", echo = FALSE, fig.align = "center"}
+mermaid("
+graph TD
+  classDef default fill:#DAFFDA;
+  A[\"Store the point estimates and Wald or Delta CI\"]
+  A --> B[\"Define the function to be minimized [<code>lbci_b_f()</code>]<br/>and the gradient function of this function [<code>lbci_b_grad()</code>]\"]
+  B --> C[\"Is <code>wald_ci_start</code> TRUE?\"]
+  C -- Yes --> CYes[\"Call <code>set_start_wn()</code><br/>to set the starting values<br/>based on Wald or Delta CI\"]
+  C -- No --> CNo(\"Slighly pertubate<br/>the point estimates<br/> to set the starting values\")
+  CYes --> D[\"Set the lower bounds of free variances<br/>to a small positive value\"]
+  CNo --> D
+  D --> E[\"Call <code>>nloptr::nloptr()</code> to minimize the objective function,<br/>with the equality constraint <code>f_constr</code><br/>(created by <code>set_constraint()</code>)\"]
+  E --> F[\"Pass the results to the Checking Stage\"]
+", height = 650, width = 500)
+```
 
 #### Optimization Algorithm
 
@@ -289,7 +351,36 @@ The arguments `xtol_rel`, `ftol_rel`, and
 
 The workflow of the checking stage is presented below:
 
-<img src="fig-ci-i-bound-wn-i-chk-1.png" alt="Workflow of `semlbci::ci_bound_wn_i()` - Checking Stage" style="display: block; margin: auto;" />
+```{r fig-ci-i-bound-wn-i-chk, fig.cap = "Workflow of `semlbci::ci_bound_wn_i()` - Checking Stage", echo = FALSE, fig.align = "center"}
+mermaid("
+graph TD
+  classDef default fill:#FFE1DA;
+  classDef statusNA fill:#ffdddd;
+  class DNo,FNo,GNo statusNA
+%%  DNo:::statusNA
+%%  FNo:::statusNA
+%%  GNo:::statusNA
+  A[\"Which bound is requested?\"]
+  A -- Upper --> AUpper[\"Multiply the value by -1\"]
+  AUpper --> B[\"Store the value to <code>bound</code>\"]
+  A -- Lower --> B
+  B --> C[\"Initialize <code>status</code> to 0\"]
+  C --> D[\"<b>Check <code>nloptr</code> Status</b>:<br/>Is status code from <code>nloptr</code> equal to 0?\"]
+  D -- No --> DNo[\"Set <code>status</code> to 1\"]
+  DNo --> F[\"<b>Check SEM Solution</b>:<br/>Is the <code>lavaan</code> results based on <code>nloptr</code> solution admissible?\"]
+  D -- Yes --> F
+  F -- No --> FNo[\"Set <code>status</code> to 1\"]
+  FNo --> G[\"<b>Check the Achieved Level of Significance</b>:<br/>Is the <i>p</i>-value of the 1-<i>df</i> likelihood ratio test<br/>close enough to 1 - Confidence Level? (.05 for 95%)<br/>(<code>p_tol</code> used as the tolerance) (For robust LBCI, scaling and shift factors are used)\"]
+  F -- Yes --> G
+  G -- No --> GNo[\"Set <code>status</code> to 1\"]
+  GNo --> E[\"Set <code>ci_limit_ratio</code> to the ratio of distances from the point estimate:<br/>(LBCI bound from point estimate) / (Wald or Delta bound to point estimate)\"]
+  G -- Yes --> E
+  E --> H[\"Is <code>status</code> equal to 0?\"]
+  H -- No --> HNo[\"Set <code>bound</code> to <code>NA</code>\"]
+  HNo --> I[\"Return the results\"]
+  H -- Yes --> I
+", height = 1200, width = 600)
+```
 
 It will do the following checks, in this order:
 

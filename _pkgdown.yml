@@ -30,7 +30,7 @@ articles:
   navbar: ~
   desc: For advanced users and developers
   contents:
-  - technical_workflow
+  - articles/technical_workflow
   - technical_searching_one_bound
 
 reference:
