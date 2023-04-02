@@ -30,8 +30,8 @@ articles:
   navbar: ~
   desc: For advanced users and developers
   contents:
-  - articles/technical_workflow
   - technical_searching_one_bound
+  - articles/technical_workflow
 
 reference:
 - title: Forming LBCIs

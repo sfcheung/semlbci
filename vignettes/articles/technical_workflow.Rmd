@@ -23,7 +23,7 @@ This vignette is a simplified version of the
 [technical appendix](https://osf.io/q6e3h)
 hosted at the [OSF project site](https://osf.io/b9a2p/)
 of Cheung and Pesigan (2023), associated with the package
-`semlbci`.
+[`semlbci`](https://sfcheung.github.io/semlbci/).
 It presents the workflow used by
 `semlbci::ci_i_one()` and `semlbci::ci_bound_wn_i()`
 to find a bound of a likelihood-based confidence interval
@@ -85,6 +85,7 @@ likelihood ratio test by @satorra_scaled_2000.
 The general workflow of `semlbci::semlbci()` is shown
 below:
 
+
 ```{r fig-semlbci, fig.cap = "General Workflow of `semlbci::semlbci()`", echo = FALSE, fig.align = "center"}
 mermaid("
 graph TD
@@ -109,6 +110,7 @@ graph TD
 ", height = 840, width = 650)
 ```
 
+
 We describe below the two functions called by `semlbci::semlbci()` in
 the workflow, `semlbci::set_constraint()` and `semlbci:::scaling_factor3()`.
 
@@ -121,15 +123,15 @@ the WNPW method.
 As presented in @pek_profile_2015, to find the lower bound,
 $\theta_L$, of the 100(1-$\alpha$)% LBCI of $\hat{\theta}_j$,
 $\theta_L$ is minimized with respect to all parameters,
-$(\theta_L, \theta_q)$, $\theta_q$ being all parameters
+$(\theta_L, \boldsymbol{\theta}_q)$, $\boldsymbol{\theta_q}$ being all parameters
 other than $\theta_L$, subject to the following constraint:
 
 $$
-0 = 2nF(\theta_L, \theta_q) - (2nF(\hat{\theta}) + \chi_{(1, 1 - \alpha)}^2)
+0 = 2nF(\theta_L, \boldsymbol{\theta_q}) - (2nF(\hat{\theta}) + \chi_{(1, 1 - \alpha)}^2)
 $$
 
-$F(\hat{\theta})$ is the value of the discrepancy function
-evaluated at the ML estimate $\hat{\theta}$.
+$F(\hat{\boldsymbol{\theta}})$ is the value of the discrepancy function
+evaluated at the ML estimate $\hat{\boldsymbol{\theta}}$.
 $\chi_{(1, 1 - \alpha)}^2$ is the $\chi^2$ critical value at
 $df = 1$ and level of significance = $\alpha$
 (about 3.84 with $\alpha = .05$), and $n$ is the sample size
@@ -140,8 +142,8 @@ between the model with $\theta_j$ fixed to $\theta_L$
 and the original model with $\theta_j$ freely estimated
 should have a *p*-value equal to $\alpha$.
 
-In `lavaan`, $F(\theta_L, \theta_q)$ is `"fmin"` in the
-output of `fitMeasures()`. When the estimator is `ML` and
+In `lavaan`, $F(\theta_L, \boldsymbol{\theta}_q)$ is `"fmin"` in the
+output of `lavaan::fitMeasures()`. When the estimator is `ML` and
 `likelihood = "normal"`, the default, multiplying `"fmin"`
 by $2n$ yields the model $\chi^2$.
 
@@ -163,7 +165,7 @@ The function `semlbci::set_constraint()` returns a general
 version of the constraint:
 
 $$
-0 = 2nF(\theta_L, \theta_q) - (2nF(\hat{\theta}) + \frac{\chi_{(1, 1 - \alpha)}^2 - b}{a})
+0 = 2nF(\theta_L, \boldsymbol{\theta}_q) - (2nF(\hat{\boldsymbol{\theta}}) + \frac{\chi_{(1, 1 - \alpha)}^2 - b}{a})
 $$
 
 In this general form, $a$ is the scaling factor and $b$ is
@@ -202,6 +204,7 @@ to get the scaling and shift factors directly.
 
 The workflow of `semlbci::ci_i_one()` is presented below:
 
+
 ```{r fig-ci-i-one, fig.cap = "General Workflow of `semlbci::ci_i_one()`", echo = FALSE, fig.align = "center"}
 mermaid("
 graph TD
@@ -229,6 +232,7 @@ graph TD
 ", height = 1300, width = 700)
 ```
 
+
 Its job is to call `semlbci::ci_bound_wn_i()`
 once or more than once to find the bound of an LBCI of
 a parameter. It does not check the validity or plausibility
@@ -251,7 +255,8 @@ and takes care of all the technical details. It is not
 supposed to be used by users and the interface is not designed
 to be user-friendly. Nevertheless, interested users can use
 it directly to find a bound, bypassing `semlbci::semlbci()`.
-Examples can be found in the vignette (to be included).
+Examples can be found in
+`vignette("technical_searching_one_bound", package = "semlbci")`.
 
 The workflow of `semlbci::ci_bound_wn_i()` can be separated into
 two stages, the *minimization stage* and the *checking stage*.
@@ -259,6 +264,7 @@ two stages, the *minimization stage* and the *checking stage*.
 ### Minimization Stage
 
 The workflow of the minimization stage is presented below:
+
 
 ```{r fig-ci-i-bound-wn-i-min, fig.cap = "Workflow of `semlbci::ci_bound_wn_i()` - Minimization Stage", echo = FALSE, fig.align = "center"}
 mermaid("
@@ -275,6 +281,7 @@ graph TD
   E --> F[\"Pass the results to the Checking Stage\"]
 ", height = 650, width = 500)
 ```
+
 
 #### Optimization Algorithm
 
@@ -300,31 +307,31 @@ $\theta_j$ (all other free parameters other than $\theta_j$
 are denoted by $\theta_q$):
 
 $$
-f(\theta_j, \theta_q) = \theta_j
+f(\theta_j, \boldsymbol{\theta}_q) = \theta_j
 $$
 
 If the upper bound is to be searched, then this function is:
 
 $$
-f(\theta_j, \theta_q) = -\theta_j
+f(\theta_j, \boldsymbol{\theta}_q) = -\theta_j
 $$
 
 
 If the parameter is a function of some free parameters (e.g.,
 an indirect effect, or a standardized coefficient such as
-correlation), denoted by $h(\theta)$, $\theta$ being all
+correlation), denoted by $h(\boldsymbol{\theta})$, $\boldsymbol{\theta}$ being all
 free parameters (though some may not be used in $h$), and
 the lower bound is to be searched, then this function is:
 
 $$
-f(\theta) = h(\theta)
+f(\boldsymbol{\theta}) = h(\boldsymbol{\theta})
 $$
 
 Similarly, if the upper bound is to be searched, this
 function is:
 
 $$
-f(\theta) = -h(\theta)
+f(\boldsymbol{\theta}) = -h(\boldsymbol{\theta})
 $$
 
 Therefore, in the optimization, minimization is conducted
@@ -350,6 +357,7 @@ The arguments `xtol_rel`, `ftol_rel`, and
 ### Checking Stage
 
 The workflow of the checking stage is presented below:
+
 
 ```{r fig-ci-i-bound-wn-i-chk, fig.cap = "Workflow of `semlbci::ci_bound_wn_i()` - Checking Stage", echo = FALSE, fig.align = "center"}
 mermaid("
@@ -382,6 +390,7 @@ graph TD
 ", height = 1200, width = 600)
 ```
 
+
 It will do the following checks, in this order:
 
 1. Is the status code of `nloptr::nloptr()` equal to 0 ("success")?
@@ -397,7 +406,7 @@ It will do the following checks, in this order:
     The values of the parameters in the final solution is
     used to fit the model, and then `lavaan::lavInspect()`
     is called to check the solution. Examples of inadmissible
-    solution are negative variance and correlations greater
+    solution are negative variances and correlations greater
     than one in magnitude.
 
     If the solution is not admissible, then the
@@ -456,7 +465,7 @@ These are the main arguments of `semlbci::ci_i_one()`:
   as appeared in the parameter table of the output of
   `lavaan::lavaan()` and its wrappers, such as
   `lavaan::sem()` and `lavaan::cfa()`. This uniquely
-  identify a parameter, which can be free, fixed, or
+  identifies a parameter, which can be free, fixed, or
   user-defined.
 
 - `which`:
@@ -695,7 +704,7 @@ These are the main arguments of `semlbci::ci_bound_wn_i()`:
 
   Used by an internal function to set the lower bound
   for free variances. Default is 3, the estimate minus
-  (3)(standard error). If negative, the lower bound is set
+  3 $\times$ standard error. If negative, the lower bound is set
   using `lb_prop`. This constraint
   is used only in the optimization to prevent intermediate values
   too far away from the point estimates. The final check done

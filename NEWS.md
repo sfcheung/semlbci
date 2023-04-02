@@ -1,4 +1,4 @@
-# semlbci 0.10.0.28
+# semlbci 0.10.0.29
 
 - First public release. (0.10.0.12)
 - Added R CMD Check GitHub actions. (0.10.0.13)
@@ -29,4 +29,5 @@
 - Added simplified versions of the technical appendices as vignettes. (0.10.0.26)
 - Updated vignettes. (0.10.0.27)
 - Change a technical appendix from a vignette to an article. (0.10.0.28)
+- Proofread the technical articles. (0.10.0.29)
 - Preparation for CRAN in progress.
