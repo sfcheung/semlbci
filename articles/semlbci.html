@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.24</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.28</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,9 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/loglike.html">Log Profile likelihood of a Parameter</a>
+    <a class="dropdown-item" href="../articles/loglike.html">Log Profile Likelihood of a Parameter</a>
+    <a class="dropdown-item" href="../articles/technical_workflow.html">Internal Workflow of semlbci()</a>
+    <a class="dropdown-item" href="../articles/technical_searching_one_bound.html">Searching for One Bound</a>
   </div>
 </li>
 <li class="nav-item">
@@ -80,7 +82,7 @@
                         <h4 data-toc-skip class="author">Shu Fai
 Cheung</h4>
             
-            <h4 data-toc-skip class="date">2023-03-08</h4>
+            <h4 data-toc-skip class="date">2023-03-26</h4>
       
       
       <div class="d-none name"><code>semlbci.Rmd</code></div>
@@ -91,14 +93,16 @@ Cheung</h4>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This package includes functions for finding the likelihood-based
-confidence intervals (LBCIs) of parameters in the output of a structural
-equation modeling (SEM) function. Currently, it supports the output from
-<code><a href="https://rdrr.io/pkg/lavaan/man/lavaan.html" class="external-link">lavaan::lavaan()</a></code> and its wrappers, such as
-<code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code> and <code><a href="https://rdrr.io/pkg/lavaan/man/cfa.html" class="external-link">lavaan::cfa()</a></code>.</p>
+<p>The package <code>semlbci</code> includes functions for finding the
+likelihood-based confidence intervals (LBCIs) of parameters in the
+output of a structural equation modeling (SEM) function. Currently, it
+supports the output from <code><a href="https://rdrr.io/pkg/lavaan/man/lavaan.html" class="external-link">lavaan::lavaan()</a></code> and its wrappers,
+such as <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code> and <code><a href="https://rdrr.io/pkg/lavaan/man/cfa.html" class="external-link">lavaan::cfa()</a></code>.</p>
 <p>The latest stable version can be installed from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"sfcheung/semlbci"</span><span class="op">)</span></span></code></pre></div>
+<p>Further information about <code>semlbci</code> can be found in Cheung
+and Pesigan (2023).</p>
 </div>
 <div class="section level2">
 <h2 id="fit-a-model-to-a-dataset">Fit a Model to a Dataset<a class="anchor" aria-label="anchor" href="#fit-a-model-to-a-dataset"></a>
@@ -119,7 +123,7 @@ fit a simple mediation model to this dataset.</p>
 <span><span class="co">#&gt; 5 -0.9628162  -4.015469 -7.288511</span></span>
 <span><span class="co">#&gt; 6 -1.0749302 -11.538140 -4.153572</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; This is lavaan 0.6-14</span></span>
+<span><span class="co">#&gt; This is lavaan 0.6-15</span></span>
 <span><span class="co">#&gt; lavaan is FREE software! Please report any bugs.</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span></span>
 <span><span class="st">"</span></span>
@@ -137,7 +141,7 @@ effect, <code>ab</code>, by <code>a * b</code>.</p>
 <p>This is the summary:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; lavaan 0.6.14 ended normally after 1 iteration</span></span>
+<span><span class="co">#&gt; lavaan 0.6.15 ended normally after 1 iteration</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -509,13 +513,20 @@ boundary. The more advanced methods by Pritikin, Rappaport, and Neale
 <h2 id="technical-details">Technical Details<a class="anchor" aria-label="anchor" href="#technical-details"></a>
 </h2>
 <p>A detailed presentation of the internal workflow of
-<code><a href="../reference/semlbci.html">semlbci()</a></code> can be found in the <a href="https://osf.io/q6e3h" class="external-link">technical appendix at OSF</a>. Users
+<code><a href="../reference/semlbci.html">semlbci()</a></code> can be found in the
+<code><a href="../articles/technical_workflow.html">vignette("technical_workflow", package = "semlbci")</a></code>. Users
 interested in calling the lowest level function,
-<code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>, can see some illustrative exmaples in <a href="https://osf.io/zjysd" class="external-link">this document at OSF</a>.</p>
+<code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>, can see some illustrative examples in
+<code><a href="../articles/technical_searching_one_bound.html">vignette("technical_searching_one_bound", package = "semlbci")</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
+<p>Cheung, S. F., &amp; Pesigan, I. J. A. (Forthcoming). An R package
+for forming likelihood-based confidence intervals for parameter
+estimates, correlations, indirect Effects, and other derived parameters.
+<em>Structural Equation Modeling: A Multidisciplinary Journal</em>.
+Accepted for publication.</p>
 <p>Falk, C. F. (2018). Are robust standard errors the best approach for
 interval estimation with nonnormal data in structural equation modeling?
 <em>Structural Equation Modeling: A Multidisciplinary Journal,
