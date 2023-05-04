@@ -4,11 +4,11 @@
 \name{semlbci-package}
 \alias{semlbci-package}
 \alias{_PACKAGE}
-\title{semlbci: Likelihood-Based Confidence Interval in Structrual Equation Models}
+\title{semlbci: Likelihood-Based Confidence Interval in Structural Equation Models}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Functions for forming the likelihood-based confidence intervals (LBCIs) for parameters in structural equation modeling, introduced in Cheung and Pesigan (2023). Currently implements the algorithm illustrated by Pek and Wu (2018) \doi{10.1037/met0000163}, and supports the robust LBCI proposed by Falk (2018) \doi{10.1080/10705511.2017.1367254}.
+Functions for forming the likelihood-based confidence intervals (LBCIs) for parameters in structural equation modeling, introduced in Cheung and Pesigan (2023) \doi{10.1080/10705511.2023.2183860}. Currently implements the algorithm illustrated by Pek and Wu (2018) \doi{10.1037/met0000163}, and supports the robust LBCI proposed by Falk (2018) \doi{10.1080/10705511.2017.1367254}.
 }
 \author{
 \strong{Maintainer}: Shu Fai Cheung \email{shufai.cheung@gmail.com} (\href{https://orcid.org/0000-0002-9871-9448}{ORCID})
