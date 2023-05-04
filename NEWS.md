@@ -1,4 +1,4 @@
-# semlbci 0.10.0.30
+# semlbci 0.10.0.31
 
 - First public release. (0.10.0.12)
 - Added R CMD Check GitHub actions. (0.10.0.13)
@@ -28,6 +28,7 @@
 - Updated doc. (0.10.0.25)
 - Added simplified versions of the technical appendices as vignettes. (0.10.0.26)
 - Updated vignettes. (0.10.0.27)
-- Change a technical appendix from a vignette to an article. (0.10.0.28)
+- Changed a technical appendix from a vignette to an article. (0.10.0.28)
 - Proofread the technical articles. (0.10.0.29)
-- Update the sources. (0.10.0.30)
+- Updated the sources. (0.10.0.30)
+- Fixed some typos and tests. (0.10.0.31)
