@@ -1,4 +1,8 @@
-# semlbci 0.10.0.31
+# semlbci 0.10.1
+
+- First submission to CRAN.
+
+# semlbci 0.10.0.12 to 0.10.0.31
 
 - First public release. (0.10.0.12)
 - Added R CMD Check GitHub actions. (0.10.0.13)
