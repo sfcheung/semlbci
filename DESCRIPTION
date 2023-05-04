@@ -1,6 +1,6 @@
 Package: semlbci
-Title: Likelihood-Based Confidence Interval in Structrual Equation Models
-Version: 0.10.0.28
+Title: Likelihood-Based Confidence Interval in Structural Equation Models
+Version: 0.10.1
 Authors@R:
     c(
       person(given = "Shu Fai",
@@ -17,10 +17,11 @@ Authors@R:
 Description: Functions for forming the likelihood-based
     confidence intervals (LBCIs) for parameters in
     structural equation modeling, introduced in
-    Cheung and Pesigan (2023). Currently implements the
-    algorithm illustrated by Pek and Wu (2018)
-    <doi:10.1037/met0000163>, and supports the robust LBCI
-    proposed by Falk (2018) <doi:10.1080/10705511.2017.1367254>.
+    Cheung and Pesigan (2023) <doi:10.1080/10705511.2023.2183860>.
+    Currently implements the algorithm illustrated by
+    Pek and Wu (2018) <doi:10.1037/met0000163>, and supports
+    the robust LBCI proposed by Falk (2018)
+    <doi:10.1080/10705511.2017.1367254>.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -29,8 +30,7 @@ RoxygenNote: 7.2.3
 Suggests:
     testthat (>= 3.0.0),
     knitr,
-    rmarkdown,
-    pbapply
+    rmarkdown
 Depends:
     R (>= 4.0.0)
 Imports:
@@ -41,7 +41,8 @@ Imports:
     MASS,
     ggplot2,
     ggrepel,
-    rlang
+    rlang,
+    pbapply
 VignetteBuilder: knitr
 Config/testthat/parallel: true
 Config/testthat/edition: 3
