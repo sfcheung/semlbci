@@ -25,23 +25,23 @@ knitr::opts_chunk$set(
 This vignette is based on the
 [technical appendix](https://osf.io/zjysd)
 hosted at the [OSF project site](https://osf.io/b9a2p/)
-of Cheung and Pesigan (2023), associated with the package
+of @cheung_semlbci_2023, associated with the package
 [`semlbci`](https://sfcheung.github.io/semlbci/).
 It presents how to use
-`semlbci::ci_bound_wn_i()` directly to search for one
+`ci_bound_wn_i()` directly to search for one
 bound (limit) of a likelihood-based confidence
 interval (LBCI). This function is not to be used by
 common users. However, for advanced users interested
 in customizing the optimization, examining the search
 in details, or just to know more about the implementation,
-they can try `semlbci::ci_bound_wn_i()` directly.
+they can try `ci_bound_wn_i()` directly.
 
 For the workflows of
-`semlbci::semlbci()` and `semlbci::ci_bound_wn_i()`,
+`semlbci()` and `ci_bound_wn_i()`,
 please refer to
 [technical_workflow](https://sfcheung.github.io/semlbci/articles/technical_workflow.html).
 This vignette only illustrates how to use
-`semlbci::ci_bound_wn_i()`.
+`ci_bound_wn_i()`.
 
 # Examples
 
@@ -64,7 +64,7 @@ fit <- sem(model = mod,
            data = dat)
 ```
 
-First, use `semlbci::set_constraint()` to set the constraint
+First, use `set_constraint()` to set the constraint
 on the likelihood ratio test used by the method
 proposed by @wu_adjusted_2012 and adapted by
 @pek_profile_2015, with `ciperc` set to
@@ -94,7 +94,7 @@ equality constraints. This can be done by counting the
 number of nonzero entries in the column `free`.
 In this model, the number of free parameters is 4.
 
-We can then call `semlbci::ci_bound_wn_i()`:
+We can then call `ci_bound_wn_i()`:
 
 ```{r}
 out_lb <- ci_bound_wn_i(i = 2,
