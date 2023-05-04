@@ -1,4 +1,4 @@
-# semlbci 0.10.1
+# semlbci 0.10.2
 
 - First submission to CRAN.
 
