@@ -39,7 +39,7 @@ remotes::install_github("sfcheung/semlbci")
 # How To Use It
 
 Illustration with examples can be found
-in the [*Get Started* guide](./articles/semlbci.html)
+in the [*Get Started* guide](https://sfcheung.github.io/semlbci/articles/semlbci.html)
 (`vignette("semlbci", package = "semlbci")`).
 
 # Implementation
@@ -50,7 +50,7 @@ adapted from
 [Wu and Neale (2012)](https://doi.org/10.1007/s10519-012-9560-z) without adjustment for parameters with
 attainable bounds. It also supports the robust LBCI proposed
 by Falk (2018). More on the implementation can be found in
-the [technical appendices](./articles/index.html).
+the [technical appendices](https://sfcheung.github.io/semlbci/articles/).
 
 # References
 
