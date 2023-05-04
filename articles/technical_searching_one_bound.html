@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.28</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,8 +51,8 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/loglike.html">Log Profile Likelihood of a Parameter</a>
-    <a class="dropdown-item" href="../articles/technical_workflow.html">Internal Workflow of semlbci()</a>
     <a class="dropdown-item" href="../articles/technical_searching_one_bound.html">Searching for One Bound</a>
+    <a class="dropdown-item" href="../articles/technical_workflow.html">Internal Workflow of semlbci()</a>
   </div>
 </li>
 <li class="nav-item">
@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Shu Fai
 Cheung</h4>
             
-            <h4 data-toc-skip class="date">2023-03-26</h4>
+            <h4 data-toc-skip class="date">2023-05-04</h4>
       
       
       <div class="d-none name"><code>technical_searching_one_bound.Rmd</code></div>
@@ -93,19 +93,18 @@ Cheung</h4>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This vignette is based on the <a href="https://osf.io/zjysd" class="external-link">technical appendix</a> hosted at the <a href="https://osf.io/b9a2p/" class="external-link">OSF project site</a> of Cheung and Pesigan
-(2023), associated with the package <code>semlbci</code>. It presents
-how to use <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> directly to search for
+<p>This vignette is based on the <a href="https://osf.io/zjysd" class="external-link">technical appendix</a> hosted at the <a href="https://osf.io/b9a2p/" class="external-link">OSF project site</a> of <span class="citation">Cheung &amp; Pesigan (2023)</span>, associated with the
+package <a href="https://sfcheung.github.io/semlbci/"><code>semlbci</code></a>. It
+presents how to use <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> directly to search for
 one bound (limit) of a likelihood-based confidence interval (LBCI). This
 function is not to be used by common users. However, for advanced users
 interested in customizing the optimization, examining the search in
 details, or just to know more about the implementation, they can try
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> directly.</p>
-<p>For the overall workflow of <code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code> and the
-workflow of <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>, please refer to
-<code><a href="../articles/technical_workflow.html">vignette("technical_workflow", package = "semlbci")</a></code>. This
-appendix only illustrates how to use
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>.</p>
+<code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> directly.</p>
+<p>For the workflows of <code><a href="../reference/semlbci.html">semlbci()</a></code> and
+<code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>, please refer to <a href="https://sfcheung.github.io/semlbci/articles/technical_workflow.html">technical_workflow</a>.
+This vignette only illustrates how to use
+<code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
@@ -127,9 +126,8 @@ to fit a simple mediation model:</p>
 <span><span class="st">"</span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">mod</span>,</span>
 <span>           data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span></code></pre></div>
-<p>First, use <code><a href="../reference/set_constraint.html">semlbci::set_constraint()</a></code> to set the
-constraint on the likelihood ratio test used by the method proposed by
-<span class="citation">Wu &amp; Neale (2012)</span> and adapted by <span class="citation">Pek &amp; Wu (2015)</span>, with <code>ciperc</code>
+<p>First, use <code><a href="../reference/set_constraint.html">set_constraint()</a></code> to set the constraint on the
+likelihood ratio test used by the method proposed by <span class="citation">Wu &amp; Neale (2012)</span> and adapted by <span class="citation">Pek &amp; Wu (2015)</span>, with <code>ciperc</code>
 set to the level of confidence of the LBCI to be formed (.95 for
 95%):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -139,7 +137,8 @@ set to the level of confidence of the LBCI to be formed (.95 for
 <h4 id="find-the-lbci-of-a-regression-coefficient">Find the LBCI of a Regression Coefficient<a class="anchor" aria-label="anchor" href="#find-the-lbci-of-a-regression-coefficient"></a>
 </h4>
 <p>To find the lower bound of the LBCI of, say, <code>y ~ m</code>, we
-first check the row number of this parameter in the parameter table:</p>
+first check the row number of this parameter in the <em>parameter
+table</em>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/lavParTable.html" class="external-link">parameterTable</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   id lhs op rhs user block group free ustart exo label plabel  start    est</span></span>
@@ -158,9 +157,10 @@ first check the row number of this parameter in the parameter table:</p>
 <span><span class="co">#&gt; 6 0.261</span></span></code></pre></div>
 <p>This parameter is in the 2<sup>nd</sup> row.</p>
 <p>We then check the number of free parameters in this table, ignoring
-any equality constraints. In this model, the number of free parameters
-is 4.</p>
-<p>We can then call <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>:</p>
+any equality constraints. This can be done by counting the number of
+nonzero entries in the column <code>free</code>. In this model, the
+number of free parameters is 4.</p>
+<p>We can then call <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_lb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i</a></span><span class="op">(</span>i <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                        npar <span class="op">=</span> <span class="fl">4</span>,</span>
@@ -218,7 +218,7 @@ is 4.</p>
 <li>
 <p><code>Position</code>:</p>
 <p>The position of the target parameter in the parameter table (the row
-row number).</p>
+number).</p>
 </li>
 <li>
 <p><code>Which Bound</code>:</p>
@@ -290,9 +290,9 @@ will be set to 1.</p>
 </li>
 <li>
 <p><code>Direction valid?</code>:</p>
-<p>Whether the direction of the bound is valid (the lower bound is less
+<p>Whether the direction of the bound is valid: the lower bound is less
 than the point estimate, or the upper bound is greater than the point
-estimate). If invalid, the status code will be set to 1.</p>
+estimate. If invalid, the status code will be set to 1.</p>
 </li>
 <li>
 <p><code>Optimization Information</code>:</p>
@@ -441,8 +441,8 @@ find the upper bound:</p>
 0.679435 is correct by definition.</p>
 </div>
 <div class="section level4">
-<h4 id="find-the-lbci-of-a-function-of-coefficients-the-indirect-effect-">Find the LBCI of a Function of Coefficients: The Indirect
-Effect.<a class="anchor" aria-label="anchor" href="#find-the-lbci-of-a-function-of-coefficients-the-indirect-effect-"></a>
+<h4 id="find-the-lbci-of-a-function-of-coefficients-the-indirect-effect">Find the LBCI of a Function of Coefficients: The Indirect
+Effect<a class="anchor" aria-label="anchor" href="#find-the-lbci-of-a-function-of-coefficients-the-indirect-effect"></a>
 </h4>
 <p>To find the bounds for a user-defined parameters, for example, the
 indirect effect in the model, the steps are the same.</p>
@@ -481,7 +481,7 @@ as in the previous example.</p>
 <span><span class="co">#&gt; Which Bound:     Lower Bound</span></span>
 <span><span class="co">#&gt; Method:          Wu-Neale-2012</span></span>
 <span><span class="co">#&gt; Confidence Level:    0.95</span></span>
-<span><span class="co">#&gt; Achieved Level:      0.950000001584309</span></span>
+<span><span class="co">#&gt; Achieved Level:      0.95000000158432</span></span>
 <span><span class="co">#&gt; Standardized:        No</span></span>
 <span><span class="co">#&gt; Likelihood-Based Bound:  0.42653</span></span>
 <span><span class="co">#&gt; Wald Bound:      0.38491</span></span>
@@ -542,6 +542,12 @@ likelihood ratio test:</p>
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-cheung_semlbci_2023" class="csl-entry">
+Cheung, S. F., &amp; Pesigan, I. J. A. (2023). <em>Semlbci</em>: An r
+package for forming likelihood-based confidence intervals for parameter
+estimates, correlations, indirect effects, and other derived parameters.
+<em>Structural Equation Modeling: A Multidisciplinary Journal</em>. <a href="https://doi.org/10.1080/10705511.2023.2183860" class="external-link">https://doi.org/10.1080/10705511.2023.2183860</a>
+</div>
 <div id="ref-pek_profile_2015" class="csl-entry">
 Pek, J., &amp; Wu, H. (2015). Profile likelihood-based confidence
 intervals and regions for structural equation models.

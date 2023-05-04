@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.28</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,8 +51,8 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/loglike.html">Log Profile Likelihood of a Parameter</a>
-    <a class="dropdown-item" href="../articles/technical_workflow.html">Internal Workflow of semlbci()</a>
     <a class="dropdown-item" href="../articles/technical_searching_one_bound.html">Searching for One Bound</a>
+    <a class="dropdown-item" href="../articles/technical_workflow.html">Internal Workflow of semlbci()</a>
   </div>
 </li>
 <li class="nav-item">
@@ -83,7 +83,7 @@
                         <h4 data-toc-skip class="author">Shu Fai
 Cheung</h4>
             
-            <h4 data-toc-skip class="date">2023-04-02</h4>
+            <h4 data-toc-skip class="date">2023-05-04</h4>
       
       
       <div class="d-none name"><code>technical_workflow.Rmd</code></div>
@@ -94,31 +94,30 @@ Cheung</h4>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This vignette is a simplified version of the <a href="https://osf.io/q6e3h" class="external-link">technical appendix</a> hosted at the <a href="https://osf.io/b9a2p/" class="external-link">OSF project site</a> of Cheung and Pesigan
-(2023), associated with the package <code>semlbci</code>. It presents
-the workflow used by <code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code> and
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> to find a bound of a
-likelihood-based confidence interval (LBCI) of a parameter in a fitted
+<p>This vignette is a simplified version of the <a href="https://osf.io/q6e3h" class="external-link">technical appendix</a> hosted at the <a href="https://osf.io/b9a2p/" class="external-link">OSF project site</a> of <span class="citation">Cheung &amp; Pesigan (2023)</span>, associated with the
+package <a href="https://sfcheung.github.io/semlbci/"><code>semlbci</code></a>. It
+presents the workflow used by <code><a href="../reference/ci_i_one.html">ci_i_one()</a></code> and
+<code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> to find a bound of a likelihood-based
+confidence interval (LBCI) of a parameter in a fitted
 <code>lavaan</code> model.</p>
-<p><code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code> and <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> are
-internal functions used by <code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code>. They are not
-supposed to be used by users. Nevertheless, developers can use them
-directly if so desired.</p>
+<p><code><a href="../reference/ci_i_one.html">ci_i_one()</a></code> and <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> are internal
+functions used by <code><a href="../reference/semlbci.html">semlbci()</a></code>. They are not supposed to be
+used by users. Nevertheless, developers can use them directly if so
+desired.</p>
 </div>
 <div class="section level2">
 <h2 id="purposes-of-the-functions">Purposes of the Functions<a class="anchor" aria-label="anchor" href="#purposes-of-the-functions"></a>
 </h2>
-<p><code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code> is called by
-<code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code> for each confidence bound (limit), twice
-for each selected parameter, once for the lower bound and once for the
-upper bound. It sets up necessary arguments and then call the lowest
-level function responsible for searching a bound.</p>
+<p><code><a href="../reference/ci_i_one.html">ci_i_one()</a></code> is called by <code><a href="../reference/semlbci.html">semlbci()</a></code> for each
+confidence bound (limit), twice for each selected parameter, once for
+the lower bound and once for the upper bound. It sets up necessary
+arguments and then call the lowest level function responsible for
+searching a bound.</p>
 <p>Currently, only one such function is available,
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>, which implements the algorithm
-proposed by <span class="citation">Wu &amp; Neale (2012)</span>, adapted
-by <span class="citation">Pek &amp; Wu (2015)</span>, without the part
-for handling parameters with attainable bounds. To avoid confusion with
-the method by <span class="citation">Wu &amp; Neale (2012)</span> for
+<code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>, which implements the algorithm proposed by
+<span class="citation">Wu &amp; Neale (2012)</span>, adapted by <span class="citation">Pek &amp; Wu (2015)</span>, without the part for
+handling parameters with attainable bounds. To avoid confusion with the
+method by <span class="citation">Wu &amp; Neale (2012)</span> for
 parameters with attainable bound, we denote this method WNPW
 (Wu-Neale-Pek-Wu) method in this document.</p>
 </div>
@@ -126,69 +125,65 @@ parameters with attainable bound, we denote this method WNPW
 <h2 id="overall-workflow">Overall Workflow<a class="anchor" aria-label="anchor" href="#overall-workflow"></a>
 </h2>
 <p>We first present the overall workflow<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Some steps are omitted for readability.&lt;/p&gt;"><sup>1</sup></a> of
-<code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code>. We then present the workflow of
-<code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code>, called by
-<code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code> once for each bound of each parameter
-requested (twice for each parameter, once for the lower bound and once
-for the upper bound). Last, we present the workflows of the two stages
-of <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>, the minimization stage and the
-checking stage.</p>
+<code><a href="../reference/semlbci.html">semlbci()</a></code>. We then present the workflow of
+<code><a href="../reference/ci_i_one.html">ci_i_one()</a></code>, called by <code><a href="../reference/semlbci.html">semlbci()</a></code> once for each
+bound of each parameter requested (twice for each parameter, once for
+the lower bound and once for the upper bound). Last, we present the
+workflows of the two stages of <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>, the
+minimization stage and the checking stage.</p>
 <p>Details for the arguments mentioned in this section can be found from
-the help pages of <code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code>,
-<code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code>, and
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>.</p>
+the help pages of <code><a href="../reference/semlbci.html">semlbci()</a></code>, <code><a href="../reference/ci_i_one.html">ci_i_one()</a></code>, and
+<code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>.</p>
 <div class="section level3">
-<h3 id="semlbcisemlbci">
-<code>semlbci::semlbci()</code><a class="anchor" aria-label="anchor" href="#semlbcisemlbci"></a>
+<h3 id="semlbci">
+<code>semlbci()</code><a class="anchor" aria-label="anchor" href="#semlbci"></a>
 </h3>
-<p><code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code> is the main function used by users.
-It is used to find the LBCI of selected parameters. It is also
-responsible for setting the equality constraint required by the WNPW
-method. If robust LBCI proposed by <span class="citation">Falk
-(2018)</span> is requested, it will also compute the scaling and shift
-factors to be used by the robust likelihood ratio test by <span class="citation">Satorra (2000)</span>.</p>
-<p>The general workflow of <code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code> is shown
-below:</p>
+<p><code><a href="../reference/semlbci.html">semlbci()</a></code> is the main function used by users. It is used
+to find the LBCI of selected parameters. It is also responsible for
+setting the equality constraint required by the WNPW method. If robust
+LBCI proposed by <span class="citation">Falk (2018)</span> is requested,
+it will also compute the scaling and shift factors to be used by the
+robust likelihood ratio test by <span class="citation">Satorra
+(2000)</span>.</p>
+<p>The general workflow of <code><a href="../reference/semlbci.html">semlbci()</a></code> is shown below:</p>
 <div class="figure" style="text-align: center">
-<div id="htmlwidget-ffa6d992d689d1868dfd" style="width:650px;height:840px;" class="DiagrammeR html-widget "></div>
-<script type="application/json" data-for="htmlwidget-ffa6d992d689d1868dfd">{"x":{"diagram":"\ngraph TD\n  classDef default fill:#DADBFF;\n  A[\"Is <code>check_fit<\/code> <code>TRUE<\/code>?\"]\n  A -- Yes --> AYes[\"Are the model and<br/>estimation method supported?<br/>(Checked by <code>check_sem_out()<\/code>)\"]\n  A --No--> B\n  AYes -- No --> AYesNo[\"Terminate and raise an error\"]\n  AYes --Yes--> B\n  B[\"Find the ids of parameters requested\"]\n  B --> C\n  C[\"Call <code>set_constraint()<\/code> to set the equality constraint<br/>used by the WNPW method\"]\n  C --> D\n  D[\"Robust LBCI requested?\"]\n  D -- Yes --> DYes\n  DYes[\"For each parameter,<br/>call <code>scaling_factor3()<\/code><br/>to compute the scaling and shift factors\"]\n  D -- No --> E\n  DYes --> E\n  E[\"Call <code>ci_i_one()<\/code> once for<br/>each bound of each parameter\"]\n  E --> F\n  F[\"Combine the bounds to form the confidence intervals<br/>and return the results\"]\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
-General Workflow of <code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code>
+<div id="htmlwidget-c41b3a6354e2e720a81a" style="width:650px;height:840px;" class="DiagrammeR html-widget "></div>
+<script type="application/json" data-for="htmlwidget-c41b3a6354e2e720a81a">{"x":{"diagram":"\ngraph TD\n  classDef default fill:#DADBFF;\n  A[\"Is <code>check_fit<\/code> <code>TRUE<\/code>?\"]\n  A -- Yes --> AYes[\"Are the model and<br/>estimation method supported?<br/>(Checked by <code>check_sem_out()<\/code>)\"]\n  A --No--> B\n  AYes -- No --> AYesNo[\"Terminate and raise an error\"]\n  AYes --Yes--> B\n  B[\"Find the ids of parameters requested\"]\n  B --> C\n  C[\"Call <code>set_constraint()<\/code> to set the equality constraint<br/>used by the WNPW method\"]\n  C --> D\n  D[\"Robust LBCI requested?\"]\n  D -- Yes --> DYes\n  DYes[\"For each parameter,<br/>call <code>scaling_factor3()<\/code><br/>to compute the scaling and shift factors\"]\n  D -- No --> E\n  DYes --> E\n  E[\"Call <code>ci_i_one()<\/code> once for<br/>each bound of each parameter\"]\n  E --> F\n  F[\"Combine the bounds to form the confidence intervals<br/>and return the results\"]\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
+General Workflow of <code><a href="../reference/semlbci.html">semlbci()</a></code>
 </p>
 </div>
-<p>We describe below the two functions called by
-<code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code> in the workflow,
-<code><a href="../reference/set_constraint.html">semlbci::set_constraint()</a></code> and
-<code>semlbci:::scaling_factor3()</code>.</p>
+<p>We describe below the two functions called by <code><a href="../reference/semlbci.html">semlbci()</a></code>
+in the workflow, <code><a href="../reference/set_constraint.html">set_constraint()</a></code> and
+<code>:scaling_factor3()</code>.</p>
 <div class="section level4">
-<h4 id="semlbciset_constraint">
-<code>semlbci::set_constraint()</code><a class="anchor" aria-label="anchor" href="#semlbciset_constraint"></a>
+<h4 id="set_constraint">
+<code>set_constraint()</code><a class="anchor" aria-label="anchor" href="#set_constraint"></a>
 </h4>
-<p>This function, called by <code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code>, is used to
-set the equality constraint used by the WNPW method.</p>
+<p>This function, called by <code><a href="../reference/semlbci.html">semlbci()</a></code>, is used to set the
+equality constraint used by the WNPW method.</p>
 <p>As presented in <span class="citation">Pek &amp; Wu (2015)</span>, to
 find the lower bound, <span class="math inline">\(\theta_L\)</span>, of
 the 100(1-<span class="math inline">\(\alpha\)</span>)% LBCI of <span class="math inline">\(\hat{\theta}_j\)</span>, <span class="math inline">\(\theta_L\)</span> is minimized with respect to all
-parameters, <span class="math inline">\((\theta_L, \theta_q)\)</span>,
-<span class="math inline">\(\theta_q\)</span> being all parameters other
-than <span class="math inline">\(\theta_L\)</span>, subject to the
-following constraint:</p>
+parameters, <span class="math inline">\((\theta_L,
+\boldsymbol{\theta}_q)\)</span>, <span class="math inline">\(\boldsymbol{\theta_q}\)</span> being all
+parameters other than <span class="math inline">\(\theta_L\)</span>,
+subject to the following constraint:</p>
 <p><span class="math display">\[
-0 = 2nF(\theta_L, \theta_q) - (2nF(\hat{\theta}) + \chi_{(1, 1 -
-\alpha)}^2)
+0 = 2nF(\theta_L, \boldsymbol{\theta_q}) - (2nF(\hat{\theta}) +
+\chi_{(1, 1 - \alpha)}^2)
 \]</span></p>
-<p><span class="math inline">\(F(\hat{\theta})\)</span> is the value of
-the discrepancy function evaluated at the ML estimate <span class="math inline">\(\hat{\theta}\)</span>. <span class="math inline">\(\chi_{(1, 1 - \alpha)}^2\)</span> is the <span class="math inline">\(\chi^2\)</span> critical value at <span class="math inline">\(df = 1\)</span> and level of significance = <span class="math inline">\(\alpha\)</span> (about 3.84 with <span class="math inline">\(\alpha = .05\)</span>), and <span class="math inline">\(n\)</span> is the sample size (total sample size
+<p><span class="math inline">\(F(\hat{\boldsymbol{\theta}})\)</span> is
+the value of the discrepancy function evaluated at the ML estimate <span class="math inline">\(\hat{\boldsymbol{\theta}}\)</span>. <span class="math inline">\(\chi_{(1, 1 - \alpha)}^2\)</span> is the <span class="math inline">\(\chi^2\)</span> critical value at <span class="math inline">\(df = 1\)</span> and level of significance = <span class="math inline">\(\alpha\)</span> (about 3.84 with <span class="math inline">\(\alpha = .05\)</span>), and <span class="math inline">\(n\)</span> is the sample size (total sample size
 in multisample models).</p>
 <p>This constraint means that model <span class="math inline">\(\chi^2\)</span> difference test between the model
 with <span class="math inline">\(\theta_j\)</span> fixed to <span class="math inline">\(\theta_L\)</span> and the original model with
 <span class="math inline">\(\theta_j\)</span> freely estimated should
 have a <em>p</em>-value equal to <span class="math inline">\(\alpha\)</span>.</p>
 <p>In <code>lavaan</code>, <span class="math inline">\(F(\theta_L,
-\theta_q)\)</span> is <code>"fmin"</code> in the output of
-<code><a href="https://rdrr.io/pkg/lavaan/man/fitMeasures.html" class="external-link">fitMeasures()</a></code>. When the estimator is <code>ML</code> and
-<code>likelihood = "normal"</code>, the default, multiplying
-<code>"fmin"</code> by <span class="math inline">\(2n\)</span> yields
-the model <span class="math inline">\(\chi^2\)</span>.</p>
+\boldsymbol{\theta}_q)\)</span> is <code>"fmin"</code> in the output of
+<code><a href="https://rdrr.io/pkg/lavaan/man/fitMeasures.html" class="external-link">lavaan::fitMeasures()</a></code>. When the estimator is
+<code>ML</code> and <code>likelihood = "normal"</code>, the default,
+multiplying <code>"fmin"</code> by <span class="math inline">\(2n\)</span> yields the model <span class="math inline">\(\chi^2\)</span>.</p>
 <p>To find the upper bound, <span class="math inline">\(\theta_U\)</span>, <span class="math inline">\(-\theta_U\)</span> is minimized (equivalently,
 <span class="math inline">\(\theta_U\)</span> is maximized). The final
 value will be multiplied by <span class="math inline">\(-1\)</span> to
@@ -199,11 +194,12 @@ extracted from the <code>lavaan</code> object and passed to
 <code><a href="https://rdrr.io/pkg/nloptr/man/nloptr.html" class="external-link">nloptr::nloptr()</a></code>, the function used to do the minimization,
 along with the constraint by the WNPW method when minimizing the
 objective function.</p>
-<p>The function <code><a href="../reference/set_constraint.html">semlbci::set_constraint()</a></code> returns a general
-version of the constraint:</p>
+<p>The function <code><a href="../reference/set_constraint.html">set_constraint()</a></code> returns a general version
+of the constraint:</p>
 <p><span class="math display">\[
-0 = 2nF(\theta_L, \theta_q) - (2nF(\hat{\theta}) + \frac{\chi_{(1, 1 -
-\alpha)}^2 - b}{a})
+0 = 2nF(\theta_L, \boldsymbol{\theta}_q) -
+(2nF(\hat{\boldsymbol{\theta}}) + \frac{\chi_{(1, 1 - \alpha)}^2 -
+b}{a})
 \]</span></p>
 <p>In this general form, <span class="math inline">\(a\)</span> is the
 scaling factor and <span class="math inline">\(b\)</span> is the shift
@@ -239,51 +235,50 @@ factors directly.</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="semlbcici_i_one">
-<code>semlbci::ci_i_one()</code><a class="anchor" aria-label="anchor" href="#semlbcici_i_one"></a>
+<h3 id="ci_i_one">
+<code>ci_i_one()</code><a class="anchor" aria-label="anchor" href="#ci_i_one"></a>
 </h3>
-<p>The workflow of <code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code> is presented
-below:</p>
+<p>The workflow of <code><a href="../reference/ci_i_one.html">ci_i_one()</a></code> is presented below:</p>
 <div class="figure" style="text-align: center">
-<div id="htmlwidget-c5cd322f10f2cafada95" style="width:700px;height:1300px;" class="DiagrammeR html-widget "></div>
-<script type="application/json" data-for="htmlwidget-c5cd322f10f2cafada95">{"x":{"diagram":"\ngraph TD\n  classDef default fill:#F8DAFF;\n  B[\"Robust LBCI requested?\"]\n  B -- Yes --> C[\"Scaling and shift factors (<code>sf_full<\/code>)<br/>supplied by <code>semlbci()<\/code>?\"]\n  C -- No --> D[Compute scaling and shift factors]\n  D --> E\n  C -- Yes --> E[\"Call <code>ci_bound_wn_i()<\/code>\"]\n  B -- No --> E\n  E --> F[\"<code>status<\/code> == 0?\"]\n  F -- No --> G[\"Move the lower bounds<br/>of free variances closer to zero<br/>and call <code>ci_bound_wn_i()<\/code> again\"]\n  F -- Yes --> ZZ[\"Return the results to <code>semlbci()<\/code><br/>Bound set to <code>NA<\/code> if status != 0\"]\n  G --> H[\"<code>status<\/code> == 0?\"]\n  H -- Yes --> ZZ\n  H -- No --> I[\"Is <code>try_k_more_times<\/code> > 0?\"]\n  I -- No --> ZZ\n  I -- Yes --> J[\"Reduce the tolerance for convergence<br/>(Reduce <code>xtol_rel<\/code> and <code>ftol_rel<\/code>)\"]\n  J --> K[\"Call <code>ci_bound_wn_i()<\/code>\"]\n  K --> L[\"<code>status<\/code> == 0?\"]\n  L -- Yes --> ZZ\n  L -- No --> M[\"Tried<br/><code>try_k_more_times<\/code>?\"]\n  M -- No --> J\n  M -- Yes --> ZZ\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
-General Workflow of <code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code>
+<div id="htmlwidget-83d4a820087fb82e0333" style="width:700px;height:1300px;" class="DiagrammeR html-widget "></div>
+<script type="application/json" data-for="htmlwidget-83d4a820087fb82e0333">{"x":{"diagram":"\ngraph TD\n  classDef default fill:#F8DAFF;\n  B[\"Robust LBCI requested?\"]\n  B -- Yes --> C[\"Scaling and shift factors (<code>sf_full<\/code>)<br/>supplied by <code>semlbci()<\/code>?\"]\n  C -- No --> D[Compute scaling and shift factors]\n  D --> E\n  C -- Yes --> E[\"Call <code>ci_bound_wn_i()<\/code>\"]\n  B -- No --> E\n  E --> F[\"<code>status<\/code> == 0?\"]\n  F -- No --> G[\"Move the lower bounds<br/>of free variances closer to zero<br/>and call <code>ci_bound_wn_i()<\/code> again\"]\n  F -- Yes --> ZZ[\"Return the results to <code>semlbci()<\/code><br/>Bound set to <code>NA<\/code> if status != 0\"]\n  G --> H[\"<code>status<\/code> == 0?\"]\n  H -- Yes --> ZZ\n  H -- No --> I[\"Is <code>try_k_more_times<\/code> > 0?\"]\n  I -- No --> ZZ\n  I -- Yes --> J[\"Reduce the tolerance for convergence<br/>(Reduce <code>xtol_rel<\/code> and <code>ftol_rel<\/code>)\"]\n  J --> K[\"Call <code>ci_bound_wn_i()<\/code>\"]\n  K --> L[\"<code>status<\/code> == 0?\"]\n  L -- Yes --> ZZ\n  L -- No --> M[\"Tried<br/><code>try_k_more_times<\/code>?\"]\n  M -- No --> J\n  M -- Yes --> ZZ\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
+General Workflow of <code><a href="../reference/ci_i_one.html">ci_i_one()</a></code>
 </p>
 </div>
-<p>Its job is to call <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> once or more
-than once to find the bound of an LBCI of a parameter. It does not check
-the validity or plausibility of the bound. The lowest level function,
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>, is responsible for doing the
-checks. If something is wrong, <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>
-will set <code>status</code> to a non-zero value.</p>
+<p>Its job is to call <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> once or more than
+once to find the bound of an LBCI of a parameter. It does not check the
+validity or plausibility of the bound. The lowest level function,
+<code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>, is responsible for doing the checks. If
+something is wrong, <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> will set
+<code>status</code> to a non-zero value.</p>
 <p>The argument <code>try_k_more_times</code> is used to determine
 whether it will try “harder” for <em>k</em> more times if the first
 attempt failed (e.g., <code>status != 0</code>, meaning that the bound
 found fails one or more checks).</p>
 </div>
 <div class="section level3">
-<h3 id="semlbcici_bound_wn_i">
-<code>semlbci::ci_bound_wn_i()</code><a class="anchor" aria-label="anchor" href="#semlbcici_bound_wn_i"></a>
+<h3 id="ci_bound_wn_i">
+<code>ci_bound_wn_i()</code><a class="anchor" aria-label="anchor" href="#ci_bound_wn_i"></a>
 </h3>
-<p>The function <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> is the lowest
-level function that is responsible for searching the bound. It
-implements an optimization method (the WNPW method in this case) and
-takes care of all the technical details. It is not supposed to be used
-by users and the interface is not designed to be user-friendly.
-Nevertheless, interested users can use it directly to find a bound,
-bypassing <code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code>. Examples can be found in the
-vignette (to be included).</p>
-<p>The workflow of <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> can be
-separated into two stages, the <em>minimization stage</em> and the
-<em>checking stage</em>.</p>
+<p>The function <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> is the lowest level
+function that is responsible for searching the bound. It implements an
+optimization method (the WNPW method in this case) and takes care of all
+the technical details. It is not supposed to be used by users and the
+interface is not designed to be user-friendly. Nevertheless, interested
+users can use it directly to find a bound, bypassing
+<code><a href="../reference/semlbci.html">semlbci()</a></code>. Examples can be found in
+<code><a href="../articles/technical_searching_one_bound.html">vignette("technical_searching_one_bound", package = "semlbci")</a></code>.</p>
+<p>The workflow of <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> can be separated into
+two stages, the <em>minimization stage</em> and the <em>checking
+stage</em>.</p>
 <div class="section level4">
 <h4 id="minimization-stage">Minimization Stage<a class="anchor" aria-label="anchor" href="#minimization-stage"></a>
 </h4>
 <p>The workflow of the minimization stage is presented below:</p>
 <div class="figure" style="text-align: center">
-<div id="htmlwidget-acd5dbd101138fa4b370" style="width:500px;height:650px;" class="DiagrammeR html-widget "></div>
-<script type="application/json" data-for="htmlwidget-acd5dbd101138fa4b370">{"x":{"diagram":"\ngraph TD\n  classDef default fill:#DAFFDA;\n  A[\"Store the point estimates and Wald or Delta CI\"]\n  A --> B[\"Define the function to be minimized [<code>lbci_b_f()<\/code>]<br/>and the gradient function of this function [<code>lbci_b_grad()<\/code>]\"]\n  B --> C[\"Is <code>wald_ci_start<\/code> TRUE?\"]\n  C -- Yes --> CYes[\"Call <code>set_start_wn()<\/code><br/>to set the starting values<br/>based on Wald or Delta CI\"]\n  C -- No --> CNo(\"Slighly pertubate<br/>the point estimates<br/> to set the starting values\")\n  CYes --> D[\"Set the lower bounds of free variances<br/>to a small positive value\"]\n  CNo --> D\n  D --> E[\"Call <code>>nloptr::nloptr()<\/code> to minimize the objective function,<br/>with the equality constraint <code>f_constr<\/code><br/>(created by <code>set_constraint()<\/code>)\"]\n  E --> F[\"Pass the results to the Checking Stage\"]\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
-Workflow of <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> - Minimization Stage
+<div id="htmlwidget-58b5fa211dc362d1958e" style="width:500px;height:650px;" class="DiagrammeR html-widget "></div>
+<script type="application/json" data-for="htmlwidget-58b5fa211dc362d1958e">{"x":{"diagram":"\ngraph TD\n  classDef default fill:#DAFFDA;\n  A[\"Store the point estimates and Wald or Delta CI\"]\n  A --> B[\"Define the function to be minimized [<code>lbci_b_f()<\/code>]<br/>and the gradient function of this function [<code>lbci_b_grad()<\/code>]\"]\n  B --> C[\"Is <code>wald_ci_start<\/code> TRUE?\"]\n  C -- Yes --> CYes[\"Call <code>set_start_wn()<\/code><br/>to set the starting values<br/>based on Wald or Delta CI\"]\n  C -- No --> CNo(\"Slighly pertubate<br/>the point estimates<br/> to set the starting values\")\n  CYes --> D[\"Set the lower bounds of free variances<br/>to a small positive value\"]\n  CNo --> D\n  D --> E[\"Call <code>>nloptr::nloptr()<\/code> to minimize the objective function,<br/>with the equality constraint <code>f_constr<\/code><br/>(created by <code>set_constraint()<\/code>)\"]\n  E --> F[\"Pass the results to the Checking Stage\"]\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
+Workflow of <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> - Minimization Stage
 </p>
 </div>
 <div class="section level5">
@@ -298,10 +293,10 @@ returns the bound in each iteration. The gradient function,
 <code>eval_grad_f</code>, is <code>lbci_b_grad()</code>. The equality
 constraint(s), <code>eval_g_eq</code>, is the result of
 <code><a href="../reference/set_constraint.html">set_constraint()</a></code>, supplied through the argument
-<code>f_constr</code> from <code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code>, along with
-other equality constraints in the model, if any.</p>
-<p>The two functions created by <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> in
-this stage, <code>lbci_b_f()</code> and <code>lbci_b_grad()</code>, are
+<code>f_constr</code> from <code><a href="../reference/semlbci.html">semlbci()</a></code>, along with other
+equality constraints in the model, if any.</p>
+<p>The two functions created by <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> in this
+stage, <code>lbci_b_f()</code> and <code>lbci_b_grad()</code>, are
 described below.</p>
 <div class="section level6">
 <h6 id="lbci_b_f">
@@ -313,24 +308,25 @@ lower bound is to be searched, this function simply returns the value of
 other than <span class="math inline">\(\theta_j\)</span> are denoted by
 <span class="math inline">\(\theta_q\)</span>):</p>
 <p><span class="math display">\[
-f(\theta_j, \theta_q) = \theta_j
+f(\theta_j, \boldsymbol{\theta}_q) = \theta_j
 \]</span></p>
 <p>If the upper bound is to be searched, then this function is:</p>
 <p><span class="math display">\[
-f(\theta_j, \theta_q) = -\theta_j
+f(\theta_j, \boldsymbol{\theta}_q) = -\theta_j
 \]</span></p>
 <p>If the parameter is a function of some free parameters (e.g., an
 indirect effect, or a standardized coefficient such as correlation),
-denoted by <span class="math inline">\(h(\theta)\)</span>, <span class="math inline">\(\theta\)</span> being all free parameters (though
-some may not be used in <span class="math inline">\(h\)</span>), and the
-lower bound is to be searched, then this function is:</p>
+denoted by <span class="math inline">\(h(\boldsymbol{\theta})\)</span>,
+<span class="math inline">\(\boldsymbol{\theta}\)</span> being all free
+parameters (though some may not be used in <span class="math inline">\(h\)</span>), and the lower bound is to be
+searched, then this function is:</p>
 <p><span class="math display">\[
-f(\theta) = h(\theta)
+f(\boldsymbol{\theta}) = h(\boldsymbol{\theta})
 \]</span></p>
 <p>Similarly, if the upper bound is to be searched, this function
 is:</p>
 <p><span class="math display">\[
-f(\theta) = -h(\theta)
+f(\boldsymbol{\theta}) = -h(\boldsymbol{\theta})
 \]</span></p>
 <p>Therefore, in the optimization, minimization is conducted whether the
 lower or upper bound is to be searched.</p>
@@ -352,9 +348,8 @@ searched is a parameter) or computed by
 target parameter is a function of free parameters (e.g., an indirect
 effect, or a parameter in the standardized solution). The arguments
 <code>xtol_rel</code>, <code>ftol_rel</code>, and <code>lb</code> are
-adjusted across attempts. This is done by
-<code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code> for the second and subsequent calls to
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>.</p>
+adjusted across attempts. This is done by <code><a href="../reference/ci_i_one.html">ci_i_one()</a></code> for
+the second and subsequent calls to <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>.</p>
 </div>
 </div>
 <div class="section level4">
@@ -362,9 +357,9 @@ adjusted across attempts. This is done by
 </h4>
 <p>The workflow of the checking stage is presented below:</p>
 <div class="figure" style="text-align: center">
-<div id="htmlwidget-d248537425abdfa348a2" style="width:600px;height:1200px;" class="DiagrammeR html-widget "></div>
-<script type="application/json" data-for="htmlwidget-d248537425abdfa348a2">{"x":{"diagram":"\ngraph TD\n  classDef default fill:#FFE1DA;\n  classDef statusNA fill:#ffdddd;\n  class DNo,FNo,GNo statusNA\n%%  DNo:::statusNA\n%%  FNo:::statusNA\n%%  GNo:::statusNA\n  A[\"Which bound is requested?\"]\n  A -- Upper --> AUpper[\"Multiply the value by -1\"]\n  AUpper --> B[\"Store the value to <code>bound<\/code>\"]\n  A -- Lower --> B\n  B --> C[\"Initialize <code>status<\/code> to 0\"]\n  C --> D[\"<b>Check <code>nloptr<\/code> Status<\/b>:<br/>Is status code from <code>nloptr<\/code> equal to 0?\"]\n  D -- No --> DNo[\"Set <code>status<\/code> to 1\"]\n  DNo --> F[\"<b>Check SEM Solution<\/b>:<br/>Is the <code>lavaan<\/code> results based on <code>nloptr<\/code> solution admissible?\"]\n  D -- Yes --> F\n  F -- No --> FNo[\"Set <code>status<\/code> to 1\"]\n  FNo --> G[\"<b>Check the Achieved Level of Significance<\/b>:<br/>Is the <i>p<\/i>-value of the 1-<i>df<\/i> likelihood ratio test<br/>close enough to 1 - Confidence Level? (.05 for 95%)<br/>(<code>p_tol<\/code> used as the tolerance) (For robust LBCI, scaling and shift factors are used)\"]\n  F -- Yes --> G\n  G -- No --> GNo[\"Set <code>status<\/code> to 1\"]\n  GNo --> E[\"Set <code>ci_limit_ratio<\/code> to the ratio of distances from the point estimate:<br/>(LBCI bound from point estimate) / (Wald or Delta bound to point estimate)\"]\n  G -- Yes --> E\n  E --> H[\"Is <code>status<\/code> equal to 0?\"]\n  H -- No --> HNo[\"Set <code>bound<\/code> to <code>NA<\/code>\"]\n  HNo --> I[\"Return the results\"]\n  H -- Yes --> I\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
-Workflow of <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> - Checking Stage
+<div id="htmlwidget-ca37d9b45099787c0068" style="width:600px;height:1200px;" class="DiagrammeR html-widget "></div>
+<script type="application/json" data-for="htmlwidget-ca37d9b45099787c0068">{"x":{"diagram":"\ngraph TD\n  classDef default fill:#FFE1DA;\n  classDef statusNA fill:#ffdddd;\n  class DNo,FNo,GNo statusNA\n%%  DNo:::statusNA\n%%  FNo:::statusNA\n%%  GNo:::statusNA\n  A[\"Which bound is requested?\"]\n  A -- Upper --> AUpper[\"Multiply the value by -1\"]\n  AUpper --> B[\"Store the value to <code>bound<\/code>\"]\n  A -- Lower --> B\n  B --> C[\"Initialize <code>status<\/code> to 0\"]\n  C --> D[\"<b>Check <code>nloptr<\/code> Status<\/b>:<br/>Is status code from <code>nloptr<\/code> equal to 0?\"]\n  D -- No --> DNo[\"Set <code>status<\/code> to 1\"]\n  DNo --> F[\"<b>Check SEM Solution<\/b>:<br/>Is the <code>lavaan<\/code> results based on <code>nloptr<\/code> solution admissible?\"]\n  D -- Yes --> F\n  F -- No --> FNo[\"Set <code>status<\/code> to 1\"]\n  FNo --> G[\"<b>Check the Achieved Level of Significance<\/b>:<br/>Is the <i>p<\/i>-value of the 1-<i>df<\/i> likelihood ratio test<br/>close enough to 1 - Confidence Level? (.05 for 95%)<br/>(<code>p_tol<\/code> used as the tolerance) (For robust LBCI, scaling and shift factors are used)\"]\n  F -- Yes --> G\n  G -- No --> GNo[\"Set <code>status<\/code> to 1\"]\n  GNo --> E[\"Set <code>ci_limit_ratio<\/code> to the ratio of distances from the point estimate:<br/>(LBCI bound from point estimate) / (Wald or Delta bound to point estimate)\"]\n  G -- Yes --> E\n  E --> H[\"Is <code>status<\/code> equal to 0?\"]\n  H -- No --> HNo[\"Set <code>bound<\/code> to <code>NA<\/code>\"]\n  HNo --> I[\"Return the results\"]\n  H -- Yes --> I\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
+Workflow of <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> - Checking Stage
 </p>
 </div>
 <p>It will do the following checks, in this order:</p>
@@ -373,8 +368,8 @@ Workflow of <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn
 <p>Is the status code of <code><a href="https://rdrr.io/pkg/nloptr/man/nloptr.html" class="external-link">nloptr::nloptr()</a></code> equal to 0
 (“success”)?</p>
 <p>If the status code of <code><a href="https://rdrr.io/pkg/nloptr/man/nloptr.html" class="external-link">nloptr::nloptr()</a></code> is not equal to
-0, then the status code for <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> will
-be set to 1.</p>
+0, then the status code for <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> will be set to
+1.</p>
 </li>
 <li>
 <p>In final solution, do the values of the free parameters result in
@@ -382,10 +377,10 @@ an admissible solution? (Checked by <code><a href="https://rdrr.io/pkg/lavaan/ma
 with <code>what = "post.check"</code>).</p>
 <p>The values of the parameters in the final solution is used to fit the
 model, and then <code><a href="https://rdrr.io/pkg/lavaan/man/lavInspect.html" class="external-link">lavaan::lavInspect()</a></code> is called to check the
-solution. Examples of inadmissible solution are negative variance and
+solution. Examples of inadmissible solution are negative variances and
 correlations greater than one in magnitude.</p>
 <p>If the solution is not admissible, then the status code for
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> will be set to 1.</p>
+<code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> will be set to 1.</p>
 </li>
 <li>
 <p>When the target parameter (free or derived, i.e., the function of
@@ -395,7 +390,7 @@ likelihood ratio test between this constrained model and the original
 model equal to 1 - confidence level (.05 for a 95% LBCI)?</p>
 <p>If not, then the likelihood-based confidence bound is by
 <em>definition</em> <em>invalid</em>. The status code for
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> will be set to 1.</p>
+<code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> will be set to 1.</p>
 <p>The check is equivalent to using <code><a href="https://rdrr.io/pkg/lavaan/man/lavTestLRT.html" class="external-link">lavaan::lavTestLRT()</a></code>.
 If robust LBCI is requested, then the check is equivalent to using
 <code><a href="https://rdrr.io/pkg/lavaan/man/lavTestLRT.html" class="external-link">lavaan::lavTestLRT()</a></code> with
@@ -422,25 +417,23 @@ solution.</p></li>
 <h2 id="main-arguments">Main Arguments<a class="anchor" aria-label="anchor" href="#main-arguments"></a>
 </h2>
 <p>This section presents in details the arguments used by
-<code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code> and
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>.</p>
+<code><a href="../reference/ci_i_one.html">ci_i_one()</a></code> and <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>.</p>
 <div class="section level3">
-<h3 id="semlbcici_i_one-1">
-<code>semlbci::ci_i_one()</code><a class="anchor" aria-label="anchor" href="#semlbcici_i_one-1"></a>
+<h3 id="ci_i_one-1">
+<code>ci_i_one()</code><a class="anchor" aria-label="anchor" href="#ci_i_one-1"></a>
 </h3>
-<p><code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code> is an interface between user
-functions such as <code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code> and low level
-functions such as <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>. It is
-responsible for setting necessary values to be used by
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>.</p>
-<p>These are the main arguments of <code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code>:</p>
+<p><code><a href="../reference/ci_i_one.html">ci_i_one()</a></code> is an interface between user functions such
+as <code><a href="../reference/semlbci.html">semlbci()</a></code> and low level functions such as
+<code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>. It is responsible for setting necessary
+values to be used by <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>.</p>
+<p>These are the main arguments of <code><a href="../reference/ci_i_one.html">ci_i_one()</a></code>:</p>
 <ul>
 <li>
 <p><code>i</code>:</p>
 <p>The position (row number) of the target parameters as appeared in the
 parameter table of the output of <code><a href="https://rdrr.io/pkg/lavaan/man/lavaan.html" class="external-link">lavaan::lavaan()</a></code> and its
 wrappers, such as <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code> and
-<code><a href="https://rdrr.io/pkg/lavaan/man/cfa.html" class="external-link">lavaan::cfa()</a></code>. This uniquely identify a parameter, which
+<code><a href="https://rdrr.io/pkg/lavaan/man/cfa.html" class="external-link">lavaan::cfa()</a></code>. This uniquely identifies a parameter, which
 can be free, fixed, or user-defined.</p>
 </li>
 <li>
@@ -462,7 +455,7 @@ modified Wu-Neale method presented by Pek and Wu (2015) is supported
 (<code>"wn"</code>). Separating the low level function from this
 function allows for the possibility to develop low level functions for
 other methods, without the need to change the interface implemented in
-<code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code>.</p>
+<code><a href="../reference/ci_i_one.html">ci_i_one()</a></code>.</p>
 </li>
 <li>
 <p><code>standardized</code>:</p>
@@ -499,29 +492,28 @@ by <span class="citation">Asparouhov &amp; Muthén
 <li>
 <p><code>try_k_more_times</code>:</p>
 <p>How many more times to try if the status code is not zero. Default is
-0 but <code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code> set this argument to 2 when
-calling this function. If set to an integer greater than zero, it will
-call the low level function until the status code is zero or until this
-number of additional calls have been attempted. In each successive call,
-some values will be modified to do the search using these new
+0 but <code><a href="../reference/semlbci.html">semlbci()</a></code> set this argument to 2 when calling this
+function. If set to an integer greater than zero, it will call the low
+level function until the status code is zero or until this number of
+additional calls have been attempted. In each successive call, some
+values will be modified to do the search using these new
 settings.</p>
 </li>
 </ul>
 </div>
 <div class="section level3">
-<h3 id="semlbcici_bound_wn_i-1">
-<code>semlbci::ci_bound_wn_i()</code><a class="anchor" aria-label="anchor" href="#semlbcici_bound_wn_i-1"></a>
+<h3 id="ci_bound_wn_i-1">
+<code>ci_bound_wn_i()</code><a class="anchor" aria-label="anchor" href="#ci_bound_wn_i-1"></a>
 </h3>
-<p><code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> is the low level function
-called by <code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code>. This function implements the
-modified Wu-Neale method presented by <span class="citation">Pek &amp;
-Wu (2015)</span>, named Wu-Neale-Pek-Wu (WNPW) method in this document.
-This function is not supposed to be used by users and the interface is
-not user-friendly. Interested users can refer to
+<p><code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> is the low level function called by
+<code><a href="../reference/ci_i_one.html">ci_i_one()</a></code>. This function implements the modified Wu-Neale
+method presented by <span class="citation">Pek &amp; Wu (2015)</span>,
+named Wu-Neale-Pek-Wu (WNPW) method in this document. This function is
+not supposed to be used by users and the interface is not user-friendly.
+Interested users can refer to
 <code><a href="../articles/technical_searching_one_bound.html">vignette("technical_searching_one_bound", package = "semlbci")</a></code>
-to see how to use <code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> directly.</p>
-<p>These are the main arguments of
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>:</p>
+to see how to use <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> directly.</p>
+<p>These are the main arguments of <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>:</p>
 <ul>
 <li>
 <p><code>i</code>:</p>
@@ -535,7 +527,7 @@ which can be free, fixed, or user-defined.</p>
 <p><code>npar</code>:</p>
 <p>The number of free parameters in the model, including those
 constrained to be equal. To be supplied by
-<code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code>.</p>
+<code><a href="../reference/ci_i_one.html">ci_i_one()</a></code>.</p>
 </li>
 <li>
 <p><code>sem_out</code>:</p>
@@ -546,8 +538,8 @@ constrained to be equal. To be supplied by
 <li>
 <p><code>f_constr</code>:</p>
 <p>The constraint function generated by <code><a href="../reference/set_constraint.html">set_constraint()</a></code>.
-Created by <code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code> and then passed to it through
-<code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code>.</p>
+Created by <code><a href="../reference/semlbci.html">semlbci()</a></code> and then passed to it through
+<code><a href="../reference/ci_i_one.html">ci_i_one()</a></code>.</p>
 </li>
 <li>
 <p><code>which</code>:</p>
@@ -590,8 +582,7 @@ the bound. Default is <code>FALSE</code>.</p>
 <p>A named list of options to be passed to
 <code><a href="https://rdrr.io/pkg/nloptr/man/nloptr.html" class="external-link">nloptr::nloptr()</a></code>, the function used for the optimization.
 Default is <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>. This argument can be used to override
-internal settings used by
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code>.</p>
+internal settings used by <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>.</p>
 </li>
 <li>
 <p><code>ciperc</code>:</p>
@@ -618,15 +609,15 @@ information in the attribute <code>diag</code>. Default is
 <li>
 <p><code>sf</code>:</p>
 <p>A scaling factor. Used for robust confidence bounds. Default is 1.
-Precomputed by an internal function called by
-<code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code> or <code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code> when
+Precomputed by an internal function called by <code><a href="../reference/semlbci.html">semlbci()</a></code> or
+<code><a href="../reference/ci_i_one.html">ci_i_one()</a></code> when
 <code>robust = "satorra.2000"</code>.</p>
 </li>
 <li>
 <p><code>sf2</code>:</p>
 <p>A shift factor. Used for robust confidence bounds. Default is 1.
-Precomputed by an internal function called by
-<code><a href="../reference/semlbci.html">semlbci::semlbci()</a></code> or <code><a href="../reference/ci_i_one.html">semlbci::ci_i_one()</a></code> when
+Precomputed by an internal function called by <code><a href="../reference/semlbci.html">semlbci()</a></code> or
+<code><a href="../reference/ci_i_one.html">ci_i_one()</a></code> when
 <code>robust = "satorra.2000"</code>.</p>
 </li>
 <li>
@@ -667,17 +658,15 @@ implement this constraint.</p>
 <li>
 <p><code>lb_se_k</code></p>
 <p>Used by an internal function to set the lower bound for free
-variances. Default is 3, the estimate minus (3)(standard error). If
-negative, the lower bound is set using <code>lb_prop</code>. This
-constraint is used only in the optimization to prevent intermediate
-values too far away from the point estimates. The final check done by
-fitting the model in <code>lavaan</code> will not implement this
-constraint.</p>
+variances. Default is 3, the estimate minus 3 <span class="math inline">\(\times\)</span> standard error. If negative, the
+lower bound is set using <code>lb_prop</code>. This constraint is used
+only in the optimization to prevent intermediate values too far away
+from the point estimates. The final check done by fitting the model in
+<code>lavaan</code> will not implement this constraint.</p>
 </li>
 </ul>
-<p>Please refer to the help page of
-<code><a href="../reference/ci_bound_wn_i.html">semlbci::ci_bound_wn_i()</a></code> to learn about other
-arguments.</p>
+<p>Please refer to the help page of <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> to
+learn about other arguments.</p>
 </div>
 </div>
 <div class="section level2">
@@ -687,6 +676,12 @@ arguments.</p>
 <div id="ref-asparouhov_simple_2010" class="csl-entry">
 Asparouhov, T., &amp; Muthén, B. O. (2010). <em>Simple second order
 chi-square correction</em>. <a href="https://www.statmodel.com/download/WLSMV_new_chi21.pdf" class="external-link">https://www.statmodel.com/download/WLSMV_new_chi21.pdf</a>
+</div>
+<div id="ref-cheung_semlbci_2023" class="csl-entry">
+Cheung, S. F., &amp; Pesigan, I. J. A. (2023). <em>Semlbci</em>: An r
+package for forming likelihood-based confidence intervals for parameter
+estimates, correlations, indirect effects, and other derived parameters.
+<em>Structural Equation Modeling: A Multidisciplinary Journal</em>. <a href="https://doi.org/10.1080/10705511.2023.2183860" class="external-link">https://doi.org/10.1080/10705511.2023.2183860</a>
 </div>
 <div id="ref-falk_are_2018" class="csl-entry">
 Falk, C. F. (2018). Are robust standard errors the best approach for
