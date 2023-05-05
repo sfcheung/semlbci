@@ -22,6 +22,8 @@ Description: Forms likelihood-based confidence intervals
     (2018) <doi:10.1037/met0000163>, and supports the robust
     LBCI proposed by Falk (2018)
     <doi:10.1080/10705511.2017.1367254>.
+URL: https://sfcheung.github.io/semlbci/
+BugReports: https://github.com/sfcheung/semlbci/issues
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
