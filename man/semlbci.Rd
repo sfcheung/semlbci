@@ -126,8 +126,10 @@ test (e.g., for testing or experimenting with some models and estimators),
 set \code{check_fit} to \code{FALSE}.
 
 Examples and technical details can be found at Cheung
-and Pesigan (2023) and the website of the \code{semlbci}
-package (https://sfcheung.github.io/semlbci/).
+and Pesigan (2023), the website of the \code{semlbci}
+package (https://sfcheung.github.io/semlbci/),
+and the technical appendices at
+(https://sfcheung.github.io/semlbci/articles/).
 
 It currently supports \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.
 }
