@@ -26,8 +26,10 @@
 #' set `check_fit` to `FALSE`.
 #'
 #' Examples and technical details can be found at Cheung
-#' and Pesigan (2023) and the website of the `semlbci`
-#' package (https://sfcheung.github.io/semlbci/).
+#' and Pesigan (2023), the website of the `semlbci`
+#' package (https://sfcheung.github.io/semlbci/),
+#' and the technical appendices at
+#' (https://sfcheung.github.io/semlbci/articles/).
 #'
 #' It currently supports [lavaan::lavaan-class] outputs only.
 #'
