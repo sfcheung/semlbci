@@ -25,6 +25,10 @@
 #' test (e.g., for testing or experimenting with some models and estimators),
 #' set `check_fit` to `FALSE`.
 #'
+#' Examples and technical details can be found at Cheung
+#' and Pesigan (2023) and the website of the `semlbci`
+#' package (https://sfcheung.github.io/semlbci/).
+#'
 #' It currently supports [lavaan::lavaan-class] outputs only.
 #'
 #' @return A `semlbci`-class object similar to the parameter table
@@ -103,6 +107,14 @@
 #' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
 #'
 #' @references
+#'
+#' Cheung, S. F., & Pesigan, I. J. A. (2023). *semlbci*:
+#' An R package for forming likelihood-based confidence
+#' intervals for parameter estimates, correlations,
+#' indirect effects, and other derived parameters.
+#' *Structural Equation Modeling: A Multidisciplinary Journal*.
+#' Advance online publication.
+#' \doi{10.1080/10705511.2023.2183860}
 #'
 #' Falk, C. F. (2018). Are robust standard errors the best approach
 #' for interval estimation with nonnormal data in structural equation
