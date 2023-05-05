@@ -96,8 +96,8 @@ NULL
 #' # Usually not to be used directly.
 #' # Used by loglike_compare().
 #' # 3 points are used just for illustration
-#' # ll_1 <- loglike_range(fit, par_i = "y ~ m", n_points = 3)
-#' # head(ll_1)
+#' ll_1 <- loglike_range(fit, par_i = "y ~ m", n_points = 2)
+#' head(ll_1)
 #'
 #' @describeIn loglikelihood Find the log profile likelihood for a range of values.
 #' @order 2
@@ -154,9 +154,11 @@ loglike_range <- function(sem_out, par_i,
         if (requireNamespace("pbapply", quietly = TRUE) &&
                     use_pbapply) {
             # Use pbapply
-            cat("\n", "Finding p-values for LR test", "\n",
-                sep = "")
-            utils::flush.console()
+            if(use_pbapply) {
+                cat("\n", "Finding p-values for LR test", "\n",
+                    sep = "")
+                utils::flush.console()
+              }
             out <- pbapply::pblapply(thetas,
                                      semlbci::loglike_point,
                                      sem_out = sem_out,
@@ -182,9 +184,11 @@ loglike_range <- function(sem_out, par_i,
         if (requireNamespace("pbapply", quietly = TRUE) &&
                     use_pbapply) {
             # Use pbapply
-            cat("\n", "Finding p-values for LR test", "\n",
-                sep = "")
-            utils::flush.console()
+            if(use_pbapply) {
+                cat("\n", "Finding p-values for LR test", "\n",
+                    sep = "")
+                utils::flush.console()
+              }
             out <- pbapply::pblapply(thetas,
                                      semlbci::loglike_point,
                                      sem_out = sem_out,
@@ -227,10 +231,10 @@ loglike_range <- function(sem_out, par_i,
 #'
 #' # Usually not to be used directly.
 #' # Used by loglike_compare().
-#' # llp_1 <- loglike_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
-#' # llp_1$loglike
-#' # llp_1$pvalue
-#' # llp_1$lrt
+#' llp_1 <- loglike_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
+#' llp_1$loglike
+#' llp_1$pvalue
+#' llp_1$lrt
 #'
 #'
 #' @describeIn loglikelihood Find the log likelihood at a value.
@@ -318,9 +322,9 @@ loglike_point <- function(theta0,
 #'
 #' # Usually not to be used directly.
 #' # Used by loglike_compare().
-#' # 3 points are used just for illustration
-#' # lq_1 <- loglike_quad_range(fit, par_i = "y ~ m", n_points = 3)
-#' # head(lq_1)
+#' # 2 points are used just for illustration
+#' lq_1 <- loglike_quad_range(fit, par_i = "y ~ m", n_points = 2)
+#' head(lq_1)
 #'
 #'
 #' @describeIn loglikelihood Find the approximated log likelihood for a range of values.
@@ -377,9 +381,11 @@ loglike_quad_range <- function(sem_out,
         if (requireNamespace("pbapply", quietly = TRUE) &&
                     use_pbapply) {
             # Use pbapply
-            cat("\n", "Finding p-values for quadratic approximation", "\n",
-                sep = "")
-            utils::flush.console()
+            if(use_pbapply) {
+                cat("\n", "Finding p-values for quadratic approximation", "\n",
+                    sep = "")
+                utils::flush.console()
+              }
             pvalues <- pbapply::pbsapply(thetas,
                                   function(x,
                                            sem_out,
@@ -423,9 +429,11 @@ loglike_quad_range <- function(sem_out,
         if (requireNamespace("pbapply", quietly = TRUE) &&
                     use_pbapply) {
             # Use pbapply
-            cat("\n", "Finding p-values for quadratic approximation", "\n",
-                sep = "")
-            utils::flush.console()
+            if(use_pbapply) {
+                cat("\n", "Finding p-values for quadratic approximation", "\n",
+                    sep = "")
+                utils::flush.console()
+              }
             pvalues <- pbapply::pbsapply(thetas, function(x) {
                                   loglike_point(x,
                                                 sem_out = sem_out,
@@ -464,8 +472,8 @@ loglike_quad_range <- function(sem_out,
 #'
 #' # Usually not to be used directly.
 #' # Used by loglike_compare().
-#' # lqp_1 <- loglike_quad_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
-#' # lqp_1
+#' lqp_1 <- loglike_quad_point(theta0 = 0.3, sem_out = fit, par_i = "y ~ m")
+#' lqp_1
 #'
 #'
 #' @describeIn loglikelihood Find the approximated log likelihood at a value.

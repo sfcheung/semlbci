@@ -1,6 +1,9 @@
-# semlbci 0.10.2
+# semlbci 0.10.3
 
-- First submission to CRAN.
+- First submission to CRAN. (0.10.2)
+- Fixed the description in DESCRIPTION. (0.10.3)
+- Uncommented some lines of code in examples. (0.10.3)
+- Make sure that `cat()` calls can be suppressed. (0.10.3)
 
 # semlbci 0.10.0.12 to 0.10.0.31
 

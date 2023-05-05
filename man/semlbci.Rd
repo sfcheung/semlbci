@@ -125,6 +125,12 @@ whether the model and the estimation method are supported. To skip this
 test (e.g., for testing or experimenting with some models and estimators),
 set \code{check_fit} to \code{FALSE}.
 
+Examples and technical details can be found at Cheung
+and Pesigan (2023), the website of the \code{semlbci}
+package (https://sfcheung.github.io/semlbci/),
+and the technical appendices at
+(https://sfcheung.github.io/semlbci/articles/).
+
 It currently supports \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.
 }
 \examples{
@@ -147,6 +153,14 @@ lbci_med
 
 }
 \references{
+Cheung, S. F., & Pesigan, I. J. A. (2023). \emph{semlbci}:
+An R package for forming likelihood-based confidence
+intervals for parameter estimates, correlations,
+indirect effects, and other derived parameters.
+\emph{Structural Equation Modeling: A Multidisciplinary Journal}.
+Advance online publication.
+\doi{10.1080/10705511.2023.2183860}
+
 Falk, C. F. (2018). Are robust standard errors the best approach
 for interval estimation with nonnormal data in structural equation
 modeling? \emph{Structural Equation Modeling: A Multidisciplinary
