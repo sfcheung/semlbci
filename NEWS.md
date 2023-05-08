@@ -1,3 +1,8 @@
+# semlbci 0.10.3.1
+
+- Update README.md for CRAN release. Identical
+  to the CRAN release in code. (0.10.3.1)
+
 # semlbci 0.10.3
 
 - First submission to CRAN. (0.10.2)

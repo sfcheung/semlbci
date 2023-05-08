@@ -1,12 +1,15 @@
 <!-- badges: start -->
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![CRAN status](https://www.r-pkg.org/badges/version/semlbci?color=blue)](https://CRAN.R-project.org/package=semlbci)
+[![CRAN: Release Date](https://www.r-pkg.org/badges/last-release/semlbci?color=blue)](https://cran.r-project.org/package=semlbci)
 [![Code size](https://img.shields.io/github/languages/code-size/sfcheung/semlbci.svg)](https://github.com/sfcheung/semlbci)
 [![Last Commit at Main](https://img.shields.io/github/last-commit/sfcheung/semlbci.svg)](https://github.com/sfcheung/semlbci/commits/master)
 [![R-CMD-check](https://github.com/sfcheung/semlbci/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sfcheung/semlbci/actions/workflows/R-CMD-check.yaml)
+[![DOI](https://img.shields.io/badge/doi-10.1080/10705511.2023.2183860-blue.svg)](https://doi.org/10.1080/10705511.2023.2183860)
 <!-- badges: end -->
 
-(Version 0.10.3, updated on 2023-05-05, [release history](https://sfcheung.github.io/semlbci/news/index.html))
+(Version 0.10.3.1, updated on 2023-05-08, [release history](https://sfcheung.github.io/semlbci/news/index.html))
 
 # semlbci <img src="man/figures/logo.png" align="right" height="150" />
 
@@ -16,7 +19,7 @@ in structural equation modeling. It also supports the robust LBCI proposed
 by [Falk (2018)](https://doi.org/10.1080/10705511.2017.1367254).
 It was described in the following manuscript:
 
-Cheung, S. F., & Pesigan, I. J. A. (2023). *semlbci*:
+- Cheung, S. F., & Pesigan, I. J. A. (2023). *semlbci*:
 An R package for forming likelihood-based confidence
 intervals for parameter estimates, correlations,
 indirect effects, and other derived parameters.
@@ -30,7 +33,13 @@ https://sfcheung.github.io/semlbci/
 
 # Installation
 
-The latest version can be installed by `remotes::install_github`:
+The stable CRAN version can be installed by `install.packages()`:
+
+```r
+install.packages("semlbci")
+```
+
+The latest version at GitHub can be installed by `remotes::install_github()`:
 
 ```r
 remotes::install_github("sfcheung/semlbci")
@@ -75,3 +84,11 @@ https://doi.org/10.1007/s11336-015-9461-1
 Wu, H., & Neale, M. C. (2012). Adjusted confidence intervals for a
 bounded parameter. *Behavior Genetics, 42*(6), 886-898.
 https://doi.org/10.1007/s10519-012-9560-z
+
+
+# Issues
+
+If you have any suggestions or found any bugs or limitations, please feel
+feel to open a GitHub issue. Thanks.
+
+https://github.com/sfcheung/semlbci/issues
