@@ -1,7 +1,8 @@
-# semlbci 0.10.3.1
+# semlbci 0.10.3.2
 
-- Update README.md for CRAN release. Identical
+- Updated README.md for CRAN release. Identical
   to the CRAN release in code. (0.10.3.1)
+- Added an R CMD check for noSuggests. (0.10.3.2)
 
 # semlbci 0.10.3
 
