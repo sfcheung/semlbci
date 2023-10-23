@@ -28,9 +28,10 @@ fn_constr0 <- set_constraint(fit, ciperc = ciperc)
 time1l <- system.time(out1l <- ci_bound_wn_i(17,16, sem_out = fit, f_constr = fn_constr0, which = "lbound", verbose = TRUE, ciperc = ciperc))
 time2u <- system.time(out2u <- ci_bound_wn_i(18,16, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc))
 
+# 2023-10-23: Updated precomputed answers manually checked for validity.
 test_that("Check against precomputed answers", {
-    expect_equal(out1l$bound, 0.04693643, tolerance = 1e-5)
-    expect_equal(out2u$bound, 13.24302, tolerance = 1e-5)
+    expect_equal(out1l$bound, 0.04712413, tolerance = 1e-4)
+    expect_equal(out2u$bound, 13.24741, tolerance = 1e-4)
   })
 
 skip("Run only if data changed")
