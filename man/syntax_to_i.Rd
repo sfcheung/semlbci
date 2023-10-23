@@ -84,8 +84,7 @@ p_table <- parameterTable(fit_med)
 pars <- c("m ~ x",
           "y ~ m",
           "asq := 1",
-          "ab  := 2",
-          "not in table")
+          "ab  := 2")
 out <- syntax_to_i(pars, fit_med)
 out
 p_table[out, ]

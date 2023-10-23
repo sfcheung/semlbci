@@ -1,8 +1,11 @@
-# semlbci 0.10.3.2
+# semlbci 0.10.3.3
 
 - Updated README.md for CRAN release. Identical
   to the CRAN release in code. (0.10.3.1)
 - Added an R CMD check for noSuggests. (0.10.3.2)
+- Revised an example of `syntax_to_i()`
+  for a coming changes to the parser of
+  `lavaan` (0.10.3.3).
 
 # semlbci 0.10.3
 
