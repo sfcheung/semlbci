@@ -12,6 +12,10 @@
   verbose = FALSE,
   verbose_if_needed = TRUE,
   drop_no_lbci = TRUE,
+  output = c("table", "text", "lavaan"),
+  sem_out = NULL,
+  lbci_only = FALSE,
+  ratio_digits = 1,
   ...
 )
 }
@@ -37,6 +41,35 @@ is \code{TRUE}.}
 
 \item{drop_no_lbci}{If \code{TRUE}, parameters without LBCIs will be
 removed. Default is \code{TRUE}.}
+
+\item{output}{The type of printout.
+If \code{"table"}, the default, the
+results will be printed in a table.
+If \code{"text"} or \code{"lavaan"}, then the
+results will be printed in the
+\code{lavaan} style, as in the \code{\link[=summary]{summary()}}
+method for the output of \code{lavaan}.}
+
+\item{sem_out}{If \code{output} is
+\code{"text"} or \code{"lavaan"}, the original
+output of \code{lavaan} used in calling
+\code{\link[=semlbci]{semlbci()}} needs to be supplied
+to this argument.}
+
+\item{lbci_only}{Used only if \code{output}
+is \code{"text"} or \code{"lavaan"}. If \code{TRUE},
+only the likelihood-based confidence
+intervals (LBCIs) will be printed.
+Default is \code{FALSE}, and LBCIs will be
+printed alongside the confidence
+intervals by \code{lavaan}.}
+
+\item{ratio_digits}{The number of
+digits after the decimal points
+for the ratios of distance from
+the confidence limits
+to the point estimates. Default is
+1.}
 
 \item{...}{Other arguments. They will be ignored.}
 }
@@ -75,6 +108,12 @@ print(lbci_med, time = TRUE)
 print(lbci_med, annotation = FALSE)
 
 print(lbci_med, digits = 4)
+
+# Text output
+
+print(lbci_med, output = "lavaan", sem_out = fit_med)
+
+print(lbci_med, output = "lavaan", sem_out = fit_med, lbci_only = TRUE)
 
 }
 \seealso{

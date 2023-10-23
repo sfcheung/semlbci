@@ -91,6 +91,12 @@
 #'
 #' print(lbci_med, digits = 4)
 #'
+#' # Text output
+#'
+#' print(lbci_med, output = "lavaan", sem_out = fit_med)
+#'
+#' print(lbci_med, output = "lavaan", sem_out = fit_med, lbci_only = TRUE)
+#'
 #' @export
 
 print.semlbci <- function(x,
@@ -112,6 +118,12 @@ print.semlbci <- function(x,
         if (is.null(sem_out)) {
             stop("Argument 'sem_out' must be supplied ",
                  "if output type is 'text' or 'lavaan'.")
+          }
+        if (!compare_semlbci_sem_out(x,
+                                     sem_out = sem_out)) {
+            stop("The value of 'sem_out' does not appear ",
+                 "to be the fit object used in the call ",
+                 "to 'semlbci()'.")
           }
         print_semlbci_text(x = x,
                            nd = digits,
@@ -303,9 +315,6 @@ print.semlbci <- function(x,
 
 #' @noRd
 # A helper for printing in the 'lavaan' way.
-# Copied from semhelpinghands::print.std_solution_boot()
-# Not ready.
-# To be modified.
 
 print_semlbci_text <- function(x,
                                sem_out = sem_out,
@@ -331,6 +340,7 @@ print_semlbci_text <- function(x,
         ciperc <- formals(semlbci)$ciperc
       }
     x_df <- as.data.frame(x)
+    x_df$block <- x_df$group
     x_df$ratio_check_lb <- verbose_chk$ratio_check_lb
     x_df$ratio_check_ub <- verbose_chk$ratio_check_ub
     if ("est.std" %in% colnames(x)) {
@@ -425,6 +435,10 @@ print_semlbci_text <- function(x,
     if (lbci_only) {
         est1$ci.lower <- NULL
         est1$ci.upper <- NULL
+      }
+    ngroups <- lavaan::lavTech(sem_out, "ngroups")
+    if (ngroups == 1) {
+        est1$group <- NULL
       }
     est2 <- est1
     if (status_note) {
@@ -647,4 +661,16 @@ format_post_check <- function(object) {
     tmp[which(!object)] <- "Failed"
     tmp[is.na(object)] <- ""
     tmp
+  }
+
+#' @noRd
+
+compare_semlbci_sem_out <- function(semlbci_out,
+                                    sem_out) {
+    tmp1 <- lavaan::lav_partable_labels(semlbci_out)
+    ptable <- lavaan::parameterTable(sem_out)
+    tmp2 <- lavaan::lav_partable_labels(ptable)
+    out <- (length(setdiff(tmp1, tmp2)) == 0) &&
+           (length(setdiff(tmp2, tmp1)) == 0)
+    return(out)
   }
