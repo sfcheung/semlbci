@@ -52,6 +52,13 @@
 #' printed alongside the confidence
 #' intervals by `lavaan`.
 #'
+#' @param ratio_digits The number of
+#' digits after the decimal points
+#' for the ratios of distance from
+#' the confidence limits
+#' to the point estimates. Default is
+#' 1.
+#'
 #' @param ... Other arguments. They will be ignored.
 #'
 #' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
@@ -96,6 +103,7 @@ print.semlbci <- function(x,
                           output = c("table", "text", "lavaan"),
                           sem_out = NULL,
                           lbci_only = FALSE,
+                          ratio_digits = 1,
                           ...) {
     output <- match.arg(output)
     if (isTRUE(output == "lavaan")) output <- "text"
@@ -113,6 +121,7 @@ print.semlbci <- function(x,
                            annotation = annotation,
                            verbose = verbose,
                            verbose_if_needed = verbose_if_needed,
+                           ratio_digits = ratio_digits,
                            ...)
         return(invisible(x))
       }
@@ -149,30 +158,35 @@ print.semlbci <- function(x,
       }
     if (verbose_if_needed) {
 
-        if (is.null(call_org$ci_limit_ratio_tol)) {
-            ci_limit_ratio_tol <- formals(ci_bound_wn_i)$ci_limit_ratio_tol
-          } else {
-            ci_limit_ratio_tol <- call_org$ci_limit_ratio_tol
-          }
-        ratio_x <- c(out$ratio_lb, out$ratio_ub)
-        ratio_note <- any(ratio_x > ci_limit_ratio_tol, na.rm = TRUE) |
-                      any(ratio_x < 1 / ci_limit_ratio_tol, na.rm = TRUE)
+        verbose_chk <- verbose_needed(out)
+        ratio_note <- verbose_chk$ratio_note
+        post_check_note <- verbose_chk$post_check_note
+        status_note <- verbose_chk$status_note
+
+        # if (is.null(call_org$ci_limit_ratio_tol)) {
+        #     ci_limit_ratio_tol <- formals(ci_bound_wn_i)$ci_limit_ratio_tol
+        #   } else {
+        #     ci_limit_ratio_tol <- call_org$ci_limit_ratio_tol
+        #   }
+        # ratio_x <- c(out$ratio_lb, out$ratio_ub)
+        # ratio_note <- any(ratio_x > ci_limit_ratio_tol, na.rm = TRUE) |
+        #               any(ratio_x < 1 / ci_limit_ratio_tol, na.rm = TRUE)
         if (!ratio_note) {
             out$ratio_lb <- NULL
             out$ratio_ub <- NULL
           }
 
-        post_check_note <- !all(out$post_check_lb,
-                                out$post_check_ub,
-                                na.rm = TRUE)
+        # post_check_note <- !all(out$post_check_lb,
+        #                         out$post_check_ub,
+        #                         na.rm = TRUE)
         if (!post_check_note) {
             out$post_check_lb <- NULL
             out$post_check_ub <- NULL
           }
 
-        status_note <- !all(out$post_check_lb == 0,
-                            out$post_check_ub == 0,
-                            na.rm = TRUE)
+        # status_note <- !all(out$status_lb == 0,
+        #                     out$status_ub == 0,
+        #                     na.rm = TRUE)
         if (!status_note) {
             out$status_lb <- NULL
             out$status_ub <- NULL
@@ -301,13 +315,24 @@ print_semlbci_text <- function(x,
                                annotation = TRUE,
                                verbose = FALSE,
                                verbose_if_needed = TRUE,
+                               ratio_digits = 1,
                                ...) {
+    # Adapted from lavaan::print.lavaan.parameterEstimates()
+    num_format  <- paste("%", max(8L, nd + 5L), ".", nd, "f", sep = "")
+    int_format  <- paste("%", max(8L, nd + 5L), "d", sep = "")
+    char_format <- paste("%", max(8L, nd + 5L), "s", sep = "")
+
     x_call <- attr(x, "call")
+    i_no_lbci <- is.na(x$status_lb) & is.na(x$status_ub)
+    verbose_chk <- verbose_needed(x)
+
     ciperc <- x_call$ciperc
     if (is.null(ciperc)) {
         ciperc <- formals(semlbci)$ciperc
       }
     x_df <- as.data.frame(x)
+    x_df$ratio_check_lb <- verbose_chk$ratio_check_lb
+    x_df$ratio_check_ub <- verbose_chk$ratio_check_ub
     if ("est.std" %in% colnames(x)) {
         std <- TRUE
       } else {
@@ -351,83 +376,167 @@ print_semlbci_text <- function(x,
                                 "status_lb", "status_ub",
                                 "ratio_lb", "ratio_ub",
                                 "post_check_lb", "post_check_ub",
-                                "cl_lb", "cl_ub")
+                                "cl_lb", "cl_ub",
+                                "ratio_check_lb", "ratio_check_ub")
     est1 <- merge(est1,
                   x_df[, i0],
                   all.x = TRUE)
-    # i0 <- colnames(ptable) %in% c("est", "se",
-    #                               "user", "free",
-    #                               "ustart", "plabel",
-    #                               "start",
-    #                               "id")
-    # est1 <- merge(est1, ptable[, !i0])
     est1 <- est1[order(est1$id), ]
     est1$id <- NULL
     est1 <- merge_attributes(est1,
                              est0)
     class(est1) <- c("lavaan.parameterEstimates", class(est1))
+    i_drop <- is.na(est1$status_lb) & is.na(est1$status_ub)
+    est1$lbci_lb <- sprintf(num_format,
+                            as.numeric(est1$lbci_lb))
+    est1$lbci_lb[i_drop] <- "--"
+    est1$lbci_ub <- sprintf(num_format,
+                            as.numeric(est1$lbci_ub))
+    est1$lbci_ub[i_drop] <- "--"
     if (drop_no_lbci) {
-        i0 <- is.na(est1$post_check_lb) & is.na(est1$post_check_ub)
-        est1 <- est1[!i0, ]
+        est1 <- est1[!i_drop, ]
       }
-    est1$status_lb <- NULL
-    est1$status_ub <- NULL
-    est1$ratio_lb <- NULL
-    est1$ratio_ub <- NULL
-    est1$post_check_lb <- NULL
-    est1$post_check_ub <- NULL
+    if (verbose_if_needed) {
+        ratio_note <- verbose_chk$ratio_note
+        post_check_note <- verbose_chk$post_check_note
+        status_note <- verbose_chk$status_note
+        if (!ratio_note) {
+            est1$ratio_lb <- NULL
+            est1$ratio_ub <- NULL
+            est1$ratio_check_lb <- NULL
+            est1$ratio_check_ub <- NULL
+
+          }
+        if (!post_check_note) {
+            est1$post_check_lb <- NULL
+            est1$post_check_ub <- NULL
+          }
+        if (!status_note) {
+            est1$status_lb <- NULL
+            est1$status_ub <- NULL
+          }
+      } else {
+        ratio_note <- TRUE
+        post_check_note <- TRUE
+        status_note <- TRUE
+      }
     est1$cl_lb <- NULL
     est1$cl_ub <- NULL
     if (lbci_only) {
         est1$ci.lower <- NULL
         est1$ci.upper <- NULL
       }
-    tmp <- colnames(est1)
-    tmp <- gsub("lbci_lb", "lbci.lower", tmp, fixed = TRUE)
-    tmp <- gsub("lbci_ub", "lbci.upper", tmp, fixed = TRUE)
-    colnames(est1) <- tmp
+    est2 <- est1
+    if (status_note) {
+        est2$status_lb <- format_status(est2$status_lb)
+        est2$status_ub <- format_status(est2$status_ub)
+        est2$Status <- paste0(est2$status_lb,
+                              ";",
+                              est2$status_ub)
+        est2$Status <- sprintf(char_format, est2$Status)
+        est2$Status[which(est2$lbci_lb == "--")] <- "--"
+        est2$status_lb <- NULL
+        est2$status_ub <- NULL
+      }
+    if (ratio_note) {
+        est2$ratio_lb <- format_ratio(est2$ratio_lb,
+                                      digits = ratio_digits,
+                                      flag = est2$ratio_check_lb,
+                                      where = "none")
+        est2$ratio_ub <- format_ratio(est2$ratio_ub,
+                                      digits = ratio_digits,
+                                      flag = est2$ratio_check_ub,
+                                      where = "none")
+        est2$Ratio <- paste0(est2$ratio_lb,
+                             ";",
+                             est2$ratio_ub)
+        est2$Ratio <- sprintf(char_format, est2$Ratio)
+        est2$Ratio[which(est2$lbci_lb == "--")] <- "--"
+        est2$ratio_lb <- NULL
+        est2$ratio_ub <- NULL
+        est2$ratio_check_lb <- NULL
+        est2$ratio_check_ub <- NULL
+      }
+    if (post_check_note) {
+        est2$post_check_lb <- format_post_check(est2$post_check_lb)
+        est2$post_check_ub <- format_post_check(est2$post_check_ub)
+        est2$Check <- paste0(est2$post_check_lb,
+                             ";",
+                             est2$post_check_ub)
+        est2$Check <- sprintf(char_format, est2$Check)
+        est2$Check[which(est2$lbci_lb == "--")] <- "--"
+        est2$post_check_lb <- NULL
+        est2$post_check_ub <- NULL
+      }
+    tmp <- colnames(est2)
+    tmp <- gsub("lbci_lb", "lb.lower", tmp, fixed = TRUE)
+    tmp <- gsub("lbci_ub", "lb.upper", tmp, fixed = TRUE)
+    colnames(est2) <- tmp
+    out <- utils::capture.output(print(est2, nd = nd))
+    if (annotation) {
+        i0 <- grepl("  Standard errors  ", out, fixed = TRUE)
+        tmp <- out
+        tmp[seq_len(which(i0))] <- "%%"
+        i1 <- match("", tmp)
+        tmp0 <- "- lb.lower, lb.upper: "
+        tmp <- paste0(tmp0,
+                      "The lower and upper likelihood-based ",
+                      "confidence bounds.")
+        tmp <- strwrap(tmp,
+                       indent = 0,
+                       exdent = nchar(tmp0))
+        msg <- tmp
+        if (status_note) {
+            tmp0 <- "- Status: "
+            tmp <- paste0(tmp0, "Whether the search encountered any problem for the two bounds. ",
+                    "If no problem encountered, the code is 0 (displayed as 'OK'). Any value ",
+                    "other than 0 indicates something was wrong in the search.")
+            tmp <- strwrap(tmp,
+                           indent = 0,
+                           exdent = nchar(tmp0))
+            msg <- c(msg, tmp)
+          }
+        if (ratio_note) {
+            tmp0 <- "- Ratio: "
+            tmp <- paste0(tmp0,
+                    "Ratio of a to b, ",
+                    "a = Distance from the point estimate to a likelihood-based",
+                    " confidence bound, b = Distance from the point estimate to the original",
+                    " confidence bound. A bound should be interpreted with caution if",
+                    " the ratio is too large or too small, indicating a large",
+                    " difference between the original interval and the",
+                    " likelihood-based interval.")
+            tmp <- strwrap(tmp,
+                           indent = 0,
+                           exdent = nchar(tmp0))
+            msg <- c(msg, tmp)
+          }
+        if (post_check_note) {
+            tmp0 <- "- Check: "
+            tmp <- paste0(tmp0,
+                    "Whether the final solution of ",
+                    "a confidence bound passed the post optimization check of lavaan ",
+                    "by lavaan::lavInspect(fit, 'post.check'), where ",
+                    "fit is the final solution.")
+            tmp <- strwrap(tmp,
+                           indent = 0,
+                           exdent = nchar(tmp0))
+            msg <- c(msg, tmp)
+          }
+        msg <- c("Likelihood-Based CI Notes:", "", msg)
+        out <- append(out,
+                      msg,
+                      after = i1)
+      }
     if (!std) {
-        print(est1,
-              nd = nd,
-              ...)
+        cat(out, sep = "\n")
         return(invisible(x))
       } else {
-        est2 <- est1
-        out <- utils::capture.output(print(est2, nd = nd))
         i <- grepl("Parameter Estimates:", out, fixed = TRUE)
         out[i] <- "Standardized Estimates Only"
         out <- gsub_heading(old = "\\s\\s\\s\\sEstimate",
                             new = "Standardized",
                             object = out)
-        # i <- grepl("  Standard errors  ", out, fixed = TRUE)
-        # j <- unlist(gregexpr("Bootstrap", out[i]))[1]
-        # tmp <- "  Confidence interval"
-        # st1 <- paste0(tmp,
-        #               paste0(rep(" ", j - nchar(tmp) - 1),
-        #                      collapse = ""),
-        #               "Bootstrap")
-        # j <- nchar(out[i])
-        # tmp <- "  Confidence Level"
-        # tmp2 <- paste0(formatC(level * 100, digits = 1, format = "f"),
-        #                "%")
-        # st2 <- paste0(tmp,
-        #               paste0(rep(" ", j - nchar(tmp) - nchar(tmp2)),
-        #                      collapse = ""),
-        #               tmp2)
-        # tmp <- "  Standardization Type"
-        # tmp2 <- attr(x, "type")
-        # st3 <- paste0(tmp,
-        #               paste0(rep(" ", j - nchar(tmp) - nchar(tmp2)),
-        #                      collapse = ""),
-        #               tmp2)
-        # out <- c(out[seq_len(which(i))],
-        #          st1,
-        #          st2,
-        #          st3,
-        #          out[-seq_len(which(i))])
-        # out <- gsub("    Estimate  Std.Err",
-        #             "Standardized  Std.Err",
-        #             out)
         cat(out, sep = "\n")
         return(invisible(x))
       }
@@ -453,14 +562,89 @@ gsub_heading <- function(old,
                          new,
                          object) {
     i1 <- grepl(old, object)
-    i2 <- grepl("lbci", object)
-    i <- i1 & i2
-    #     Estimate
-    # Standardized
+    # i2 <- grepl("lbci", object)
+    # i <- i1 & i2
+    i <- i1
     for (xx in which(i)) {
         tmp <- object[i]
         tmp <- gsub(old, new, tmp)
         object[i] <- tmp
       }
     object
+  }
+
+#' @noRd
+
+verbose_needed <- function(x) {
+    call_org <- attr(x, "call")
+    if (is.null(call_org$ci_limit_ratio_tol)) {
+        ci_limit_ratio_tol <- formals(ci_bound_wn_i)$ci_limit_ratio_tol
+      } else {
+        ci_limit_ratio_tol <- call_org$ci_limit_ratio_tol
+      }
+    ratio_x <- c(x$ratio_lb, x$ratio_ub)
+    ratio_check_lb <- (x$ratio_lb > ci_limit_ratio_tol) |
+                      (x$ratio_lb < 1 / ci_limit_ratio_tol)
+    ratio_check_ub <- (x$ratio_ub > ci_limit_ratio_tol) |
+                      (x$ratio_ub < 1 / ci_limit_ratio_tol)
+    ratio_note <- any(ratio_x > ci_limit_ratio_tol, na.rm = TRUE) |
+                  any(ratio_x < 1 / ci_limit_ratio_tol, na.rm = TRUE)
+
+    post_check_note <- !all(x$post_check_lb,
+                            x$post_check_ub,
+                            na.rm = TRUE)
+
+    status_note <- !all(x$status_lb == 0,
+                        x$status_ub == 0,
+                        na.rm = TRUE)
+
+    out <- list(ratio_note = ratio_note,
+                ratio_check_lb = ratio_check_lb,
+                ratio_check_ub = ratio_check_ub,
+                post_check_note = post_check_note,
+                status_note = status_note)
+    out
+  }
+
+#' @noRd
+
+format_status <- function(object) {
+    tmp <- character(length(object))
+    tmp[which(object == 0)] <- "OK"
+    i <- object != 0
+    tmp[which(i)] <- paste0("<", object[which(i)], ">")
+    tmp[is.na(object)] <- ""
+    tmp
+  }
+
+#' @noRd
+
+format_ratio <- function(object,
+                         digits = 1,
+                         flag,
+                         where = c("left", "right", "none")) {
+    where <- match.arg(where)
+    tmp <- formatC(as.numeric(object),
+                   digits = digits,
+                   format = "f")
+    tmp2 <- tmp
+    if (where == "left") {
+        tmp2[which(!flag)] <- paste0(" ", tmp[which(!flag)])
+        tmp2[which(flag)] <- paste0("<", tmp[which(flag)])
+      } else if (where == "right") {
+        tmp2[which(!flag)] <- paste0(tmp[which(!flag)], " ")
+        tmp2[which(flag)] <- paste0(tmp[which(flag)], ">")
+      }
+    tmp2[is.na(flag)] <- ""
+    tmp2
+  }
+
+#' @noRd
+
+format_post_check <- function(object) {
+    tmp <- character(length(object))
+    tmp[which(object)] <- "OK"
+    tmp[which(!object)] <- "Failed"
+    tmp[is.na(object)] <- ""
+    tmp
   }

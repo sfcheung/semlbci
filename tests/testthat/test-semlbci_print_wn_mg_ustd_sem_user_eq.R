@@ -33,7 +33,18 @@ system.time(
                         verbose = TRUE,
                         opts = list(ftol_rel = 1e-6))
   )
+system.time(
+    lbci_fit_warn <- semlbci(fit,
+                             pars = c("a1 :="),
+                             semlbci_out = lbci_fit,
+                             method = "wn",
+                             verbose = TRUE,
+                             try_k_more_times = 0,
+                             opts = list(ftol_rel = 1e-6,
+                                         maxeval = 3))
+  )
 
+lbci_fit_warn
 lbci_fit
 
 print(lbci_fit,
@@ -52,6 +63,25 @@ print(lbci_fit,
       sem_out = fit,
       lbci_only = TRUE,
       drop_no_lbci = FALSE)
+print(lbci_fit_warn,
+      output = "text",
+      sem_out = fit)
+print(lbci_fit_warn,
+      output = "text",
+      sem_out = fit,
+      verbose = TRUE)
+print(lbci_fit_warn,
+      output = "text",
+      sem_out = fit,
+      verbose = TRUE,
+      lbci_only = TRUE)
+print(lbci_fit_warn,
+      output = "text",
+      sem_out = fit,
+      verbose = TRUE,
+      drop_no_lbci = FALSE)
+
+
 
 pars <- c("c2 :=",
           "f1 ~ f2",
@@ -84,3 +114,11 @@ print(lbci_std,
       sem_out = fit,
       lbci_only = TRUE,
       drop_no_lbci = FALSE)
+
+print(lbci_std,
+      output = "text",
+      sem_out = fit,
+      lbci_only = TRUE,
+      verbose = TRUE,
+      drop_no_lbci = FALSE)
+
