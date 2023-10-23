@@ -30,6 +30,28 @@
 #' @param drop_no_lbci If `TRUE`, parameters without LBCIs will be
 #' removed. Default is `TRUE`.
 #'
+#' @param output The type of printout.
+#' If `"table"`, the default, the
+#' results will be printed in a table.
+#' If `"text"` or `"lavaan"`, then the
+#' results will be printed in the
+#' `lavaan` style, as in the [summary()]
+#' method for the output of `lavaan`.
+#'
+#' @param sem_out If `output` is
+#' `"text"` or `"lavaan"`, the original
+#' output of `lavaan` used in calling
+#' [semlbci()] needs to be supplied
+#' to this argument.
+#'
+#' @param lbci_only Used only if `output`
+#' is `"text"` or `"lavaan"`. If `TRUE`,
+#' only the likelihood-based confidence
+#' intervals (LBCIs) will be printed.
+#' Default is `FALSE`, and LBCIs will be
+#' printed alongside the confidence
+#' intervals by `lavaan`.
+#'
 #' @param ... Other arguments. They will be ignored.
 #'
 #' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
@@ -71,8 +93,29 @@ print.semlbci <- function(x,
                           verbose = FALSE,
                           verbose_if_needed = TRUE,
                           drop_no_lbci = TRUE,
+                          output = c("table", "text", "lavaan"),
+                          sem_out = NULL,
+                          lbci_only = FALSE,
                           ...) {
+    output <- match.arg(output)
+    if (isTRUE(output == "lavaan")) output <- "text"
     if (verbose) verbose_if_needed <- FALSE
+    if (isTRUE(output == "text")) {
+        if (is.null(sem_out)) {
+            stop("Argument 'sem_out' must be supplied ",
+                 "if output type is 'text' or 'lavaan'.")
+          }
+        print_semlbci_text(x = x,
+                           nd = digits,
+                           sem_out = sem_out,
+                           lbci_only = lbci_only,
+                           drop_no_lbci = drop_no_lbci,
+                           annotation = annotation,
+                           verbose = verbose,
+                           verbose_if_needed = verbose_if_needed,
+                           ...)
+        return(invisible(x))
+      }
     out <- x
     if (max(out$group) == 1) {
         out$group <- NULL
@@ -250,19 +293,16 @@ print.semlbci <- function(x,
 # Not ready.
 # To be modified.
 
-print_text <- function(x,
-                       ...,
-                       sem_out = sem_out,
-                       nd = 3,
-                       output = c("table", "text"),
-                       lbci_only = FALSE,
-                       drop_no_lbci = FALSE) {
-    output <- match.arg(output)
+print_semlbci_text <- function(x,
+                               sem_out = sem_out,
+                               nd = 3,
+                               lbci_only = FALSE,
+                               drop_no_lbci = FALSE,
+                               annotation = TRUE,
+                               verbose = FALSE,
+                               verbose_if_needed = TRUE,
+                               ...) {
     x_call <- attr(x, "call")
-    if (output == "table") {
-        NextMethod()
-        return(invisible(x))
-      }
     ciperc <- x_call$ciperc
     if (is.null(ciperc)) {
         ciperc <- formals(semlbci)$ciperc
@@ -340,14 +380,16 @@ print_text <- function(x,
     est1$cl_ub <- NULL
     if (lbci_only) {
         est1$ci.lower <- NULL
-        est1$ci.lower <- NULL
+        est1$ci.upper <- NULL
       }
     tmp <- colnames(est1)
     tmp <- gsub("lbci_lb", "lbci.lower", tmp, fixed = TRUE)
     tmp <- gsub("lbci_ub", "lbci.upper", tmp, fixed = TRUE)
     colnames(est1) <- tmp
     if (!std) {
-        print(est1, ..., nd = nd)
+        print(est1,
+              nd = nd,
+              ...)
         return(invisible(x))
       } else {
         est2 <- est1

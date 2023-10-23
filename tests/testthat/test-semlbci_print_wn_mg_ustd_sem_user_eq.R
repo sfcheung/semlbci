@@ -36,6 +36,23 @@ system.time(
 
 lbci_fit
 
+print(lbci_fit,
+      output = "text",
+      sem_out = fit)
+print(lbci_fit,
+      output = "text",
+      sem_out = fit,
+      lbci_only = TRUE)
+print(lbci_fit,
+      output = "text",
+      sem_out = fit,
+      drop_no_lbci = FALSE)
+print(lbci_fit,
+      output = "text",
+      sem_out = fit,
+      lbci_only = TRUE,
+      drop_no_lbci = FALSE)
+
 pars <- c("c2 :=",
           "f1 ~ f2",
           "ab :=")
@@ -50,3 +67,20 @@ system.time(
   )
 
 lbci_std
+
+print(lbci_std,
+      output = "text",
+      sem_out = fit)
+print(lbci_std,
+      output = "text",
+      sem_out = fit,
+      lbci_only = TRUE)
+print(lbci_std,
+      output = "text",
+      sem_out = fit,
+      drop_no_lbci = FALSE)
+print(lbci_std,
+      output = "text",
+      sem_out = fit,
+      lbci_only = TRUE,
+      drop_no_lbci = FALSE)
