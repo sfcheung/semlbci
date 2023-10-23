@@ -252,92 +252,173 @@ print.semlbci <- function(x,
 
 print_text <- function(x,
                        ...,
+                       sem_out = sem_out,
                        nd = 3,
                        output = c("table", "text"),
-                       standardized_only = TRUE) {
+                       lbci_only = FALSE,
+                       drop_no_lbci = FALSE) {
     output <- match.arg(output)
     x_call <- attr(x, "call")
     if (output == "table") {
         NextMethod()
         return(invisible(x))
       }
-    ptable <- attr(x, "partable")
-    est0 <- attr(x, "est")
+    ciperc <- x_call$ciperc
+    if (is.null(ciperc)) {
+        ciperc <- formals(semlbci)$ciperc
+      }
+    x_df <- as.data.frame(x)
+    if ("est.std" %in% colnames(x)) {
+        std <- TRUE
+      } else {
+        std <- FALSE
+      }
+    est0 <- lavaan::parameterEstimates(sem_out,
+                                       standardized = FALSE,
+                                       level = ciperc,
+                                       output = "text",
+                                       header = TRUE)
     est1 <- est0
     est1$id <- seq_len(nrow(est1))
-    i0 <- colnames(x) %in% c("se", "z", "pvalue",
-                             "ci.lower", "ci.upper")
+    if (std) {
+        # If CIs for standardized solution,
+        # always print standardized estimates.
+        std1 <- lavaan::standardizedSolution(sem_out,
+                                             type = "std.all",
+                                             ci = TRUE,
+                                             level = ciperc)
+        i0 <- colnames(std1) %in% c("lhs", "op", "rhs",
+                                    "group", "label",
+                                    "est.std",
+                                    "se", "z", "pvalue",
+                                    "ci.lower", "ci.upper")
+        est1$est <- NULL
+        est1$se <- NULL
+        est1$z <- NULL
+        est1$pvalue <- NULL
+        est1$ci.lower <- NULL
+        est1$ci.upper <- NULL
+        est1 <- merge(est1,
+                      std1[, i0],
+                      all.x = TRUE)
+        tmp <- colnames(est1)
+        tmp <- gsub("est.std", "est", tmp, fixed = TRUE)
+        colnames(est1) <- tmp
+      }
+    i0 <- colnames(x_df) %in% c("lhs", "op", "rhs",
+                                "group", "label",
+                                "lbci_lb", "lbci_ub",
+                                "status_lb", "status_ub",
+                                "ratio_lb", "ratio_ub",
+                                "post_check_lb", "post_check_ub",
+                                "cl_lb", "cl_ub")
     est1 <- merge(est1,
-                  x[, !i0])
-    i0 <- colnames(ptable) %in% c("est", "se",
-                                  "user", "free",
-                                  "ustart", "plabel",
-                                  "start",
-                                  "id")
-    est1 <- merge(est1, ptable[, !i0])
+                  x_df[, i0],
+                  all.x = TRUE)
+    # i0 <- colnames(ptable) %in% c("est", "se",
+    #                               "user", "free",
+    #                               "ustart", "plabel",
+    #                               "start",
+    #                               "id")
+    # est1 <- merge(est1, ptable[, !i0])
     est1 <- est1[order(est1$id), ]
     est1$id <- NULL
-    class(est1) <- class(est0)
-    pe_attrib <- attr(x, "pe_attrib")
-    tmp <- !(names(pe_attrib) %in% names(attributes(est1)))
-    attributes(est1) <- c(attributes(est1),
-                          pe_attrib[tmp])
+    est1 <- merge_attributes(est1,
+                             est0)
     class(est1) <- c("lavaan.parameterEstimates", class(est1))
-    if (!standardized_only) {
-        tmp <- colnames(est1)
-        tmp[tmp == "est.std"] <- "Standardized"
-        tmp[tmp == "boot.ci.lower"] <- "ci.std.lower"
-        tmp[tmp == "boot.ci.upper"] <- "ci.std.upper"
-        tmp[tmp == "boot.se"] <- "Std.Err.std"
-        colnames(est1) <- tmp
+    if (drop_no_lbci) {
+        i0 <- is.na(est1$post_check_lb) & is.na(est1$post_check_ub)
+        est1 <- est1[!i0, ]
+      }
+    est1$status_lb <- NULL
+    est1$status_ub <- NULL
+    est1$ratio_lb <- NULL
+    est1$ratio_ub <- NULL
+    est1$post_check_lb <- NULL
+    est1$post_check_ub <- NULL
+    est1$cl_lb <- NULL
+    est1$cl_ub <- NULL
+    if (lbci_only) {
+        est1$ci.lower <- NULL
+        est1$ci.lower <- NULL
+      }
+    tmp <- colnames(est1)
+    tmp <- gsub("lbci_lb", "lbci.lower", tmp, fixed = TRUE)
+    tmp <- gsub("lbci_ub", "lbci.upper", tmp, fixed = TRUE)
+    colnames(est1) <- tmp
+    if (!std) {
         print(est1, ..., nd = nd)
         return(invisible(x))
       } else {
-        level <- attr(x, "level")
         est2 <- est1
-        est2$est <- est2$est.std
-        est2$ci.lower <- est2$boot.ci.lower
-        est2$ci.upper <- est2$boot.ci.upper
-        est2$se <- est2$boot.se
-        est2$boot.se <- NULL
-        est2$z <- NULL
-        est2$pvalue <- NULL
-        est2$est.std <- NULL
-        est2$boot.ci.lower <- NULL
-        est2$boot.ci.upper <- NULL
         out <- utils::capture.output(print(est2, nd = nd))
         i <- grepl("Parameter Estimates:", out, fixed = TRUE)
         out[i] <- "Standardized Estimates Only"
-        i <- grepl("  Standard errors  ", out, fixed = TRUE)
-        j <- unlist(gregexpr("Bootstrap", out[i]))[1]
-        tmp <- "  Confidence interval"
-        st1 <- paste0(tmp,
-                      paste0(rep(" ", j - nchar(tmp) - 1),
-                             collapse = ""),
-                      "Bootstrap")
-        j <- nchar(out[i])
-        tmp <- "  Confidence Level"
-        tmp2 <- paste0(formatC(level * 100, digits = 1, format = "f"),
-                       "%")
-        st2 <- paste0(tmp,
-                      paste0(rep(" ", j - nchar(tmp) - nchar(tmp2)),
-                             collapse = ""),
-                      tmp2)
-        tmp <- "  Standardization Type"
-        tmp2 <- attr(x, "type")
-        st3 <- paste0(tmp,
-                      paste0(rep(" ", j - nchar(tmp) - nchar(tmp2)),
-                             collapse = ""),
-                      tmp2)
-        out <- c(out[seq_len(which(i))],
-                 st1,
-                 st2,
-                 st3,
-                 out[-seq_len(which(i))])
-        out <- gsub("    Estimate  Std.Err",
-                    "Standardized  Std.Err",
-                    out)
+        out <- gsub_heading(old = "\\s\\s\\s\\sEstimate",
+                            new = "Standardized",
+                            object = out)
+        # i <- grepl("  Standard errors  ", out, fixed = TRUE)
+        # j <- unlist(gregexpr("Bootstrap", out[i]))[1]
+        # tmp <- "  Confidence interval"
+        # st1 <- paste0(tmp,
+        #               paste0(rep(" ", j - nchar(tmp) - 1),
+        #                      collapse = ""),
+        #               "Bootstrap")
+        # j <- nchar(out[i])
+        # tmp <- "  Confidence Level"
+        # tmp2 <- paste0(formatC(level * 100, digits = 1, format = "f"),
+        #                "%")
+        # st2 <- paste0(tmp,
+        #               paste0(rep(" ", j - nchar(tmp) - nchar(tmp2)),
+        #                      collapse = ""),
+        #               tmp2)
+        # tmp <- "  Standardization Type"
+        # tmp2 <- attr(x, "type")
+        # st3 <- paste0(tmp,
+        #               paste0(rep(" ", j - nchar(tmp) - nchar(tmp2)),
+        #                      collapse = ""),
+        #               tmp2)
+        # out <- c(out[seq_len(which(i))],
+        #          st1,
+        #          st2,
+        #          st3,
+        #          out[-seq_len(which(i))])
+        # out <- gsub("    Estimate  Std.Err",
+        #             "Standardized  Std.Err",
+        #             out)
         cat(out, sep = "\n")
         return(invisible(x))
       }
+  }
+
+#' @noRd
+
+merge_attributes <- function(target, source) {
+    tmp1 <- names(attributes(source))
+    tmp2 <- names(attributes(target))
+    tmp3 <- setdiff(tmp1, tmp2)
+    if (length(tmp3) > 0) {
+        for (xx in tmp3) {
+            attr(target, xx) <- attr(source, xx)
+          }
+      }
+    target
+  }
+
+#' @noRd
+
+gsub_heading <- function(old,
+                         new,
+                         object) {
+    i1 <- grepl(old, object)
+    i2 <- grepl("lbci", object)
+    i <- i1 & i2
+    #     Estimate
+    # Standardized
+    for (xx in which(i)) {
+        tmp <- object[i]
+        tmp <- gsub(old, new, tmp)
+        object[i] <- tmp
+      }
+    object
   }

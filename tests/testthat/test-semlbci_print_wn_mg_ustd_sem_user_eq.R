@@ -35,3 +35,18 @@ system.time(
   )
 
 lbci_fit
+
+pars <- c("c2 :=",
+          "f1 ~ f2",
+          "ab :=")
+pars_i <- syntax_to_i(pars, fit)
+system.time(
+    lbci_std <- semlbci(fit,
+                        pars = pars,
+                        method = "wn",
+                        verbose = TRUE,
+                        opts = list(ftol_rel = 1e-6),
+                        standardized = TRUE)
+  )
+
+lbci_std
