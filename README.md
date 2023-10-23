@@ -9,7 +9,7 @@
 [![DOI](https://img.shields.io/badge/doi-10.1080/10705511.2023.2183860-blue.svg)](https://doi.org/10.1080/10705511.2023.2183860)
 <!-- badges: end -->
 
-(Version 0.10.3.4, updated on 2023-10-23, [release history](https://sfcheung.github.io/semlbci/news/index.html))
+(Version 0.10.3.5, updated on 2023-10-23, [release history](https://sfcheung.github.io/semlbci/news/index.html))
 
 # semlbci <img src="man/figures/logo.png" align="right" height="150" />
 
