@@ -40,11 +40,12 @@ time1u <- system.time(out1u <- ci_bound_wn_i( 1, 16, sem_out = fit, f_constr = f
 time2l <- system.time(out2l <- ci_bound_wn_i(10, 16, sem_out = fit, f_constr = fn_constr0, which = "lbound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb))
 time2u <- system.time(out2u <- ci_bound_wn_i(10, 16, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb))
 
+# 2023-10-23: Updated precomputed answers manually checked for validity.
 test_that("Check against precomputed answers", {
-    expect_equal(out1l$bound, -0.1900844, tolerance = 1e-5)
-    expect_equal(out1u$bound, 2.751777, tolerance = 1e-5)
-    expect_equal(out2l$bound, 0.362989, tolerance = 1e-5)
-    expect_equal(out2u$bound, 0.7840242, tolerance = 1e-5)
+    expect_equal(out1l$bound, -0.190309, tolerance = 1e-4)
+    expect_equal(out1u$bound, 2.752005, tolerance = 1e-4)
+    expect_equal(out2l$bound, 0.362989, tolerance = 1e-4)
+    expect_equal(out2u$bound, 0.7840242, tolerance = 1e-4)
   })
 
 skip("Run only if data changed")

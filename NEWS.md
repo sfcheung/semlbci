@@ -1,4 +1,4 @@
-# semlbci 0.10.3.3
+# semlbci 0.10.3.4
 
 - Updated README.md for CRAN release. Identical
   to the CRAN release in code. (0.10.3.1)
@@ -6,6 +6,7 @@
 - Revised an example of `syntax_to_i()`
   for a coming changes to the parser of
   `lavaan` (0.10.3.3).
+- Updated a few tests (0.10.3.4).
 
 # semlbci 0.10.3
 
