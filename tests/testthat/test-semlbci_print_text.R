@@ -72,6 +72,11 @@ test_that("print.semlbci, text", {
                         output = "text",
                         sem_out = fit),
                   "lb.lower")
+    expect_output(print(lbci_fit,
+                        output = "text",
+                        sem_out = fit,
+                        se = FALSE),
+                  "lb.lower")
     expect_false(any(grepl("ci.upper",
                      capture.output(print(lbci_fit,
                                       output = "text",

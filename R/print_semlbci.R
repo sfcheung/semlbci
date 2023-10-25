@@ -48,9 +48,15 @@
 #' is `"text"` or `"lavaan"`. If `TRUE`,
 #' only the likelihood-based confidence
 #' intervals (LBCIs) will be printed.
-#' Default is `FALSE`, and LBCIs will be
+#' If `FALSE`, and LBCIs will be
 #' printed alongside the confidence
-#' intervals by `lavaan`.
+#' intervals by `lavaan`. Its default
+#' value depend on the argument
+#' `drop_no_lbci`. If `drop_no_lbci`
+#' is `TRUE`, then `lbci_only` is
+#' `TRUE` by default. If `drop_no_lbci`
+#' is `FALSE`, then `lbci_only` is
+#' `FALSE` by default.
 #'
 #' @param ratio_digits The number of
 #' digits after the decimal points
@@ -58,6 +64,39 @@
 #' the confidence limits
 #' to the point estimates. Default is
 #' 1.
+#'
+#' @param se Logical. To be passed to
+#' [lavaan::parameterEstimates()].
+#' Whether standard error (S.E.) will be
+#' printed. Only applicable if `output`
+#' is `"text"` or `"lavaan"`.
+#'
+#' @param zstat Logical. To be passed to
+#' [lavaan::parameterEstimates()].
+#' Whether z-values will be printed.
+#' Only applicable if `output` is
+#' `"text"` or `"lavaan"`.
+#'
+#' @param pvalue Logical. To be passed
+#' to [lavaan::parameterEstimates()].
+#' Whether p-values will be printed.
+#' Only applicable if `output` is
+#' `"text"` or `"lavaan"`.
+#'
+#' @param boot.ci.type Logical. To be
+#' passed to
+#' [lavaan::parameterEstimates()]. The
+#' type of bootstrap confidence
+#' intervals to be printed if
+#' bootstrapping confidence intervals
+#' available. Possible values are
+#' `"norm"`, `"basic"`, `"perc"`, or
+#' `"bca.simple"`. The default value is
+#' `"perc"`. Refer to the help of
+#' [lavaan::parameterEstimates()] for
+#' further information. Only applicable
+#' if `output` is `"text"` or
+#' `"lavaan"`.
 #'
 #' @param ... Other arguments. They will be ignored.
 #'
@@ -95,7 +134,10 @@
 #'
 #' print(lbci_med, output = "lavaan", sem_out = fit_med)
 #'
-#' print(lbci_med, output = "lavaan", sem_out = fit_med, lbci_only = TRUE)
+#' print(lbci_med, output = "lavaan", sem_out = fit_med, lbci_only = FALSE)
+#'
+#' print(lbci_med, output = "lavaan", sem_out = fit_med, lbci_only = FALSE,
+#'       se = FALSE, zstat = FALSE, pvalue = FALSE)
 #'
 #' @export
 
@@ -108,8 +150,12 @@ print.semlbci <- function(x,
                           drop_no_lbci = TRUE,
                           output = c("table", "text", "lavaan"),
                           sem_out = NULL,
-                          lbci_only = FALSE,
+                          lbci_only = drop_no_lbci,
                           ratio_digits = 1,
+                          se = TRUE,
+                          zstat = TRUE,
+                          pvalue = TRUE,
+                          boot.ci.type = "perc",
                           ...) {
     output <- match.arg(output)
     if (isTRUE(output == "lavaan")) output <- "text"
@@ -134,6 +180,10 @@ print.semlbci <- function(x,
                            verbose = verbose,
                            verbose_if_needed = verbose_if_needed,
                            ratio_digits = ratio_digits,
+                           se = se,
+                           zstat = zstat,
+                           pvalue = pvalue,
+                           boot.ci.type = boot.ci.type,
                            ...)
         return(invisible(x))
       }
@@ -325,6 +375,10 @@ print_semlbci_text <- function(x,
                                verbose = FALSE,
                                verbose_if_needed = TRUE,
                                ratio_digits = 1,
+                               se = TRUE,
+                               zstat = TRUE,
+                               pvalue = TRUE,
+                               boot.ci.type = "perc",
                                ...) {
     # Adapted from lavaan::print.lavaan.parameterEstimates()
     num_format  <- paste("%", max(8L, nd + 5L), ".", nd, "f", sep = "")
@@ -352,7 +406,11 @@ print_semlbci_text <- function(x,
                                        standardized = FALSE,
                                        level = ciperc,
                                        output = "text",
-                                       header = TRUE)
+                                       header = TRUE,
+                                       se = se,
+                                       zstat = zstat,
+                                       pvalue = pvalue,
+                                       boot.ci.type = boot.ci.type)
     est1 <- est0
     est1$id <- seq_len(nrow(est1))
     if (std) {
@@ -488,10 +546,10 @@ print_semlbci_text <- function(x,
     colnames(est2) <- tmp
     out <- utils::capture.output(print(est2, nd = nd))
     if (annotation) {
-        i0 <- grepl("  Standard errors  ", out, fixed = TRUE)
-        tmp <- out
-        tmp[seq_len(which(i0))] <- "%%"
-        i1 <- match("", tmp)
+        # i0 <- grepl("  Standard errors  ", out, fixed = TRUE)
+        # tmp <- out
+        # tmp[seq_len(which(i0))] <- "%%"
+        # i1 <- match("", tmp)
         tmp0 <- "- lb.lower, lb.upper: "
         tmp <- paste0(tmp0,
                       "The lower and upper likelihood-based ",
@@ -538,9 +596,10 @@ print_semlbci_text <- function(x,
             msg <- c(msg, tmp)
           }
         msg <- c("Likelihood-Based CI Notes:", "", msg)
-        out <- append(out,
-                      msg,
-                      after = i1)
+        # out <- append(out,
+        #               msg,
+        #               after = i1)
+        out <- c(msg, out)
       }
     if (!std) {
         cat(out, sep = "\n")
