@@ -13,7 +13,7 @@ template:
     # primary: "#000055"
     base_font: {google: "Inter"}
     heading_font: {google: "Inter"}
-    code_font: {google: "Martian Mono"}
+    code_font: {google: "Cousine"}
   includes:
     in_header: <meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnORPBsWxqZwmzuGpK-TeVRLBjQ" />
 
