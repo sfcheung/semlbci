@@ -1,11 +1,11 @@
-# semlbci 0.10.3.6
+# semlbci 0.10.4
 
 ## New Feature
 
 - The print method of the output of
   `semlbci()` (`print.semlbci()`) can
   print the results in a `lavaan`-like
-  format. (0.10.3.6).
+  format. (0.10.4).
 
 ## Miscellaneous
 
@@ -16,6 +16,7 @@
   for a coming changes to the parser of
   `lavaan` (0.10.3.3).
 - Updated a few tests (0.10.3.4, 0.10.3.5).
+- Finalized to 0.10.4.
 
 # semlbci 0.10.3
 
