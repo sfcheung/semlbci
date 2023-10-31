@@ -12,6 +12,14 @@
   verbose = FALSE,
   verbose_if_needed = TRUE,
   drop_no_lbci = TRUE,
+  output = c("table", "text", "lavaan"),
+  sem_out = NULL,
+  lbci_only = drop_no_lbci,
+  ratio_digits = 1,
+  se = TRUE,
+  zstat = TRUE,
+  pvalue = TRUE,
+  boot.ci.type = "perc",
   ...
 )
 }
@@ -37,6 +45,74 @@ is \code{TRUE}.}
 
 \item{drop_no_lbci}{If \code{TRUE}, parameters without LBCIs will be
 removed. Default is \code{TRUE}.}
+
+\item{output}{The type of printout.
+If \code{"table"}, the default, the
+results will be printed in a table.
+If \code{"text"} or \code{"lavaan"}, then the
+results will be printed in the
+\code{lavaan} style, as in the \code{\link[=summary]{summary()}}
+method for the output of \code{lavaan}.}
+
+\item{sem_out}{If \code{output} is
+\code{"text"} or \code{"lavaan"}, the original
+output of \code{lavaan} used in calling
+\code{\link[=semlbci]{semlbci()}} needs to be supplied
+to this argument.}
+
+\item{lbci_only}{Used only if \code{output}
+is \code{"text"} or \code{"lavaan"}. If \code{TRUE},
+only the likelihood-based confidence
+intervals (LBCIs) will be printed.
+If \code{FALSE}, and LBCIs will be
+printed alongside the confidence
+intervals by \code{lavaan}. Its default
+value depend on the argument
+\code{drop_no_lbci}. If \code{drop_no_lbci}
+is \code{TRUE}, then \code{lbci_only} is
+\code{TRUE} by default. If \code{drop_no_lbci}
+is \code{FALSE}, then \code{lbci_only} is
+\code{FALSE} by default.}
+
+\item{ratio_digits}{The number of
+digits after the decimal points
+for the ratios of distance from
+the confidence limits
+to the point estimates. Default is
+1.}
+
+\item{se}{Logical. To be passed to
+\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}.
+Whether standard error (S.E.) will be
+printed. Only applicable if \code{output}
+is \code{"text"} or \code{"lavaan"}.}
+
+\item{zstat}{Logical. To be passed to
+\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}.
+Whether z-values will be printed.
+Only applicable if \code{output} is
+\code{"text"} or \code{"lavaan"}.}
+
+\item{pvalue}{Logical. To be passed
+to \code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}.
+Whether p-values will be printed.
+Only applicable if \code{output} is
+\code{"text"} or \code{"lavaan"}.}
+
+\item{boot.ci.type}{Logical. To be
+passed to
+\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}. The
+type of bootstrap confidence
+intervals to be printed if
+bootstrapping confidence intervals
+available. Possible values are
+\code{"norm"}, \code{"basic"}, \code{"perc"}, or
+\code{"bca.simple"}. The default value is
+\code{"perc"}. Refer to the help of
+\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}} for
+further information. Only applicable
+if \code{output} is \code{"text"} or
+\code{"lavaan"}.}
 
 \item{...}{Other arguments. They will be ignored.}
 }
@@ -75,6 +151,15 @@ print(lbci_med, time = TRUE)
 print(lbci_med, annotation = FALSE)
 
 print(lbci_med, digits = 4)
+
+# Text output
+
+print(lbci_med, output = "lavaan", sem_out = fit_med)
+
+print(lbci_med, output = "lavaan", sem_out = fit_med, lbci_only = FALSE)
+
+print(lbci_med, output = "lavaan", sem_out = fit_med, lbci_only = FALSE,
+      se = FALSE, zstat = FALSE, pvalue = FALSE)
 
 }
 \seealso{

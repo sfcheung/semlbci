@@ -1,4 +1,13 @@
-# semlbci 0.10.3.5
+# semlbci 0.10.3.6
+
+## New Feature
+
+- The print method of the output of
+  `semlbci()` (`print.semlbci()`) can
+  print the results in a `lavaan`-like
+  format. (0.10.3.6).
+
+## Miscellaneous
 
 - Updated README.md for CRAN release. Identical
   to the CRAN release in code. (0.10.3.1)
