@@ -1,7 +1,7 @@
 ---
 title: "Get Started"
 author: "Shu Fai Cheung"
-date: "2023-05-04"
+date: "2023-10-31"
 output:
   rmarkdown::html_vignette
 vignette: >
@@ -54,6 +54,8 @@ head(dat)
 #> 5 -0.9628162  -4.015469 -7.288511
 #> 6 -1.0749302 -11.538140 -4.153572
 library(lavaan)
+#> This is lavaan 0.6-16
+#> lavaan is FREE software! Please report any bugs.
 mod <-
 "
 m ~ a*x
@@ -76,7 +78,7 @@ This is the summary:
 
 ```r
 summary(fit, standardized = TRUE)
-#> lavaan 0.6.15 ended normally after 1 iteration
+#> lavaan 0.6.16 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -179,6 +181,56 @@ and the LBCI is
 to
 2.525.
 
+### Customizing the printout
+
+For users familiar with the column names,
+the annotation can be disabled by calling `print()`
+and add `annotation = FALSE`:
+
+
+```r
+print(out, annotation = FALSE)
+#> 
+#> Results:
+#>   id lhs op rhs label   est lbci_lb lbci_ub    lb    ub cl_lb cl_ub
+#> 1  1   m  ~   x     a 1.676   0.828   2.525 0.832 2.520 0.950 0.950
+#> 2  2   y  ~   m     b 0.535   0.391   0.679 0.391 0.679 0.950 0.950
+```
+
+The results can also be printed in a `lavaan`-like
+format by calling `print()`, setting `sem_out`
+to the original fit object (`fit` in this example),
+and add  `output = "lavaan"`:
+
+
+```r
+print(out,
+      sem_out = fit,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
+#> 
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Parameter Estimates:
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> Regressions:
+#>                    Estimate  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>   m ~                                                                   
+#>     x          (a)    1.676    0.431    3.891    0.000    0.828    2.525
+#>   y ~                                                                   
+#>     m          (b)    0.535    0.073    7.300    0.000    0.391    0.679
+```
+
+By default, the original confidence intervals
+will not be printed. See the
+help page of `print.semlbci()` for other
+options available.
+
 ## Find the LBCI for a User-Defined Parameter
 
 To find the LBCI for a user-defined
@@ -192,11 +244,23 @@ after `:=` will be ignored by `semlbci()`.
 ```r
 out <- semlbci(sem_out = fit,
                pars = c("ab := "))
-print(out, annotation = FALSE)
+print(out,
+      sem_out = fit,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
 #> 
-#> Results:
-#>   id lhs op rhs label   est lbci_lb lbci_ub    lb    ub cl_lb cl_ub
-#> 6  6  ab := a*b    ab 0.897   0.427   1.464 0.385 1.409 0.950 0.950
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Parameter Estimates:
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> Defined Parameters:
+#>                    Estimate  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>     ab                0.897    0.261    3.434    0.001    0.427    1.464
 ```
 
 In this example, the point estimate of
@@ -226,13 +290,34 @@ out <- semlbci(sem_out = fit,
                pars = c("y ~ m",
                         "m ~ x"),
                standardized = TRUE)
-print(out, annotation = FALSE)
+print(out,
+      sem_out = fit,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
 #> 
-#> Results:
-#>   lhs op rhs id label est.std lbci_lb lbci_ub    lb    ub cl_lb cl_ub
-#> 1   m  ~   x  1     a   0.265   0.133   0.389 0.136 0.394 0.950 0.950
-#> 2   y  ~   m  2     b   0.459   0.342   0.561 0.349 0.568 0.950 0.950
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Standardized Estimates Only
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> Regressions:
+#>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>   m ~                                                                   
+#>     x          (a)    0.265    0.066    4.035    0.000    0.133    0.389
+#>   y ~                                                                   
+#>     m          (b)    0.459    0.056    8.215    0.000    0.342    0.561
 ```
+
+If LBCIs are for the standardized solution
+and `output` set to `"lavaan"` when
+printing the results, the parameter
+estimates, standard errors, *z*-values,
+and *p*-values are those from the
+standardized solution.
 
 The LBCIs for standardized user-defined
 parameters can be requested similarly.
@@ -242,11 +327,23 @@ parameters can be requested similarly.
 out <- semlbci(sem_out = fit,
                pars = c("ab :="),
                standardized = TRUE)
-print(out, annotation = FALSE)
+print(out,
+      sem_out = fit,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
 #> 
-#> Results:
-#>   lhs op rhs id label est.std lbci_lb lbci_ub    lb    ub cl_lb cl_ub
-#> 6  ab := a*b  6    ab   0.122   0.059   0.194 0.054 0.189 0.950 0.950
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Standardized Estimates Only
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> Defined Parameters:
+#>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>     ab                0.122    0.034    3.538    0.000    0.059    0.194
 ```
 
 # Basic Arguments in `semlbci()`
@@ -418,15 +515,35 @@ visual ability and textual ability:
 ```r
 fcov <- semlbci(fit_cfa,
                 pars = c("visual ~~ textual"))
-print(fcov, annotation = FALSE)
+print(fcov,
+      sem_out = fit_cfa,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
 #> 
-#> Results:
-#>    id    lhs op     rhs group label   est lbci_lb lbci_ub    lb    ub cl_lb
-#> 22 22 visual ~~ textual     1       0.416   0.221   0.654 0.225 0.606 0.950
-#> 58 58 visual ~~ textual     2       0.437   0.263   0.663 0.243 0.631 0.950
-#>    cl_ub
-#> 22 0.950
-#> 58 0.950
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Parameter Estimates:
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> 
+#> Group 1 [Pasteur]:
+#> 
+#> Covariances:
+#>                    Estimate  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>   visual ~~                                                             
+#>     textual           0.416    0.097    4.271    0.000    0.221    0.654
+#> 
+#> 
+#> Group 2 [Grant-White]:
+#> 
+#> Covariances:
+#>                    Estimate  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>   visual ~~                                                             
+#>     textual           0.437    0.099    4.423    0.000    0.263    0.663
 ```
 
 This is the LBCI for correlation
@@ -438,16 +555,40 @@ ability:
 fcor <- semlbci(fit_cfa,
                 pars = c("visual ~~ textual"),
                 standardized = TRUE)
-print(fcor, annotation = FALSE)
+print(fcor,
+      sem_out = fit_cfa,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
 #> 
-#> Results:
-#>       lhs op     rhs group id label est.std lbci_lb lbci_ub    lb    ub cl_lb
-#> 22 visual ~~ textual     1 22         0.485   0.291   0.640 0.315 0.654 0.950
-#> 58 visual ~~ textual     2 58         0.540   0.357   0.692 0.373 0.708 0.950
-#>    cl_ub
-#> 22 0.950
-#> 58 0.950
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Standardized Estimates Only
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> 
+#> Group 1 [Pasteur]:
+#> 
+#> Covariances:
+#>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>   visual ~~                                                             
+#>     textual           0.485    0.087    5.601    0.000    0.291    0.640
+#> 
+#> 
+#> Group 2 [Grant-White]:
+#> 
+#> Covariances:
+#>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>   visual ~~                                                             
+#>     textual           0.540    0.086    6.317    0.000    0.357    0.692
 ```
+
+Note that the example above can take more
+than one minute to one if parallel
+processing is not enabled.
 
 ## Robust LBCI
 
@@ -471,13 +612,23 @@ fit_robust <- sem(mod, simple_med,
 fit_lbci_ab_robust <- semlbci(fit_robust,
                               pars = "ab := ",
                               robust = "satorra.2000")
-print(fit_lbci_ab_robust, annotation = FALSE)
+print(fit_lbci_ab_robust,
+      sem_out = fit_robust,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
 #> 
-#> Results:
-#>   id lhs op rhs label   est lbci_lb lbci_ub    lb    ub cl_lb cl_ub
-#> 6  6  ab := a*b    ab 0.897   0.353   1.571 0.299 1.495 0.950 0.950
-#>         robust
-#> 6 satorra.2000
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Parameter Estimates:
+#> 
+#>   Standard errors                             Sandwich
+#>   Information bread                           Observed
+#>   Observed information based on                Hessian
+#> 
+#> Defined Parameters:
+#>                    Estimate  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>     ab                0.897    0.305    2.941    0.003    0.353    1.571
 ```
 
 ## Latent level parameters

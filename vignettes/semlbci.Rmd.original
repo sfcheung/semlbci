@@ -120,6 +120,32 @@ and the LBCI is
 to
 `r formatC(out[out$id == 1, "lbci_ub"], 3, format = "f")`.
 
+### Customizing the printout
+
+For users familiar with the column names,
+the annotation can be disabled by calling `print()`
+and add `annotation = FALSE`:
+
+```{r}
+print(out, annotation = FALSE)
+```
+
+The results can also be printed in a `lavaan`-like
+format by calling `print()`, setting `sem_out`
+to the original fit object (`fit` in this example),
+and add  `output = "lavaan"`:
+
+```{r}
+print(out,
+      sem_out = fit,
+      output = "lavaan")
+```
+
+By default, the original confidence intervals
+will not be printed. See the
+help page of `print.semlbci()` for other
+options available.
+
 ## Find the LBCI for a User-Defined Parameter
 
 To find the LBCI for a user-defined
@@ -132,7 +158,9 @@ after `:=` will be ignored by `semlbci()`.
 ```{r}
 out <- semlbci(sem_out = fit,
                pars = c("ab := "))
-print(out, annotation = FALSE)
+print(out,
+      sem_out = fit,
+      output = "lavaan")
 ```
 
 In this example, the point estimate of
@@ -161,8 +189,17 @@ out <- semlbci(sem_out = fit,
                pars = c("y ~ m",
                         "m ~ x"),
                standardized = TRUE)
-print(out, annotation = FALSE)
+print(out,
+      sem_out = fit,
+      output = "lavaan")
 ```
+
+If LBCIs are for the standardized solution
+and `output` set to `"lavaan"` when
+printing the results, the parameter
+estimates, standard errors, *z*-values,
+and *p*-values are those from the
+standardized solution.
 
 The LBCIs for standardized user-defined
 parameters can be requested similarly.
@@ -171,7 +208,9 @@ parameters can be requested similarly.
 out <- semlbci(sem_out = fit,
                pars = c("ab :="),
                standardized = TRUE)
-print(out, annotation = FALSE)
+print(out,
+      sem_out = fit,
+      output = "lavaan")
 ```
 
 # Basic Arguments in `semlbci()`
@@ -328,7 +367,9 @@ visual ability and textual ability:
 ```{r}
 fcov <- semlbci(fit_cfa,
                 pars = c("visual ~~ textual"))
-print(fcov, annotation = FALSE)
+print(fcov,
+      sem_out = fit_cfa,
+      output = "lavaan")
 ```
 
 This is the LBCI for correlation
@@ -339,8 +380,14 @@ ability:
 fcor <- semlbci(fit_cfa,
                 pars = c("visual ~~ textual"),
                 standardized = TRUE)
-print(fcor, annotation = FALSE)
+print(fcor,
+      sem_out = fit_cfa,
+      output = "lavaan")
 ```
+
+Note that the example above can take more
+than one minute to one if parallel
+processing is not enabled.
 
 ## Robust LBCI
 
@@ -363,7 +410,9 @@ fit_robust <- sem(mod, simple_med,
 fit_lbci_ab_robust <- semlbci(fit_robust,
                               pars = "ab := ",
                               robust = "satorra.2000")
-print(fit_lbci_ab_robust, annotation = FALSE)
+print(fit_lbci_ab_robust,
+      sem_out = fit_robust,
+      output = "lavaan")
 ```
 
 ## Latent level parameters
