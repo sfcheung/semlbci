@@ -111,7 +111,7 @@ set_constraint <- function(sem_out, ciperc = .95) {
             if (is_error) {
                 fit2_gradient <- rbind(rep(-Inf, length(param)))
                 fit2_jacobian <- rbind(eq_jac,
-                                        rep(-InfA, length(param)))
+                                        rep(-Inf, length(param)))
                 out <- list(objective = Inf,
                             gradient = fit2_gradient,
                             constraints = Inf,
@@ -124,11 +124,11 @@ set_constraint <- function(sem_out, ciperc = .95) {
                             fit2_jacobian <- rbind(eq_jac,
                                                   lavaan::lavTech(fit2, "gradient"))
                     } else {
-                        suppressWarnings(fit2_gradient <-
-                                        rbind(lavaan::lavTech(fit2, "gradient")))
+                        fit2_gradient <- tryCatch(suppressWarnings(rbind(lavaan::lavTech(fit2, "gradient"))),
+                                                  error = function(e) rep(-Inf, length(param)))
                         suppressWarnings(fit2_jacobian <-
                                         rbind(eq_jac,
-                                              lavaan::lavTech(fit2, "gradient")))
+                                              fit2_gradient))
                     }
               }
             list(
@@ -137,7 +137,7 @@ set_constraint <- function(sem_out, ciperc = .95) {
                   constraints = rbind(t(t(eq_out)),
                                    lavaan::lavTech(fit2, "optim")$fx - target),
                   jacobian = fit2_jacobian,
-                  parameterTable = lavaan::parameterTable(fit2))
+                  parameterTable = lavaan::fit2_gradient)
           }
       } else {
         # The model has no equality constraint
@@ -185,10 +185,10 @@ set_constraint <- function(sem_out, ciperc = .95) {
                         fit2_gradient <- rbind(lavaan::lavTech(fit2, "gradient"))
                         fit2_jacobian <- rbind(lavaan::lavTech(fit2, "gradient"))
                     } else {
-                        suppressWarnings(fit2_gradient <-
-                                        rbind(lavaan::lavTech(fit2, "gradient")))
+                        fit2_gradient <- tryCatch(suppressWarnings(rbind(lavaan::lavTech(fit2, "gradient"))),
+                                                  error = function(e) rep(-Inf, length(param)))
                         suppressWarnings(fit2_jacobian <-
-                                        rbind(lavaan::lavTech(fit2, "gradient")))
+                                        rbind(fit2_gradient))
                     }
               }
             list(
