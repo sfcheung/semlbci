@@ -1,3 +1,10 @@
+# semlbci 0.10.4.1
+
+## Miscellaneous
+
+- Suppressed a harmless warning in a
+  test. (0.10.4.1)
+
 # semlbci 0.10.4
 
 ## New Feature
