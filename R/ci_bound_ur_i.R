@@ -550,7 +550,6 @@ ci_bound_ur <- function(sem_out,
             r1$run(function(x) {sem_out_userp_run <<- x},
                   args = list(x = sem_out_userp_run))
             if (progress) {
-                browser()
                 optimize_out <- r1$call(function(f,
                                                  interval,
                                                  alpha,
