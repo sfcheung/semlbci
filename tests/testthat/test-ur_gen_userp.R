@@ -35,7 +35,7 @@ test_that("Indirect effect", {
 
 # gen_sem_out_userp
 
-skip("To be run in an interactive sessi")
+skip("To be run in an interactive session")
 
 test_that("gen_sem_out_userp", {
     userp1234 <- gen_userp(func = ind, sem_out = fit)
