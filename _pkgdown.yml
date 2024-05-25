@@ -66,6 +66,7 @@ reference:
   desc: Low level functions for advanced users.
 - contents:
   - ci_bound_wn_i
+  - ci_bound_ur_i
   - ci_i_one
   - set_constraint
   - print.cibound
