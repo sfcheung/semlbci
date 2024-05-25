@@ -44,7 +44,7 @@
 #' is .95, or 95%.
 #'
 #' @noRd
-
+# CHECKED: The only change is the level argument
 uniroot_interval <- function(sem_out,
                              func,
                              which,
@@ -76,63 +76,42 @@ uniroot_interval <- function(sem_out,
 #' @noRd
 # Generate a function to extract a parameter
 # To be used by [ci_bound_ur_i()].
-
+# CHECKED: Reverted to the experimental version
 gen_est_i <- function(i,
                       sem_out,
-                      standardized = FALSE,
-                      std_method = c("lavaan", "internal")) {
-    std_method <- match.arg(std_method)
+                      standardized = FALSE) {
     ptable <- lavaan::parameterTable(sem_out)
+    # i_user <- (ptable$free > 0) | (ptable$user > 0)
+    # i_est <- which(which(i_user) == i)
     # From the help page of lavaan-class object,
     # type = "user" should return *all* parameters
     # in the parameter table, including equality constraints.
     # Therefore, the row number should be equal to the order
     # in the vector of coefficients.
+    i_user <- i
     i_est <- i
     is_def <- (ptable$op[i] == ":=")
     i_lhs <- (ptable$lhs[i])
     i_rhs <- (ptable$rhs[i])
     i_op <- ptable$op[i]
     i_gp <- ptable$group[i]
-    i_free <- (ptable$free > 0)
-    def_label <- ifelse(is_def,
-                        ptable$label[i],
-                        NA)
     if (standardized) {
         if (is_def) {
-            if (std_method == "internal") {
-                # Does not yet work
-                out <- function(object) {
-                    # Just in case
-                    force(i_est)
-                    force(def_label)
-                    force(ptable)
-                    force(i_free)
-                    force(sem_out)
-                    object@implied <- lavaan::lav_model_implied(object@Model)
-                    est <- lavaan::lav_model_get_parameters(object@Model)
-                    std <- std_lav(param = est, sem_out = sem_out)[i_free]
-                    est_def <- object@Model@def.function(std)[def_label]
-                    unname(est_def)
-                  }
-              }
-            if (std_method == "lavaan") {
-                out <- function(object) {
-                    # Just in case
-                    force(i_est)
-                    std <- lavaan::standardizedSolution(object,
-                                    est = lavaan::lav_model_get_parameters(object@Model, type = "user"),
-                                    GLIST = object@Model@GLIST,
-                                    se = FALSE,
-                                    zstat = FALSE,
-                                    pvalue = FALSE,
-                                    ci = FALSE,
-                                    remove.eq = FALSE,
-                                    remove.ineq = FALSE,
-                                    remove.def = FALSE,
-                                    type = "std.all")
-                    unname(std[i_est, "est.std"])
-                  }
+            out <- function(object) {
+                # Just in case
+                force(i_est)
+                std <- lavaan::standardizedSolution(object,
+                                est = lavaan::lav_model_get_parameters(object@Model, type = "user"),
+                                GLIST = object@Model@GLIST,
+                                se = FALSE,
+                                zstat = FALSE,
+                                pvalue = FALSE,
+                                ci = FALSE,
+                                remove.eq = FALSE,
+                                remove.ineq = FALSE,
+                                remove.def = FALSE,
+                                type = "std.all")
+                unname(std[i_est, "est.std"])
               }
           } else {
             out <- function(object) {
@@ -217,7 +196,7 @@ gen_est_i <- function(i,
 #' fixed to the target value.
 #'
 #' @noRd
-
+# CHECKED: Identical to the experimental version
 sem_out_userp_run <- function(target,
                               object,
                               verbose = FALSE,
@@ -244,8 +223,6 @@ sem_out_userp_run <- function(target,
                                                    envir = globalenv())},
                args = list(userp = userp,
                            userp_name = userp_name))
-        # TODO:
-        # - No need to export when gen_fit_userp is in the package
         r1$run(function(x) {sem_out_userp <<- x},
                args = list(object$sem_out_userp))
         out <- r1$run(function(...) {
@@ -316,7 +293,7 @@ sem_out_userp_run <- function(target,
 #' user defined parameter in the model.
 #'
 #' @noRd
-
+# CHECKED: Identical to the experimental version
 add_func <- function(func,
                      sem_out,
                      userp_name = "semlbciuserp1234",
@@ -334,11 +311,11 @@ add_func <- function(func,
                        userp_name = userp_name))
     # TODO:
     # - Mo need to export when gen_fit_userp is in the package
-    r1$run(function(x) {gen_sem_out_userp <<- x},
-           args = list(gen_sem_out_userp))
+    # r1$run(function(x) {gen_sem_out_userp <<- x},
+    #        args = list(gen_sem_out_userp))
     # Generate sem_out_userp in the child process
     fit_i <- r1$run(function(...) {
-                      gen_sem_out_userp(...)
+                      semlbci::gen_sem_out_userp(...)
                     }, args = list(userp = userp,
                                    sem_out = sem_out,
                                    userp_name = userp_name,
@@ -354,8 +331,9 @@ add_func <- function(func,
 
 # Generate a function that:
 # - refits the model with the user-parameter fixed to a target value.
-
+# CHECKED: Identical to the experimental version
 # For add_fun using callr
+#' @export
 gen_sem_out_userp <- function(userp,
                               sem_out,
                               userp_name = "semlbciuserp1234",
@@ -549,7 +527,7 @@ gen_sem_out_userp <- function(userp,
 #' which is the output of `func`.
 #'
 #' @noRd
-
+# CHECKED: Identical to the experimental version
 gen_userp <- function(func,
                       sem_out) {
     stopifnot(is.function(func))

@@ -1,6 +1,8 @@
-skip("WIP")
+skip_on_cran()
 
-# Not Ready
+# Ready
+
+# After skip("Long test"): WIP
 
 library(testthat)
 library(lavaan)
@@ -19,72 +21,74 @@ fit_gp <- sem(HS.model, data = HolzingerSwineford1939,
 
 # Unstandardized
 
-ci_lb <- ci_bound_ur_i(i = 9,
-                       sem_out = fit,
-                       which = "lbound",
-                       opts = list(progress = TRUE))
-ci_lb
+# One group
 
 est_i <- gen_est_i(i = 9, sem_out = fit)
 system.time(
 ci_lb <- ci_bound_ur(sem_out = fit,
-                      func = est_i,
-                      which = "lbound",
-                      progress = TRUE)
+                     func = est_i,
+                     which = "lbound",
+                     user_callr = FALSE)
 )
 system.time(
 ci_ub <- ci_bound_ur(sem_out = fit,
-                      func = est_i,
-                      which = "ubound",
-                      progress = TRUE)
+                     func = est_i,
+                     which = "ubound",
+                     user_callr = TRUE)
 )
-ci_lb$lrt
-ci_ub$lrt
-c(ci_lb$bound, ci_ub$bound)
-parameterEstimates(fit)[9, ]
+expect_equal(ci_lb$lrt[2, "Pr(>Chisq)"],
+             .05,
+             tolerance = 1e-3)
+expect_equal(ci_ub$lrt[2, "Pr(>Chisq)"],
+             .05,
+             tolerance = 1e-3)
 
 est_i <- gen_est_i(i = 25, sem_out = fit)
 system.time(
 ci_lb <- ci_bound_ur(sem_out = fit,
                       func = est_i,
                       which = "lbound",
-                      progress = TRUE)
+                      use_callr = TRUE)
 )
 system.time(
 ci_ub <- ci_bound_ur(sem_out = fit,
                       func = est_i,
                       which = "ubound",
-                      progress = TRUE)
+                      user_callr = FALSE)
 )
+expect_equal(round(ci_lb$lrt[2, "Pr(>Chisq)"], 2),
+             .05,
+             tolerance = 1e-2)
+expect_equal(ci_ub$lrt[2, "Pr(>Chisq)"],
+             .05,
+             tolerance = 1e-3)
 
-ci_lbci <- semlbci(sem_out = fit, pars = "ab :=")
+ci_lbci <- semlbci(sem_out = fit, pars = "ab :=", use_pbapply = FALSE)
 
-ci_lb$lrt
-ci_ub$lrt
-round(c(ci_lb$bound, ci_ub$bound), 3)
-round(confint(ci_lbci), 3)
-parameterEstimates(fit)[25, ]
+expect_equal(unname(round(c(ci_lb$bound, ci_ub$bound), 3)),
+             unname(round(unlist(confint(ci_lbci)), 3)))
+
+# Two groups
 
 est_i <- gen_est_i(i = 46, sem_out = fit_gp)
 system.time(
 ci_lb <- ci_bound_ur(sem_out = fit_gp,
                       func = est_i,
                       which = "lbound",
-                      progress = TRUE)
+                      use_callr = FALSE)
 )
 system.time(
 ci_ub <- ci_bound_ur(sem_out = fit_gp,
                       func = est_i,
                       which = "ubound",
-                      progress = TRUE)
+                      use_callr = TRUE)
 )
-ci_lbci <- semlbci(sem_out = fit, pars = "visual ~~ textual", progress = FALSE)
-
-ci_lb$lrt
-ci_ub$lrt
-round(c(ci_lb$bound, ci_ub$bound), 3)
-round(confint(ci_lbci), 3)
-parameterEstimates(fit_gp)[46, ]
+expect_equal(ci_lb$lrt[2, "Pr(>Chisq)"],
+             .05,
+             tolerance = 1e-2)
+expect_equal(ci_ub$lrt[2, "Pr(>Chisq)"],
+             .05,
+             tolerance = 1e-3)
 
 # # Too long to run
 # est_i <- gen_est_i(i = 73, sem_out = fit_gp)
@@ -117,22 +121,30 @@ system.time(
 ci_lb <- ci_bound_ur(sem_out = fit,
                       func = est_i,
                       which = "lbound",
-                      progress = TRUE)
+                      progress = TRUE,
+                      use_callr = FALSE)
 )
 system.time(
 ci_ub <- ci_bound_ur(sem_out = fit,
-                      func = est_i,
-                      which = "ubound",
-                      progress = TRUE)
+                     func = est_i,
+                     which = "ubound",
+                     progress = TRUE,
+                     use_callr = TRUE)
 )
 
 ci_lbci <- semlbci(sem_out = fit, pars = "speed =~ x9", standardized = TRUE)
 
-ci_lb$lrt
-ci_ub$lrt
-c(ci_lb$bound, ci_ub$bound)
-confint(ci_lbci)
-standardizedSolution(fit)[9, ]
+expect_equal(round(ci_lb$lrt[2, "Pr(>Chisq)"], 2),
+             .05,
+             tolerance = 1e-2)
+expect_equal(ci_ub$lrt[2, "Pr(>Chisq)"],
+             .05,
+             tolerance = 1e-2)
+
+expect_equal(unname(round(c(ci_lb$bound, ci_ub$bound), 3)),
+             unname(round(unlist(confint(ci_lbci)), 3)))
+
+# TO WORK
 
 est_i <- gen_est_i(i = 25, sem_out = fit, standardized = TRUE)
 system.time(

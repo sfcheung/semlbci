@@ -519,6 +519,9 @@ ci_bound_ur <- function(sem_out,
                                      d = d)
         bound_start <- attr(interval, "bound_start")
         user_est <- attr(interval, "user_est")
+        if (progress) {
+            cat("\rInitial interval computed.      ")
+          }
       } else {
         bound_start <- NA
         user_est <- NA
@@ -551,26 +554,23 @@ ci_bound_ur <- function(sem_out,
                   args = list(x = sem_out_userp_run))
             if (progress) {
                 optimize_out <- r1$call(function(f,
-                                                 interval,
-                                                 alpha,
-                                                 root_target,
-                                                 global_ok,
-                                                 extendInt,
-                                                 tol,
-                                                 trace,
-                                                 maxiter) {
-                                          tryCatch(stats::uniroot(f = f,
-                                                                  interval = interval,
-                                                                  alpha = alpha,
-                                                                  root_target = root_target,
-                                                                  global_ok = global_ok,
-                                                                  extendInt = extendInt,
-                                                                  tol = tol,
-                                                                  trace = trace,
-                                                                  maxiter = maxiter,
-                                                                  check.conv = TRUE),
-                                                                  error = function(e) e,
-                                                                  warning = function(w) w)
+                                                interval,
+                                                alpha,
+                                                root_target,
+                                                global_ok,
+                                                extendInt,
+                                                tol,
+                                                trace,
+                                                maxiter) {
+                                          stats::uniroot(f = f,
+                                              interval = interval,
+                                              alpha = alpha,
+                                              root_target = root_target,
+                                              global_ok = global_ok,
+                                              extendInt = extendInt,
+                                              tol = tol,
+                                              trace = trace,
+                                              maxiter = maxiter)
                                         },
                                       args = list(f = lrtp_i,
                                                   interval = interval,
@@ -600,18 +600,15 @@ ci_bound_ur <- function(sem_out,
                                                 tol,
                                                 trace,
                                                 maxiter) {
-                                          tryCatch(stats::uniroot(f = f,
-                                                   interval = interval,
-                                                   alpha = alpha,
-                                                   root_target = root_target,
-                                                   global_ok = global_ok,
-                                                   extendInt = extendInt,
-                                                   tol = tol,
-                                                   trace = trace,
-                                                   maxiter = maxiter,
-                                                   check.conv = TRUE),
-                                                   error = function(e) e,
-                                                   warning = function(w) w)
+                                          stats::uniroot(f = f,
+                                              interval = interval,
+                                              alpha = alpha,
+                                              root_target = root_target,
+                                              global_ok = global_ok,
+                                              extendInt = extendInt,
+                                              tol = tol,
+                                              trace = trace,
+                                              maxiter = maxiter)
                                         },
                                       args = list(f = lrtp_i,
                                                   interval = interval,
@@ -625,18 +622,21 @@ ci_bound_ur <- function(sem_out,
               }
           } else {
             # Run locally. Need global_ok == FALSE.
-            optimize_out <- tryCatch(stats::uniroot(lrtp_i,
-                                                    interval = interval,
-                                                    alpha = lrt_alpha,
-                                                    root_target = root_target,
-                                                    global_ok = FALSE,
-                                                    extendInt = uniroot_extendInt,
-                                                    tol = tol,
-                                                    trace = uniroot_trace,
-                                                    maxiter = uniroot_maxiter,
-                                                    check.conv = TRUE),
-                                                    error = function(e) e,
-                                                    warning = function(w) w)
+            if (progress) {
+                cat("\nSearch started ...\n")
+              }
+            optimize_out <- stats::uniroot(lrtp_i,
+                                           interval = interval,
+                                           alpha = lrt_alpha,
+                                           root_target = root_target,
+                                           global_ok = FALSE,
+                                           extendInt = uniroot_extendInt,
+                                           tol = tol,
+                                           trace = uniroot_trace,
+                                           maxiter = uniroot_maxiter)
+            if (progress) {
+                cat("\nSearch finished. Finalize the results ... \n")
+              }
         }
       }
     out_root <- optimize_out$root
