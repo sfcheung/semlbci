@@ -48,4 +48,4 @@ Imports:
 VignetteBuilder: knitr
 Config/testthat/parallel: true
 Config/testthat/edition: 3
-Config/testthat/start-first: semlbci_wn_mg_*
+Config/testthat/start-first: semlbci_wn_mg_*, ur_ci_bound_ur*
