@@ -273,7 +273,8 @@ sem_out_userp_run <- function(target,
 #'
 #' @param fix To be passed to
 #' [gen_sem_out_userp()]. If `TRUE`, the
-#' default, the function generated fix
+#' default, the function generated is
+#' used to fix
 #' the value of `func` to a target value
 #' using an equality constraint. If
 #' `FALSE`, then the function simply
@@ -290,7 +291,7 @@ sem_out_userp_run <- function(target,
 #'
 #' - `userp_name`: The value of
 #' `userp_name`, the label of the
-#' user defined parameter in the model.
+#' user-defined parameter in the model.
 #'
 #' @noRd
 # CHECKED: Identical to the experimental version
@@ -309,10 +310,6 @@ add_func <- function(func,
                                                envir = globalenv())},
            args = list(userp = userp,
                        userp_name = userp_name))
-    # TODO:
-    # - Mo need to export when gen_fit_userp is in the package
-    # r1$run(function(x) {gen_sem_out_userp <<- x},
-    #        args = list(gen_sem_out_userp))
     # Generate sem_out_userp in the child process
     fit_i <- r1$run(function(...) {
                       semlbci::gen_sem_out_userp(...)
@@ -325,23 +322,111 @@ add_func <- function(func,
          userp_name = userp_name)
   }
 
-#' @title Generate a Function to Fix a User-Defined Parameter
-
-#' @noRd
-
+#' @title Generate a Function to Fix a
+#' User-Defined Parameter
+#'
+#' @description Add a function to a
+#' lavaan object as a user-defined
+#' parameter and return a function which
+#' can fix this user-defined parameter
+#' to ba value.
+#'
+#' @details
+#' This function is to be used internally
+#' for generating a function for searching
+#' a likelihood-based confidence bound.
+#'
+#' It is exported because it needs to
+#' be run in an external R process,
+#' usually created by `callr` in other
+#' functions, such as [add_func()].
+#'
+#' @param userp A function that receives
+#' a `lavaan` object and returns a
+#' scalars.
+#'
+#' @param userp_name The name of the
+#' function `userp` to be used in the
+#' `lavaan` model. It does not have to
+#' be the name of the function in
+#' `userp`. Should be changed only if it
+#' conflicts with another object in the
+#' global environment, which should not
+#' happen if the model is always fitted
+#' in a clean R session.
+#'
+#' @param sem_out A `lavaan`-class object,
+#' to which the function will be added
+#' as a user-defined parameter.
+#'
+#' @param fix If `TRUE`, the default,
+#' the function generated is used to fix
+#' the value of `userp` to a target
+#' value using an equality constraint.
+#' If `FALSE`, then the function simply
+#' fits the model to the data.
+#'
+#' @param control_args To be passed to
+#' the argument of the same name in
+#' [lavaan::lavaan()]. Default is
+#' `list()`. Can be used to set the
+#' default values of this argument
+#' in the generated function.
+#'
+#' @param iter.max The maximum number of
+#' iteration when the generated function
+#' fit the model. Default is 10000.
+#'
+#' @param max_attempts If the initial
+#' fit with the equality constraint
+#' fails, how many more attempts
+#' will be made by the generated
+#' function. Default is 5.
+#'
+#' @return
+#' If `fix` is `TRUE`, it returns a
+#' function with these arguments:
+#'
+#' - `target`: The value to which the
+#' user-defined parameter will be fixed
+#' to.
+#'
+#' - `verbose`: If `TRUE`, additional
+#' information will be printed when
+#' fitting the model.
+#'
+#' - `control`: The values to be passed
+#' as a list to the argument of the
+#' same name in [lavaan::lavaan()].
+#'
+#' - `seed`: Numeric. If supplied, it
+#' will be used in [set.seed()] to
+#' initialize the random number
+#' generator. Necessary to reproduce
+#' some results because random numbers
+#' are used in some steps in `lavaan`.
+#' If `NULL`, the default, [set.seed()]
+#' will not be called.
+#'
+#' If `fix` is `FALSE, then it returns a
+#' function with optional arguments that
+#' will be ignored, Calling it will
+#' simply fit the modified model to the
+#' data. Useful for getting the value of
+#' the user-defined parameter.
+#'
+#' @export
 # Generate a function that:
 # - refits the model with the user-parameter fixed to a target value.
 # CHECKED: Identical to the experimental version
 # For add_fun using callr
-#' @export
 gen_sem_out_userp <- function(userp,
                               sem_out,
                               userp_name = "semlbciuserp1234",
                               fix = TRUE,
                               control_args = list(),
                               iter.max = 10000,
-                              max_attempts = 5,
-                              verbose = TRUE) {
+                              max_attempts = 5) {
     iter.max <- max(lavaan::lavInspect(sem_out, "optim")$iterations,
                     iter.max)
     ptable <- lavaan::parameterTable(sem_out)
