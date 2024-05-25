@@ -26,7 +26,8 @@ fit02 <- lavaan::sem(mod, dat, estimator = "MLR")
 # fit03 <- lavaan::sem(mod, dat, estimator = "ML", se = "robust")
 # (out_03 <- check_sem_out(fit03))
 
-fit04<- lavaan::sem(mod, dat, estimator = "DWLS")
+# The warning can be ignored because this problem is intentional
+suppressWarnings(fit04 <- lavaan::sem(mod, dat, estimator = "DWLS"))
 (out_04 <- check_sem_out(fit04))
 
 suppressWarnings(fit05 <- lavaan::sem(mod, dat, group = "gp"))
