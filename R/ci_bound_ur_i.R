@@ -289,7 +289,6 @@ ci_bound_ur_i <- function(i = NULL,
                     func = est_i_func,
                     level = ciperc,
                     which = which,
-                    tol = p_tol,
                     uniroot_maxiter = 500)
     ur_opts <- utils::modifyList(ur_opts,
                                  opts)
