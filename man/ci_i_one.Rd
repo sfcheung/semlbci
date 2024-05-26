@@ -38,9 +38,7 @@ standardized solution is to be searched. Default is \code{FALSE}.}
 
 \item{robust}{Whether the LBCI based on robust likelihood ratio
 test is to be found. Only \code{"satorra.2000"} in
-\code{\link[lavaan:lavTestLRT]{lavaan::lavTestLRT()}} is supported for now. If `"none"``, the
-default, then likelihood ratio test based on maximum likelihood
-estimation will be used.}
+\code{\link[lavaan:lavTestLRT]{lavaan::lavTestLRT()}} is supported for now. If \verb{"none"``, the default, then likelihood ratio test based on maximum likelihood estimation will be used. For "ur", }"satorra.2000"\verb{is automatically used if a scaled test statistic is requested in}sem_out`.}
 
 \item{sf_full}{A list with the scaling and shift factors. Ignored
 if \code{robust} is \code{"none"}. If \code{robust} is \code{"satorra.2000"} and

@@ -500,6 +500,13 @@ ci_bound_ur_i <- function(i = NULL,
 #' May include other function in the
 #' future.
 #'
+#' @param lrt_method The method used in
+#' [lavaan::lavTestLRT()]. Default is
+#' `"default"`. It is automatically set
+#'  to `"satorra.2000"` and cannot be
+#' overridden if a scaled test statistic
+#'  is requested in `sem_out`.
+#'
 #' @param tol The tolerance used in
 #' [uniroot()], default is .005.
 #'
@@ -608,6 +615,7 @@ ci_bound_ur <- function(sem_out,
                         interval = NULL,
                         progress = FALSE,
                         method = "uniroot",
+                        lrt_method = "default",
                         tol = .0005, # This is the tolerance in x, not in y
                         root_target = c("chisq", "pvalue"),
                         d = 5,
@@ -621,8 +629,17 @@ ci_bound_ur <- function(sem_out,
     # - Call add_func() to generate a modified lavaan object.
     # - Call sem_out_userp_run() to fix to a value
 
-    # TODO:
-    # - Support satorra.2000
+    # satorra.2000 is used automatically and cannot be overridden
+    scaled <- any(names(lavaan::lavInspect(sem_out, "test")) %in%
+                        c("satorra.bentler",
+                          "yuan.bentler",
+                          "yuan.bentler.mplus",
+                          "mean.var.adjusted",
+                          "scaled.shifted"))
+    if (scaled) {
+        lrt_method <- "satorra.2000"
+      }
+
     which <- match.arg(which)
     root_target <- match.arg(root_target)
     # Only support uniroot() for now
@@ -658,7 +675,9 @@ ci_bound_ur <- function(sem_out,
             sem_out_x <- sem_out_userp_run(target = x,
                                             object = fit_i,
                                             global_ok = global_ok)
-            lrt0 <- lavaan::lavTestLRT(sem_out_x, sem_out)
+            lrt0 <- lavaan::lavTestLRT(sem_out_x,
+                                       sem_out,
+                                       method = lrt_method)
             cname <- switch(root_target,
                             pvalue = "Pr(>Chisq)",
                             chisq = "Chisq diff")
@@ -761,7 +780,9 @@ ci_bound_ur <- function(sem_out,
     out_root <- optimize_out$root
     sem_out_final <- sem_out_userp_run(target = out_root,
                                        object = fit_i)
-    lrt_final <- lavaan::lavTestLRT(sem_out_final, sem_out)
+    lrt_final <- lavaan::lavTestLRT(sem_out_final,
+                                    sem_out,
+                                    method = lrt_method)
     out <- list(bound = out_root,
                 optimize_out = optimize_out,
                 sem_out_bound = sem_out_final,

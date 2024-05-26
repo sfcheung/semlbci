@@ -64,7 +64,9 @@
 #'  test is to be found. Only `"satorra.2000"` in
 #'  [lavaan::lavTestLRT()] is supported for now. If `"none"``, the
 #'  default, then likelihood ratio test based on maximum likelihood
-#'  estimation will be used.
+#'  estimation will be used. For "ur", `"satorra.2000"` is
+#'  automatically used if a scaled test statistic is requested
+#'  in `sem_out`.
 #'
 #' @param sf_full A list with the scaling and shift factors. Ignored
 #'  if `robust` is `"none"`. If `robust` is `"satorra.2000"` and
@@ -174,9 +176,7 @@ ci_i_one <- function(i,
                              ...)
       }
     if (method == "ur") {
-        if (robust == "satorra.2000") {
-            stop("Method 'ur' does not yet support robust LBCI.")
-          }
+        # satorra.2000 is turned on automatically for ur
         b_out <- ci_i_one_ur(i = i,
                              which = which,
                              sem_out = sem_out,

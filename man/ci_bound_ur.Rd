@@ -15,6 +15,7 @@ ci_bound_ur(
   interval = NULL,
   progress = FALSE,
   method = "uniroot",
+  lrt_method = "default",
   tol = 5e-04,
   root_target = c("chisq", "pvalue"),
   d = 5,
@@ -70,6 +71,13 @@ be used in the search. which can only
 be \code{"uniroot"}, the default, for now.
 May include other function in the
 future.}
+
+\item{lrt_method}{The method used in
+\code{\link[lavaan:lavTestLRT]{lavaan::lavTestLRT()}}. Default is
+\code{"default"}. It is automatically set
+to \code{"satorra.2000"} and cannot be
+overridden if a scaled test statistic
+is requested in \code{sem_out}.}
 
 \item{tol}{The tolerance used in
 \code{\link[=uniroot]{uniroot()}}, default is .005.}
