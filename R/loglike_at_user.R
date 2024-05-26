@@ -16,7 +16,7 @@ loglik_user <- function(x,
                       error = function(e) e,
                       warning = function(w) w)
     if (inherits(lrt_x, "warning")) {
-        tmp <- as.character(lrt_msg)
+        tmp <- as.character(lrt_x)
         if (grepl("scaling factor is negative",
                   tmp, fixed = TRUE)) {
             lrt_x <- tryCatch(lavaan::lavTestLRT(sem_out_userp_tmp,
