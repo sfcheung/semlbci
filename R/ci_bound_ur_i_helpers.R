@@ -613,7 +613,11 @@ gen_sem_out_userp <- function(userp,
             fit_new
           }
       } else {
-        out <- function(...) {
+        # The arguments are not used in this version
+        out <- function(target,
+                        verbose = FALSE,
+                        control = list(),
+                        seed = NULL) {
             # Generate a model with the user parameter added.
             # For debugging
             # Just in case ...
