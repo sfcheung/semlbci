@@ -241,9 +241,7 @@ parameters with cautions.
 }
 \examples{
 
-# TODO:
-# - Update the example
-
+library(lavaan)
 data(simple_med)
 dat <- simple_med
 
@@ -253,7 +251,7 @@ m ~ x
 y ~ m
 "
 
-fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+fit_med <- sem(mod, simple_med, fixed.x = FALSE)
 
 out1l <- ci_bound_ur_i(i = 1,
                        sem_out = fit_med,
