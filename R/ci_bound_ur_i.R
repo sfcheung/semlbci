@@ -412,7 +412,8 @@ ci_bound_ur_i <- function(i = NULL,
       }
     out <- list(bound = bound,
                 diag = diag,
-                call = match.call())
+                call = match.call(),
+                method_name = "Root Finding")
     class(out) <- c("cibound", class(out))
     out
   }

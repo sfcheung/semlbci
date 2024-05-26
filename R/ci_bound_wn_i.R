@@ -615,7 +615,8 @@ ci_bound_wn_i <- function(i = NULL,
       }
     out <- list(bound = bound,
                 diag = diag,
-                call = match.call())
+                call = match.call(),
+                method_name = "Wu-Neale-2012")
     class(out) <- c("cibound", class(out))
     out
   }

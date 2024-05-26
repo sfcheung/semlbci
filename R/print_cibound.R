@@ -47,7 +47,7 @@
 print.cibound <- function(x, digits = 5, ...) {
     call_org <- x$call
     out_diag <- x$diag
-    ci_method <- switch(out_diag$method, wn = "Wu-Neale-2012")
+    ci_method <- x$method_name
     if (is.null(out_diag$standardized)) {
         std <- "No"
       } else {
