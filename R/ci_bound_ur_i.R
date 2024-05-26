@@ -151,6 +151,9 @@
 #'
 #' @examples
 #'
+#' # TODO:
+#' # - Update the example
+#'
 #' data(simple_med)
 #' dat <- simple_med
 #'
@@ -168,11 +171,6 @@
 #' out1l
 #'
 #' @export
-
-# Workflow
-# - Input:
-#   - sem_out
-#   - A function which receive parameters and return a value
 
 ci_bound_ur_i <- function(i = NULL,
                           npar = NULL, # Not used by ur
@@ -476,12 +474,28 @@ ci_bound_ur_i <- function(i = NULL,
 #' determining the interval internally.
 #'
 #'
-#' @noRd
-
-# Internal Workflow
-# - Define the function that works on the lavaan object.
-# - Call add_func() to generate a modified lavaan object.
-# - Call sem_out_userp_run() to fix to a value
+#' @examples
+#'
+#' # TODO:
+#' # - Update the example
+#'
+#' data(simple_med)
+#' dat <- simple_med
+#'
+#' mod <-
+#' "
+#' m ~ x
+#' y ~ m
+#' "
+#'
+#' fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
+#'
+#' out1l <- ci_bound_ur_i(i = 1,
+#'                        sem_out = fit_med,
+#'                        which = "lbound")
+#' out1l
+#'
+#' @export
 
 ci_bound_ur <- function(sem_out,
                         func,
@@ -498,6 +512,12 @@ ci_bound_ur <- function(sem_out,
                         uniroot_trace = 0,
                         uniroot_maxiter = 1000,
                         use_callr = TRUE) {
+
+    # Internal Workflow
+    # - Define the function that works on the lavaan object.
+    # - Call add_func() to generate a modified lavaan object.
+    # - Call sem_out_userp_run() to fix to a value
+
     # TODO:
     # - Support satorra.2000
     which <- match.arg(which)

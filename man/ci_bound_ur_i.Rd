@@ -171,6 +171,9 @@ close to an attainable bound.
 }
 \examples{
 
+# TODO:
+# - Update the example
+
 data(simple_med)
 dat <- simple_med
 

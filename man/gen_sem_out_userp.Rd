@@ -105,3 +105,12 @@ be run in an external R process,
 usually created by \code{callr} in other
 functions, such as \code{\link[=add_func]{add_func()}}.
 }
+\examples{
+
+# TODO:
+# - Add an example
+data(simple_med)
+dat <- simple_med
+
+
+}

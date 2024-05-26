@@ -420,6 +420,15 @@ add_func <- function(func,
 #' data. Useful for getting the value of
 #' the user-defined parameter.
 #'
+#'
+#' @examples
+#'
+#' # TODO:
+#' # - Add an example
+#' data(simple_med)
+#' dat <- simple_med
+#'
+#'
 #' @export
 # Generate a function that:
 # - refits the model with the user-parameter fixed to a target value.
