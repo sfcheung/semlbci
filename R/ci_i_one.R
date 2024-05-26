@@ -54,7 +54,8 @@
 #'  [lavaan::lavaan-class] outputs only.
 #'
 #' @param method The approach to be used. Default is `"wn"`
-#'  (Wu-Neale-2012 Method), the only supported method.
+#'  (Wu-Neale-2012 Method). Another method is "ur",
+#' root finding by [stats::uniroot()].
 #'
 #' @param standardized Logical. Whether the bound of the LBCI of the
 #'  standardized solution is to be searched. Default is `FALSE`.
@@ -124,7 +125,7 @@
 ci_i_one <- function(i,
                      which = NULL,
                      sem_out,
-                     method = "wn",
+                     method = c("wn", "ur"),
                      standardized = FALSE,
                      robust = "none",
                      sf_full = NA,
@@ -165,91 +166,24 @@ ci_i_one <- function(i,
       }
 
     if (method == "wn") {
-        # Wu-Neale-2012 method.
-        # The only method supported for now.
-        ## Attempt 1
-        wald_ci_start <- !standardized
-        std_method_i <- "internal"
-        b_time <- system.time(b <- try(suppressWarnings(ci_bound_wn_i(i,
-                                                   sem_out = sem_out,
-                                                   which = which,
-                                                   standardized = standardized,
-                                                   sf = sf,
-                                                   sf2 = sf2,
-                                                   std_method = std_method_i,
-                                                   wald_ci_start = wald_ci_start,
-                                                    ...)), silent = TRUE))
-        ## If "internal" failed, switches to "lavaan".
-        if (inherits(b, "try-error")) {
-            std_method_i <- "lavaan"
-            b_time <- b_time + system.time(b <- suppressWarnings(ci_bound_wn_i(i,
-                                                      sem_out = sem_out,
-                                                      which = which,
-                                                      standardized = standardized,
-                                                      sf = sf,
-                                                      sf2 = sf2,
-                                                      std_method = std_method_i,
-                                                        ...)))
-          }
-        attempt_lb_var <- 0
-        # Attempt 2
-        if (b$diag$status != 0) {
-            ## Successively reduce the positive lower bounds for free variances
-            lb_se_k0 <- 10
-            lb_prop0 <- .11
-            lb_prop1 <- .01
-            lb_propi <- lb_prop0
-            while ((lb_propi > lb_prop1) & (b$diag$status != 0)) {
-              attempt_lb_var <- attempt_lb_var + 1
-              lb_propi <- lb_propi - .01
-              b_time <- b_time + system.time(b <- suppressWarnings(ci_bound_wn_i(i,
-                                                        sem_out = sem_out,
-                                                        which = which,
-                                                        standardized = standardized,
-                                                        sf = sf,
-                                                        sf2 = sf2,
-                                                        std_method = std_method_i,
-                                                        lb_prop = lb_propi,
-                                                        lb_se_k = lb_se_k0,
-                                                        ...)))
-                }
-          }
-        # Attempt 3
-        attempt_more_times <- 0
-        if (b$diag$status != 0) {
-            # Try k more times
-            # Successively change the tolerance for convergence
-            ki <- try_k_more_times
-            fxi <- 1
-            fti <- 1
-            while ((ki > 0) & (b$diag$status != 0)) {
-                attempt_more_times <- attempt_more_times + 1
-                ki <- ki - 1
-                fxi <- fxi * .1
-                if (ki > 0) {
-                    fti <- fti * .1
-                  } else {
-                    # Try hard in the last attempt
-                    fti <- 0
-                  }
-                b_time <- b_time + system.time(b <- suppressWarnings(ci_bound_wn_i(i,
-                                                          sem_out = sem_out,
-                                                          which = which,
-                                                          standardized = standardized,
-                                                          sf = sf,
-                                                          sf2 = sf2,
-                                                          std_method = std_method_i,
-                                                          xtol_rel_factor = fxi,
-                                                          ftol_rel_factor = fti,
-                                                          lb_prop = lb_propi,
-                                                          lb_se_k = lb_se_k0,
-                                                            ...)))
-              }
-          }
+        b_out <- ci_i_one_wn(i = i,
+                             which = which,
+                             sem_out = sem_out,
+                             standardized = standardized,
+                             sf = sf,
+                             sf2 = sf2,
+                             try_k_more_times = try_k_more_times,
+                             ...)
       }
     if (method == "nm") {
         stop("The method 'nm' is no longer supported.")
       }
+
+    b <- b_out$b
+    b_time <- b_out$b_time
+    attempt_lb_var <- b_out$attempt_lb_var
+    attempt_more_times <- b_out$attempt_more_times
+
     # MAY-FIX:
     # Should not name the elements based on the bound (lower/upper).
     # But this is not an issue for now.
@@ -275,3 +209,102 @@ ci_i_one <- function(i,
       }
     out
   }
+
+#' @noRd
+
+ci_i_one_wn <- function(i,
+                        which = c("lbound", "ubound"),
+                        sem_out,
+                        standardized = FALSE,
+                        sf,
+                        sf2,
+                        try_k_more_times = 0,
+                        ...) {
+    # Wu-Neale-2012 method.
+    # The only method supported for now.
+    ## Attempt 1
+    wald_ci_start <- !standardized
+    std_method_i <- "internal"
+    b_time <- system.time(b <- try(suppressWarnings(ci_bound_wn_i(i,
+                                                sem_out = sem_out,
+                                                which = which,
+                                                standardized = standardized,
+                                                sf = sf,
+                                                sf2 = sf2,
+                                                std_method = std_method_i,
+                                                wald_ci_start = wald_ci_start,
+                                                ...)), silent = TRUE))
+    ## If "internal" failed, switches to "lavaan".
+    if (inherits(b, "try-error")) {
+        std_method_i <- "lavaan"
+        b_time <- b_time + system.time(b <- suppressWarnings(ci_bound_wn_i(i,
+                                                  sem_out = sem_out,
+                                                  which = which,
+                                                  standardized = standardized,
+                                                  sf = sf,
+                                                  sf2 = sf2,
+                                                  std_method = std_method_i,
+                                                    ...)))
+      }
+    attempt_lb_var <- 0
+    # Attempt 2
+    if (b$diag$status != 0) {
+        ## Successively reduce the positive lower bounds for free variances
+        lb_se_k0 <- 10
+        lb_prop0 <- .11
+        lb_prop1 <- .01
+        lb_propi <- lb_prop0
+        while ((lb_propi > lb_prop1) & (b$diag$status != 0)) {
+          attempt_lb_var <- attempt_lb_var + 1
+          lb_propi <- lb_propi - .01
+          b_time <- b_time + system.time(b <- suppressWarnings(ci_bound_wn_i(i,
+                                                    sem_out = sem_out,
+                                                    which = which,
+                                                    standardized = standardized,
+                                                    sf = sf,
+                                                    sf2 = sf2,
+                                                    std_method = std_method_i,
+                                                    lb_prop = lb_propi,
+                                                    lb_se_k = lb_se_k0,
+                                                    ...)))
+            }
+      }
+    # Attempt 3
+    attempt_more_times <- 0
+    if (b$diag$status != 0) {
+        # Try k more times
+        # Successively change the tolerance for convergence
+        ki <- try_k_more_times
+        fxi <- 1
+        fti <- 1
+        while ((ki > 0) && (b$diag$status != 0)) {
+            attempt_more_times <- attempt_more_times + 1
+            ki <- ki - 1
+            fxi <- fxi * .1
+            if (ki > 0) {
+                fti <- fti * .1
+              } else {
+                # Try hard in the last attempt
+                fti <- 0
+              }
+            b_time <- b_time + system.time(b <- suppressWarnings(ci_bound_wn_i(i,
+                                                      sem_out = sem_out,
+                                                      which = which,
+                                                      standardized = standardized,
+                                                      sf = sf,
+                                                      sf2 = sf2,
+                                                      std_method = std_method_i,
+                                                      xtol_rel_factor = fxi,
+                                                      ftol_rel_factor = fti,
+                                                      lb_prop = lb_propi,
+                                                      lb_se_k = lb_se_k0,
+                                                        ...)))
+          }
+      }
+    out <- list(b = b,
+                b_time = b_time,
+                attempt_lb_var = attempt_lb_var,
+                attempt_more_times = attempt_more_times)
+    return(out)
+  }
+
