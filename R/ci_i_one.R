@@ -175,6 +175,17 @@ ci_i_one <- function(i,
                              try_k_more_times = try_k_more_times,
                              ...)
       }
+    if (method == "ur") {
+        if (robust == "satorra.2000") {
+            stop("Method 'ur' does not yet support robust LBCI.")
+          }
+        b_out <- ci_i_one_ur(i = i,
+                             which = which,
+                             sem_out = sem_out,
+                             standardized = standardized,
+                             try_k_more_times = try_k_more_times,
+                             ...)
+      }
     if (method == "nm") {
         stop("The method 'nm' is no longer supported.")
       }
@@ -301,6 +312,48 @@ ci_i_one_wn <- function(i,
                                                         ...)))
           }
       }
+    out <- list(b = b,
+                b_time = b_time,
+                attempt_lb_var = attempt_lb_var,
+                attempt_more_times = attempt_more_times)
+    return(out)
+  }
+
+#' @noRd
+
+ci_i_one_ur <- function(i,
+                        which = c("lbound", "ubound"),
+                        sem_out,
+                        standardized = FALSE,
+                        sf,
+                        sf2,
+                        try_k_more_times = 0,
+                        ...) {
+    # Root finding by uniroot
+    ## Rarely need to try more than once.
+    std_method_i <- "internal"
+    b_time <- system.time(b <- try(suppressWarnings(ci_bound_ur_i(i,
+                                                sem_out = sem_out,
+                                                which = which,
+                                                standardized = standardized,
+                                                sf = sf,
+                                                sf2 = sf2,
+                                                std_method = std_method_i,
+                                                ...)), silent = TRUE))
+    ## If "internal" failed, switches to "lavaan".
+    if (inherits(b, "try-error")) {
+        std_method_i <- "lavaan"
+        b_time <- b_time + system.time(b <- suppressWarnings(ci_bound_ur_i(i,
+                                                  sem_out = sem_out,
+                                                  which = which,
+                                                  standardized = standardized,
+                                                  sf = sf,
+                                                  sf2 = sf2,
+                                                  std_method = std_method_i,
+                                                    ...)))
+      }
+    attempt_lb_var <- 0
+    attempt_more_times <- 0
     out <- list(b = b,
                 b_time = b_time,
                 attempt_lb_var = attempt_lb_var,

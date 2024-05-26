@@ -8,7 +8,7 @@ ci_i_one(
   i,
   which = NULL,
   sem_out,
-  method = "wn",
+  method = c("wn", "ur"),
   standardized = FALSE,
   robust = "none",
   sf_full = NA,
@@ -30,7 +30,8 @@ found. Must be \code{"lbound"} or \code{"ubound"}.}
 \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.}
 
 \item{method}{The approach to be used. Default is \code{"wn"}
-(Wu-Neale-2012 Method), the only supported method.}
+(Wu-Neale-2012 Method). Another method is "ur",
+root finding by \code{\link[stats:uniroot]{stats::uniroot()}}.}
 
 \item{standardized}{Logical. Whether the bound of the LBCI of the
 standardized solution is to be searched. Default is \code{FALSE}.}
