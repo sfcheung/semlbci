@@ -189,6 +189,20 @@ semlbci <- function(sem_out,
     robust <- match.arg(robust)
     sem_out_name <- deparse(substitute(sem_out))
 
+    # Use satorra.2000 automatically if
+    # - a scaled test is used and
+    # - the method is "ur"
+
+    scaled <- any(names(lavaan::lavInspect(sem_out, "test")) %in%
+                        c("satorra.bentler",
+                          "yuan.bentler",
+                          "yuan.bentler.mplus",
+                          "mean.var.adjusted",
+                          "scaled.shifted"))
+    if (scaled && (method == "ur")) {
+        robust <- "satorra.2000"
+      }
+
     # Check sem_out
     if (check_fit) {
         sem_out_check <- check_sem_out(sem_out = sem_out, robust = robust)
