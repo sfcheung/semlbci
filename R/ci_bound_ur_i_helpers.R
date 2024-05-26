@@ -528,8 +528,12 @@ gen_sem_out_userp <- function(userp,
             # Fit once to update the model slot
             attempted <- 0
             fit_new_converged <- FALSE
-            if (verbose) {cat("Target:", target, "\n")}
-            if (verbose) {cat("First attempt ...\n")}
+            if (verbose) {
+                cat("Target:", target, "\n")
+              }
+            if (verbose) {
+                cat("First attempt ...\n")
+              }
             # Fail when
             # eq.constraints.K is 0x0
             # Succeed when
@@ -553,19 +557,24 @@ gen_sem_out_userp <- function(userp,
 
             # Fit the model with the user parameter constrained
             # to the target value
-            # TODO:
-            # - Add an error handler
-            fit_new <- lavaan::lavaan(slotParTable = slot_pat_new,
-                                      slotModel = slot_model_new,
-                                      slotSampleStats = slot_smp_new,
-                                      slotOptions = slot_opt,
-                                      slotData = slot_dat)
+            fit_new <- tryCatch(lavaan::lavaan(slotParTable = slot_pat_new,
+                                               slotModel = slot_model_new,
+                                               slotSampleStats = slot_smp_new,
+                                               slotOptions = slot_opt,
+                                               slotData = slot_dat),
+                                error = function(e) e)
+            if (inherits(fit_new, "error")) {
+                stop("Something's with the function.",
+                     "Error occurred when fitting the modified model.")
+              }
 
             fit_new_converged <- lavaan::lavInspect(fit_new, "converged")
 
             # Try max_attempts more times
             if (!fit_new_converged) {
-                if (verbose) {cat("More attempts ...\n")}
+                if (verbose) {
+                    cat("More attempts ...\n")
+                  }
                 while (!((attempted > max_attempts) ||
                           fit_new_converged)) {
                     if (verbose) {cat("Attempt", attempted, "\n")}
@@ -574,23 +583,30 @@ gen_sem_out_userp <- function(userp,
                     ptable_new$est[i_free] <- jitter(ptable_new$est[i_free],
                                                      factor = 50)
                     slot_opt$start <- as.data.frame(ptable_new)
-                    # TODO:
-                    # - Add an error handler
-                    fit_new <- lavaan::lavaan(slotParTable = ptable_new,
-                                              slotModel = slot_model_new,
-                                              slotSampleStats = slot_smp_new,
-                                              slotOptions = slot_opt,
-                                              slotData = slot_dat)
-                    fit_new_converged <- lavaan::lavInspect(fit_new, "converged")
+                    fit_old <- fit_new
+                    fit_new <- tryCatch(lavaan::lavaan(slotParTable = ptable_new,
+                                                       slotModel = slot_model_new,
+                                                       slotSampleStats = slot_smp_new,
+                                                       slotOptions = slot_opt,
+                                                       slotData = slot_dat),
+                                        error = function(e) e)
+                    if (inherits(fit_new, "error")) {
+                        fit_new <- fit_old
+                        fit_new_converged <- FALSE
+                      } else {
+                        fit_new_converged <- lavaan::lavInspect(fit_new, "converged")
+                      }
                     attempted <- attempted + 1
                   }
               }
             if (!fit_new_converged) {
-                # TODO:
-                # - Need to decide what to do
-                cat("Failed to converge.")
+                if (verbose) {
+                    cat("The modified model failed to converge.")
+                  }
               }
-            if (verbose) {cat("Done!\n")}
+            if (verbose) {
+                cat("Done!\n")
+              }
             fit_new
           }
       } else {
