@@ -51,6 +51,11 @@ uniroot_interval <- function(sem_out,
                              d = 5,
                              level = .95) {
     # Set the interval to search
+
+    # NOTE:
+    # No need to know standardized or not because
+    # standardization, if any, is done inside func.
+
     fit_i_free <- add_func(func = func,
                            sem_out = sem_out,
                            fix = FALSE)
