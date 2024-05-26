@@ -1,6 +1,7 @@
-#' @title Likelihood-based Confidence Bound For One parameter
+#' @title Likelihood-based Confidence Bound By Wu-Neale-2012
 #'
-#' @description Find the lower or upper bound of the likelihood-based
+#' @description User the method proposed by Wu and Neale
+#' (2012) to find the lower or upper bound of the likelihood-based
 #'  confidence interval (LBCI) for one parameter in a structural
 #'  equation model fitted in [lavaan::lavaan()].
 #'
@@ -615,7 +616,8 @@ ci_bound_wn_i <- function(i = NULL,
       }
     out <- list(bound = bound,
                 diag = diag,
-                call = match.call())
+                call = match.call(),
+                method_name = "Wu-Neale-2012")
     class(out) <- c("cibound", class(out))
     out
   }

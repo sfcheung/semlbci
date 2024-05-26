@@ -3,7 +3,6 @@
 \docType{package}
 \name{semlbci-package}
 \alias{semlbci-package}
-\alias{_PACKAGE}
 \title{semlbci: Likelihood-Based Confidence Interval in Structural Equation Models}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}

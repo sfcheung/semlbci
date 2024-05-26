@@ -1,4 +1,17 @@
-# semlbci 0.10.4.1
+# semlbci 0.10.4.2
+
+## New Feature
+
+- Add the method `"ur"` for forming the
+  LBCI. It uses root finding without
+  derivatives. It is inefficient before
+  a model with equality constraint is
+  fitted in each iteration. However, it
+  may be able to find the bound for a
+  parameter when the `"wn"` method
+  cannot. It also supports robust LBCI
+  using Satorra (2000) chi-square
+  difference test. (0.10.4.2)
 
 ## Miscellaneous
 

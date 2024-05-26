@@ -8,7 +8,7 @@ ci_i_one(
   i,
   which = NULL,
   sem_out,
-  method = "wn",
+  method = c("wn", "ur"),
   standardized = FALSE,
   robust = "none",
   sf_full = NA,
@@ -30,16 +30,15 @@ found. Must be \code{"lbound"} or \code{"ubound"}.}
 \link[lavaan:lavaan-class]{lavaan::lavaan} outputs only.}
 
 \item{method}{The approach to be used. Default is \code{"wn"}
-(Wu-Neale-2012 Method), the only supported method.}
+(Wu-Neale-2012 Method). Another method is "ur",
+root finding by \code{\link[stats:uniroot]{stats::uniroot()}}.}
 
 \item{standardized}{Logical. Whether the bound of the LBCI of the
 standardized solution is to be searched. Default is \code{FALSE}.}
 
 \item{robust}{Whether the LBCI based on robust likelihood ratio
 test is to be found. Only \code{"satorra.2000"} in
-\code{\link[lavaan:lavTestLRT]{lavaan::lavTestLRT()}} is supported for now. If `"none"``, the
-default, then likelihood ratio test based on maximum likelihood
-estimation will be used.}
+\code{\link[lavaan:lavTestLRT]{lavaan::lavTestLRT()}} is supported for now. If \verb{"none"``, the default, then likelihood ratio test based on maximum likelihood estimation will be used. For "ur", }"satorra.2000"\verb{is automatically used if a scaled test statistic is requested in}sem_out`.}
 
 \item{sf_full}{A list with the scaling and shift factors. Ignored
 if \code{robust} is \code{"none"}. If \code{robust} is \code{"satorra.2000"} and

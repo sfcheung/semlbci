@@ -2,7 +2,7 @@
 % Please edit documentation in R/ci_bound_wn_i.R
 \name{ci_bound_wn_i}
 \alias{ci_bound_wn_i}
-\title{Likelihood-based Confidence Bound For One parameter}
+\title{Likelihood-based Confidence Bound By Wu-Neale-2012}
 \usage{
 ci_bound_wn_i(
   i = NULL,
@@ -139,7 +139,8 @@ A detailed and organized output can be printed by the default print
 method (\code{\link[=print.cibound]{print.cibound()}}).
 }
 \description{
-Find the lower or upper bound of the likelihood-based
+User the method proposed by Wu and Neale
+(2012) to find the lower or upper bound of the likelihood-based
 confidence interval (LBCI) for one parameter in a structural
 equation model fitted in \code{\link[lavaan:lavaan]{lavaan::lavaan()}}.
 }
