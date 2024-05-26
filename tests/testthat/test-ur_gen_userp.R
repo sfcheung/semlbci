@@ -37,14 +37,12 @@ test_that("Indirect effect", {
 
 skip("To be run in an interactive session")
 
-test_that("gen_sem_out_userp", {
-    userp1234 <- gen_userp(func = ind, sem_out = fit)
-    fit_userp <- gen_sem_out_userp(userp = userp1234,
-                                   userp_name = "userp1234",
-                                   sem_out = fit)
-    fit_test <- fit_userp(.12)
-    expect_equal(coef(fit_test, type = "user")["user"],
-                 .12,
-                 ignore_attr = TRUE,
-                 tolerance = 1e-4)
-})
+userp1234 <- gen_userp(func = ind, sem_out = fit)
+fit_userp <- gen_sem_out_userp(userp = userp1234,
+                                userp_name = "userp1234",
+                                sem_out = fit)
+fit_test <- fit_userp(.12)
+expect_equal(coef(fit_test, type = "user")["user"],
+              .12,
+              ignore_attr = TRUE,
+              tolerance = 1e-4)
