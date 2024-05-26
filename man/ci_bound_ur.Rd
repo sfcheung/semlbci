@@ -3,7 +3,7 @@
 \name{ci_bound_ur}
 \alias{ci_bound_ur}
 \title{Find a Likelihood-Based
-Confidence Bound By 'uniroot()'}
+Confidence Bound By Root Finding}
 \usage{
 ci_bound_ur(
   sem_out,
@@ -29,9 +29,7 @@ Currently supports
 \link[lavaan:lavaan-class]{lavaan::lavaan} objects only.}
 
 \item{func}{A function that receives
-a lavaan object and returns a scalar.
-Usually the output of
-\code{\link[=gen_sem_out_userp]{gen_sem_out_userp()}}.}
+a lavaan object and returns a scalar.}
 
 \item{...}{Optional arguments to be
 passed to \code{func}.}
@@ -53,7 +51,8 @@ method confidence interval, if
 available.}
 
 \item{progress}{Whether progress will
-be reported on screen. Default is
+be reported on screen during the
+search. Default is
 \code{FALSE}.}
 
 \item{method}{The actual function to
@@ -138,12 +137,29 @@ using \code{\link[=uniroot]{uniroot()}}.
 }
 \details{
 This function is called xby
-\code{\link[=ci_bound_ur_i]{ci_bound_ur_i()}}. This function will
-be exported later because it is a
+\code{\link[=ci_bound_ur_i]{ci_bound_ur_i()}}. This function is
+exported later because it is a
 stand-alone function that can be used
 directly for any function that
 receives a lavaan object and returns
 a scalar.
+
+The function \code{\link[=ci_bound_ur_i]{ci_bound_ur_i()}} is a
+wrapper of this function, with an
+interface similar to that of
+\code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} and returns a
+\code{cibound}-class object. The
+user-parameter function is generated
+internally by \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}.
+
+This function, on the other hand,
+requires users to supply the function
+directly through the \code{func} argument.
+This provides the flexibility to find
+the bound for any function of the
+model parameter, even one that cannot
+be easily coded in `lavaan`` model
+syntax.
 }
 \examples{
 

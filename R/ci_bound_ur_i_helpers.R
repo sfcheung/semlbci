@@ -331,10 +331,10 @@ add_func <- function(func,
 #' User-Defined Parameter
 #'
 #' @description Add a function to a
-#' lavaan object as a user-defined
+#' `lavaan` object as a user-defined
 #' parameter and return a function which
 #' can fix this user-defined parameter
-#' to ba value.
+#' to a value.
 #'
 #' @details
 #' This function is to be used internally
@@ -348,7 +348,7 @@ add_func <- function(func,
 #'
 #' @param userp A function that receives
 #' a `lavaan` object and returns a
-#' scalars.
+#' scalar.
 #'
 #' @param userp_name The name of the
 #' function `userp` to be used in the
@@ -430,10 +430,7 @@ add_func <- function(func,
 #'
 #'
 #' @export
-# Generate a function that:
-# - refits the model with the user-parameter fixed to a target value.
-# CHECKED: Identical to the experimental version
-# For add_fun using callr
+
 gen_sem_out_userp <- function(userp,
                               sem_out,
                               userp_name = "semlbciuserp1234",
@@ -441,6 +438,12 @@ gen_sem_out_userp <- function(userp,
                               control_args = list(),
                               iter.max = 10000,
                               max_attempts = 5) {
+
+    # Generate a function that:
+    # - refits the model with the user-parameter fixed to a target value.
+    # CHECKED: Identical to the experimental version
+    # For add_fun() using callr.
+
     iter.max <- max(lavaan::lavInspect(sem_out, "optim")$iterations,
                     iter.max)
     ptable <- lavaan::parameterTable(sem_out)

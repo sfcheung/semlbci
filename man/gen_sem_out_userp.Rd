@@ -18,7 +18,7 @@ gen_sem_out_userp(
 \arguments{
 \item{userp}{A function that receives
 a \code{lavaan} object and returns a
-scalars.}
+scalar.}
 
 \item{sem_out}{A \code{lavaan}-class object,
 to which the function will be added
@@ -90,10 +90,10 @@ the user-defined parameter.
 }
 \description{
 Add a function to a
-lavaan object as a user-defined
+\code{lavaan} object as a user-defined
 parameter and return a function which
 can fix this user-defined parameter
-to ba value.
+to a value.
 }
 \details{
 This function is to be used internally
