@@ -35,7 +35,7 @@ Currently supports
 a lavaan object and returns a scalar.
 This function is to be used by
 \code{\link[=gen_userp]{gen_userp()}} and so there are
-special requirement on it.
+special requirements on it.
 Alternatively, it can be the output
 of \code{\link[=gen_est_i]{gen_est_i()}}.}
 
