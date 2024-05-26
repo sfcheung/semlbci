@@ -185,15 +185,10 @@ gen_est_i <- function(i,
 #'
 #' @param global_ok Logical. Whether
 #' is the user function can be stored
-#' in the global environment. Default
-#' is `FALSE`. Should not be set to
-#' `TRUE` unless users are pretty sure
-#' it is acceptable to store the
-#' function in the global environment,
-#' which is the case when this function
-#' is called in an R process started
-#' by `callr` dedicated to running this
-#' function.
+#' in the global environment. This
+#' option is disabled for now because
+#' it is not a good practice to change
+#' the global environment.
 #'
 #' @return
 #' A `lavaan` object, with the value
@@ -213,30 +208,37 @@ sem_out_userp_run <- function(target,
     userp <- object$userp
     userp_name <- object$userp_name
 
+    # This option is disabled to avoid
+    # storing things to the global
+    # environment
+    global_ok <- FALSE
     if (global_ok) {
-        assign(userp_name,
-               value = userp,
-               envir = globalenv())
-        out <- object$sem_out_userp(target = target,
-                                    verbose = verbose,
-                                    control = control,
-                                    seed = seed)
+        # Disabled for now
       } else {
         r1 <- callr::r_session$new()
-        r1$run(function(userp, userp_name) {assign(userp_name,
-                                                   value = userp,
-                                                   envir = globalenv())},
-               args = list(userp = userp,
-                           userp_name = userp_name))
-        r1$run(function(x) {sem_out_userp <<- x},
-               args = list(object$sem_out_userp))
-        out <- r1$run(function(...) {
-                          sem_out_userp(...)
+        out <- r1$run(function(target,
+                               verbose,
+                               control,
+                               seed,
+                               sem_out_userp,
+                               userp,
+                               userp_name) {
+                          assign(userp_name,
+                                 value = userp,
+                                 envir = parent.frame())
+                          do.call(sem_out_userp,
+                                  list(target = target,
+                                       verbose = verbose,
+                                       control = control,
+                                       seed = seed))
                         },
                       args = list(target = target,
                                   verbose = verbose,
                                   control = control,
-                                  seed = seed))
+                                  seed = seed,
+                                  sem_out_userp = object$sem_out_userp,
+                                  userp = userp,
+                                  userp_name = userp_name))
       }
     out
   }
@@ -309,14 +311,12 @@ add_func <- function(func,
                        sem_out = sem_out)
     # Create a child process
     r1 <- callr::r_session$new()
-    # Store the function there
-    r1$run(function(userp, userp_name) {assign(userp_name,
-                                               value = userp,
-                                               envir = globalenv())},
-           args = list(userp = userp,
-                       userp_name = userp_name))
-    # Generate sem_out_userp in the child process
-    fit_i <- r1$run(function(...) {
+    fit_i <- r1$run(function(...,
+                             userp,
+                             userp_name) {
+                      assign(userp_name,
+                             value = userp,
+                             parent.frame())
                       semlbci::gen_sem_out_userp(...)
                     }, args = list(userp = userp,
                                    sem_out = sem_out,
