@@ -12,7 +12,7 @@ semlbci(
   remove_intercepts = TRUE,
   ciperc = 0.95,
   standardized = FALSE,
-  method = "wn",
+  method = c("wn", "ur"),
   robust = c("none", "satorra.2000"),
   try_k_more_times = 2,
   semlbci_out = NULL,
@@ -56,8 +56,8 @@ interval.}
 \item{standardized}{If \code{TRUE}, the LBCI is for the standardized estimates.}
 
 \item{method}{The method to be used to search for the confidence
-bounds. Currently only \code{"wn"} (Wu-Neale-2012), the default, is
-supported.}
+bounds. Supported methods are\code{"wn"} (Wu-Neale-2012), the default,
+and \code{"ur"} (root finding by \code{\link[stats:uniroot]{stats::uniroot()}}).}
 
 \item{robust}{Whether the LBCI based on robust likelihood ratio
 test is to be found. Only \code{"satorra.2000"} in \code{\link[lavaan:lavTestLRT]{lavaan::lavTestLRT()}}

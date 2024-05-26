@@ -71,8 +71,8 @@
 #' @param standardized If `TRUE`, the LBCI is for the standardized estimates.
 #'
 #' @param method The method to be used to search for the confidence
-#'  bounds. Currently only `"wn"` (Wu-Neale-2012), the default, is
-#'  supported.
+#'  bounds. Supported methods are`"wn"` (Wu-Neale-2012), the default,
+#' and `"ur"` (root finding by [stats::uniroot()]).
 #'
 #' @param robust Whether the LBCI based on robust likelihood ratio
 #'  test is to be found. Only `"satorra.2000"` in [lavaan::lavTestLRT()]
@@ -168,7 +168,7 @@ semlbci <- function(sem_out,
                     remove_intercepts = TRUE,
                     ciperc = .95,
                     standardized = FALSE,
-                    method = "wn",
+                    method = c("wn", "ur"),
                     robust = c("none", "satorra.2000"),
                     try_k_more_times = 2,
                     semlbci_out = NULL,
