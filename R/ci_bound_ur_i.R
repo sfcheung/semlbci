@@ -306,7 +306,10 @@ ci_bound_ur_i <- function(i = NULL,
     status <- 0
 
     # Check convergence
-    # TODO:
+    # NOTE:
+    # - Not necessary to check the code
+    #   because the validity of the bound
+    #   can be determined by the LR test.
     # - Find the status code of uniroot
     # - Need to be done in the call to uniroot()
     # if (out$status < 0) {
