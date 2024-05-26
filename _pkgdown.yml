@@ -72,6 +72,7 @@ reference:
   - set_constraint
   - print.cibound
   - gen_sem_out_userp
+  - gen_userp
 - title: Datasets
   desc: Datasets used in examples.
 - contents:
