@@ -67,9 +67,11 @@ reference:
 - contents:
   - ci_bound_wn_i
   - ci_bound_ur_i
+  - ci_bound_ur
   - ci_i_one
   - set_constraint
   - print.cibound
+  - gen_sem_out_userp
 - title: Datasets
   desc: Datasets used in examples.
 - contents:
