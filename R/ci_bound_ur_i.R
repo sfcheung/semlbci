@@ -387,9 +387,7 @@ ci_bound_ur_i <- function(i = NULL,
                  ciperc = ciperc,
                  ciperc_final = ciperc_final,
                  i = i,
-                 # TODO:
-                 # - Remove semlbci:::
-                 i_lor = semlbci:::get_lhs_op_rhs(i, sem_out, more =  TRUE),
+                 i_lor = get_lhs_op_rhs(i, sem_out, more =  TRUE),
                  optim_message = "Nil", # out$message
                  optim_iterations = out$optimize_out$iter,
                  optim_status = NA, # out$status
@@ -530,11 +528,11 @@ ci_bound_ur_i <- function(i = NULL,
 #' Default is 1000.
 #'
 #' @param use_callr Whether the
-#' [callr] package will be used to
+#' `callr`` package will be used to
 #' do the search in a separate R
 #' process. Default is `TRUE`. Should
-#' not set to `FALSE` if used in the
-#' global environment unless this is
+#' not set to `FALSE` if used in an
+#' interactive environment unless this is
 #' intentional.
 #'
 #' @return

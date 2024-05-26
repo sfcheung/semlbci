@@ -30,7 +30,7 @@ function \code{userp} to be used in the
 be the name of the function in
 \code{userp}. Should be changed only if it
 conflicts with another object in the
-global environment, which should not
+parent environment, which should not
 happen if the model is always fitted
 in a clean R session.}
 
@@ -103,7 +103,7 @@ a likelihood-based confidence bound.
 It is exported because it needs to
 be run in an external R process,
 usually created by \code{callr} in other
-functions, such as \code{\link[=add_func]{add_func()}}.
+internal functions.
 }
 \examples{
 

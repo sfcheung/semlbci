@@ -44,7 +44,9 @@ Imports:
     ggplot2,
     ggrepel,
     rlang,
-    pbapply
+    pbapply,
+    callr,
+    methods
 VignetteBuilder: knitr
 Config/testthat/parallel: true
 Config/testthat/edition: 3

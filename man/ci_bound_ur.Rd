@@ -97,11 +97,8 @@ number of iteration in the search.
 Default is 1000.}
 
 \item{use_callr}{Whether the
-\link{callr} package will be used to
-do the search in a separate R
-process. Default is \code{TRUE}. Should
-not set to \code{FALSE} if used in the
-global environment unless this is
+\verb{callr`` package will be used to do the search in a separate R process. Default is }TRUE\verb{. Should not set to }FALSE` if used in an
+interactive environment unless this is
 intentional.}
 }
 \value{

@@ -273,7 +273,7 @@ sem_out_userp_run <- function(target,
 #' function (`func`) to be used in the
 #' `lavaan` model. Should be changed
 #' only if it conflicts with another
-#' object in the global environment,
+#' object in the parent environment,
 #' which should not happen if the model
 #' is always fitted in a clean R
 #' session.
@@ -344,7 +344,7 @@ add_func <- function(func,
 #' It is exported because it needs to
 #' be run in an external R process,
 #' usually created by `callr` in other
-#' functions, such as [add_func()].
+#' internal functions.
 #'
 #' @param userp A function that receives
 #' a `lavaan` object and returns a
@@ -356,7 +356,7 @@ add_func <- function(func,
 #' be the name of the function in
 #' `userp`. Should be changed only if it
 #' conflicts with another object in the
-#' global environment, which should not
+#' parent environment, which should not
 #' happen if the model is always fitted
 #' in a clean R session.
 #'
