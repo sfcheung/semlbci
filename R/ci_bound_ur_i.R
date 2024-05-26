@@ -568,10 +568,6 @@ ci_bound_ur <- function(sem_out,
         if (use_callr) {
             on.exit(try(r1$close(), silent = TRUE))
             r1 <- callr::r_session$new()
-            # TODO:
-            # - Mo need to export when gen_fit_userp is in the package
-            r1$run(function(x) {sem_out_userp_run <<- x},
-                  args = list(x = sem_out_userp_run))
             if (progress) {
                 optimize_out <- r1$call(function(f,
                                                 interval,
