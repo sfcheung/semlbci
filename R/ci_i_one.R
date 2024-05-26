@@ -133,9 +133,7 @@ ci_i_one <- function(i,
                      sem_out_name = NULL,
                      try_k_more_times = 0,
                      ...) {
-    if (!(which %in% c("lbound", "ubound"))) {
-        stop("Must be 'lbound' or 'ubound' for the 'which' argument.")
-      }
+    method <- match.arg(method)
     # It should be the job of the calling function to check whether it is
     # appropriate to use the robust method.
     if (tolower(robust) == "satorra.2000") {
