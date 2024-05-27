@@ -1,4 +1,4 @@
-# semlbci 0.10.4.3
+# semlbci 0.10.4.4
 
 ## New Feature
 
@@ -21,6 +21,9 @@
   when calling `semlbci()` with
   `use_pbapply` set to `TRUE`. Enabled
   by default. (0.10.4.3)
+- Add error handlers in the output
+  of `set_constraints()` and
+  `ci_bound_wn_i()`. (0.10.4.4)
 
 # semlbci 0.10.4
 
