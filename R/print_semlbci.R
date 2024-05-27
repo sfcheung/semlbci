@@ -195,21 +195,21 @@ print.semlbci <- function(x,
         out$label <- NULL
       }
     class(out) <- "data.frame"
-    out$lbci_lb <- formatC(out$lbci_lb, digits, format = "f")
+    out$lbci_lb <- formatC(out$lbci_lb, digits, format = "f", mode = "double")
     if ("est.std" %in% colnames(x)) {
         standardized <- TRUE
-        out$est.std <- formatC(out$est.std, digits, format = "f")
+        out$est.std <- formatC(out$est.std, digits, format = "f", mode = "double")
       } else {
         standardized <- FALSE
-        out$est <- formatC(out$est, digits, format = "f")
+        out$est <- formatC(out$est, digits, format = "f", mode = "double")
       }
-    out$lbci_ub <- formatC(out$lbci_ub, digits, format = "f")
-    out$ci_org_lb <- formatC(out$ci_org_lb, digits, format = "f")
-    out$ci_org_ub <- formatC(out$ci_org_ub, digits, format = "f")
-    out$ratio_lb <- formatC(out$ratio_lb, digits, format = "f")
-    out$ratio_ub <- formatC(out$ratio_ub, digits, format = "f")
-    out$cl_lb <- formatC(out$cl_lb, digits, format = "f")
-    out$cl_ub <- formatC(out$cl_ub, digits, format = "f")
+    out$lbci_ub <- formatC(out$lbci_ub, digits, format = "f", mode = "double")
+    out$ci_org_lb <- formatC(out$ci_org_lb, digits, format = "f", mode = "double")
+    out$ci_org_ub <- formatC(out$ci_org_ub, digits, format = "f", mode = "double")
+    out$ratio_lb <- formatC(out$ratio_lb, digits, format = "f", mode = "double")
+    out$ratio_ub <- formatC(out$ratio_ub, digits, format = "f", mode = "double")
+    out$cl_lb <- formatC(out$cl_lb, digits, format = "f", mode = "double")
+    out$cl_ub <- formatC(out$cl_ub, digits, format = "f", mode = "double")
     call_org <- attr(out, "call")
     if (drop_no_lbci) {
         out <- out[!is.na(out$status_lb), ]
@@ -699,7 +699,8 @@ format_ratio <- function(object,
     where <- match.arg(where)
     tmp <- formatC(as.numeric(object),
                    digits = digits,
-                   format = "f")
+                   format = "f",
+                   mode = "double")
     tmp2 <- tmp
     if (where == "left") {
         tmp2[which(!flag)] <- paste0(" ", tmp[which(!flag)])
