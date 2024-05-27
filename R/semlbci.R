@@ -106,6 +106,11 @@
 #'  progress bar when finding the intervals. Default is `TRUE`.
 #'  Ignored if `pbapply` is not installed.
 #'
+#' @param loadbalancing Whether load
+#' balancing is used when `parallel`
+#' is `TRUE` and `use_pbapply` is
+#' `TRUE`.
+#'
 #' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
 #'
 #' @references
@@ -176,7 +181,8 @@ semlbci <- function(sem_out,
                     ...,
                     parallel = FALSE,
                     ncpus = 2,
-                    use_pbapply = TRUE) {
+                    use_pbapply = TRUE,
+                    loadbalancing = TRUE) {
     if (!inherits(sem_out, "lavaan")) {
         stop("sem_out is not a supported object.")
       }
@@ -317,6 +323,11 @@ semlbci <- function(sem_out,
                                        envir = environment())
         if (requireNamespace("pbapply", quietly = TRUE) &&
             use_pbapply) {
+            if (loadbalancing) {
+                pboptions_old <- pbapply::pboptions(use_lb = TRUE)
+                # Restore pboptions on exit
+                on.exit(pbapply::pboptions(pboptions_old))
+              }
             # Use pbapply
             args_final <- utils::modifyList(list(...),
                                     list(npar = npar,

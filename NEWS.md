@@ -1,4 +1,4 @@
-# semlbci 0.10.4.2
+# semlbci 0.10.4.3
 
 ## New Feature
 
@@ -17,6 +17,10 @@
 
 - Suppressed a harmless warning in a
   test. (0.10.4.1)
+- Added the option to use load balancing
+  when calling `semlbci()` with
+  `use_pbapply` set to `TRUE`. Enabled
+  by default. (0.10.4.3)
 
 # semlbci 0.10.4
 

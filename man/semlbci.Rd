@@ -20,7 +20,8 @@ semlbci(
   ...,
   parallel = FALSE,
   ncpus = 2,
-  use_pbapply = TRUE
+  use_pbapply = TRUE,
+  loadbalancing = TRUE
 )
 }
 \arguments{
@@ -90,6 +91,11 @@ cores.}
 is installed, \code{\link[pbapply:pbapply]{pbapply::pbapply()}} will be used to display a
 progress bar when finding the intervals. Default is \code{TRUE}.
 Ignored if \code{pbapply} is not installed.}
+
+\item{loadbalancing}{Whether load
+balancing is used when \code{parallel}
+is \code{TRUE} and \code{use_pbapply} is
+\code{TRUE}.}
 }
 \value{
 A \code{semlbci}-class object similar to the parameter table
