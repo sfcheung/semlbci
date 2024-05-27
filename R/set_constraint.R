@@ -81,7 +81,8 @@ set_constraint <- function(sem_out, ciperc = .95) {
                                   debug = FALSE,
                                   lav_warn = FALSE,
                                   sf = 1,
-                                  sf2 = 0) {
+                                  sf2 = 0,
+                                  stop_on_error = FALSE) {
             target <- fmin + sf * (qcrit - sf2) / (2 * n)
             if (debug) {
                 cat(ls())
@@ -109,6 +110,9 @@ set_constraint <- function(sem_out, ciperc = .95) {
                 }
             is_error <- inherits(fit2, "error")
             if (is_error) {
+                if (stop_on_error) {
+                    stop("Error in evaluating the constraint(s).")
+                  }
                 fit2_gradient <- rbind(rep(-Inf, length(param)))
                 fit2_jacobian <- rbind(eq_jac,
                                         rep(-Inf, length(param)))
@@ -146,7 +150,8 @@ set_constraint <- function(sem_out, ciperc = .95) {
                                   debug = FALSE,
                                   lav_warn = FALSE,
                                   sf = 1,
-                                  sf2 = 0) {
+                                  sf2 = 0,
+                                  stop_on_error = FALSE) {
             target <- fmin + sf * (qcrit - sf2) / (2 * n)
             if (debug) {
                 cat(ls())
@@ -172,6 +177,9 @@ set_constraint <- function(sem_out, ciperc = .95) {
                 }
             is_error <- inherits(fit2, "error")
             if (is_error) {
+                if (stop_on_error) {
+                    stop("Error in evaluating the constraint(s).")
+                  }
                 fit2_gradient <- rbind(rep(-Inf, length(param)))
                 fit2_jacobian <- rbind(rep(-Inf, length(param)))
                 out <- list(objective = Inf,
