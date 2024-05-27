@@ -142,6 +142,12 @@
 #'   for free variances. Default is 3, the estimate minus 3 standard
 #'   error. If negative, the lower bound is set using `lb_prop`.
 #'
+#' @param try_harder If error occurred
+#' in the optimization, how many more
+#' times to try. In each new attempt,
+#' the starting values will be randomly
+#' jittered. Default is 0.
+#'
 #' @param ... Optional arguments. Not used.
 #'
 #' @references
@@ -205,6 +211,7 @@ ci_bound_wn_i <- function(i = NULL,
                           ftol_rel_factor = 1,
                           lb_prop = .05,
                           lb_se_k = 3,
+                          try_harder = 0,
                           ...) {
     k <- switch(which,
                 lbound = 1,
@@ -311,7 +318,7 @@ ci_bound_wn_i <- function(i = NULL,
               }
             start0 <- lavaan::parameterTable(sem_out)
             # The function to be minimized.
-            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
+            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
                 start1 <- start0
                 start1[start1$free > 0, "est"] <- param
                 sem_out2 <- sem_out
@@ -357,13 +364,22 @@ ci_bound_wn_i <- function(i = NULL,
               }
             start0 <- lavaan::parameterTable(sem_out)
             # The function to be minimized.
-            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
-                std0 <- std_lav(param, sem_out)
-                k * std0[i_std]
+            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
+                std0 <- tryCatch(std_lav(param, sem_out),
+                                 error = function(e) e)
+                if (inherits(std0, "error")) {
+                    if (stop_on_error) {
+                        stop("Error in std_lav().")
+                      } else {
+                        return(Inf)
+                      }
+                  } else {
+                    return(k * std0[i_std])
+                  }
               }
           }
         # The gradient of the function to be minimized
-        lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2) {
+        lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
             lavaan::lav_func_gradient_complex(
                                       lbci_b_f, param, sem_out = sem_out,
                                       debug = debug, lav_warn = lav_warn,
@@ -381,11 +397,21 @@ ci_bound_wn_i <- function(i = NULL,
             # Get the name of the defined parameter
             i_name <- p_table[i, "label"]
             # The function to be minimized.
-            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
-                k * sem_out@Model@def.function(param)[i_name]
+            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
+                out <- tryCatch(k * sem_out@Model@def.function(param)[i_name],
+                                error = function(e) e)
+                if (inherits(out, "error")) {
+                    if (stop_on_error) {
+                        stop("Error in cmoputing user-parameter(s).")
+                      } else {
+                        return(Inf)
+                      }
+                  } else {
+                    return(out)
+                  }
               }
             # The gradient of the function to be minimized
-            lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2) {
+            lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
                 lavaan::lav_func_gradient_complex(
                                           lbci_b_f, param, sem_out = sem_out,
                                           debug = debug, lav_warn = lav_warn,
@@ -401,7 +427,7 @@ ci_bound_wn_i <- function(i = NULL,
           } else {
             # The function to be minimized.
             # force() may not be needed but does not harm to keep them.
-            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
+            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
                 force(k)
                 force(i_in_free)
                 k * param[i_in_free]
@@ -409,7 +435,7 @@ ci_bound_wn_i <- function(i = NULL,
             # The gradient of the function to be minimized
             grad_c <- rep(0, npar)
             grad_c[i_in_free] <- k
-            lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2) {
+            lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
                     grad_c
               }
           }
@@ -473,19 +499,55 @@ ci_bound_wn_i <- function(i = NULL,
                         "maxeval" = 500,
                         "print_level" = 0),
                         opts)
-    out <- nloptr::nloptr(
-                        x0 = xstart,
-                        eval_f = lbci_b_f,
-                        lb = fit_lb,
-                        ub = fit_ub,
-                        eval_grad_f = lbci_b_grad,
-                        eval_g_eq = f_constr,
-                        opts = opts_final,
-                        sem_out = sem_out,
-                        lav_warn = FALSE,
-                        debug = FALSE,
-                        sf = sf,
-                        sf2 = sf2)
+    try_harder <- as.integer(max(try_harder, 0))
+    try_harder_count <- 0
+    xstart_i <- xstart
+    while(try_harder_count <= try_harder) {
+        out <- tryCatch(nloptr::nloptr(
+                            x0 = xstart_i,
+                            eval_f = lbci_b_f,
+                            lb = fit_lb,
+                            ub = fit_ub,
+                            eval_grad_f = lbci_b_grad,
+                            eval_g_eq = f_constr,
+                            opts = opts_final,
+                            sem_out = sem_out,
+                            lav_warn = FALSE,
+                            debug = FALSE,
+                            sf = sf,
+                            sf2 = sf2,
+                            stop_on_error = TRUE),
+                        error = function(e) e)
+        if (inherits(out, "error")) {
+            xstart_i <- stats::runif(length(xstart_i),
+                                     min = -2,
+                                     max = 2) * xstart_i
+            try_harder_count <- try_harder_count + 1
+          } else {
+            try_harder_count <- Inf
+          }
+      }
+
+    # Failed after try harder k times
+
+    if (inherits(out, "error")) {
+        opts_error <- utils::modifyList(opts_final,
+                                        list("maxeval" = 1))
+        out <- nloptr::nloptr(x0 = xstart,
+                              eval_f = lbci_b_f,
+                              lb = fit_lb,
+                              ub = fit_ub,
+                              eval_grad_f = lbci_b_grad,
+                              eval_g_eq = f_constr,
+                              opts = opts_error,
+                              sem_out = sem_out,
+                              lav_warn = FALSE,
+                              debug = FALSE,
+                              sf = sf,
+                              sf2 = sf2,
+                              stop_on_error = TRUE)
+      }
+
 
     # Process the results
 

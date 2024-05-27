@@ -81,7 +81,8 @@ set_constraint <- function(sem_out, ciperc = .95) {
                                   debug = FALSE,
                                   lav_warn = FALSE,
                                   sf = 1,
-                                  sf2 = 0) {
+                                  sf2 = 0,
+                                  stop_on_error = FALSE) {
             target <- fmin + sf * (qcrit - sf2) / (2 * n)
             if (debug) {
                 cat(ls())
@@ -91,31 +92,49 @@ set_constraint <- function(sem_out, ciperc = .95) {
             eq_out <- sem_out@Model@ceq.function(param)
             eq_jac <- sem_out@Model@con.jac
             if (lav_warn) {
-                    fit2 <- lavaan::lavaan(
+                    fit2 <- tryCatch(lavaan::lavaan(
                               slotOptions = slot_opt3,
                               slotParTable = slot_pat2,
                               slotModel = slot_mod3,
                               slotSampleStats = slot_smp2,
-                              slotData = slot_dat2)
+                              slotData = slot_dat2),
+                              error = function(e) e)
                 } else {
-                    suppressWarnings(fit2 <- lavaan::lavaan(
+                    fit2 <- tryCatch(suppressWarnings(lavaan::lavaan(
                                               slotOptions = slot_opt3,
                                               slotParTable = slot_pat2,
                                               slotModel = slot_mod3,
                                               slotSampleStats = slot_smp2,
-                                              slotData = slot_dat2))
+                                              slotData = slot_dat2)),
+                                     error = function(e) e)
                 }
-            if (lav_warn) {
-                    fit2_gradient <- rbind(lavaan::lavTech(fit2, "gradient"))
-                    fit2_jacobian <- rbind(eq_jac,
-                                           lavaan::lavTech(fit2, "gradient"))
-                } else {
-                    suppressWarnings(fit2_gradient <-
-                                    rbind(lavaan::lavTech(fit2, "gradient")))
-                    suppressWarnings(fit2_jacobian <-
-                                    rbind(eq_jac,
-                                          lavaan::lavTech(fit2, "gradient")))
-                }
+            is_error <- inherits(fit2, "error")
+            if (is_error) {
+                if (stop_on_error) {
+                    stop("Error in evaluating the constraint(s).")
+                  }
+                fit2_gradient <- rbind(rep(-Inf, length(param)))
+                fit2_jacobian <- rbind(eq_jac,
+                                        rep(-Inf, length(param)))
+                out <- list(objective = Inf,
+                            gradient = fit2_gradient,
+                            constraints = Inf,
+                            jacobian = fit2_jacobian,
+                            parameterTable = NA)
+                return(out)
+              } else {
+                if (lav_warn) {
+                            fit2_gradient <- rbind(lavaan::lavTech(fit2, "gradient"))
+                            fit2_jacobian <- rbind(eq_jac,
+                                                  lavaan::lavTech(fit2, "gradient"))
+                    } else {
+                        fit2_gradient <- tryCatch(suppressWarnings(rbind(lavaan::lavTech(fit2, "gradient"))),
+                                                  error = function(e) rep(-Inf, length(param)))
+                        suppressWarnings(fit2_jacobian <-
+                                        rbind(eq_jac,
+                                              fit2_gradient))
+                    }
+              }
             list(
                   objective = lavaan::lavTech(fit2, "optim")$fx,
                   gradient = fit2_gradient,
@@ -131,7 +150,8 @@ set_constraint <- function(sem_out, ciperc = .95) {
                                   debug = FALSE,
                                   lav_warn = FALSE,
                                   sf = 1,
-                                  sf2 = 0) {
+                                  sf2 = 0,
+                                  stop_on_error = FALSE) {
             target <- fmin + sf * (qcrit - sf2) / (2 * n)
             if (debug) {
                 cat(ls())
@@ -139,29 +159,46 @@ set_constraint <- function(sem_out, ciperc = .95) {
                 }
             slot_mod3 <- lavaan::lav_model_set_parameters(slot_mod2, param)
             if (lav_warn) {
-                    fit2 <- lavaan::lavaan(
+                    fit2 <- tryCatch(lavaan::lavaan(
                               slotOptions = slot_opt3,
                               slotParTable = slot_pat2,
                               slotModel = slot_mod3,
                               slotSampleStats = slot_smp2,
-                              slotData = slot_dat2)
+                              slotData = slot_dat2),
+                              error = function(e) e)
                 } else {
-                    suppressWarnings(fit2 <- lavaan::lavaan(
+                    fit2 <- tryCatch(suppressWarnings(lavaan::lavaan(
                                               slotOptions = slot_opt3,
                                               slotParTable = slot_pat2,
                                               slotModel = slot_mod3,
                                               slotSampleStats = slot_smp2,
-                                              slotData = slot_dat2))
+                                              slotData = slot_dat2)),
+                                     error = function(e) e)
                 }
-            if (lav_warn) {
-                    fit2_gradient <- rbind(lavaan::lavTech(fit2, "gradient"))
-                    fit2_jacobian <- rbind(lavaan::lavTech(fit2, "gradient"))
-                } else {
-                    suppressWarnings(fit2_gradient <-
-                                    rbind(lavaan::lavTech(fit2, "gradient")))
-                    suppressWarnings(fit2_jacobian <-
-                                    rbind(lavaan::lavTech(fit2, "gradient")))
-                }
+            is_error <- inherits(fit2, "error")
+            if (is_error) {
+                if (stop_on_error) {
+                    stop("Error in evaluating the constraint(s).")
+                  }
+                fit2_gradient <- rbind(rep(-Inf, length(param)))
+                fit2_jacobian <- rbind(rep(-Inf, length(param)))
+                out <- list(objective = Inf,
+                            gradient = fit2_gradient,
+                            constraints = Inf,
+                            jacobian = fit2_jacobian,
+                            parameterTable = NA)
+                return(out)
+              } else {
+                if (lav_warn) {
+                        fit2_gradient <- rbind(lavaan::lavTech(fit2, "gradient"))
+                        fit2_jacobian <- rbind(lavaan::lavTech(fit2, "gradient"))
+                    } else {
+                        fit2_gradient <- tryCatch(suppressWarnings(rbind(lavaan::lavTech(fit2, "gradient"))),
+                                                  error = function(e) rep(-Inf, length(param)))
+                        suppressWarnings(fit2_jacobian <-
+                                        rbind(fit2_gradient))
+                    }
+              }
             list(
                   objective = lavaan::lavTech(fit2, "optim")$fx,
                   gradient = fit2_gradient,

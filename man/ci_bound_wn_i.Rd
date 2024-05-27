@@ -28,6 +28,7 @@ ci_bound_wn_i(
   ftol_rel_factor = 1,
   lb_prop = 0.05,
   lb_se_k = 3,
+  try_harder = 5,
   ...
 )
 }
@@ -123,6 +124,12 @@ negative.}
 \item{lb_se_k}{Used by an internal function to set the lower bound
 for free variances. Default is 3, the estimate minus 3 standard
 error. If negative, the lower bound is set using \code{lb_prop}.}
+
+\item{try_harder}{If error occurred
+in the optimization, how many more
+times to try. In each new attempt,
+the starting values will be randomly
+jittered. Default is 5.}
 
 \item{...}{Optional arguments. Not used.}
 }
