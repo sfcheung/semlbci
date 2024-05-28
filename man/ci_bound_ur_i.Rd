@@ -29,6 +29,7 @@ ci_bound_ur_i(
   ftol_rel_factor = 1,
   lb_prop = 0.05,
   lb_se_k = 3,
+  d = 5,
   ...
 )
 }
@@ -144,6 +145,12 @@ interface.}
 \item{lb_se_k}{Ignored by this
 function. Included consistency in the
 interface.}
+
+\item{d}{A value used to determine
+the width of the interval in the
+initial search. Larger this value,
+\emph{narrow} the interval. Default is 5.
+Used by \code{\link[=ci_bound_ur]{ci_bound_ur()}}.}
 
 \item{...}{Optional arguments. Not
 used.}

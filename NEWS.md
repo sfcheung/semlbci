@@ -1,4 +1,4 @@
-# semlbci 0.10.4.7
+# semlbci 0.10.4.8
 
 ## New Feature
 
@@ -31,6 +31,9 @@
 - Speed up the examples of
   `ci_bound_ur_i()` and `ci_bound_ur()`.
   (0.10.4.7)
+- Precompute the interval in
+  `ci_bound_ur_i()` before calling
+  `ci_bound_ur()`. (0.10.4.8)
 
 ## (Possibly) Breaking Changes
 

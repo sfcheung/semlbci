@@ -207,6 +207,12 @@
 #' function. Included consistency in the
 #' interface.
 #'
+#' @param d A value used to determine
+#' the width of the interval in the
+#' initial search. Larger this value,
+#' *narrow* the interval. Default is 5.
+#' Used by [ci_bound_ur()].
+#'
 #' @param ... Optional arguments. Not
 #' used.
 #'
@@ -268,15 +274,55 @@ ci_bound_ur_i <- function(i = NULL,
                           ftol_rel_factor = 1, # Not used by ur
                           lb_prop = .05, # Not used by ur
                           lb_se_k = 3, # Not used by ur
+                          d = 5,
                           ...) {
 
     # Basic info
 
-    est <- lavaan::parameterEstimates(sem_out, ci = TRUE)
-    i_est <- est[i, "est"]
-    i_org_ci_limit <- switch(which,
-                             lbound = est[i, "ci.lower"],
-                             ubound = est[i, "ci.upper"])
+    # Check if the parameter is a user-defined parameter
+    p_table <- lavaan::parameterTable(sem_out)
+    i_op <- p_table[i, "op"]
+    # The id in the vector of free parameters
+    i_in_free <- p_table[i, "free"]
+
+    # Get original point estimate and CI
+    if (standardized) {
+        ## Standardized solution
+        p_est <- lavaan::standardizedSolution(sem_out,
+                    type = "std.all",
+                    se = TRUE,
+                    zstat = FALSE,
+                    pvalue = FALSE,
+                    ci = TRUE,
+                    level = ciperc,
+                    remove.eq = FALSE,
+                    remove.ineq = FALSE,
+                    remove.def = FALSE,
+                    output = "data.frame")
+        i_est <- p_est[i, "est.std"]
+        i_org_ci_limit <- switch(which,
+                        lbound = p_est[i, "ci.lower"],
+                        ubound = p_est[i, "ci.upper"])
+      } else {
+        ## Unstandardized solution
+        p_est <- lavaan::parameterEstimates(sem_out,
+                                            se = TRUE,
+                                            ci = TRUE,
+                                            level = ciperc,
+                                            zstat = FALSE,
+                                            fmi = FALSE,
+                                            rsquare = TRUE,
+                                            output = "data.frame")
+        i_est <- p_est[i, "est"]
+        i_org_ci_limit <- switch(which,
+                                lbound = p_est[i, "ci.lower"],
+                                ubound = p_est[i, "ci.upper"])
+      }
+
+    # Initial interval to search
+    a <- abs(i_org_ci_limit - i_est) / d
+    interval0 <- c(i_org_ci_limit - a, i_org_ci_limit + a)
+
     npar <- lavaan::lavTech(sem_out, "npar")
 
     # Generate the user-parameter function
@@ -289,6 +335,7 @@ ci_bound_ur_i <- function(i = NULL,
                     func = est_i_func,
                     level = ciperc,
                     which = which,
+                    interval = interval0,
                     uniroot_maxiter = 500)
     ur_opts <- utils::modifyList(ur_opts,
                                  opts)
