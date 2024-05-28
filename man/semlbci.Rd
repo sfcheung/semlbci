@@ -14,7 +14,7 @@ semlbci(
   standardized = FALSE,
   method = c("wn", "ur"),
   robust = c("none", "satorra.2000"),
-  try_k_more_times = 2,
+  try_k_more_times = 0,
   semlbci_out = NULL,
   check_fit = TRUE,
   ...,
