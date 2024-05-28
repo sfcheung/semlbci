@@ -28,7 +28,7 @@ ci_bound_wn_i(
   ftol_rel_factor = 1,
   lb_prop = 0.05,
   lb_se_k = 3,
-  try_harder = 5,
+  try_harder = 0,
   ...
 )
 }
@@ -129,7 +129,7 @@ error. If negative, the lower bound is set using \code{lb_prop}.}
 in the optimization, how many more
 times to try. In each new attempt,
 the starting values will be randomly
-jittered. Default is 5.}
+jittered. Default is 0.}
 
 \item{...}{Optional arguments. Not used.}
 }
