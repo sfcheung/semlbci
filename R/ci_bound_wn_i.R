@@ -550,8 +550,8 @@ ci_bound_wn_i <- function(i = NULL,
 
 
     # Process the results
-
-    bound <- k * out$objective
+    ## Need as.numeric() to handle NA
+    bound <- as.numeric(k * out$objective)
     bound_unchecked <- bound
 
     # Initialize the status code

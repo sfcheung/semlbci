@@ -297,7 +297,7 @@ ci_bound_ur_i <- function(i = NULL,
 
     # Process the results
 
-    bound <- out$bound
+    bound <- as.numeric(out$bound)
     bound_unchecked <- bound
 
     # Initialize the status code
