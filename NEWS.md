@@ -1,4 +1,4 @@
-# semlbci 0.10.4.4
+# semlbci 0.10.4.5
 
 ## New Feature
 
@@ -24,6 +24,10 @@
 - Add error handlers in the output
   of `set_constraints()` and
   `ci_bound_wn_i()`. (0.10.4.4)
+- Revised `ci_bound_wn_i()` and
+  `ci_bound_ur_i()` to make
+  sure the bound is a numeric object,
+  even if `NA`. (0.10.4.5)
 
 # semlbci 0.10.4
 
