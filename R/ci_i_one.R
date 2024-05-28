@@ -228,6 +228,10 @@ ci_i_one_wn <- function(i,
                         sf,
                         sf2,
                         try_k_more_times = 0,
+                        lb_se_k0 = 10,
+                        lb_prop0 = .11,
+                        lb_prop1 = .01,
+                        try_lb = FALSE,
                         ...) {
     # Wu-Neale-2012 method.
     # The only method supported for now.
@@ -257,11 +261,8 @@ ci_i_one_wn <- function(i,
       }
     attempt_lb_var <- 0
     # Attempt 2
-    if (b$diag$status != 0) {
+    if ((b$diag$status != 0) && try_lb) {
         ## Successively reduce the positive lower bounds for free variances
-        lb_se_k0 <- 10
-        lb_prop0 <- .11
-        lb_prop1 <- .01
         lb_propi <- lb_prop0
         while ((lb_propi > lb_prop1) & (b$diag$status != 0)) {
           attempt_lb_var <- attempt_lb_var + 1
@@ -283,6 +284,9 @@ ci_i_one_wn <- function(i,
     if (b$diag$status != 0) {
         # Try k more times
         # Successively change the tolerance for convergence
+        if (!try_lb) {
+            lb_propi <- 1e-3
+          }
         ki <- try_k_more_times
         fxi <- 1
         fti <- 1
