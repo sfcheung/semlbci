@@ -244,20 +244,20 @@ parameters with cautions.
 library(lavaan)
 data(simple_med)
 dat <- simple_med
-
 mod <-
 "
 m ~ x
 y ~ m
 "
-
 fit_med <- sem(mod, simple_med, fixed.x = FALSE)
-
+# Remove `opts` in real cases.
+# The options are added just to speed up the example
 out1l <- ci_bound_ur_i(i = 1,
                        sem_out = fit_med,
-                       which = "lbound")
+                       which = "lbound",
+                       opts = list(use_callr = FALSE,
+                                   interval = c(0.8277, 0.8278)))
 out1l
-
 }
 \references{
 Wu, H., & Neale, M. C. (2012).

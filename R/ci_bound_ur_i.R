@@ -229,20 +229,20 @@
 #' library(lavaan)
 #' data(simple_med)
 #' dat <- simple_med
-#'
 #' mod <-
 #' "
 #' m ~ x
 #' y ~ m
 #' "
-#'
 #' fit_med <- sem(mod, simple_med, fixed.x = FALSE)
-#'
+#' # Remove `opts` in real cases.
+#' # The options are added just to speed up the example
 #' out1l <- ci_bound_ur_i(i = 1,
 #'                        sem_out = fit_med,
-#'                        which = "lbound")
+#'                        which = "lbound",
+#'                        opts = list(use_callr = FALSE,
+#'                                    interval = c(0.8277, 0.8278)))
 #' out1l
-#'
 #' @export
 
 ci_bound_ur_i <- function(i = NULL,
@@ -590,17 +590,17 @@ ci_bound_ur_i <- function(i = NULL,
 #' "
 #' fit_med <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 #' parameterTable(fit_med)
-
 #' # Create a function to get the second parameter
 #' est_i <- gen_est_i(i = 2, sem_out = fit_med)
-
 #' # Find the lower bound of the likelihood-based confidence interval
 #' # of the second parameter.
 #' # user_callr should be TRUE or omitted in read research.
+#' # Remove interval in read research. It is added to speed up the example.
 #' out1l <- ci_bound_ur(sem_out = fit_med,
 #'                      func = est_i,
 #'                      which = "lbound",
-#'                      use_callr = FALSE)
+#'                      use_callr = FALSE,
+#'                      interval = c(.39070, .39075))
 #' out1l
 #'
 #' @rdname ci_bound_ur

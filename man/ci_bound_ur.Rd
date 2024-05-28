@@ -214,10 +214,12 @@ est_i <- gen_est_i(i = 2, sem_out = fit_med)
 # Find the lower bound of the likelihood-based confidence interval
 # of the second parameter.
 # user_callr should be TRUE or omitted in read research.
+# Remove interval in read research. It is added to speed up the example.
 out1l <- ci_bound_ur(sem_out = fit_med,
                      func = est_i,
                      which = "lbound",
-                     use_callr = FALSE)
+                     use_callr = FALSE,
+                     interval = c(.39070, .39075))
 out1l
 
 }

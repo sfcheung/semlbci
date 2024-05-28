@@ -1,4 +1,4 @@
-# semlbci 0.10.4.6
+# semlbci 0.10.4.7
 
 ## New Feature
 
@@ -28,6 +28,9 @@
   `ci_bound_ur_i()` to make
   sure the bound is a numeric object,
   even if `NA`. (0.10.4.5)
+- Speed up the examples of
+  `ci_bound_ur_i()` and `ci_bound_ur()`.
+  (0.10.4.7)
 
 ## (Possibly) Breaking Changes
 
