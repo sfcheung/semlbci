@@ -1,4 +1,4 @@
-# semlbci 0.10.4.5
+# semlbci 0.10.4.6
 
 ## New Feature
 
@@ -28,6 +28,27 @@
   `ci_bound_ur_i()` to make
   sure the bound is a numeric object,
   even if `NA`. (0.10.4.5)
+
+## (Possibly) Breaking Changes
+
+- This may or may not be a breaking
+  changes. The default of
+  `try_k_more_times` in `semlbci()` was
+  changed from 2 to 0. These additional
+  attempts rarely help but usually
+  increase processing time
+  unnecessarily. (0.10.4.6)
+- Disabled further attempts in
+  the `wn` method by default
+  as they rarely help but they usually
+  increase
+  the processing time unnecessarily.
+  If necessary, one of the set of
+  attempts, successfully lower the
+  lower limits of variances can be
+  enabled again by setting `try_lb`
+  to `TRUE` when calling `semlbci()`
+  (0.10.4.6)
 
 # semlbci 0.10.4
 
