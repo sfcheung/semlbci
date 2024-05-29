@@ -1,4 +1,4 @@
-# semlbci 0.10.4.9
+# semlbci 0.10.4.10
 
 ## New Feature
 
@@ -36,6 +36,10 @@
   `ci_bound_ur()`. (0.10.4.8)
 - Use `kill()` instead of `close()`
   in R sessions. (0.10.4.9)
+- Add `bound_start` and `user_est`
+  to the precomputed interval.
+  (0.10.4.10)
+
 
 ## (Possibly) Breaking Changes
 

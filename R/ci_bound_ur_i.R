@@ -322,6 +322,8 @@ ci_bound_ur_i <- function(i = NULL,
     # Initial interval to search
     a <- abs(i_org_ci_limit - i_est) / d
     interval0 <- c(i_org_ci_limit - a, i_org_ci_limit + a)
+    attr(interval0, "bound_start") <- i_org_ci_limit
+    attr(interval0, "user_est") <- i_est
 
     npar <- lavaan::lavTech(sem_out, "npar")
 
@@ -704,15 +706,14 @@ ci_bound_ur <- function(sem_out,
                                      func = func,
                                      which = which,
                                      d = d)
-        bound_start <- attr(interval, "bound_start")
-        user_est <- attr(interval, "user_est")
         if (progress) {
             cat("\rInitial interval computed.      ")
           }
-      } else {
-        bound_start <- NA
-        user_est <- NA
       }
+    bound_start <- attr(interval, "bound_start")
+    user_est <- attr(interval, "user_est")
+    bound_start <- ifelse(is.null(bound_start), NA, bound_start)
+    user_est <- ifelse(is.null(user_est), NA, user_est)
     if (method == "uniroot") {
         # Define the function for which to find the root
         lrtp_i <- function(x,
