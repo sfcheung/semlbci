@@ -134,8 +134,8 @@ sem_out_userp_run <- function(target,
                               verbose = FALSE,
                               control = list(),
                               seed = NULL,
-                              global_ok = FALSE) {
-    on.exit(try(rs$kill(), silent = TRUE))
+                              global_ok = FALSE,
+                              rs = NULL) {
 
     userp <- object$userp
     userp_name <- object$userp_name
@@ -147,7 +147,10 @@ sem_out_userp_run <- function(target,
     if (global_ok) {
         # Disabled for now
       } else {
-        rs <- callr::r_session$new()
+        if (is.null(rs)) {
+            on.exit(try(rs$kill(), silent = TRUE))
+            rs <- callr::r_session$new()
+          }
         out <- rs$run(function(target,
                                verbose,
                                control,
@@ -237,12 +240,15 @@ sem_out_userp_run <- function(target,
 add_func <- function(func,
                      sem_out,
                      userp_name = "semlbciuserp1234",
-                     fix = TRUE) {
-    on.exit(try(rs$kill(), silent = TRUE))
+                     fix = TRUE,
+                     rs = NULL) {
     userp <- gen_userp(func = func,
                        sem_out = sem_out)
     # Create a child process
-    rs <- callr::r_session$new()
+    if (is.null(rs)) {
+        on.exit(try(rs$kill(), silent = TRUE))
+        rs <- callr::r_session$new()
+      }
     fit_i <- rs$run(function(...,
                              userp,
                              userp_name) {
