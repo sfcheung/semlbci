@@ -735,10 +735,10 @@ ci_bound_ur <- function(sem_out,
             out1 - y_target
           }
         if (use_callr) {
-            on.exit(try(r1$close(), silent = TRUE))
-            r1 <- callr::r_session$new()
+            on.exit(try(rs$kill(), silent = TRUE))
+            rs <- callr::r_session$new()
             if (progress) {
-                optimize_out <- r1$call(function(f,
+                optimize_out <- rs$call(function(f,
                                                 interval,
                                                 alpha,
                                                 root_target,
@@ -767,16 +767,16 @@ ci_bound_ur <- function(sem_out,
                                                   trace = uniroot_trace,
                                                   maxiter = uniroot_maxiter))
                 cat("\nSearch started ...\n")
-                while (r1$poll_process(500) != "ready") {
-                    rtime <- r1$get_running_time()["total"]
+                while (rs$poll_process(500) != "ready") {
+                    rtime <- rs$get_running_time()["total"]
                     # TODO:
                     # - Need to handle time longer than 1 mins.
                     cat("\r", "Time spent: ", round(rtime, 2), " sec.", spe = "")
                   }
                 cat("\nSearch finished. Finalize the results ... \n")
-                optimize_out <- r1$read()$result
+                optimize_out <- rs$read()$result
               } else {
-                optimize_out <- r1$run(function(f,
+                optimize_out <- rs$run(function(f,
                                                 interval,
                                                 alpha,
                                                 root_target,

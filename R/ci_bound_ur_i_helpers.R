@@ -135,7 +135,7 @@ sem_out_userp_run <- function(target,
                               control = list(),
                               seed = NULL,
                               global_ok = FALSE) {
-    on.exit(try(r1$close(), silent = TRUE))
+    on.exit(try(rs$kill(), silent = TRUE))
 
     userp <- object$userp
     userp_name <- object$userp_name
@@ -147,8 +147,8 @@ sem_out_userp_run <- function(target,
     if (global_ok) {
         # Disabled for now
       } else {
-        r1 <- callr::r_session$new()
-        out <- r1$run(function(target,
+        rs <- callr::r_session$new()
+        out <- rs$run(function(target,
                                verbose,
                                control,
                                seed,
@@ -238,12 +238,12 @@ add_func <- function(func,
                      sem_out,
                      userp_name = "semlbciuserp1234",
                      fix = TRUE) {
-    on.exit(try(r1$close(), silent = TRUE))
+    on.exit(try(rs$kill(), silent = TRUE))
     userp <- gen_userp(func = func,
                        sem_out = sem_out)
     # Create a child process
-    r1 <- callr::r_session$new()
-    fit_i <- r1$run(function(...,
+    rs <- callr::r_session$new()
+    fit_i <- rs$run(function(...,
                              userp,
                              userp_name) {
                       assign(userp_name,
