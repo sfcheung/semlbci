@@ -1,4 +1,4 @@
-# semlbci 0.10.4.8
+# semlbci 0.10.4.9
 
 ## New Feature
 
@@ -34,6 +34,8 @@
 - Precompute the interval in
   `ci_bound_ur_i()` before calling
   `ci_bound_ur()`. (0.10.4.8)
+- Use `kill()` instead of `close()`
+  in R sessions. (0.10.4.9)
 
 ## (Possibly) Breaking Changes
 
