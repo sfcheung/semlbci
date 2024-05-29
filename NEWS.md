@@ -1,4 +1,4 @@
-# semlbci 0.10.4.10
+# semlbci 0.10.4.11
 
 ## New Feature
 
@@ -39,6 +39,10 @@
 - Add `bound_start` and `user_est`
   to the precomputed interval.
   (0.10.4.10)
+- Modified several functions related to
+  `"ur"` method to have the option to
+  use an existing R session instead of
+  creating a new one. (0.10.4.11)
 
 
 ## (Possibly) Breaking Changes
