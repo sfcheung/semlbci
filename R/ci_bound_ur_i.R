@@ -333,12 +333,16 @@ ci_bound_ur_i <- function(i = NULL,
                             standardized = standardized)
 
     # Find the root
+    on.exit(try(rs$kill(), silent = TRUE), add = TRUE)
+    rs <- callr::r_session$new()
     ur_opts <- list(sem_out = sem_out,
                     func = est_i_func,
                     level = ciperc,
                     which = which,
                     interval = interval0,
-                    uniroot_maxiter = 500)
+                    uniroot_maxiter = 500,
+                    use_callr = FALSE,
+                    rs = rs)
     ur_opts <- utils::modifyList(ur_opts,
                                  opts)
     out <- do.call(ci_bound_ur,
@@ -599,6 +603,12 @@ ci_bound_ur_i <- function(i = NULL,
 #' interactive environment unless this is
 #' intentional.
 #'
+#' @param rs Optional. If set to
+#' a persistent R process created by
+#' `callr`, it will be used instead of
+#' starting a new one, and it will not
+#' be terminated on exit.
+#'
 #' @return
 #' The function [ci_bound_ur()] returns
 #' a list with the following elements:
@@ -671,7 +681,8 @@ ci_bound_ur <- function(sem_out,
                         uniroot_extendInt = "yes",
                         uniroot_trace = 0,
                         uniroot_maxiter = 1000,
-                        use_callr = TRUE) {
+                        use_callr = TRUE,
+                        rs = NULL) {
 
     # Internal Workflow
     # - Define the function that works on the lavaan object.
@@ -719,10 +730,12 @@ ci_bound_ur <- function(sem_out,
         lrtp_i <- function(x,
                             alpha,
                             root_target = "pvalue",
-                            global_ok = FALSE) {
+                            global_ok = FALSE,
+                            rs = NULL) {
             sem_out_x <- sem_out_userp_run(target = x,
                                             object = fit_i,
-                                            global_ok = global_ok)
+                                            global_ok = global_ok,
+                                            rs = rs)
             lrt0 <- lavaan::lavTestLRT(sem_out_x,
                                        sem_out,
                                        method = lrt_method)
@@ -736,8 +749,11 @@ ci_bound_ur <- function(sem_out,
             out1 - y_target
           }
         if (use_callr) {
-            on.exit(try(rs$kill(), silent = TRUE))
-            rs <- callr::r_session$new()
+            if (is.null(rs)) {
+                on.exit(try(rs$kill(), silent = TRUE), add = TRUE)
+                rs <- callr::r_session$new()
+              }
+            # May fix: Cannot pass an R session to another R session
             if (progress) {
                 optimize_out <- rs$call(function(f,
                                                 interval,
@@ -811,11 +827,16 @@ ci_bound_ur <- function(sem_out,
             if (progress) {
                 cat("\nSearch started ...\n")
               }
+            if (is.null(rs)) {
+                on.exit(try(rs$kill(), silent = TRUE), add = TRUE)
+                rs <- callr::r_session$new()
+              }
             optimize_out <- stats::uniroot(lrtp_i,
                                            interval = interval,
                                            alpha = lrt_alpha,
                                            root_target = root_target,
                                            global_ok = FALSE,
+                                           rs = rs,
                                            extendInt = uniroot_extendInt,
                                            tol = tol,
                                            trace = uniroot_trace,
@@ -827,7 +848,8 @@ ci_bound_ur <- function(sem_out,
       }
     out_root <- optimize_out$root
     sem_out_final <- sem_out_userp_run(target = out_root,
-                                       object = fit_i)
+                                       object = fit_i,
+                                       rs = rs)
     lrt_final <- lavaan::lavTestLRT(sem_out_final,
                                     sem_out,
                                     method = lrt_method)

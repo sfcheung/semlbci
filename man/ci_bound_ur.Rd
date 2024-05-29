@@ -22,7 +22,8 @@ ci_bound_ur(
   uniroot_extendInt = "yes",
   uniroot_trace = 0,
   uniroot_maxiter = 1000,
-  use_callr = TRUE
+  use_callr = TRUE,
+  rs = NULL
 )
 
 gen_est_i(i, sem_out, standardized = FALSE)
@@ -118,6 +119,12 @@ Default is 1000.}
 \verb{callr`` package will be used to do the search in a separate R process. Default is }TRUE\verb{. Should not set to }FALSE` if used in an
 interactive environment unless this is
 intentional.}
+
+\item{rs}{Optional. If set to
+a persistent R process created by
+\code{callr}, it will be used instead of
+starting a new one, and it will not
+be terminated on exit.}
 
 \item{i}{The position of the target
 parameter as appeared in the
