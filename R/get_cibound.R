@@ -32,7 +32,7 @@
 #'  may be omitted in the printout of `x`.
 #'
 #' @param which The bound for which the [ci_bound_wn_i()] is
-#'  to be extracted. Either `"lbound"`` or `"ubound"``.
+#'  to be extracted. Either `"lbound"` or `"ubound"`.
 #'
 #' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
 #'

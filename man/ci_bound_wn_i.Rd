@@ -102,7 +102,11 @@ and \code{ciperc} is greater than this amount, a warning is set in the
 status code and the bound is set to \code{NA}. Default is 5e-4.}
 
 \item{std_method}{The method used to find the standardized
-solution. If equal to \verb{"lavaan"``, [lavaan::standardizedSolution()] will be used. If equal to }"internal"\verb{, an internal function will be used. The }"lavaan"\verb{method should work in all situations, but the}"internal"\verb{method is usually much faster. Default is}"internal"`.}
+solution. If equal to \code{"lavaan"},
+\code{\link[lavaan:standardizedSolution]{lavaan::standardizedSolution()}} will be used. If equal to
+\code{"internal"}, an internal function will be used. The \code{"lavaan"}
+method should work in all situations, but the \code{"internal"} method
+is usually much faster. Default is \code{"internal"}.}
 
 \item{bounds}{Default is \code{""} and this function will set the lower
 bounds to \code{lb_var} for variances. Other valid values are those

@@ -116,7 +116,10 @@ number of iteration in the search.
 Default is 1000.}
 
 \item{use_callr}{Whether the
-\verb{callr`` package will be used to do the search in a separate R process. Default is }TRUE\verb{. Should not set to }FALSE` if used in an
+\code{callr} package will be used to
+do the search in a separate R
+process. Default is \code{TRUE}. Should
+not set to \code{FALSE} if used in an
 interactive environment unless this is
 intentional.}
 
@@ -201,7 +204,7 @@ directly through the \code{func} argument.
 This provides the flexibility to find
 the bound for any function of the
 model parameter, even one that cannot
-be easily coded in `lavaan`` model
+be easily coded in \code{lavaan} model
 syntax.
 }
 \examples{

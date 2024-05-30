@@ -62,7 +62,7 @@
 #'
 #' @param robust Whether the LBCI based on robust likelihood ratio
 #'  test is to be found. Only `"satorra.2000"` in
-#'  [lavaan::lavTestLRT()] is supported for now. If `"none"``, the
+#'  [lavaan::lavTestLRT()] is supported for now. If `"none"`, the
 #'  default, then likelihood ratio test based on maximum likelihood
 #'  estimation will be used. For "ur", `"satorra.2000"` is
 #'  automatically used if a scaled test statistic is requested

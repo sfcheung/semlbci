@@ -17,7 +17,7 @@ on the left, not the actual row number, because some rows
 may be omitted in the printout of \code{x}.}
 
 \item{which}{The bound for which the \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}} is
-to be extracted. Either \verb{"lbound"`` or }"ubound"``.}
+to be extracted. Either \code{"lbound"} or \code{"ubound"}.}
 }
 \value{
 \code{\link[=get_cibound]{get_cibound()}} returns a \code{cibound}-class object. See \code{\link[=ci_bound_wn_i]{ci_bound_wn_i()}}

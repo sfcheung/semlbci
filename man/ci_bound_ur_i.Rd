@@ -124,7 +124,14 @@ bound is set to \code{NA}. Default is
 
 \item{std_method}{The method used to
 find the standardized solution. If
-equal to \verb{"lavaan"``, [lavaan::standardizedSolution()] will be used. If equal to }"internal"\verb{, an internal function will be used. The }"lavaan"\verb{method should work in all situations, but the}"internal"\verb{method is usually much faster. Default is}"internal"`.}
+equal to \code{"lavaan"},
+\code{\link[lavaan:standardizedSolution]{lavaan::standardizedSolution()}} will
+be used. If equal to \code{"internal"}, an
+internal function will be used. The
+\code{"lavaan"} method should work in all
+situations, but the \code{"internal"}
+method is usually much faster.
+Default is \code{"internal"}.}
 
 \item{bounds}{Ignored by this
 function. Included consistency in the

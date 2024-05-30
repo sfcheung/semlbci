@@ -178,7 +178,7 @@
 #'
 #' @param std_method The method used to
 #' find the standardized solution. If
-#' equal to `"lavaan"``,
+#' equal to `"lavaan"`,
 #' [lavaan::standardizedSolution()] will
 #' be used. If equal to `"internal"`, an
 #' internal function will be used. The
@@ -506,7 +506,7 @@ ci_bound_ur_i <- function(i = NULL,
 #' This provides the flexibility to find
 #' the bound for any function of the
 #' model parameter, even one that cannot
-#' be easily coded in `lavaan`` model
+#' be easily coded in `lavaan` model
 #' syntax.
 #'
 #' @param sem_out The fit object.
@@ -596,7 +596,7 @@ ci_bound_ur_i <- function(i = NULL,
 #' Default is 1000.
 #'
 #' @param use_callr Whether the
-#' `callr`` package will be used to
+#' `callr` package will be used to
 #' do the search in a separate R
 #' process. Default is `TRUE`. Should
 #' not set to `FALSE` if used in an

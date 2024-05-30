@@ -1,4 +1,4 @@
-# semlbci 0.10.4.13
+# semlbci 0.10.4.14
 
 ## New Feature
 
@@ -53,7 +53,8 @@
 - Store the error in the search and
   display it in the printout.
   (0.10.4.12)
-
+- Fixed some typos in doc.
+  (0.10.4.14)
 
 ## (Possibly) Breaking Changes
 

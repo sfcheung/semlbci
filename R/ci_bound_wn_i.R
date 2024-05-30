@@ -115,7 +115,7 @@
 #'  status code and the bound is set to `NA`. Default is 5e-4.
 #'
 #' @param std_method The method used to find the standardized
-#'  solution. If equal to `"lavaan"``,
+#'  solution. If equal to `"lavaan"`,
 #'  [lavaan::standardizedSolution()] will be used. If equal to
 #'  `"internal"`, an internal function will be used. The `"lavaan"`
 #'  method should work in all situations, but the `"internal"` method
