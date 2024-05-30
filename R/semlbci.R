@@ -228,8 +228,8 @@ semlbci <- function(sem_out,
         # Check whether semlbci_out and sem_out match
         tmp0 <- ptable[, c("id", "lhs", "op", "rhs", "group", "label")]
         tmp1 <- as.data.frame(semlbci_out)[, c("id", "lhs", "op", "rhs", "group", "label")]
-        if (!identical(tmp0, tmp1)) {
-            stop("semblci_out and the parameter table of sem_out do not match.")
+        if (!identical(tmp0[order(tmp0$id), ], tmp1[order(tmp1$id), ])) {
+            stop("semlbci_out and the parameter table of sem_out do not match.")
           }
         # Find pars with both lbci_lb and lbci_ub
         pars_lbci_yes <- !sapply(semlbci_out$lbci_lb, is.na) &
