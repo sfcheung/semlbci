@@ -531,6 +531,7 @@ ci_bound_wn_i <- function(i = NULL,
     # Failed after try harder k times
 
     if (inherits(out, "error")) {
+        search_error <- as.character(out)
         opts_error <- utils::modifyList(opts_final,
                                         list("maxeval" = 1))
         out <- nloptr::nloptr(x0 = xstart,
@@ -546,6 +547,8 @@ ci_bound_wn_i <- function(i = NULL,
                               sf = sf,
                               sf2 = sf2,
                               stop_on_error = TRUE)
+      } else {
+        search_error <- NULL
       }
 
 
@@ -663,7 +666,8 @@ ci_bound_wn_i <- function(i = NULL,
                  standardized = standardized,
                  check_optimization = check_optimization,
                  check_post_check = check_post_check,
-                 check_level_of_confidence = check_level_of_confidence
+                 check_level_of_confidence = check_level_of_confidence,
+                 search_error = search_error
                  )
     if (verbose) {
         diag$history <- out

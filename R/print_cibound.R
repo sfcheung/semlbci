@@ -63,6 +63,16 @@ print.cibound <- function(x, digits = 5, ...) {
                                             ubound = "Upper Bound")))
     cat(paste0("\nMethod:\t\t\t", ci_method))
     cat(paste0("\nConfidence Level:\t", out_diag$ciperc))
+    if (!is.null(out_diag$search_error)) {
+    cat(paste0("\nSearch Error Message:\n", out_diag$search_error, "\n"))
+    cat(paste0(rep("*", round(getOption("width") * .8)), collapse = ""))
+    cat("\n")
+    cat(strwrap(c("The search was terminated due to the error above.",
+                  "The following lines should not be interpreted.")),
+        sep = "\n")
+    cat(paste0(rep("*", round(getOption("width") * .8)), collapse = ""))
+    cat("\n")
+    }
     cat(paste0("\nAchieved Level:\t\t", out_diag$ciperc_final))
     cat(paste0("\nStandardized:\t\t", std))
     cat(paste0("\nLikelihood-Based Bound:\t",

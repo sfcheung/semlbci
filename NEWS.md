@@ -1,4 +1,4 @@
-# semlbci 0.10.4.11
+# semlbci 0.10.4.12
 
 ## New Feature
 
@@ -43,6 +43,9 @@
   `"ur"` method to have the option to
   use an existing R session instead of
   creating a new one. (0.10.4.11)
+- Store the error in the search and
+  display it in the printout.
+  (0.10.4.12)
 
 
 ## (Possibly) Breaking Changes
