@@ -1,4 +1,4 @@
-# semlbci 0.10.4.15
+# semlbci 0.10.4.16
 
 ## New Feature
 
@@ -19,9 +19,6 @@
   a list the `cibound` objects of
   bounds with status not equal to zero.
   For diagnostic purpose. (0.10.4.13)
-- Make the test for the match between
-  `sem_out` and `semlbci_out` in
-  `semlbci()` more robust. (0.10.4.15)
 
 ## Miscellaneous
 
@@ -58,6 +55,11 @@
   (0.10.4.12)
 - Fixed some typos in doc.
   (0.10.4.14)
+- Made the test for the match between
+  `sem_out` and `semlbci_out` in
+  `semlbci()` more robust. (0.10.4.15)
+- Fixed the order of the output when
+  `standardized` is `TRUE`. (0.10.4.16)
 
 ## (Possibly) Breaking Changes
 
