@@ -1,4 +1,4 @@
-# semlbci 0.10.4.12
+# semlbci 0.10.4.13
 
 ## New Feature
 
@@ -12,6 +12,13 @@
   cannot. It also supports robust LBCI
   using Satorra (2000) chi-square
   difference test. (0.10.4.2)
+
+- Add `get_cibound_status_not_0()`. It
+  checks the status of each bound in
+  a `semlbci` object, and returns as
+  a list the `cibound` objects of
+  bounds with status not equal to zero.
+  For diagnostic purpose. (0.10.4.13)
 
 ## Miscellaneous
 
