@@ -1,4 +1,4 @@
-# semlbci 0.10.4.17
+# semlbci 0.10.4.18
 
 ## New Feature
 
@@ -63,6 +63,9 @@
 - Fixed a bug in `print.cibound()` when
   the call is of the form `xxx::yyy()`.
   (0.10.4.17)
+- Added `fit_lb` and `fit_ub` arguments
+  to `ci_bound_wn_i()` for setting
+  the bounds. (0.10.4.18)
 
 ## (Possibly) Breaking Changes
 

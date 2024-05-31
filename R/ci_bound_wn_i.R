@@ -148,6 +148,18 @@
 #' the starting values will be randomly
 #' jittered. Default is 0.
 #'
+#' @param fit_lb The vector of lower
+#' bounds of parameters. Default is
+#' `-Inf`, setting the lower bounds to
+#' `-Inf` for all parameters except for
+#' free variances which are controlled
+#' by `lb_var`.
+#'
+#' @param fit_ub The vector of upper
+#' bounds of parameters. Default is
+#' `+Inf`, setting the lower bounds to
+#' `+Inf` for all parameters.
+#'
 #' @param ... Optional arguments. Not used.
 #'
 #' @references
@@ -212,6 +224,8 @@ ci_bound_wn_i <- function(i = NULL,
                           lb_prop = .05,
                           lb_se_k = 3,
                           try_harder = 0,
+                          fit_lb = -Inf,
+                          fit_ub = +Inf,
                           ...) {
     k <- switch(which,
                 lbound = 1,
@@ -452,8 +466,17 @@ ci_bound_wn_i <- function(i = NULL,
         xstart <- perturbation_factor * lavaan::coef(sem_out)
       }
 
+    # Get SEs. For bounds
+    p_table <- lavaan::parameterTable(sem_out)
+    se_free <- p_table[p_table$free > 0, "se"]
+    est_free <- p_table[p_table$free > 0, "est"]
+
     # Set lower bounds
-    fit_lb <- rep(-Inf, npar)
+    if (fit_lb == -Inf) {
+        fit_lb <- rep(-Inf, npar)
+      } else if (length(fit_lb) == 1) {
+        fit_lb <- est_free - se_free * fit_lb
+      }
     if (isTRUE(identical(lb_var, -Inf))) {
         # Override lb_var = -Inf for free variances
         fit_lb[find_variance_in_free(sem_out)] <- find_variance_in_free_lb(sem_out,
@@ -464,7 +487,11 @@ ci_bound_wn_i <- function(i = NULL,
       }
 
     # Set upper bounds
-    fit_ub <- rep(+Inf, npar)
+    if (fit_ub == -Inf) {
+        fit_ub <- rep(-Inf, npar)
+      } else if (length(fit_ub) == 1) {
+        fit_ub <- est_free + se_free * fit_ub
+      }
 
     # Need further testing on using lavaan bounds
     # if (!is.null(p_table$lower)) {

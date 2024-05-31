@@ -29,6 +29,8 @@ ci_bound_wn_i(
   lb_prop = 0.05,
   lb_se_k = 3,
   try_harder = 0,
+  fit_lb = -Inf,
+  fit_ub = +Inf,
   ...
 )
 }
@@ -134,6 +136,18 @@ in the optimization, how many more
 times to try. In each new attempt,
 the starting values will be randomly
 jittered. Default is 0.}
+
+\item{fit_lb}{The vector of lower
+bounds of parameters. Default is
+\code{-Inf}, setting the lower bounds to
+\code{-Inf} for all parameters except for
+free variances which are controlled
+by \code{lb_var}.}
+
+\item{fit_ub}{The vector of upper
+bounds of parameters. Default is
+\code{+Inf}, setting the lower bounds to
+\code{+Inf} for all parameters.}
 
 \item{...}{Optional arguments. Not used.}
 }
