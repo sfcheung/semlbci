@@ -1,4 +1,4 @@
-# semlbci 0.10.4.18
+# semlbci 0.10.4.19
 
 ## New Feature
 
@@ -65,7 +65,7 @@
   (0.10.4.17)
 - Added `fit_lb` and `fit_ub` arguments
   to `ci_bound_wn_i()` for setting
-  the bounds. (0.10.4.18)
+  the bounds. (0.10.4.18, 0.10.4.19)
 
 ## (Possibly) Breaking Changes
 

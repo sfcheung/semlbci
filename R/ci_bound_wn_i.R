@@ -493,6 +493,12 @@ ci_bound_wn_i <- function(i = NULL,
         fit_ub <- est_free + se_free * fit_ub
       }
 
+    # For pmax() and pmin()
+    fit_lb_na <- fit_lb
+    fit_ub_na <- fit_ub
+    fit_lb_na[fit_lb_na == -Inf] <- NA
+    fit_ub_na[fit_ub_na == +Inf] <- NA
+
     # Need further testing on using lavaan bounds
     # if (!is.null(p_table$lower)) {
     #     fit_lb <- p_table$lower[p_table$free > 0]
@@ -549,6 +555,7 @@ ci_bound_wn_i <- function(i = NULL,
             xstart_i <- stats::runif(length(xstart_i),
                                      min = -2,
                                      max = 2) * xstart_i
+            xstart_i <- pmin(pmax(xstart_i, fit_lb_na), fit_ub_na)
             try_harder_count <- try_harder_count + 1
           } else {
             try_harder_count <- Inf
