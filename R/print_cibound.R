@@ -88,6 +88,8 @@ print.cibound <- function(x, digits = 5, ...) {
     p_tol_call <- call_org$p_tol
     if (is.null(p_tol_call)) {
         ci_method <- as.character(call_org[[1]])
+        # ci_method can be of the form xxx::yyy
+        ci_method <- ci_method[length(ci_method)]
         p_tol_call <- formals(ci_method)$p_tol
       }
     ciperc_diff <- abs(out_diag$ciperc - out_diag$ciperc_final)

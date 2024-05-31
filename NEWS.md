@@ -1,4 +1,4 @@
-# semlbci 0.10.4.16
+# semlbci 0.10.4.17
 
 ## New Feature
 
@@ -60,6 +60,9 @@
   `semlbci()` more robust. (0.10.4.15)
 - Fixed the order of the output when
   `standardized` is `TRUE`. (0.10.4.16)
+- Fixed a bug in `print.cibound()` when
+  the call is of the form `xxx::yyy()`.
+  (0.10.4.17)
 
 ## (Possibly) Breaking Changes
 
