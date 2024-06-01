@@ -1,4 +1,4 @@
-# semlbci 0.10.4.23
+# semlbci 0.10.4.24
 
 ## New Feature
 
@@ -79,6 +79,10 @@
 - Use whitespace instead of tab to
   align the output of `print.cibound()`.
   (0.10.4.23)
+- Fixed a bug with `semlbci()`.
+  Intercepts are now automatically
+  skipped if `standardized` is `TRUE`.
+  (0.10.4.24)
 
 ## (Possibly) Breaking Changes
 

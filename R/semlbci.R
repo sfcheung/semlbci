@@ -277,7 +277,7 @@ semlbci <- function(sem_out,
             pars <- remove_variances(pars, sem_out)
           }
         if (remove_intercepts) {
-            pars <- remove_variances(pars, sem_out)
+            pars <- remove_intercepts(pars, sem_out)
           }
         # Remove parameters already with LBCIs in semlbci_out.
         pars <- pars[!pars %in% i_id[pars_lbci_yes]]
