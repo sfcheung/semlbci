@@ -56,13 +56,13 @@ print.cibound <- function(x, digits = 5, ...) {
     lor <- out_diag$i_lor
     lor2 <- paste0(lor$lhs, " ", lor$op, " ", lor$rhs, " (group = ",
                    lor$group, ", block = ", lor$block, ")")
-    cat(paste0("Target Parameter:\t", lor2))
-    cat(paste0("\nPosition:\t\t", out_diag$i))
-    cat(paste0("\nWhich Bound:\t\t", switch(out_diag$which,
+    cat(paste0(  "Target Parameter:       ", lor2))
+    cat(paste0("\nPosition:               ", out_diag$i))
+    cat(paste0("\nWhich Bound:            ", switch(out_diag$which,
                                             lbound = "Lower Bound",
                                             ubound = "Upper Bound")))
-    cat(paste0("\nMethod:\t\t\t", ci_method))
-    cat(paste0("\nConfidence Level:\t", out_diag$ciperc))
+    cat(paste0("\nMethod:                 ", ci_method))
+    cat(paste0("\nConfidence Level:       ", out_diag$ciperc))
     if (!is.null(out_diag$search_error)) {
     cat(paste0("\nSearch Error Message:\n", out_diag$search_error, "\n"))
     cat(paste0(rep("*", round(getOption("width") * .8)), collapse = ""))
@@ -73,15 +73,15 @@ print.cibound <- function(x, digits = 5, ...) {
     cat(paste0(rep("*", round(getOption("width") * .8)), collapse = ""))
     cat("\n")
     }
-    cat(paste0("\nAchieved Level:\t\t", out_diag$ciperc_final))
-    cat(paste0("\nStandardized:\t\t", std))
-    cat(paste0("\nLikelihood-Based Bound:\t",
+    cat(paste0("\nAchieved Level:         ", out_diag$ciperc_final))
+    cat(paste0("\nStandardized:           ", std))
+    cat(paste0("\nLikelihood-Based Bound: ",
                   ifelse(is.na(x$bound),
                          "Not valid",
                          round(x$bound, digits))))
-    cat(paste0("\nWald Bound:\t\t", round(out_diag$ci_org_limit, digits)))
-    cat(paste0("\nPoint Estimate:\t\t", round(out_diag$est_org, digits)))
-    cat(paste0("\nRatio to Wald Bound:\t", ifelse(is.na(x$bound), "Not valid",
+    cat(paste0("\nWald Bound:             ", round(out_diag$ci_org_limit, digits)))
+    cat(paste0("\nPoint Estimate:         ", round(out_diag$est_org, digits)))
+    cat(paste0("\nRatio to Wald Bound:    ", ifelse(is.na(x$bound), "Not valid",
                   round(out_diag$ci_limit_ratio, digits))))
     cat(paste0("\n\n-- Check --"))
     # Get p_tol in call
@@ -93,12 +93,12 @@ print.cibound <- function(x, digits = 5, ...) {
         p_tol_call <- formals(ci_method)$p_tol
       }
     ciperc_diff <- abs(out_diag$ciperc - out_diag$ciperc_final)
-    cat(paste0("\nLevel achieved?\t\t",
+    cat(paste0("\nLevel achieved?         ",
             ifelse(ciperc_diff <= p_tol_call, "Yes", "No"),
                    " (Difference: ",
                    formatC(ciperc_diff, digits = digits), ";",
                    " Tolerance: ", p_tol_call, ")"))
-    cat(paste0("\nSolution admissible?\t",
+    cat(paste0("\nSolution admissible?    ",
             ifelse(out_diag$fit_post_check, "Yes", "No")))
     bound_unchecked <- out_diag$bound_unchecked
     if (is.na(bound_unchecked)) {
@@ -111,16 +111,16 @@ print.cibound <- function(x, digits = 5, ...) {
                                           "Yes", "No")
                         )
       }
-    cat(paste0("\nDirection valid?\t", direct_valid))
+    cat(paste0("\nDirection valid?        ", direct_valid))
     cat("\n")
 
     cat("\n-- Optimization Information --")
-    cat(paste0("\nSolver Status:\t\t", out_diag$optim_status))
-    cat(paste0("\nConvergence Message:\t", out_diag$optim_message))
-    if (any(grepl("NLOPT_MAXTIME_REACHED:", out_diag$optim_message))) {
+    cat(paste0("\nSolver Status:          ", out_diag$optim_status))
+    cat(paste0("\nConvergence Message:    ", out_diag$optim_message))
+    if (any(grepl("NLOPT_MAXTIME_REACHED: ", out_diag$optim_message))) {
         cat("\n - Set 'timeout' to a larger value to increase maximum time.")
       }
-    cat(paste0("\nIterations:\t\t", out_diag$optim_iterations))
+    cat(paste0("\nIterations:             ", out_diag$optim_iterations))
     t_cond <- out_diag$optim_termination_conditions
     t_cond2 <- strsplit(t_cond, "\t")[[1]]
     t_cond2 <- gsub("maxeval: ", "maxeval:  ", t_cond2)
@@ -137,9 +137,9 @@ print.cibound <- function(x, digits = 5, ...) {
     cat("\n-- Parameter Estimates --\n")
     print(coef_c)
 
-    cat(paste0("\nBound before check:\t",
+    cat(paste0("\nBound before check:     ",
                 round(out_diag$bound_unchecked, digits)))
-    cat(paste0("\nStatus Code:\t\t", out_diag$status))
+    cat(paste0("\nStatus Code:            ", out_diag$status))
     cat("\nCall: ")
     call_print <- call_org
     if (!is.name(call_print$f_constr)) {

@@ -1,4 +1,4 @@
-# semlbci 0.10.4.22
+# semlbci 0.10.4.23
 
 ## New Feature
 
@@ -76,6 +76,9 @@
 - In `print.semlbci()`, added
   suggestions on what to do if some
   bounds could not be found (0.10.4.22)
+- Use whitespace instead of tab to
+  align the output of `print.cibound()`.
+  (0.10.4.23)
 
 ## (Possibly) Breaking Changes
 
