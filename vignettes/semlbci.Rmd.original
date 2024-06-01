@@ -85,7 +85,7 @@ its usage by some examples, and then
 present other technical details in the
 following section.
 
-## Find the LBCI for a free parameter
+## Find the LBCI for selected free parameters
 
 All free parameters can be specified in
 `lavaan` style. For example, the path
@@ -100,6 +100,23 @@ out <- semlbci(sem_out = fit,
                pars = c("y ~ m",
                         "m ~ x"))
 ```
+
+Since version 0.10.4.25, `lavaan`
+model syntax operators
+can be used to represent all parameters
+of the same type: `"~"` for regression
+paths, `"~~"` for variances and
+covariances, `"=~"` for factor
+loadings, and `":="` for all user-defined
+parameters. For example, the following
+call and the one above find LBCIs for
+the same set of parameters:
+
+```{r}
+out <- semlbci(sem_out = fit,
+               pars = c("~"))
+```
+
 
 The output is the parameter table of
 the fitted `lavaan` object, with two
@@ -119,6 +136,27 @@ and the LBCI is
 `r formatC(out[out$id == 1, "lbci_lb"], 3, format = "f")`
 to
 `r formatC(out[out$id == 1, "lbci_ub"], 3, format = "f")`.
+
+### Default Parameters
+
+By default, factor loadings, covariances
+(except for error covariances), and
+regression paths are included in the
+search. Therefore, `pars` can be omitted,
+although the search will take time to
+run for a big model. In this case,
+it is advised to enable parallel processing
+by add `parallel = TRUE` and set `ncpus`
+to the number of processes to run
+(these arguments are explained later):
+
+```{r}
+out <- semlbci(sem_out = fit,
+               parallel = TRUE,
+               ncpus = 6)
+print(out,
+      annotation = FALSE)
+```
 
 ### Customizing the printout
 
@@ -189,6 +227,19 @@ out <- semlbci(sem_out = fit,
                pars = c("y ~ m",
                         "m ~ x"),
                standardized = TRUE)
+```
+
+This one also works:
+
+```{r eval = FALSE}
+out <- semlbci(sem_out = fit,
+               pars = "~",
+               standardized = TRUE)
+```
+
+This is the printout, in `lavaan`-style:
+
+```{r}
 print(out,
       sem_out = fit,
       output = "lavaan")
@@ -212,6 +263,15 @@ print(out,
       sem_out = fit,
       output = "lavaan")
 ```
+
+```{r}
+out <- semlbci(sem_out = fit,
+               standardized = TRUE)
+print(out,
+      sem_out = fit,
+      output = "lavaan")
+```
+
 
 # Basic Arguments in `semlbci()`
 
