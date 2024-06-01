@@ -244,46 +244,19 @@ semlbci <- function(sem_out,
     i_id_free <- i_id[i]
     i_id_user <- i_id[(ptable$free == 0) & (ptable$op == ":=")]
     # pars must be the row numbers as in the lavaan parameterTable.
-    if (!is.null(pars)) {
-        # Parameters supplied
-        if (is.character(pars)) {
-            # Convert syntax to row numbers.
-            pars <- syntax_to_i(pars, sem_out)
-          }
-        if (standardized) {
-            # Always exclude variances fixed in the standardized solution
-            pars <- remove_v1(pars, sem_out)
-          }
-        # Remove parameters already with LBCIs in semlbci_out.
-        pars <- pars[!pars %in% i_id[pars_lbci_yes]]
-        # Ids in the vector of free parameters
-        i_selected <- i_id[pars]
-      } else {
-        # Start with all free parameters
-        pars <- i_id_free
-        if (standardized) {
-            # Intercepts and means not supported for standardized solution
-            remove_intercepts <- TRUE
-            # Always exclude variances fixed in the standardized solution
-            pars <- remove_v1(pars, sem_out)
-            # Include parameters free in the standardized solution,
-            # e.g., fixed loadings.
-            pars <- sort(unique(c(pars, free_in_std(i_id, sem_out))))
-          }
-        if (include_user_pars && length(i_id_user) > 0) {
-            pars <- c(pars, i_id_user)
-          }
-        if (remove_variances) {
-            pars <- remove_variances(pars, sem_out)
-          }
-        if (remove_intercepts) {
-            pars <- remove_intercepts(pars, sem_out)
-          }
-        # Remove parameters already with LBCIs in semlbci_out.
-        pars <- pars[!pars %in% i_id[pars_lbci_yes]]
-        # Ids in the vector of free parameters
-        i_selected <- i_id[pars]
-      }
+    pars_tmp <- fix_pars(pars = pars,
+                         sem_out = sem_out,
+                         standardized = standardized,
+                         include_user_pars = include_user_pars,
+                         remove_variances = remove_variances,
+                         remove_intercepts = remove_intercepts,
+                         pars_lbci_yes = pars_lbci_yes,
+                         i_id = i_id,
+                         i_id_free = i_id_free,
+                         i_id_user = i_id_user)
+    pars <- pars_tmp$pars
+    i_selected <- pars_tmp$i_selected
+
     if (length(pars) == 0) {
         if (is.null(semlbci_out)) {
             stop("The number of parameters selected is zero.")
@@ -533,4 +506,61 @@ semlbci <- function(sem_out,
 
     class(out_p) <- c("semlbci", class(out_p))
     out_p
+  }
+
+#' @noRd
+# Process the `pars` argument
+
+fix_pars <- function(pars,
+                     sem_out,
+                     standardized,
+                     include_user_pars,
+                     remove_variances,
+                     remove_intercepts,
+                     pars_lbci_yes,
+                     i_id,
+                     i_id_free,
+                     i_id_user) {
+    if (!is.null(pars)) {
+        # Parameters supplied
+        if (is.character(pars)) {
+            # Convert syntax to row numbers.
+            pars <- syntax_to_i(pars, sem_out)
+          }
+        if (standardized) {
+            # Always exclude variances fixed in the standardized solution
+            pars <- remove_v1(pars, sem_out)
+          }
+        # Remove parameters already with LBCIs in semlbci_out.
+        pars <- pars[!pars %in% i_id[pars_lbci_yes]]
+        # Ids in the vector of free parameters
+        i_selected <- i_id[pars]
+      } else {
+        # Start with all free parameters
+        pars <- i_id_free
+        if (standardized) {
+            # Intercepts and means not supported for standardized solution
+            remove_intercepts <- TRUE
+            # Always exclude variances fixed in the standardized solution
+            pars <- remove_v1(pars, sem_out)
+            # Include parameters free in the standardized solution,
+            # e.g., fixed loadings.
+            pars <- sort(unique(c(pars, free_in_std(i_id, sem_out))))
+          }
+        if (include_user_pars && length(i_id_user) > 0) {
+            pars <- c(pars, i_id_user)
+          }
+        if (remove_variances) {
+            pars <- remove_variances(pars, sem_out)
+          }
+        if (remove_intercepts) {
+            pars <- remove_intercepts(pars, sem_out)
+          }
+        # Remove parameters already with LBCIs in semlbci_out.
+        pars <- pars[!pars %in% i_id[pars_lbci_yes]]
+        # Ids in the vector of free parameters
+        i_selected <- i_id[pars]
+      }
+    list(pars = pars,
+         i_selected = i_selected)
   }
