@@ -1,4 +1,4 @@
-# semlbci 0.10.4.26
+# semlbci 0.10.4.27
 
 ## New Feature
 
@@ -89,6 +89,9 @@
   Intercepts are now automatically
   skipped if `standardized` is `TRUE`.
   (0.10.4.24)
+- Added support for dynamic scheduling
+  in `semlbci()` when `parallel` is
+  `FALSE`. (0.10.4.27)
 
 ## (Possibly) Breaking Changes
 

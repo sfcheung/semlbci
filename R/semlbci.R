@@ -354,7 +354,10 @@ semlbci <- function(sem_out,
                               sf_full = sf_full_list2,
                               which = which2,
                               MoreArgs = args_final,
-                              SIMPLIFY = FALSE)
+                              SIMPLIFY = FALSE,
+                              .scheduling = ifelse(loadbalancing,
+                                                   yes = "dynamic",
+                                                   no = "static"))
           }
         parallel::stopCluster(cl)
       } else {
