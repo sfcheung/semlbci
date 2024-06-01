@@ -2,7 +2,7 @@
 % Please edit documentation in R/ci_bound_wn_i.R
 \name{ci_bound_wn_i}
 \alias{ci_bound_wn_i}
-\title{Likelihood-based Confidence Bound For One parameter}
+\title{Likelihood-based Confidence Bound By Wu-Neale-2012}
 \usage{
 ci_bound_wn_i(
   i = NULL,
@@ -28,6 +28,10 @@ ci_bound_wn_i(
   ftol_rel_factor = 1,
   lb_prop = 0.05,
   lb_se_k = 3,
+  try_harder = 0,
+  fit_lb = -Inf,
+  fit_ub = +Inf,
+  timeout = 300,
   ...
 )
 }
@@ -101,7 +105,11 @@ and \code{ciperc} is greater than this amount, a warning is set in the
 status code and the bound is set to \code{NA}. Default is 5e-4.}
 
 \item{std_method}{The method used to find the standardized
-solution. If equal to \verb{"lavaan"``, [lavaan::standardizedSolution()] will be used. If equal to }"internal"\verb{, an internal function will be used. The }"lavaan"\verb{method should work in all situations, but the}"internal"\verb{method is usually much faster. Default is}"internal"`.}
+solution. If equal to \code{"lavaan"},
+\code{\link[lavaan:standardizedSolution]{lavaan::standardizedSolution()}} will be used. If equal to
+\code{"internal"}, an internal function will be used. The \code{"lavaan"}
+method should work in all situations, but the \code{"internal"} method
+is usually much faster. Default is \code{"internal"}.}
 
 \item{bounds}{Default is \code{""} and this function will set the lower
 bounds to \code{lb_var} for variances. Other valid values are those
@@ -124,6 +132,29 @@ negative.}
 for free variances. Default is 3, the estimate minus 3 standard
 error. If negative, the lower bound is set using \code{lb_prop}.}
 
+\item{try_harder}{If error occurred
+in the optimization, how many more
+times to try. In each new attempt,
+the starting values will be randomly
+jittered. Default is 0.}
+
+\item{fit_lb}{The vector of lower
+bounds of parameters. Default is
+\code{-Inf}, setting the lower bounds to
+\code{-Inf} for all parameters except for
+free variances which are controlled
+by \code{lb_var}.}
+
+\item{fit_ub}{The vector of upper
+bounds of parameters. Default is
+\code{+Inf}, setting the lower bounds to
+\code{+Inf} for all parameters.}
+
+\item{timeout}{The approximate
+maximum time for the search, in
+second. Default is 300 seconds
+(5 minutes).}
+
 \item{...}{Optional arguments. Not used.}
 }
 \value{
@@ -139,7 +170,8 @@ A detailed and organized output can be printed by the default print
 method (\code{\link[=print.cibound]{print.cibound()}}).
 }
 \description{
-Find the lower or upper bound of the likelihood-based
+User the method proposed by Wu and Neale
+(2012) to find the lower or upper bound of the likelihood-based
 confidence interval (LBCI) for one parameter in a structural
 equation model fitted in \code{\link[lavaan:lavaan]{lavaan::lavaan()}}.
 }

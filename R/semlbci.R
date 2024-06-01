@@ -71,8 +71,8 @@
 #' @param standardized If `TRUE`, the LBCI is for the standardized estimates.
 #'
 #' @param method The method to be used to search for the confidence
-#'  bounds. Currently only `"wn"` (Wu-Neale-2012), the default, is
-#'  supported.
+#'  bounds. Supported methods are`"wn"` (Wu-Neale-2012), the default,
+#' and `"ur"` (root finding by [stats::uniroot()]).
 #'
 #' @param robust Whether the LBCI based on robust likelihood ratio
 #'  test is to be found. Only `"satorra.2000"` in [lavaan::lavTestLRT()]
@@ -105,6 +105,11 @@
 #'  is installed, [pbapply::pbapply()] will be used to display a
 #'  progress bar when finding the intervals. Default is `TRUE`.
 #'  Ignored if `pbapply` is not installed.
+#'
+#' @param loadbalancing Whether load
+#' balancing is used when `parallel`
+#' is `TRUE` and `use_pbapply` is
+#' `TRUE`.
 #'
 #' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
 #'
@@ -168,15 +173,16 @@ semlbci <- function(sem_out,
                     remove_intercepts = TRUE,
                     ciperc = .95,
                     standardized = FALSE,
-                    method = "wn",
+                    method = c("wn", "ur"),
                     robust = c("none", "satorra.2000"),
-                    try_k_more_times = 2,
+                    try_k_more_times = 0,
                     semlbci_out = NULL,
                     check_fit = TRUE,
                     ...,
                     parallel = FALSE,
                     ncpus = 2,
-                    use_pbapply = TRUE) {
+                    use_pbapply = TRUE,
+                    loadbalancing = TRUE) {
     if (!inherits(sem_out, "lavaan")) {
         stop("sem_out is not a supported object.")
       }
@@ -188,6 +194,20 @@ semlbci <- function(sem_out,
     method <- match.arg(method)
     robust <- match.arg(robust)
     sem_out_name <- deparse(substitute(sem_out))
+
+    # Use satorra.2000 automatically if
+    # - a scaled test is used and
+    # - the method is "ur"
+
+    scaled <- any(names(lavaan::lavInspect(sem_out, "test")) %in%
+                        c("satorra.bentler",
+                          "yuan.bentler",
+                          "yuan.bentler.mplus",
+                          "mean.var.adjusted",
+                          "scaled.shifted"))
+    if (scaled && (method == "ur")) {
+        robust <- "satorra.2000"
+      }
 
     # Check sem_out
     if (check_fit) {
@@ -208,8 +228,12 @@ semlbci <- function(sem_out,
         # Check whether semlbci_out and sem_out match
         tmp0 <- ptable[, c("id", "lhs", "op", "rhs", "group", "label")]
         tmp1 <- as.data.frame(semlbci_out)[, c("id", "lhs", "op", "rhs", "group", "label")]
+        tmp0 <- tmp0[order(tmp0$id), ]
+        tmp1 <- tmp1[order(tmp1$id), ]
+        rownames(tmp0) <- NULL
+        rownames(tmp1) <- NULL
         if (!identical(tmp0, tmp1)) {
-            stop("semblci_out and the parameter table of sem_out do not match.")
+            stop("semlbci_out and the parameter table of sem_out do not match.")
           }
         # Find pars with both lbci_lb and lbci_ub
         pars_lbci_yes <- !sapply(semlbci_out$lbci_lb, is.na) &
@@ -253,7 +277,7 @@ semlbci <- function(sem_out,
             pars <- remove_variances(pars, sem_out)
           }
         if (remove_intercepts) {
-            pars <- remove_variances(pars, sem_out)
+            pars <- remove_intercepts(pars, sem_out)
           }
         # Remove parameters already with LBCIs in semlbci_out.
         pars <- pars[!pars %in% i_id[pars_lbci_yes]]
@@ -303,6 +327,11 @@ semlbci <- function(sem_out,
                                        envir = environment())
         if (requireNamespace("pbapply", quietly = TRUE) &&
             use_pbapply) {
+            if (loadbalancing) {
+                pboptions_old <- pbapply::pboptions(use_lb = TRUE)
+                # Restore pboptions on exit
+                on.exit(pbapply::pboptions(pboptions_old))
+              }
             # Use pbapply
             args_final <- utils::modifyList(list(...),
                                     list(npar = npar,
@@ -414,6 +443,7 @@ semlbci <- function(sem_out,
             pstd$group[pstd$op == ":="] <- 0
             out_p <- merge(out_p, pstd[, c("lhs", "op", "rhs", "group", "est.std")],
                     by = c("lhs", "op", "rhs", "group"), all.x = TRUE, sort = FALSE)
+            out_p <- out_p[order(out_p$id), ]
           } else {
             out_p$est <- ptable[, c("est")]
           }

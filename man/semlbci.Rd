@@ -12,15 +12,16 @@ semlbci(
   remove_intercepts = TRUE,
   ciperc = 0.95,
   standardized = FALSE,
-  method = "wn",
+  method = c("wn", "ur"),
   robust = c("none", "satorra.2000"),
-  try_k_more_times = 2,
+  try_k_more_times = 0,
   semlbci_out = NULL,
   check_fit = TRUE,
   ...,
   parallel = FALSE,
   ncpus = 2,
-  use_pbapply = TRUE
+  use_pbapply = TRUE,
+  loadbalancing = TRUE
 )
 }
 \arguments{
@@ -56,8 +57,8 @@ interval.}
 \item{standardized}{If \code{TRUE}, the LBCI is for the standardized estimates.}
 
 \item{method}{The method to be used to search for the confidence
-bounds. Currently only \code{"wn"} (Wu-Neale-2012), the default, is
-supported.}
+bounds. Supported methods are\code{"wn"} (Wu-Neale-2012), the default,
+and \code{"ur"} (root finding by \code{\link[stats:uniroot]{stats::uniroot()}}).}
 
 \item{robust}{Whether the LBCI based on robust likelihood ratio
 test is to be found. Only \code{"satorra.2000"} in \code{\link[lavaan:lavTestLRT]{lavaan::lavTestLRT()}}
@@ -90,6 +91,11 @@ cores.}
 is installed, \code{\link[pbapply:pbapply]{pbapply::pbapply()}} will be used to display a
 progress bar when finding the intervals. Default is \code{TRUE}.
 Ignored if \code{pbapply} is not installed.}
+
+\item{loadbalancing}{Whether load
+balancing is used when \code{parallel}
+is \code{TRUE} and \code{use_pbapply} is
+\code{TRUE}.}
 }
 \value{
 A \code{semlbci}-class object similar to the parameter table

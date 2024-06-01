@@ -1,6 +1,7 @@
-#' @title Likelihood-based Confidence Bound For One parameter
+#' @title Likelihood-based Confidence Bound By Wu-Neale-2012
 #'
-#' @description Find the lower or upper bound of the likelihood-based
+#' @description User the method proposed by Wu and Neale
+#' (2012) to find the lower or upper bound of the likelihood-based
 #'  confidence interval (LBCI) for one parameter in a structural
 #'  equation model fitted in [lavaan::lavaan()].
 #'
@@ -114,7 +115,7 @@
 #'  status code and the bound is set to `NA`. Default is 5e-4.
 #'
 #' @param std_method The method used to find the standardized
-#'  solution. If equal to `"lavaan"``,
+#'  solution. If equal to `"lavaan"`,
 #'  [lavaan::standardizedSolution()] will be used. If equal to
 #'  `"internal"`, an internal function will be used. The `"lavaan"`
 #'  method should work in all situations, but the `"internal"` method
@@ -140,6 +141,29 @@
 #' @param lb_se_k Used by an internal function to set the lower bound
 #'   for free variances. Default is 3, the estimate minus 3 standard
 #'   error. If negative, the lower bound is set using `lb_prop`.
+#'
+#' @param try_harder If error occurred
+#' in the optimization, how many more
+#' times to try. In each new attempt,
+#' the starting values will be randomly
+#' jittered. Default is 0.
+#'
+#' @param fit_lb The vector of lower
+#' bounds of parameters. Default is
+#' `-Inf`, setting the lower bounds to
+#' `-Inf` for all parameters except for
+#' free variances which are controlled
+#' by `lb_var`.
+#'
+#' @param fit_ub The vector of upper
+#' bounds of parameters. Default is
+#' `+Inf`, setting the lower bounds to
+#' `+Inf` for all parameters.
+#'
+#' @param timeout The approximate
+#' maximum time for the search, in
+#' second. Default is 300 seconds
+#' (5 minutes).
 #'
 #' @param ... Optional arguments. Not used.
 #'
@@ -204,6 +228,10 @@ ci_bound_wn_i <- function(i = NULL,
                           ftol_rel_factor = 1,
                           lb_prop = .05,
                           lb_se_k = 3,
+                          try_harder = 0,
+                          fit_lb = -Inf,
+                          fit_ub = +Inf,
+                          timeout = 300,
                           ...) {
     k <- switch(which,
                 lbound = 1,
@@ -310,7 +338,7 @@ ci_bound_wn_i <- function(i = NULL,
               }
             start0 <- lavaan::parameterTable(sem_out)
             # The function to be minimized.
-            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
+            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
                 start1 <- start0
                 start1[start1$free > 0, "est"] <- param
                 sem_out2 <- sem_out
@@ -356,13 +384,22 @@ ci_bound_wn_i <- function(i = NULL,
               }
             start0 <- lavaan::parameterTable(sem_out)
             # The function to be minimized.
-            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
-                std0 <- std_lav(param, sem_out)
-                k * std0[i_std]
+            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
+                std0 <- tryCatch(std_lav(param, sem_out),
+                                 error = function(e) e)
+                if (inherits(std0, "error")) {
+                    if (stop_on_error) {
+                        stop("Error in std_lav().")
+                      } else {
+                        return(Inf)
+                      }
+                  } else {
+                    return(k * std0[i_std])
+                  }
               }
           }
         # The gradient of the function to be minimized
-        lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2) {
+        lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
             lavaan::lav_func_gradient_complex(
                                       lbci_b_f, param, sem_out = sem_out,
                                       debug = debug, lav_warn = lav_warn,
@@ -380,11 +417,21 @@ ci_bound_wn_i <- function(i = NULL,
             # Get the name of the defined parameter
             i_name <- p_table[i, "label"]
             # The function to be minimized.
-            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
-                k * sem_out@Model@def.function(param)[i_name]
+            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
+                out <- tryCatch(k * sem_out@Model@def.function(param)[i_name],
+                                error = function(e) e)
+                if (inherits(out, "error")) {
+                    if (stop_on_error) {
+                        stop("Error in cmoputing user-parameter(s).")
+                      } else {
+                        return(Inf)
+                      }
+                  } else {
+                    return(out)
+                  }
               }
             # The gradient of the function to be minimized
-            lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2) {
+            lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
                 lavaan::lav_func_gradient_complex(
                                           lbci_b_f, param, sem_out = sem_out,
                                           debug = debug, lav_warn = lav_warn,
@@ -400,7 +447,7 @@ ci_bound_wn_i <- function(i = NULL,
           } else {
             # The function to be minimized.
             # force() may not be needed but does not harm to keep them.
-            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2) {
+            lbci_b_f <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
                 force(k)
                 force(i_in_free)
                 k * param[i_in_free]
@@ -408,7 +455,7 @@ ci_bound_wn_i <- function(i = NULL,
             # The gradient of the function to be minimized
             grad_c <- rep(0, npar)
             grad_c[i_in_free] <- k
-            lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2) {
+            lbci_b_grad <- function(param, sem_out, debug, lav_warn, sf, sf2, stop_on_error = FALSE) {
                     grad_c
               }
           }
@@ -425,8 +472,17 @@ ci_bound_wn_i <- function(i = NULL,
         xstart <- perturbation_factor * lavaan::coef(sem_out)
       }
 
+    # Get SEs. For bounds
+    p_table <- lavaan::parameterTable(sem_out)
+    se_free <- p_table[p_table$free > 0, "se"]
+    est_free <- p_table[p_table$free > 0, "est"]
+
     # Set lower bounds
-    fit_lb <- rep(-Inf, npar)
+    if (fit_lb == -Inf) {
+        fit_lb <- rep(-Inf, npar)
+      } else if (length(fit_lb) == 1) {
+        fit_lb <- est_free - se_free * fit_lb
+      }
     if (isTRUE(identical(lb_var, -Inf))) {
         # Override lb_var = -Inf for free variances
         fit_lb[find_variance_in_free(sem_out)] <- find_variance_in_free_lb(sem_out,
@@ -437,7 +493,17 @@ ci_bound_wn_i <- function(i = NULL,
       }
 
     # Set upper bounds
-    fit_ub <- rep(+Inf, npar)
+    if (fit_ub == -Inf) {
+        fit_ub <- rep(-Inf, npar)
+      } else if (length(fit_ub) == 1) {
+        fit_ub <- est_free + se_free * fit_ub
+      }
+
+    # For pmax() and pmin()
+    fit_lb_na <- fit_lb
+    fit_ub_na <- fit_ub
+    fit_lb_na[fit_lb_na == -Inf] <- NA
+    fit_ub_na[fit_ub_na == +Inf] <- NA
 
     # Need further testing on using lavaan bounds
     # if (!is.null(p_table$lower)) {
@@ -470,25 +536,66 @@ ci_bound_wn_i <- function(i = NULL,
                         "xtol_rel" = 1.0e-5 * xtol_rel_factor,
                         "ftol_rel" = 1.0e-5 * ftol_rel_factor,
                         "maxeval" = 500,
-                        "print_level" = 0),
+                        "print_level" = 0,
+                        "maxtime" = timeout),
                         opts)
-    out <- nloptr::nloptr(
-                        x0 = xstart,
-                        eval_f = lbci_b_f,
-                        lb = fit_lb,
-                        ub = fit_ub,
-                        eval_grad_f = lbci_b_grad,
-                        eval_g_eq = f_constr,
-                        opts = opts_final,
-                        sem_out = sem_out,
-                        lav_warn = FALSE,
-                        debug = FALSE,
-                        sf = sf,
-                        sf2 = sf2)
+    try_harder <- as.integer(max(try_harder, 0))
+    try_harder_count <- 0
+    xstart_i <- xstart
+    while(try_harder_count <= try_harder) {
+        out <- tryCatch(nloptr::nloptr(
+                            x0 = xstart_i,
+                            eval_f = lbci_b_f,
+                            lb = fit_lb,
+                            ub = fit_ub,
+                            eval_grad_f = lbci_b_grad,
+                            eval_g_eq = f_constr,
+                            opts = opts_final,
+                            sem_out = sem_out,
+                            lav_warn = FALSE,
+                            debug = FALSE,
+                            sf = sf,
+                            sf2 = sf2,
+                            stop_on_error = TRUE),
+                        error = function(e) e)
+        if (inherits(out, "error")) {
+            xstart_i <- stats::runif(length(xstart_i),
+                                     min = -2,
+                                     max = 2) * xstart_i
+            xstart_i <- pmin(pmax(xstart_i, fit_lb_na), fit_ub_na)
+            try_harder_count <- try_harder_count + 1
+          } else {
+            try_harder_count <- Inf
+          }
+      }
+
+    # Failed after try harder k times
+
+    if (inherits(out, "error")) {
+        search_error <- as.character(out)
+        opts_error <- utils::modifyList(opts_final,
+                                        list("maxeval" = 1))
+        out <- nloptr::nloptr(x0 = xstart,
+                              eval_f = lbci_b_f,
+                              lb = fit_lb,
+                              ub = fit_ub,
+                              eval_grad_f = lbci_b_grad,
+                              eval_g_eq = f_constr,
+                              opts = opts_error,
+                              sem_out = sem_out,
+                              lav_warn = FALSE,
+                              debug = FALSE,
+                              sf = sf,
+                              sf2 = sf2,
+                              stop_on_error = TRUE)
+      } else {
+        search_error <- NULL
+      }
+
 
     # Process the results
-
-    bound <- k * out$objective
+    ## Need as.numeric() to handle NA
+    bound <- as.numeric(k * out$objective)
     bound_unchecked <- bound
 
     # Initialize the status code
@@ -600,7 +707,8 @@ ci_bound_wn_i <- function(i = NULL,
                  standardized = standardized,
                  check_optimization = check_optimization,
                  check_post_check = check_post_check,
-                 check_level_of_confidence = check_level_of_confidence
+                 check_level_of_confidence = check_level_of_confidence,
+                 search_error = search_error
                  )
     if (verbose) {
         diag$history <- out
@@ -615,7 +723,8 @@ ci_bound_wn_i <- function(i = NULL,
       }
     out <- list(bound = bound,
                 diag = diag,
-                call = match.call())
+                call = match.call(),
+                method_name = "Wu-Neale-2012")
     class(out) <- c("cibound", class(out))
     out
   }
