@@ -298,7 +298,9 @@ print.semlbci <- function(x,
           msg <- c(msg,
             paste0("* ok_l, ok_u: Whether the search encountered any problem. ",
                   "If no problem encountered, it is equal to 0. Any value ",
-                  "other than 0 indicates something was wrong in the search."))
+                  "other than 0 indicates something was wrong in the search. ",
+                  "Try running 'semlbci()' again, setting 'semlbci_out' to this output, ",
+                  "and set 'try_k_more_times' to a positive number, e.g., 2 to 5."))
           }
         if (standardized) {
             msg <- c(msg,
@@ -562,7 +564,9 @@ print_semlbci_text <- function(x,
             tmp0 <- "- Status: "
             tmp <- paste0(tmp0, "Whether the search encountered any problem for the two bounds. ",
                     "If no problem encountered, the code is 0 (displayed as 'OK'). Any value ",
-                    "other than 0 indicates something was wrong in the search.")
+                    "other than 0 indicates something was wrong in the search. ",
+                    "Try running 'semlbci()' again, setting 'semlbci_out' to this output, ",
+                    "and set 'try_k_more_times' to a positive number, e.g., 2 to 5.")
             tmp <- strwrap(tmp,
                            indent = 0,
                            exdent = nchar(tmp0))
