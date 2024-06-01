@@ -1,4 +1,4 @@
-# semlbci 0.10.4.25
+# semlbci 0.10.4.26
 
 ## New Feature
 
@@ -99,6 +99,10 @@
   attempts rarely help but usually
   increase processing time
   unnecessarily. (0.10.4.6)
+  NOTE: Default values reverted back to
+  2 due to a change in the search
+  strategy. (0.10.4.26)
+
 - Disabled further attempts in
   the `wn` method by default
   as they rarely help but they usually

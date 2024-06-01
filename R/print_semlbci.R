@@ -300,7 +300,8 @@ print.semlbci <- function(x,
                   "If no problem encountered, it is equal to 0. Any value ",
                   "other than 0 indicates something was wrong in the search. ",
                   "Try running 'semlbci()' again, setting 'semlbci_out' to this output, ",
-                  "and set 'try_k_more_times' to a positive number, e.g., 2 to 5."))
+                  "and set 'try_k_more_times' to a positive number greater than ",
+                  "2 (the default), e.g., 3 to 5."))
           }
         if (standardized) {
             msg <- c(msg,
@@ -566,7 +567,8 @@ print_semlbci_text <- function(x,
                     "If no problem encountered, the code is 0 (displayed as 'OK'). Any value ",
                     "other than 0 indicates something was wrong in the search. ",
                     "Try running 'semlbci()' again, setting 'semlbci_out' to this output, ",
-                    "and set 'try_k_more_times' to a positive number, e.g., 2 to 5.")
+                    "and set 'try_k_more_times' to a positive number greater than ",
+                    "2 (the default), e.g., 3 to 5.")
             tmp <- strwrap(tmp,
                            indent = 0,
                            exdent = nchar(tmp0))
