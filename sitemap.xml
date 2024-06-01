@@ -40,6 +40,12 @@
     <loc>https://sfcheung.github.io/semlbci/reference/check_sem_out.html</loc>
   </url>
   <url>
+    <loc>https://sfcheung.github.io/semlbci/reference/ci_bound_ur.html</loc>
+  </url>
+  <url>
+    <loc>https://sfcheung.github.io/semlbci/reference/ci_bound_ur_i.html</loc>
+  </url>
+  <url>
     <loc>https://sfcheung.github.io/semlbci/reference/ci_bound_wn_i.html</loc>
   </url>
   <url>
@@ -50,6 +56,9 @@
   </url>
   <url>
     <loc>https://sfcheung.github.io/semlbci/reference/confint.semlbci.html</loc>
+  </url>
+  <url>
+    <loc>https://sfcheung.github.io/semlbci/reference/gen_userp.html</loc>
   </url>
   <url>
     <loc>https://sfcheung.github.io/semlbci/reference/get_cibound.html</loc>
