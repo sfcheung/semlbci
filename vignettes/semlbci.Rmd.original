@@ -41,7 +41,7 @@ be found in [Cheung and Pesigan (2023)](https://doi.org/10.1080/10705511.2023.21
 
 # Fit a Model to a Dataset
 
-The package has a dataset, `simple_med`,buil
+The package has a dataset, `simple_med`,
 with three variables, `x`, `m`, and `y`.
 Let us fit a simple mediation model to
 this dataset.
