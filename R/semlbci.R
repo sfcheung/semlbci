@@ -244,6 +244,7 @@ semlbci <- function(sem_out,
     i_id_free <- i_id[i]
     i_id_user <- i_id[(ptable$free == 0) & (ptable$op == ":=")]
     # pars must be the row numbers as in the lavaan parameterTable.
+    # Support operators: "~", "~~", "=~", ":="
     pars_tmp <- fix_pars(pars = pars,
                          sem_out = sem_out,
                          standardized = standardized,
@@ -524,6 +525,7 @@ fix_pars <- function(pars,
     if (!is.null(pars)) {
         # Parameters supplied
         if (is.character(pars)) {
+            pars <- pars_op(pars, sem_out = sem_out)
             # Convert syntax to row numbers.
             pars <- syntax_to_i(pars, sem_out)
           }
