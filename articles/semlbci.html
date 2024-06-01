@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.4.24</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,7 @@
                         <h4 data-toc-skip class="author">Shu Fai
 Cheung</h4>
             
-            <h4 data-toc-skip class="date">2023-10-31</h4>
+            <h4 data-toc-skip class="date">2024-06-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/semlbci/blob/HEAD/vignettes/semlbci.Rmd" class="external-link"><code>vignettes/semlbci.Rmd</code></a></small>
       <div class="d-none name"><code>semlbci.Rmd</code></div>
@@ -129,10 +129,9 @@ fit a simple mediation model to this dataset.</p>
 <span><span class="co">#&gt; 3 -0.8294968  -7.016254 -7.823257</span></span>
 <span><span class="co">#&gt; 4 -0.3389654   4.367018  1.563098</span></span>
 <span><span class="co">#&gt; 5 -0.9628162  -4.015469 -7.288511</span></span>
-<span><span class="co">#&gt; 6 -1.0749302 -11.538140 -4.153572</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; This is lavaan 0.6-16</span></span>
-<span><span class="co">#&gt; lavaan is FREE software! Please report any bugs.</span></span>
+<span><span class="co">#&gt; 6 -1.0749302 -11.538140 -4.153572</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span></span>
 <span><span class="st">"</span></span>
 <span><span class="st">m ~ a*x</span></span>
@@ -147,9 +146,9 @@ labelled the <code>m ~ x</code> path by <code>a</code>, the
 <code>y ~ m</code> path by <code>b</code>, and defined the indirect
 effect, <code>ab</code>, by <code>a * b</code>.</p>
 <p>This is the summary:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; lavaan 0.6.16 ended normally after 1 iteration</span></span>
+<span><span class="co">#&gt; lavaan 0.6.17 ended normally after 1 iteration</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -194,22 +193,32 @@ effect, <code>ab</code>, by <code>a * b</code>.</p>
 users. We will first illustrate its usage by some examples, and then
 present other technical details in the following section.</p>
 <div class="section level3">
-<h3 id="find-the-lbci-for-a-free-parameter">Find the LBCI for a free parameter<a class="anchor" aria-label="anchor" href="#find-the-lbci-for-a-free-parameter"></a>
+<h3 id="find-the-lbci-for-selected-free-parameters">Find the LBCI for Selected Free Parameters<a class="anchor" aria-label="anchor" href="#find-the-lbci-for-selected-free-parameters"></a>
 </h3>
 <p>All free parameters can be specified in <code>lavaan</code> style.
 For example, the path from <code>m</code> to <code>y</code> is denoted
 by <code>"y ~ m"</code>, and the covariance or correlation between
 <code>x</code> and <code>m</code> (not in the example) is denoted by
 <code>"x ~~ m"</code> (order does not matter).</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span>sem_out <span class="op">=</span> <span class="va">fit</span>,</span>
 <span>               pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y ~ m"</span>,</span>
 <span>                        <span class="st">"m ~ x"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Since version 0.10.4.25, <code>lavaan</code> model syntax operators
+can be used to represent all parameters of the same type:
+<code>"~"</code> for regression paths, <code>"~~"</code> for variances
+and covariances, <code>"=~"</code> for factor loadings, and
+<code>":="</code> for all user-defined parameters. For example, the
+following call and the one above find LBCIs for the same set of
+parameters:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span>sem_out <span class="op">=</span> <span class="va">fit</span>,</span>
+<span>               pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"~"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The output is the parameter table of the fitted <code>lavaan</code>
 object, with two columns added, <code>lbci_lb</code> and
 <code>lbci_ub</code>, the likelihood-based lower bounds and upper
 bounds, respectively.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Results:</span></span>
@@ -228,28 +237,52 @@ bounds, respectively.</p>
 <span><span class="co">#&gt;     confidence, e.g., .95 for 95% confidence intervals.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; semlbci(sem_out = fit, pars = c("y ~ m", "m ~ x"))</span></span></code></pre></div>
+<span><span class="co">#&gt; semlbci(sem_out = fit, pars = c("~"))</span></span></code></pre></div>
 <p>In this example, the point estimate of the unstandardized coefficient
 from <code>x</code> to <code>m</code> is 1.676, and the LBCI is 0.828 to
 2.525.</p>
 <div class="section level4">
-<h4 id="customizing-the-printout">Customizing the printout<a class="anchor" aria-label="anchor" href="#customizing-the-printout"></a>
+<h4 id="default-parameters">Default Parameters<a class="anchor" aria-label="anchor" href="#default-parameters"></a>
+</h4>
+<p>By default, factor loadings, covariances (except for error
+covariances), and regression paths are included in the search.
+Therefore, <code>pars</code> can be omitted, although the search will
+take time to run for a big model. In this case, it is advised to enable
+parallel processing by add <code>parallel = TRUE</code> and set
+<code>ncpus</code> to the number of processes to run (these arguments
+are explained later):</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span>sem_out <span class="op">=</span> <span class="va">fit</span>,</span>
+<span>               parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>               ncpus <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
+<span>      annotation <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Results:</span></span>
+<span><span class="co">#&gt;   id lhs op rhs label   est lbci_lb lbci_ub    lb    ub cl_lb cl_ub</span></span>
+<span><span class="co">#&gt; 1  1   m  ~   x     a 1.676   0.828   2.525 0.832 2.520 0.950 0.950</span></span>
+<span><span class="co">#&gt; 2  2   y  ~   m     b 0.535   0.391   0.679 0.391 0.679 0.950 0.950</span></span>
+<span><span class="co">#&gt; 6  6  ab := a*b    ab 0.897   0.427   1.464 0.385 1.409 0.950 0.950</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="customizing-the-printout">Customizing the Printout<a class="anchor" aria-label="anchor" href="#customizing-the-printout"></a>
 </h4>
 <p>For users familiar with the column names, the annotation can be
 disabled by calling <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and add
 <code>annotation = FALSE</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>, annotation <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Results:</span></span>
 <span><span class="co">#&gt;   id lhs op rhs label   est lbci_lb lbci_ub    lb    ub cl_lb cl_ub</span></span>
 <span><span class="co">#&gt; 1  1   m  ~   x     a 1.676   0.828   2.525 0.832 2.520 0.950 0.950</span></span>
-<span><span class="co">#&gt; 2  2   y  ~   m     b 0.535   0.391   0.679 0.391 0.679 0.950 0.950</span></span></code></pre></div>
+<span><span class="co">#&gt; 2  2   y  ~   m     b 0.535   0.391   0.679 0.391 0.679 0.950 0.950</span></span>
+<span><span class="co">#&gt; 6  6  ab := a*b    ab 0.897   0.427   1.464 0.385 1.409 0.950 0.950</span></span></code></pre></div>
 <p>The results can also be printed in a <code>lavaan</code>-like format
 by calling <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, setting <code>sem_out</code> to the
 original fit object (<code>fit</code> in this example), and add
 <code>output = "lavaan"</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>      sem_out <span class="op">=</span> <span class="va">fit</span>,</span>
 <span>      output <span class="op">=</span> <span class="st">"lavaan"</span><span class="op">)</span></span>
@@ -269,7 +302,11 @@ original fit object (<code>fit</code> in this example), and add
 <span><span class="co">#&gt;   m ~                                                                   </span></span>
 <span><span class="co">#&gt;     x          (a)    1.676    0.431    3.891    0.000    0.828    2.525</span></span>
 <span><span class="co">#&gt;   y ~                                                                   </span></span>
-<span><span class="co">#&gt;     m          (b)    0.535    0.073    7.300    0.000    0.391    0.679</span></span></code></pre></div>
+<span><span class="co">#&gt;     m          (b)    0.535    0.073    7.300    0.000    0.391    0.679</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Defined Parameters:</span></span>
+<span><span class="co">#&gt;                    Estimate  Std.Err  z-value  P(&gt;|z|) lb.lower lb.upper</span></span>
+<span><span class="co">#&gt;     ab                0.897    0.261    3.434    0.001    0.427    1.464</span></span></code></pre></div>
 <p>By default, the original confidence intervals will not be printed.
 See the help page of <code><a href="../reference/print.semlbci.html">print.semlbci()</a></code> for other options
 available.</p>
@@ -283,7 +320,7 @@ available.</p>
 model specification. The definition of this parameter can be omitted.
 The content after <code>:=</code> will be ignored by
 <code><a href="../reference/semlbci.html">semlbci()</a></code>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span>sem_out <span class="op">=</span> <span class="va">fit</span>,</span>
 <span>               pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ab := "</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
@@ -315,12 +352,19 @@ vignette.)</p>
 <p>By the default, the unstandardized solution is used by
 <code><a href="../reference/semlbci.html">semlbci()</a></code>. If the LBCIs for the standardized solution
 solution are needed, set <code>standardized = TRUE</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span>sem_out <span class="op">=</span> <span class="va">fit</span>,</span>
 <span>               pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y ~ m"</span>,</span>
 <span>                        <span class="st">"m ~ x"</span><span class="op">)</span>,</span>
-<span>               standardized <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
+<span>               standardized <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>This one also works:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span>sem_out <span class="op">=</span> <span class="va">fit</span>,</span>
+<span>               pars <span class="op">=</span> <span class="st">"~"</span>,</span>
+<span>               standardized <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>This is the printout, in <code>lavaan</code>-style:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>      sem_out <span class="op">=</span> <span class="va">fit</span>,</span>
 <span>      output <span class="op">=</span> <span class="st">"lavaan"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Likelihood-Based CI Notes:</span></span>
@@ -346,7 +390,7 @@ estimates, standard errors, <em>z</em>-values, and <em>p</em>-values are
 those from the standardized solution.</p>
 <p>The LBCIs for standardized user-defined parameters can be requested
 similarly.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span>sem_out <span class="op">=</span> <span class="va">fit</span>,</span>
 <span>               pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ab :="</span><span class="op">)</span>,</span>
 <span>               standardized <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -367,6 +411,33 @@ similarly.</p>
 <span><span class="co">#&gt; Defined Parameters:</span></span>
 <span><span class="co">#&gt;                Standardized  Std.Err  z-value  P(&gt;|z|) lb.lower lb.upper</span></span>
 <span><span class="co">#&gt;     ab                0.122    0.034    3.538    0.000    0.059    0.194</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span>sem_out <span class="op">=</span> <span class="va">fit</span>,</span>
+<span>               standardized <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
+<span>      sem_out <span class="op">=</span> <span class="va">fit</span>,</span>
+<span>      output <span class="op">=</span> <span class="st">"lavaan"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Likelihood-Based CI Notes:</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - lb.lower, lb.upper: The lower and upper likelihood-based confidence</span></span>
+<span><span class="co">#&gt;                       bounds.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Standardized Estimates Only</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Standard errors                             Standard</span></span>
+<span><span class="co">#&gt;   Information                                 Expected</span></span>
+<span><span class="co">#&gt;   Information saturated (h1) model          Structured</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Regressions:</span></span>
+<span><span class="co">#&gt;                Standardized  Std.Err  z-value  P(&gt;|z|) lb.lower lb.upper</span></span>
+<span><span class="co">#&gt;   m ~                                                                   </span></span>
+<span><span class="co">#&gt;     x          (a)    0.265    0.066    4.035    0.000    0.133    0.389</span></span>
+<span><span class="co">#&gt;   y ~                                                                   </span></span>
+<span><span class="co">#&gt;     m          (b)    0.459    0.056    8.215    0.000    0.342    0.561</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Defined Parameters:</span></span>
+<span><span class="co">#&gt;                Standardized  Std.Err  z-value  P(&gt;|z|) lb.lower lb.upper</span></span>
+<span><span class="co">#&gt;     ab                0.122    0.034    3.538    0.000    0.059    0.194</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -374,8 +445,8 @@ similarly.</p>
 </h2>
 <div class="section level3">
 <h3 id="sem_out-and-pars-the-fit-object-and-the-parameters">
-<code>sem_out</code> and <code>pars</code>: The fit object and the
-parameters<a class="anchor" aria-label="anchor" href="#sem_out-and-pars-the-fit-object-and-the-parameters"></a>
+<code>sem_out</code> and <code>pars</code>: The Fit Object and the
+Parameters<a class="anchor" aria-label="anchor" href="#sem_out-and-pars-the-fit-object-and-the-parameters"></a>
 </h3>
 <p>The only required argument for <code><a href="../reference/semlbci.html">semlbci()</a></code> is
 <code>sem_out</code>, the fit object from <code><a href="https://rdrr.io/pkg/lavaan/man/lavaan.html" class="external-link">lavaan::lavaan()</a></code>
@@ -403,7 +474,7 @@ parameters (if any) in a model.</p>
 </div>
 <div class="section level3">
 <h3 id="ciperc-the-level-of-confidence">
-<code>ciperc</code>: The level of confidence<a class="anchor" aria-label="anchor" href="#ciperc-the-level-of-confidence"></a>
+<code>ciperc</code>: The Level of Confidence<a class="anchor" aria-label="anchor" href="#ciperc-the-level-of-confidence"></a>
 </h3>
 <p>By default, the 95% LBCIs for the unstandardized solution will be
 formed. To change the level of confidence, set the argument
@@ -412,8 +483,8 @@ formed. To change the level of confidence, set the argument
 </div>
 <div class="section level3">
 <h3 id="standardized-whether-standardized-solution-is-used">
-<code>standardized</code>: Whether standardized solution is
-used<a class="anchor" aria-label="anchor" href="#standardized-whether-standardized-solution-is-used"></a>
+<code>standardized</code>: Whether Standardized Solution Is
+Used<a class="anchor" aria-label="anchor" href="#standardized-whether-standardized-solution-is-used"></a>
 </h3>
 <p>By default, the LBCIs for the unstandardized solution will be formed.
 If the LBCIs for the standardized solution are desired, set
@@ -432,7 +503,7 @@ be enabled by setting <code>parallel</code> to <code>TRUE</code> and
 <code>ncpus</code> to a number smaller than the number of available
 cores. For example, without parallel processing, the following search
 took about 28 seconds on Intel i7-8700:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HolzingerSwineford1939</span><span class="op">)</span></span>
 <span><span class="va">mod_test</span> <span class="op">&lt;-</span></span>
 <span><span class="st">'</span></span>
@@ -445,7 +516,7 @@ took about 28 seconds on Intel i7-8700:</p>
 <span><span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span><span class="va">fit_cfa</span><span class="op">)</span></span></code></pre></div>
 <p>With parallel processing enabled and using 6 cores, it took about 20
 seconds.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span><span class="va">fit_cfa</span>,</span>
 <span>        parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        ncpus <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
@@ -455,7 +526,34 @@ parameters and some equality constraints.</p>
 the progress in real time.</p>
 </div>
 <div class="section level3">
-<h3 id="other-arguments">Other arguments<a class="anchor" aria-label="anchor" href="#other-arguments"></a>
+<h3 id="try_k_more_times-and-semlbci_out">
+<code>try_k_more_times</code> and <code>semlbci_out</code><a class="anchor" aria-label="anchor" href="#try_k_more_times-and-semlbci_out"></a>
+</h3>
+<p>For some models and some parameters, the search may be difficult. By
+default, <code><a href="../reference/semlbci.html">semlbci()</a></code> will try two more times, successively
+changing some settings internally. If still failed in forming the LBCI,
+users can try to set <code>try_k_more_times</code> to a larger number
+slightly larger than 2 (the default value) to see whether it can help
+forming the LBCI. This can be done without forming other LBCIs again if
+the output of <code><a href="../reference/semlbci.html">semlbci()</a></code> is passed to the new call using
+<code>semlbci_out</code>.</p>
+<p>For example, assume that some LBCIs could not be found in the first
+run:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lbci_some_failed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span><span class="va">fit_cfa</span><span class="op">)</span></span></code></pre></div>
+<p>We can call <code><a href="../reference/semlbci.html">semlbci()</a></code> again, increasing
+<code>try_k_more_times</code> to 5, and set <code>semlbci_out</code> to
+<code>lbci_some_failed</code>.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lbci_try_again</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span><span class="va">fit_cfa</span>,</span>
+<span>                          try_k_more_times <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>                          semlbci_out <span class="op">=</span> <span class="va">lbci_some_failed</span><span class="op">)</span></span></code></pre></div>
+<p>It will only form LBCIs for parameters failed in the first one. The
+output, <code>lbci_try_again</code>, will have the original LBCIs plus
+the new ones, if the search succeeds.</p>
+</div>
+<div class="section level3">
+<h3 id="other-arguments">Other Arguments<a class="anchor" aria-label="anchor" href="#other-arguments"></a>
 </h3>
 <p>For detailed documentation of other arguments, please refer to the
 help page of <code><a href="../reference/semlbci.html">semlbci()</a></code>. Advanced users who want to tweak
@@ -467,12 +565,12 @@ the optimization options can check the help pages of
 <h2 id="additional-features">Additional Features<a class="anchor" aria-label="anchor" href="#additional-features"></a>
 </h2>
 <div class="section level3">
-<h3 id="multiple-group-models">Multiple-group Models<a class="anchor" aria-label="anchor" href="#multiple-group-models"></a>
+<h3 id="multiple-group-models">Multiple-Group Models<a class="anchor" aria-label="anchor" href="#multiple-group-models"></a>
 </h3>
 <p><code><a href="../reference/semlbci.html">semlbci()</a></code> supports multiple-group models. For example,
 this is a two-group confirmatory factor analysis model with equality
 constraints:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">HolzingerSwineford1939</span><span class="op">)</span></span>
 <span><span class="va">mod_cfa</span> <span class="op">&lt;-</span></span>
 <span><span class="st">'</span></span>
@@ -485,7 +583,7 @@ constraints:</p>
 <span>               group <span class="op">=</span> <span class="st">"school"</span><span class="op">)</span></span></code></pre></div>
 <p>The factor correlations between group are not constrained to be
 equal.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/parameterEstimates.html" class="external-link">parameterEstimates</a></span><span class="op">(</span><span class="va">fit_cfa</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">22</span>, <span class="fl">23</span>, <span class="fl">58</span>, <span class="fl">59</span><span class="op">)</span>, <span class="op">]</span></span>
 <span><span class="co">#&gt;       lhs op     rhs block group label   est    se     z pvalue ci.lower</span></span>
 <span><span class="co">#&gt; 22 visual ~~ textual     1     1       0.416 0.097 4.271  0.000    0.225</span></span>
@@ -499,7 +597,7 @@ equal.</p>
 <span><span class="co">#&gt; 59    0.469</span></span></code></pre></div>
 <p>This is the LBCI for covariance between visual ability and textual
 ability:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fcov</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span><span class="va">fit_cfa</span>,</span>
 <span>                pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"visual ~~ textual"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fcov</span>,</span>
@@ -533,7 +631,7 @@ ability:</p>
 <span><span class="co">#&gt;     textual           0.437    0.099    4.423    0.000    0.263    0.663</span></span></code></pre></div>
 <p>This is the LBCI for correlation between visual ability and textual
 ability:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fcor</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/semlbci.html">semlbci</a></span><span class="op">(</span><span class="va">fit_cfa</span>,</span>
 <span>                pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"visual ~~ textual"</span><span class="op">)</span>,</span>
 <span>                standardized <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -578,7 +676,7 @@ statistics requested (e.g., <code>estimator = "MLR"</code>). To request
 robust LBCIs, add <code>robust = "satorra.2000"</code> when calling
 <code><a href="../reference/semlbci.html">semlbci()</a></code>.</p>
 <p>We use the simple mediation model as an example:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_robust</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="va">mod</span>, <span class="va">simple_med</span>,</span>
 <span>                  fixed.x <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                  estimator <span class="op">=</span> <span class="st">"MLR"</span><span class="op">)</span></span>
@@ -604,7 +702,7 @@ robust LBCIs, add <code>robust = "satorra.2000"</code> when calling
 <span><span class="co">#&gt;     ab                0.897    0.305    2.941    0.003    0.353    1.571</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="latent-level-parameters">Latent level parameters<a class="anchor" aria-label="anchor" href="#latent-level-parameters"></a>
+<h3 id="latent-level-parameters">Latent Level Parameters<a class="anchor" aria-label="anchor" href="#latent-level-parameters"></a>
 </h3>
 <p><code><a href="../reference/semlbci.html">semlbci()</a></code> support forming the LBCIs for most free
 parameters. Not illustrated above but LBCIs can be formed for path
@@ -613,7 +711,7 @@ based on latent-level parameters, such as an indirect effect from one
 latent variable to another.</p>
 </div>
 <div class="section level3">
-<h3 id="more-examples">More examples<a class="anchor" aria-label="anchor" href="#more-examples"></a>
+<h3 id="more-examples">More Examples<a class="anchor" aria-label="anchor" href="#more-examples"></a>
 </h3>
 <p>More examples can be found in the “examples” folders in <a href="https://osf.io/b9a2p/files/osfstorage" class="external-link">the OSF page</a> for this
 package.</p>
@@ -670,7 +768,7 @@ interested in calling the lowest level function,
 package for forming likelihood-based confidence intervals for parameter
 estimates, correlations, indirect effects, and other derived parameters.
 <em>Structural Equation Modeling: A Multidisciplinary Journal</em>.
-Advance online publication. <a href="https://doi.org/10.1080/10705511.2023.2183860" class="external-link uri">https://doi.org/10.1080/10705511.2023.2183860</a></p>
+<em>30</em>(6), 985–999. <a href="https://doi.org/10.1080/10705511.2023.2183860" class="external-link uri">https://doi.org/10.1080/10705511.2023.2183860</a></p>
 <p>Falk, C. F. (2018). Are robust standard errors the best approach for
 interval estimation with nonnormal data in structural equation modeling?
 <em>Structural Equation Modeling: A Multidisciplinary Journal,

@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.4.24</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9">
-<p>(Version 0.10.4.24, updated on 2024-06-01 <a href="https://sfcheung.github.io/semlbci/news/index.html">release history</a>)</p>
+<p>(Version 0.11.0, updated on 2024-06-01 <a href="https://sfcheung.github.io/semlbci/news/index.html">release history</a>)</p>
 <div class="section level1">
 <div class="page-header">
 <img src="logo.png" class="logo" alt=""><h1 id="semlbci-">semlbci <a class="anchor" aria-label="anchor" href="#semlbci-"></a>
@@ -89,11 +89,18 @@
 </div>
 <p>This package includes functions for forming the likelihood-based confidence intervals (LBCIs) for parameters in structural equation modeling. It also supports the robust LBCI proposed by <a href="https://doi.org/10.1080/10705511.2017.1367254" class="external-link">Falk (2018)</a>. It was described in the following manuscript:</p>
 <ul>
-<li>Cheung, S. F., &amp; Pesigan, I. J. A. (2023). <em>semlbci</em>: An R package for forming likelihood-based confidence intervals for parameter estimates, correlations, indirect effects, and other derived parameters. <em>Structural Equation Modeling: A Multidisciplinary Journal</em>. Advance online publication. <a href="https://doi.org/10.1080/10705511.2023.2183860" class="external-link uri">https://doi.org/10.1080/10705511.2023.2183860</a>
+<li>Cheung, S. F., &amp; Pesigan, I. J. A. (2023). <em>semlbci</em>: An R package for forming likelihood-based confidence intervals for parameter estimates, correlations, indirect effects, and other derived parameters. <em>Structural Equation Modeling: A Multidisciplinary Journal</em>. <em>30</em>(6), 985–999. <a href="https://doi.org/10.1080/10705511.2023.2183860" class="external-link uri">https://doi.org/10.1080/10705511.2023.2183860</a>
 </li>
 </ul>
-<p>More information on this package:</p>
+<p>As argued in the article and by others, LBCI is usually better than Wald-based confidence interval and delta method confidence interval, which are the default method in most structural equation modeling (SEM) program. However, there is one technical disadvantage: LBCI cannot be directly computed but needs to be “found” (searched) by some algorithms. Wald CIs, on the other hand, can be computed quickly.</p>
+<p>In <a href="https://sfcheung.github.io/semlbci/"><code>semlbci</code></a>, we try to address this disadvantage of LBCI by implementing an efficient method (illustrated by <a href="https://doi.org/10.1007/s11336-015-9461-1" class="external-link">Pek &amp; Wu, 2018</a>, adapted from <a href="https://doi.org/10.1007/s10519-012-9560-z" class="external-link">Wu &amp; Neale, 2012</a>), to help researchers to form LBCIs for model parameters, including user-defined parameters, in models fitted by <code>lavaan</code>. It can also form LBCIs for the standardized solution, such as “betas” (standardized regression coefficients) and correlations, and support multiple-group models. Last, it supports the robust LBCI proposed by <a href="https://doi.org/10.1080/10705511.2017.1367254" class="external-link">Falk (2018)</a> for nonnormal variables.</p>
+<p>More information on this package can be found below:</p>
 <p><a href="https://sfcheung.github.io/semlbci/" class="uri">https://sfcheung.github.io/semlbci/</a></p>
+</div>
+<div class="section level1">
+<h1 id="how-to-use-it">How To Use It<a class="anchor" aria-label="anchor" href="#how-to-use-it"></a>
+</h1>
+<p>Illustration with examples can be found in the <a href="https://sfcheung.github.io/semlbci/articles/semlbci.html"><em>Get Started</em> guide</a> (<code><a href="articles/semlbci.html">vignette("semlbci", package = "semlbci")</a></code>).</p>
 </div>
 <div class="section level1">
 <h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -106,11 +113,6 @@
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"sfcheung/semlbci"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level1">
-<h1 id="how-to-use-it">How To Use It<a class="anchor" aria-label="anchor" href="#how-to-use-it"></a>
-</h1>
-<p>Illustration with examples can be found in the <a href="https://sfcheung.github.io/semlbci/articles/semlbci.html"><em>Get Started</em> guide</a> (<code><a href="articles/semlbci.html">vignette("semlbci", package = "semlbci")</a></code>).</p>
-</div>
-<div class="section level1">
 <h1 id="implementation">Implementation<a class="anchor" aria-label="anchor" href="#implementation"></a>
 </h1>
 <p>It currently implements the algorithm illustrated by <a href="https://doi.org/10.1007/s11336-015-9461-1" class="external-link">Pek and Wu (2018)</a>, adapted from <a href="https://doi.org/10.1007/s10519-012-9560-z" class="external-link">Wu and Neale (2012)</a> without adjustment for parameters with attainable bounds. It also supports the robust LBCI proposed by Falk (2018). More on the implementation can be found in the <a href="https://sfcheung.github.io/semlbci/articles/">technical appendices</a>.</p>
@@ -118,7 +120,7 @@
 <div class="section level1">
 <h1 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h1>
-<p>Cheung, S. F., &amp; Pesigan, I. J. A. (2023). <em>semlbci</em>: An R package for forming likelihood-based confidence intervals for parameter estimates, correlations, indirect effects, and other derived parameters. <em>Structural Equation Modeling: A Multidisciplinary Journal</em>. Advance online publication. <a href="https://doi.org/10.1080/10705511.2023.2183860" class="external-link uri">https://doi.org/10.1080/10705511.2023.2183860</a></p>
+<p>Cheung, S. F., &amp; Pesigan, I. J. A. (2023). <em>semlbci</em>: An R package for forming likelihood-based confidence intervals for parameter estimates, correlations, indirect effects, and other derived parameters. <em>Structural Equation Modeling: A Multidisciplinary Journal</em>. <em>30</em>(6), 985–999. <a href="https://doi.org/10.1080/10705511.2023.2183860" class="external-link uri">https://doi.org/10.1080/10705511.2023.2183860</a></p>
 <p>Falk, C. F. (2018). Are robust standard errors the best approach for interval estimation with nonnormal data in structural equation modeling? <em>Structural Equation Modeling: A Multidisciplinary Journal, 25</em>(2), 244-266. <a href="https://doi.org/10.1080/10705511.2017.1367254" class="external-link uri">https://doi.org/10.1080/10705511.2017.1367254</a></p>
 <p>Pek, J., &amp; Wu, H. (2015). Profile likelihood-based confidence intervals and regions for structural equation models. <em>Psychometrika, 80</em>(4), 1123-1145. <a href="https://doi.org/10.1007/s11336-015-9461-1" class="external-link uri">https://doi.org/10.1007/s11336-015-9461-1</a></p>
 <p>Wu, H., &amp; Neale, M. C. (2012). Adjusted confidence intervals for a bounded parameter. <em>Behavior Genetics, 42</em>(6), 886-898. <a href="https://doi.org/10.1007/s10519-012-9560-z" class="external-link uri">https://doi.org/10.1007/s10519-012-9560-z</a></p>
