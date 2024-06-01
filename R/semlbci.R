@@ -119,8 +119,8 @@
 #' An R package for forming likelihood-based confidence
 #' intervals for parameter estimates, correlations,
 #' indirect effects, and other derived parameters.
-#' *Structural Equation Modeling: A Multidisciplinary Journal*.
-#' Advance online publication.
+#' *Structural Equation Modeling: A Multidisciplinary Journal*,
+#' *30*(6), 985--999.
 #' \doi{10.1080/10705511.2023.2183860}
 #'
 #' Falk, C. F. (2018). Are robust standard errors the best approach

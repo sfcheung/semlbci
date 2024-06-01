@@ -1,4 +1,4 @@
-# semlbci 0.10.4.27
+# semlbci 0.10.4.28
 
 ## New Feature
 
@@ -92,6 +92,8 @@
 - Added support for dynamic scheduling
   in `semlbci()` when `parallel` is
   `FALSE`. (0.10.4.27)
+- Updated the vignettes and readme.
+ (0.10.4.28)
 
 ## (Possibly) Breaking Changes
 

@@ -41,7 +41,7 @@ be found in [Cheung and Pesigan (2023)](https://doi.org/10.1080/10705511.2023.21
 
 # Fit a Model to a Dataset
 
-The package has a dataset, `simple_med`,
+The package has a dataset, `simple_med`,buil
 with three variables, `x`, `m`, and `y`.
 Let us fit a simple mediation model to
 this dataset.
@@ -85,7 +85,7 @@ its usage by some examples, and then
 present other technical details in the
 following section.
 
-## Find the LBCI for selected free parameters
+## Find the LBCI for Selected Free Parameters
 
 All free parameters can be specified in
 `lavaan` style. For example, the path
@@ -158,7 +158,7 @@ print(out,
       annotation = FALSE)
 ```
 
-### Customizing the printout
+### Customizing the Printout
 
 For users familiar with the column names,
 the annotation can be disabled by calling `print()`
@@ -275,7 +275,7 @@ print(out,
 
 # Basic Arguments in `semlbci()`
 
-## `sem_out` and `pars`: The fit object and the parameters
+## `sem_out` and `pars`: The Fit Object and the Parameters
 
 The only required argument for
 `semlbci()` is `sem_out`, the fit
@@ -317,7 +317,7 @@ free parameters (except for variances
 and covariances) and user-defined
 parameters (if any) in a model.
 
-## `ciperc`: The level of confidence
+## `ciperc`: The Level of Confidence
 
 By default, the 95% LBCIs for the
 unstandardized solution will be formed.
@@ -326,7 +326,7 @@ the argument `ciperc` to the desired
 coverage probability, e.g., .95 for 95%,
 .90 for 90%.
 
-## `standardized`: Whether standardized solution is used
+## `standardized`: Whether Standardized Solution Is Used
 
 By default, the LBCIs for the
 unstandardized solution will be formed.
@@ -383,7 +383,47 @@ Enabling parallel processing also has
 the added benefit of showing the
 progress in real time.
 
-## Other arguments
+## `try_k_more_times` and `semlbci_out`
+
+For some models and some parameters,
+the search may be difficult. By
+default, `semlbci()` will try two
+more times, successively changing some
+settings internally. If still failed
+in forming the LBCI, users can try
+to set `try_k_more_times` to a larger
+number slightly larger than 2 (the
+default value) to see whether it can
+help forming the LBCI. This can be done
+without forming other LBCIs again if
+the output of `semlbci()` is passed
+to the new call using `semlbci_out`.
+
+For example, assume that some LBCIs
+could not be found in the first run:
+
+```{r eval = FALSE}
+lbci_some_failed <- semlbci(fit_cfa)
+```
+
+We can call `semlbci()` again,
+increasing `try_k_more_times` to 5,
+and set `semlbci_out` to
+`lbci_some_failed`.
+
+```{r eval = FALSE}
+lbci_try_again <- semlbci(fit_cfa,
+                          try_k_more_times = 5,
+                          semlbci_out = lbci_some_failed)
+```
+
+It will only form LBCIs for parameters
+failed in the first one. The output,
+`lbci_try_again`, will have the original
+LBCIs plus the new ones, if the search
+succeeds.
+
+## Other Arguments
 
 For detailed documentation of other
 arguments, please refer to the help
@@ -394,7 +434,7 @@ options can check the help pages of
 
 # Additional Features
 
-## Multiple-group Models
+## Multiple-Group Models
 
 `semlbci()` supports multiple-group
 models. For example, this is a
@@ -475,7 +515,7 @@ print(fit_lbci_ab_robust,
       output = "lavaan")
 ```
 
-## Latent level parameters
+## Latent Level Parameters
 
 `semlbci()` support forming the LBCIs
 for most free parameters. Not
@@ -486,7 +526,7 @@ parameters based on latent-level
 parameters, such as an indirect effect
 from one latent variable to another.
 
-## More examples
+## More Examples
 
 More examples can be found
 in the "examples" folders in
@@ -544,7 +584,7 @@ in `vignette("technical_searching_one_bound", package = "semlbci")`.
 
 # References
 
-Cheung, S. F., & Pesigan, I. J. A. (2023). *semlbci*: An R package for forming likelihood-based confidence intervals for parameter estimates, correlations, indirect effects, and other derived parameters. *Structural Equation Modeling: A Multidisciplinary Journal*. Advance online publication.
+Cheung, S. F., & Pesigan, I. J. A. (2023). *semlbci*: An R package for forming likelihood-based confidence intervals for parameter estimates, correlations, indirect effects, and other derived parameters. *Structural Equation Modeling: A Multidisciplinary Journal*. *30*(6), 985--999.
 https://doi.org/10.1080/10705511.2023.2183860
 
 Falk, C. F. (2018). Are robust standard errors the best approach for interval estimation with nonnormal data in structural equation
