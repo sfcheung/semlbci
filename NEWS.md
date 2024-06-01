@@ -1,4 +1,4 @@
-# semlbci 0.10.4.24
+# semlbci 0.10.4.25
 
 ## New Feature
 
@@ -19,6 +19,12 @@
   a list the `cibound` objects of
   bounds with status not equal to zero.
   For diagnostic purpose. (0.10.4.13)
+
+- When calling `semlbci()`, users can
+  use `lavaan` model syntax operators to
+  select parameters. Supported operators
+  are `"~"`, `"~~"`, `"=~"`, and `":="`.
+  (0.10.4.25)
 
 ## Miscellaneous
 
