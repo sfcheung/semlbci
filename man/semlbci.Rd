@@ -14,7 +14,7 @@ semlbci(
   standardized = FALSE,
   method = c("wn", "ur"),
   robust = c("none", "satorra.2000"),
-  try_k_more_times = 0,
+  try_k_more_times = 2,
   semlbci_out = NULL,
   check_fit = TRUE,
   ...,
@@ -163,8 +163,8 @@ Cheung, S. F., & Pesigan, I. J. A. (2023). \emph{semlbci}:
 An R package for forming likelihood-based confidence
 intervals for parameter estimates, correlations,
 indirect effects, and other derived parameters.
-\emph{Structural Equation Modeling: A Multidisciplinary Journal}.
-Advance online publication.
+\emph{Structural Equation Modeling: A Multidisciplinary Journal},
+\emph{30}(6), 985--999.
 \doi{10.1080/10705511.2023.2183860}
 
 Falk, C. F. (2018). Are robust standard errors the best approach

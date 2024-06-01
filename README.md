@@ -9,7 +9,7 @@
 [![DOI](https://img.shields.io/badge/doi-10.1080/10705511.2023.2183860-blue.svg)](https://doi.org/10.1080/10705511.2023.2183860)
 <!-- badges: end -->
 
-(Version 0.10.4.24, updated on 2024-06-01 [release history](https://sfcheung.github.io/semlbci/news/index.html))
+(Version 0.11.0, updated on 2024-06-01 [release history](https://sfcheung.github.io/semlbci/news/index.html))
 
 # semlbci <img src="man/figures/logo.png" align="right" height="150" />
 
@@ -24,12 +24,49 @@ An R package for forming likelihood-based confidence
 intervals for parameter estimates, correlations,
 indirect effects, and other derived parameters.
 *Structural Equation Modeling: A Multidisciplinary Journal*.
-Advance online publication.
+*30*(6), 985--999.
 https://doi.org/10.1080/10705511.2023.2183860
 
-More information on this package:
+As argued in the article and by others,
+LBCI is usually better than Wald-based
+confidence interval and delta method
+confidence interval, which are the
+default method in most structural
+equation modeling (SEM) program.
+However, there is one technical
+disadvantage: LBCI cannot be directly
+computed but needs to be "found"
+(searched) by some algorithms. Wald CIs,
+on the other hand, can be computed
+quickly.
+
+In
+[`semlbci`](https://sfcheung.github.io/semlbci/),
+we try to address this disadvantage of
+LBCI by implementing an efficient
+method (illustrated by
+[Pek & Wu, 2018](https://doi.org/10.1007/s11336-015-9461-1),
+adapted from [Wu & Neale, 2012](https://doi.org/10.1007/s10519-012-9560-z)),
+to help researchers to form LBCIs for
+model parameters, including user-defined
+parameters, in models fitted by `lavaan`.
+It can also form LBCIs for the standardized
+solution, such as "betas" (standardized
+regression coefficients) and correlations,
+and support multiple-group models. Last,
+it supports the robust LBCI proposed
+by [Falk (2018)](https://doi.org/10.1080/10705511.2017.1367254)
+for nonnormal variables.
+
+More information on this package can be found below:
 
 https://sfcheung.github.io/semlbci/
+
+# How To Use It
+
+Illustration with examples can be found
+in the [*Get Started* guide](https://sfcheung.github.io/semlbci/articles/semlbci.html)
+(`vignette("semlbci", package = "semlbci")`).
 
 # Installation
 
@@ -44,12 +81,6 @@ The latest version at GitHub can be installed by `remotes::install_github()`:
 ```r
 remotes::install_github("sfcheung/semlbci")
 ```
-
-# How To Use It
-
-Illustration with examples can be found
-in the [*Get Started* guide](https://sfcheung.github.io/semlbci/articles/semlbci.html)
-(`vignette("semlbci", package = "semlbci")`).
 
 # Implementation
 
@@ -67,7 +98,8 @@ Cheung, S. F., & Pesigan, I. J. A. (2023). *semlbci*: An R
 package for forming likelihood-based confidence intervals
 for parameter estimates, correlations, indirect effects,
 and other derived parameters.
-*Structural Equation Modeling: A Multidisciplinary Journal*. Advance online publication.
+*Structural Equation Modeling: A Multidisciplinary Journal*.
+*30*(6), 985--999.
 https://doi.org/10.1080/10705511.2023.2183860
 
 Falk, C. F. (2018). Are robust standard errors the best approach
