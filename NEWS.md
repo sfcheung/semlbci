@@ -1,4 +1,4 @@
-# semlbci 0.10.4.19
+# semlbci 0.10.4.20
 
 ## New Feature
 
@@ -66,6 +66,9 @@
 - Added `fit_lb` and `fit_ub` arguments
   to `ci_bound_wn_i()` for setting
   the bounds. (0.10.4.18, 0.10.4.19)
+- Fixed a bug with `std_lav()` for
+  models with only one factor.
+  (0.10.4.20)
 
 ## (Possibly) Breaking Changes
 
