@@ -1,4 +1,4 @@
-# semlbci 0.10.4.20
+# semlbci 0.10.4.21
 
 ## New Feature
 
@@ -69,6 +69,10 @@
 - Fixed a bug with `std_lav()` for
   models with only one factor.
   (0.10.4.20)
+- Add the `timeout` argument to
+  `ci_bound_wn_i()`, default to 300
+  (300 seconds or 5 minutes).
+  (0.10.4.21)
 
 ## (Possibly) Breaking Changes
 

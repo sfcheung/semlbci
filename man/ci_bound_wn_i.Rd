@@ -31,6 +31,7 @@ ci_bound_wn_i(
   try_harder = 0,
   fit_lb = -Inf,
   fit_ub = +Inf,
+  timeout = 300,
   ...
 )
 }
@@ -148,6 +149,11 @@ by \code{lb_var}.}
 bounds of parameters. Default is
 \code{+Inf}, setting the lower bounds to
 \code{+Inf} for all parameters.}
+
+\item{timeout}{The approximate
+maximum time for the search, in
+second. Default is 300 seconds
+(5 minutes).}
 
 \item{...}{Optional arguments. Not used.}
 }

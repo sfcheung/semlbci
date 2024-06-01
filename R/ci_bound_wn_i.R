@@ -160,6 +160,11 @@
 #' `+Inf`, setting the lower bounds to
 #' `+Inf` for all parameters.
 #'
+#' @param timeout The approximate
+#' maximum time for the search, in
+#' second. Default is 300 seconds
+#' (5 minutes).
+#'
 #' @param ... Optional arguments. Not used.
 #'
 #' @references
@@ -226,6 +231,7 @@ ci_bound_wn_i <- function(i = NULL,
                           try_harder = 0,
                           fit_lb = -Inf,
                           fit_ub = +Inf,
+                          timeout = 300,
                           ...) {
     k <- switch(which,
                 lbound = 1,
@@ -530,7 +536,8 @@ ci_bound_wn_i <- function(i = NULL,
                         "xtol_rel" = 1.0e-5 * xtol_rel_factor,
                         "ftol_rel" = 1.0e-5 * ftol_rel_factor,
                         "maxeval" = 500,
-                        "print_level" = 0),
+                        "print_level" = 0,
+                        "maxtime" = timeout),
                         opts)
     try_harder <- as.integer(max(try_harder, 0))
     try_harder_count <- 0

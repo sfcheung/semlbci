@@ -117,6 +117,9 @@ print.cibound <- function(x, digits = 5, ...) {
     cat("\n-- Optimization Information --")
     cat(paste0("\nSolver Status:\t\t", out_diag$optim_status))
     cat(paste0("\nConvergence Message:\t", out_diag$optim_message))
+    if (any(grepl("NLOPT_MAXTIME_REACHED:", out_diag$optim_message))) {
+        cat("\n - Set 'timeout' to a larger value to increase maximum time.")
+      }
     cat(paste0("\nIterations:\t\t", out_diag$optim_iterations))
     t_cond <- out_diag$optim_termination_conditions
     t_cond2 <- strsplit(t_cond, "\t")[[1]]
