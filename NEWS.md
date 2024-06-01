@@ -1,15 +1,16 @@
-# semlbci 0.10.4.28
+# semlbci 0.11.0
 
 ## New Feature
 
-- Add the method `"ur"` for forming the
+- Added the method `"ur"` for forming the
   LBCI. It uses root finding without
-  derivatives. It is inefficient before
-  a model with equality constraint is
+  derivatives. It is inefficient
+  (*very* slow) because
+  a model with an equality constraint is
   fitted in each iteration. However, it
   may be able to find the bound for a
   parameter when the `"wn"` method
-  cannot. It also supports robust LBCI
+  cannot. It also supports robust LBCIs
   using Satorra (2000) chi-square
   difference test. (0.10.4.2)
 
@@ -26,99 +27,73 @@
   are `"~"`, `"~~"`, `"=~"`, and `":="`.
   (0.10.4.25)
 
-## Miscellaneous
-
-- Suppressed a harmless warning in a
-  test. (0.10.4.1)
-- Added the option to use load balancing
-  when calling `semlbci()` with
-  `use_pbapply` set to `TRUE`. Enabled
-  by default. (0.10.4.3)
-- Add error handlers in the output
-  of `set_constraints()` and
-  `ci_bound_wn_i()`. (0.10.4.4)
-- Revised `ci_bound_wn_i()` and
-  `ci_bound_ur_i()` to make
-  sure the bound is a numeric object,
-  even if `NA`. (0.10.4.5)
-- Speed up the examples of
-  `ci_bound_ur_i()` and `ci_bound_ur()`.
-  (0.10.4.7)
-- Precompute the interval in
-  `ci_bound_ur_i()` before calling
-  `ci_bound_ur()`. (0.10.4.8)
-- Use `kill()` instead of `close()`
-  in R sessions. (0.10.4.9)
-- Add `bound_start` and `user_est`
-  to the precomputed interval.
-  (0.10.4.10)
-- Modified several functions related to
-  `"ur"` method to have the option to
-  use an existing R session instead of
-  creating a new one. (0.10.4.11)
-- Store the error in the search and
-  display it in the printout.
-  (0.10.4.12)
-- Fixed some typos in doc.
-  (0.10.4.14)
-- Made the test for the match between
-  `sem_out` and `semlbci_out` in
-  `semlbci()` more robust. (0.10.4.15)
-- Fixed the order of the output when
-  `standardized` is `TRUE`. (0.10.4.16)
-- Fixed a bug in `print.cibound()` when
-  the call is of the form `xxx::yyy()`.
-  (0.10.4.17)
-- Added `fit_lb` and `fit_ub` arguments
-  to `ci_bound_wn_i()` for setting
-  the bounds. (0.10.4.18, 0.10.4.19)
-- Fixed a bug with `std_lav()` for
-  models with only one factor.
-  (0.10.4.20)
-- Added the `timeout` argument to
-  `ci_bound_wn_i()`, default to 300
-  (300 seconds or 5 minutes).
-  (0.10.4.21)
-- In `print.semlbci()`, added
-  suggestions on what to do if some
-  bounds could not be found (0.10.4.22)
-- Use whitespace instead of tab to
-  align the output of `print.cibound()`.
-  (0.10.4.23)
-- Fixed a bug with `semlbci()`.
-  Intercepts are now automatically
-  skipped if `standardized` is `TRUE`.
-  (0.10.4.24)
-- Added support for dynamic scheduling
-  in `semlbci()` when `parallel` is
-  `FALSE`. (0.10.4.27)
-- Updated the vignettes and readme.
- (0.10.4.28)
-
 ## (Possibly) Breaking Changes
 
-- This may or may not be a breaking
-  changes. The default of
-  `try_k_more_times` in `semlbci()` was
-  changed from 2 to 0. These additional
-  attempts rarely help but usually
-  increase processing time
-  unnecessarily. (0.10.4.6)
-  NOTE: Default values reverted back to
-  2 due to a change in the search
-  strategy. (0.10.4.26)
-
-- Disabled further attempts in
+- Disabled some further attempts in
   the `wn` method by default
   as they rarely help but they usually
   increase
   the processing time unnecessarily.
   If necessary, one of the set of
-  attempts, successfully lower the
+  attempts, successively lowering the
   lower limits of variances can be
   enabled again by setting `try_lb`
   to `TRUE` when calling `semlbci()`
   (0.10.4.6)
+
+- Added the `timeout` argument to
+  `ci_bound_wn_i()`, default to 300
+  (300 seconds or 5 minutes). Can be
+  used in `semlbci()` too if the method
+  is `"wn"` (the default).
+  (0.10.4.21)
+
+## Miscellaneous
+
+- Added the option to use load balancing
+  when calling `semlbci()` with
+  `use_pbapply` set to `TRUE`. Enabled
+  by default. (0.10.4.3)
+
+- Added support for dynamic scheduling
+  in `semlbci()` when `parallel` is
+  `FALSE`. (0.10.4.27)
+
+- Added `fit_lb` and `fit_ub` arguments
+  to `ci_bound_wn_i()` for setting
+  the bounds. Can also be used
+  in `semlbci()` if the method is
+  `"wn"` (the defalt).
+  (0.10.4.18, 0.10.4.19)
+
+- In `print.semlbci()`, added
+  suggestions on what to do if some
+  bounds could not be found (0.10.4.22)
+
+- Use whitespace instead of tab to
+  align the output of `print.cibound()`.
+  (0.10.4.23)
+
+## Bug Fixes
+
+- Revised `ci_bound_wn_i()` and
+  `ci_bound_ur_i()` to make
+  sure the bound is a numeric object,
+  even if `NA`. (0.10.4.5)
+
+- Fixed a bug in `print.cibound()` when
+  the call is of the form `xxx::yyy()`.
+  (0.10.4.17)
+
+- Fixed a bug with `std_lav()` for
+  models with only one factor.
+  (0.10.4.20)
+
+- Fixed a bug with `semlbci()`.
+  Intercepts are now automatically
+  skipped if `standardized` is `TRUE`,
+  as stated in the help page.
+  (0.10.4.24)
 
 # semlbci 0.10.4
 
