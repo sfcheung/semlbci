@@ -412,9 +412,21 @@ ci_bound_ur_i <- function(i = NULL,
         check_level_of_confidence <- TRUE
       }
 
-    if (!all(check_optimization,
-             check_post_check,
-             check_level_of_confidence)) {
+    if (!is.na(bound)) {
+        check_direction <- switch(which,
+                             lbound = (bound < i_est),
+                             ubound = (bound > i_est))
+        if (!check_direction) {
+            status <- 1
+          }
+      } else {
+        check_direction <- NA
+      }
+
+    if (!all(isTRUE(check_optimization),
+             isTRUE(check_post_check),
+             isTRUE(check_level_of_confidence),
+             isTRUE(check_direction))) {
         bound <- NA
       }
 
@@ -450,7 +462,9 @@ ci_bound_ur_i <- function(i = NULL,
                  standardized = standardized,
                  check_optimization = check_optimization,
                  check_post_check = check_post_check,
-                 check_level_of_confidence = check_level_of_confidence
+                 check_level_of_confidence = check_level_of_confidence,
+                 check_direction = check_direction,
+                 interval0 = interval0
                  )
     if (verbose) {
         out0 <- out
@@ -461,8 +475,8 @@ ci_bound_ur_i <- function(i = NULL,
         diag$history <- NULL
         diag$fit_final <- NULL
       }
-    if (status < 0) {
-        # If convergence status < 0, override verbose
+    if (status != 0) {
+        # If status != 0, override verbose
         diag$history <- out
       }
     out <- list(bound = bound,
@@ -579,7 +593,8 @@ ci_bound_ur_i <- function(i = NULL,
 #' to the argument `extendInt` of
 #' [uniroot()]. Whether the interval
 #' should be extended if the root is not
-#' found. Default is `"yes"`. Refer to
+#' found. Default value depends on
+#' the bound to be searched. Refer to
 #' the help page of [uniroot()] for
 #' possible values.
 #'
@@ -678,7 +693,7 @@ ci_bound_ur <- function(sem_out,
                         tol = .0005, # This is the tolerance in x, not in y
                         root_target = c("chisq", "pvalue"),
                         d = 5,
-                        uniroot_extendInt = "yes",
+                        uniroot_extendInt = switch(which, lbound = "downX", ubound = "upX"),
                         uniroot_trace = 0,
                         uniroot_maxiter = 1000,
                         use_callr = TRUE,

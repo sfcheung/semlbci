@@ -1,4 +1,4 @@
-# semlbci 0.11.1
+# semlbci 0.11.2
 
 ## New Feature
 

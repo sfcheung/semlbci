@@ -19,7 +19,7 @@ ci_bound_ur(
   tol = 5e-04,
   root_target = c("chisq", "pvalue"),
   d = 5,
-  uniroot_extendInt = "yes",
+  uniroot_extendInt = switch(which, lbound = "downX", ubound = "upX"),
   uniroot_trace = 0,
   uniroot_maxiter = 1000,
   use_callr = TRUE,
@@ -99,7 +99,8 @@ initial search. Larger this value,
 to the argument \code{extendInt} of
 \code{\link[=uniroot]{uniroot()}}. Whether the interval
 should be extended if the root is not
-found. Default is \code{"yes"}. Refer to
+found. Default value depends on
+the bound to be searched. Refer to
 the help page of \code{\link[=uniroot]{uniroot()}} for
 possible values.}
 
