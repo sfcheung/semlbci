@@ -541,6 +541,12 @@ ci_bound_wn_i <- function(i = NULL,
                         opts)
     try_harder <- as.integer(max(try_harder, 0))
     try_harder_count <- 0
+    # Make sure the starting values are within the bounds
+    xstart <- pmin(pmax(xstart,
+                        fit_lb_na,
+                        na.rm = TRUE),
+                   fit_ub_na,
+                   na.rm = TRUE)
     xstart_i <- xstart
     while(try_harder_count <= try_harder) {
         out <- tryCatch(nloptr::nloptr(
@@ -562,7 +568,11 @@ ci_bound_wn_i <- function(i = NULL,
             xstart_i <- stats::runif(length(xstart_i),
                                      min = -2,
                                      max = 2) * xstart_i
-            xstart_i <- pmin(pmax(xstart_i, fit_lb_na), fit_ub_na)
+            xstart_i <- pmin(pmax(xstart_i,
+                                  fit_lb_na,
+                                  na.rm = TRUE),
+                             fit_ub_na,
+                             na.rm = TRUE)
             try_harder_count <- try_harder_count + 1
           } else {
             try_harder_count <- Inf
