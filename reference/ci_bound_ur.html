@@ -20,7 +20,7 @@ using uniroot()."><meta property="og:image" content="https://sfcheung.github.io/
     
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,7 @@ using <code><a href="https://rdrr.io/r/stats/uniroot.html" class="external-link"
 <span>  tol <span class="op">=</span> <span class="fl">5e-04</span>,</span>
 <span>  root_target <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chisq"</span>, <span class="st">"pvalue"</span><span class="op">)</span>,</span>
 <span>  d <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>  uniroot_extendInt <span class="op">=</span> <span class="st">"yes"</span>,</span>
+<span>  uniroot_extendInt <span class="op">=</span> <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span><span class="va">which</span>, lbound <span class="op">=</span> <span class="st">"downX"</span>, ubound <span class="op">=</span> <span class="st">"upX"</span><span class="op">)</span>,</span>
 <span>  uniroot_trace <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  uniroot_maxiter <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  use_callr <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -197,7 +197,8 @@ initial search. Larger this value,
 to the argument <code>extendInt</code> of
 <code><a href="https://rdrr.io/r/stats/uniroot.html" class="external-link">uniroot()</a></code>. Whether the interval
 should be extended if the root is not
-found. Default is <code>"yes"</code>. Refer to
+found. Default value depends on
+the bound to be searched. Refer to
 the help page of <code><a href="https://rdrr.io/r/stats/uniroot.html" class="external-link">uniroot()</a></code> for
 possible values.</p></dd>
 

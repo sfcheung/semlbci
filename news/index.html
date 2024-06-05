@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,20 +56,20 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.11.0" id="semlbci-0110">semlbci 0.11.0<a class="anchor" aria-label="anchor" href="#semlbci-0110"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.11.2" id="semlbci-0112">semlbci 0.11.2<a class="anchor" aria-label="anchor" href="#semlbci-0112"></a></h2>
 <div class="section level3">
-<h3 id="new-feature-0-11-0">New Feature<a class="anchor" aria-label="anchor" href="#new-feature-0-11-0"></a></h3>
+<h3 id="new-feature-0-11-2">New Feature<a class="anchor" aria-label="anchor" href="#new-feature-0-11-2"></a></h3>
 <ul><li><p>Added the method <code>"ur"</code> for forming the LBCI. It uses root finding without derivatives. It is inefficient (<em>very</em> slow) because a model with an equality constraint is fitted in each iteration. However, it may be able to find the bound for a parameter when the <code>"wn"</code> method cannot. It also supports robust LBCIs using Satorra (2000) chi-square difference test. (0.10.4.2)</p></li>
 <li><p>Add <code><a href="../reference/get_cibound.html">get_cibound_status_not_0()</a></code>. It checks the status of each bound in a <code>semlbci</code> object, and returns as a list the <code>cibound</code> objects of bounds with status not equal to zero. For diagnostic purpose. (0.10.4.13)</p></li>
 <li><p>When calling <code><a href="../reference/semlbci.html">semlbci()</a></code>, users can use <code>lavaan</code> model syntax operators to select parameters. Supported operators are <code>"~"</code>, <code>"~~"</code>, <code>"=~"</code>, and <code>":="</code>. (0.10.4.25)</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="possibly-breaking-changes-0-11-0">(Possibly) Breaking Changes<a class="anchor" aria-label="anchor" href="#possibly-breaking-changes-0-11-0"></a></h3>
+<h3 id="possibly-breaking-changes-0-11-2">(Possibly) Breaking Changes<a class="anchor" aria-label="anchor" href="#possibly-breaking-changes-0-11-2"></a></h3>
 <ul><li><p>Disabled some further attempts in the <code>wn</code> method by default as they rarely help but they usually increase the processing time unnecessarily. If necessary, one of the set of attempts, successively lowering the lower limits of variances can be enabled again by setting <code>try_lb</code> to <code>TRUE</code> when calling <code><a href="../reference/semlbci.html">semlbci()</a></code> (0.10.4.6)</p></li>
 <li><p>Added the <code>timeout</code> argument to <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code>, default to 300 (300 seconds or 5 minutes). Can be used in <code><a href="../reference/semlbci.html">semlbci()</a></code> too if the method is <code>"wn"</code> (the default). (0.10.4.21)</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="miscellaneous-0-11-0">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-11-0"></a></h3>
+<h3 id="miscellaneous-0-11-2">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-11-2"></a></h3>
 <ul><li><p>Added the option to use load balancing when calling <code><a href="../reference/semlbci.html">semlbci()</a></code> with <code>use_pbapply</code> set to <code>TRUE</code>. Enabled by default. (0.10.4.3)</p></li>
 <li><p>Added support for dynamic scheduling in <code><a href="../reference/semlbci.html">semlbci()</a></code> when <code>parallel</code> is <code>FALSE</code>. (0.10.4.27)</p></li>
 <li><p>Added <code>fit_lb</code> and <code>fit_ub</code> arguments to <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> for setting the bounds. Can also be used in <code><a href="../reference/semlbci.html">semlbci()</a></code> if the method is <code>"wn"</code> (the defalt). (0.10.4.18, 0.10.4.19)</p></li>
@@ -77,7 +77,7 @@
 <li><p>Use whitespace instead of tab to align the output of <code><a href="../reference/print.cibound.html">print.cibound()</a></code>. (0.10.4.23)</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-0-11-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-11-0"></a></h3>
+<h3 id="bug-fixes-0-11-2">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-11-2"></a></h3>
 <ul><li><p>Revised <code><a href="../reference/ci_bound_wn_i.html">ci_bound_wn_i()</a></code> and <code><a href="../reference/ci_bound_ur_i.html">ci_bound_ur_i()</a></code> to make sure the bound is a numeric object, even if <code>NA</code>. (0.10.4.5)</p></li>
 <li><p>Fixed a bug in <code><a href="../reference/print.cibound.html">print.cibound()</a></code> when the call is of the form <code>xxx::yyy()</code>. (0.10.4.17)</p></li>
 <li><p>Fixed a bug with <code>std_lav()</code> for models with only one factor. (0.10.4.20)</p></li>
