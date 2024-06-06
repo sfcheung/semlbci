@@ -6,8 +6,6 @@ loglike_compare_ur <- function(sem_out,
                                confidence = .95,
                                n_points = 21,
                                standardized = FALSE,
-                               start = "default",
-                               try_k_more = 5,
                                parallel = FALSE,
                                ncpus = parallel::detectCores(logical = FALSE) - 1,
                                use_pbapply = TRUE) {

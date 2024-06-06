@@ -19,7 +19,7 @@ f2 =~ x4 + x5 + x6
 f1 ~~ cov12 * f2
 f1 ~~ v11 * f1
 f2 ~~ v22 * f2
-#corf1f2 := cov12 / sqrt(v11 * v22)
+corf1f2 := cov12 / sqrt(v11 * v22)
 "
 fit <- lavaan::cfa(mod, dat)
 ptable <- parameterTable(fit)
@@ -56,8 +56,11 @@ standardizedSolution(fit)
 # #                                 lower.tail = FALSE)
 # # print(a_loglik, digits = 3)
 
+
 loglike_point_ur(2, fit, par_i = "f1 ~~ f2")
-loglike_point(2, fit, par_i = "f1 =~ x2")
+loglike_point_ur(coef(fit)["cov12"], fit, par_i = "f1 ~~ f2")
+
+loglike_point_ur(.515, fit, par_i = 16)
 
 
 # loglike_point(a_loglik_w[1, "theta"], fit, par_i = i)$lrt[2, "Pr(>Chisq)"]
