@@ -16,15 +16,22 @@ loglike_compare_ur <- function(sem_out,
           }
       }
     par_i_name <- i_to_name(par_i, sem_out)
-    ptable <- lavaan::parameterTable(sem_out)
-    est <- ptable$est[par_i]
-    se <- ptable$se[par_i]
+    if (standardized) {
+        ptable <- lavaan::standardizedSolution(sem_out)
+        est <- ptable$est.std[par_i]
+        se <- ptable$se[par_i]
+      } else {
+        ptable <- lavaan::parameterTable(sem_out)
+        est <- ptable$est[par_i]
+        se <- ptable$se[par_i]
+      }
     z <- stats::qnorm(1 - (1 - confidence) / 2)
     zs <- seq(-z, z, length.out = n_points)
     thetas_q <- est + se * zs
     if (is.null(semlbci_out)) {
         lbci_i <- semlbci(sem_out,
                           pars = par_i,
+                          standardized = standardized,
                           ciperc = confidence,
                           method = "ur",
                           parallel = FALSE,
@@ -39,11 +46,11 @@ loglike_compare_ur <- function(sem_out,
     int_l <- thetas_0[which(thetas_0 == min(thetas_l)):which(thetas_0 == max(thetas_l))]
 
     # Generate the user-parameter function
-    est_i_func <- gen_est_i(i = par_i,
-                            sem_out = sem_out,
-                            standardized = standardized)
-    fit_i <- add_func(func = est_i_func,
-                      sem_out = sem_out)
+    # est_i_func <- gen_est_i(i = par_i,
+    #                         sem_out = sem_out,
+    #                         standardized = standardized)
+    # fit_i <- add_func(func = est_i_func,
+    #                   sem_out = sem_out)
     # tmp <- loglik_user(x = 1.2,
     #                    sem_out_userp = fit_i,
     #                    sem_out = sem_out)
