@@ -1,4 +1,3 @@
-skip("WIP")
 skip("Plots: Test in interactive sections")
 
 options_old <- options(width = 132)
@@ -34,38 +33,47 @@ loglike_point_ur(coef(fit, type = "user")["corf1f2"], fit, par_i = "f1 ~~ f2", s
 loglike_point_ur(.515, fit, par_i = 16)
 
 i <- "f1 ~~ f2"
-out <- loglike_compare_ur(fit, par_i = i, n_points = 21)
-# out <- loglike_compare_ur(fit, par_i = i, n_points = 21, parallel = TRUE)
+out <- loglike_compare_ur(fit, par_i = i, n_points = 13)
+out2 <- loglike_compare_ur(fit, par_i = i, n_points = 13, parallel = TRUE)
 out
+out2
 plot(out, type = "default")
 plot(out, type = "ggplot2")
 p <- plot(out, type = "ggplot2", add_pvalues = TRUE)
 p
+plot(out2, type = "ggplot2")
 
-out <- loglike_compare_ur(fit, par_i = i, n_points = 21, standardized = TRUE)
+out <- loglike_compare_ur(fit, par_i = i, n_points = 13, standardized = TRUE)
+out2 <- loglike_compare_ur(fit, par_i = i, n_points = 13, standardized = TRUE, parallel = TRUE)
 out
+out2
 plot(out, type = "default")
 plot(out, type = "ggplot2")
 p <- plot(out, type = "ggplot2", add_pvalues = TRUE)
 p
+plot(out2, type = "ggplot2")
+
 
 i <- "f1 =~ x2"
-out <- loglike_compare_ur(fit, par_i = i, n_points = 21)
-out <- loglike_compare_ur(fit, par_i = i, n_points = 21, parallel = TRUE)
+out <- loglike_compare_ur(fit, par_i = i, n_points = 13)
+out2 <- loglike_compare_ur(fit, par_i = i, n_points = 13, parallel = TRUE)
 out
+out2
 plot(out, type = "default")
 plot(out, type = "ggplot2")
 p <- plot(out, type = "ggplot2", add_pvalues = TRUE, size_label = 10, size_point = 15)
 p
+plot(out2, type = "ggplot2")
 
-out <- loglike_compare_ur(fit, par_i = i, standardized = TRUE, n_points = 21)
-out <- loglike_compare_ur(fit, par_i = i, standardized = TRUE, n_points = 21, parallel = TRUE)
+out <- loglike_compare_ur(fit, par_i = i, standardized = TRUE, n_points = 13)
+out2 <- loglike_compare_ur(fit, par_i = i, standardized = TRUE, n_points = 13, parallel = TRUE)
 out
+out2
 plot(out, type = "default")
 plot(out, type = "ggplot2")
 p <- plot(out, type = "ggplot2", add_pvalues = TRUE, size_label = 10, size_point = 15)
 p
-
+plot(out2, type = "ggplot2")
 
 # User Parameters
 
@@ -81,19 +89,22 @@ fit <- lavaan::sem(mod, dat, fixed.x = FALSE)
 lavaan::parameterTable(fit)
 
 i <- "ab :="
-out <- loglike_compare_ur(fit, par_i = i, n_points = 21)
-out <- loglike_compare_ur(fit, par_i = i, n_points = 21, parallel = TRUE)
+out <- loglike_compare_ur(fit, par_i = i, n_points = 13)
+out2 <- loglike_compare_ur(fit, par_i = i, n_points = 13, parallel = TRUE)
 out
+out2
 plot(out)
 plot(out, type = "ggplot2")
 plot(out, type = "ggplot2", add_pvalues = TRUE)
+plot(out2, type = "ggplot2")
 
-out <- loglike_compare_ur(fit, par_i = i, standardized = TRUE, n_points = 21)
-out <- loglike_compare_ur(fit, par_i = i, standardized = TRUE, n_points = 21, parallel = TRUE)
+out <- loglike_compare_ur(fit, par_i = i, standardized = TRUE, n_points = 13)
+out2 <- loglike_compare_ur(fit, par_i = i, standardized = TRUE, n_points = 13, parallel = TRUE)
 out
+out2
 plot(out)
 plot(out, type = "ggplot2")
 plot(out, type = "ggplot2", add_pvalues = TRUE)
-
+plot(out2, type = "ggplot2", add_pvalues = TRUE)
 
 options(options_old)

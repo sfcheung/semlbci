@@ -1,4 +1,22 @@
-#' @noRd
+#' @param standardized Logical. Whether
+#' the parameter requested is in the
+#' standardized solution. Default is
+#' `FALSE`.
+#'
+#' @param loadbalancing Logical. When
+#' using parallel processing, whether
+#' load balancing is used. Default is
+#' `TRUE`.
+#'
+#' @describeIn loglikelihood Generates
+#' points for log profile likelihood and
+#' quadratic approximation using root
+#' finding, by calling the helper
+#' functions [loglike_range_ur()] and
+#' [loglike_quad_range_ur()].
+#'
+#' @order 6
+#' @export
 
 loglike_compare_ur <- function(sem_out,
                                semlbci_out = NULL,
@@ -8,7 +26,8 @@ loglike_compare_ur <- function(sem_out,
                                standardized = FALSE,
                                parallel = FALSE,
                                ncpus = parallel::detectCores(logical = FALSE) - 1,
-                               use_pbapply = TRUE) {
+                               use_pbapply = TRUE,
+                               loadbalancing = TRUE) {
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -61,14 +80,16 @@ loglike_compare_ur <- function(sem_out,
                                   interval = int_q,
                                   parallel = parallel,
                                   ncpus = ncpus,
-                                  use_pbapply = use_pbapply)
+                                  use_pbapply = use_pbapply,
+                                  loadbalancing = loadbalancing)
     ll <- loglike_range_ur(sem_out,
                            par_i = par_i,
                            standardized = standardized,
                            interval = int_l,
                            parallel = parallel,
                            ncpus = ncpus,
-                           use_pbapply = use_pbapply)
+                           use_pbapply = use_pbapply,
+                           loadbalancing = loadbalancing)
     pvalue_q_lb <- loglike_point_ur(ll_q[1, "theta"],
                                     sem_out = sem_out,
                                     par_i = par_i,
@@ -95,8 +116,12 @@ loglike_compare_ur <- function(sem_out,
     out
   }
 
-#' @noRd
-
+#' @describeIn loglikelihood Find the
+#' log profile likelihood for a range of
+#' values using root finding.
+#'
+#' @order 7
+#' @export
 
 loglike_range_ur <- function(sem_out,
                              par_i,
@@ -105,11 +130,15 @@ loglike_range_ur <- function(sem_out,
                              n_points = 21,
                              interval = NULL,
                              verbose = FALSE,
-                             start = "default",
-                             try_k_more = 5,
                              parallel = FALSE,
                              ncpus = parallel::detectCores(logical = FALSE) - 1,
-                             use_pbapply = TRUE) {
+                             use_pbapply = TRUE,
+                             loadbalancing = TRUE) {
+    if (use_pbapply && loadbalancing) {
+        pboptions_old <- pbapply::pboptions(use_lb = TRUE)
+        # Restore pboptions on exit
+        on.exit(pbapply::pboptions(pboptions_old))
+      }
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -211,8 +240,48 @@ loglike_range_ur <- function(sem_out,
     out_final
   }
 
+#' @describeIn loglikelihood Find the
+#' log likelihood at a value.
+#'
+#' @order 8
+#' @export
 
-#' @noRd
+loglike_point_ur <- function(theta0,
+                             sem_out,
+                             par_i,
+                             standardized = FALSE,
+                             verbose = FALSE) {
+    if (is.character(par_i)) {
+        par_i <- syntax_to_i(par_i, sem_out)
+        if (length(par_i) != 1) {
+            stop("par_i must denote one parameter only.")
+          }
+      }
+    est_i_func <- gen_est_i(i = par_i,
+                            sem_out = sem_out,
+                            standardized = standardized)
+    fit_i <- add_func(func = est_i_func,
+                      sem_out = sem_out)
+    out <- loglik_user(x = theta0,
+                       sem_out_userp = fit_i,
+                       sem_out = sem_out)
+    lrt <- attr(out, "lrt")
+    if (verbose) print(lrt)
+    loglike <- as.vector(out)
+    p <- lrt[2, "Pr(>Chisq)"]
+    out <- list(loglike = loglike,
+                pvalue = p,
+                fit = attr(out, "sem_out_userp_x"),
+                lrt = lrt)
+    out
+  }
+
+#' @describeIn loglikelihood Find the
+#' approximated log likelihood for a
+#' range of values using root finding.
+#'
+#' @order 9
+#' @export
 
 loglike_quad_range_ur <- function(sem_out,
                                   par_i,
@@ -223,8 +292,12 @@ loglike_quad_range_ur <- function(sem_out,
                                   parallel = FALSE,
                                   ncpus = parallel::detectCores(logical = FALSE) - 1,
                                   use_pbapply = TRUE,
-                                  try_k_more = 5,
-                                  start = "default") {
+                                  loadbalancing = TRUE) {
+    if (use_pbapply && loadbalancing) {
+        pboptions_old <- pbapply::pboptions(use_lb = TRUE)
+        # Restore pboptions on exit
+        on.exit(pbapply::pboptions(pboptions_old))
+      }
     if (is.character(par_i)) {
         par_i <- syntax_to_i(par_i, sem_out)
         if (length(par_i) != 1) {
@@ -277,10 +350,10 @@ loglike_quad_range_ur <- function(sem_out,
                                            sem_out,
                                            par_i,
                                            standardized = standardized) {
-                                      loglike_point_ur(x,
-                                                       sem_out = sem_out,
-                                                       par_i = par_i,
-                                                       standardized = standardized)$pvalue
+                                      semlbci::loglike_point_ur(x,
+                                          sem_out = sem_out,
+                                          par_i = par_i,
+                                          standardized = standardized)$pvalue
                                     },
                                 sem_out = sem_out,
                                 par_i = par_i,
@@ -294,10 +367,10 @@ loglike_quad_range_ur <- function(sem_out,
                                            sem_out,
                                            par_i,
                                            standardized = standardized) {
-                                      loglike_point_ur(x,
-                                                       sem_out = sem_out,
-                                                       par_i = par_i,
-                                                       standardized = standardized)$pvalue
+                                      semlbci::loglike_point_ur(x,
+                                          sem_out = sem_out,
+                                          par_i = par_i,
+                                          standardized = standardized)$pvalue
                                     },
                                 sem_out = sem_out,
                                 par_i = par_i,
@@ -337,7 +410,13 @@ loglike_quad_range_ur <- function(sem_out,
     out_final
   }
 
-#' @noRd
+#' @describeIn loglikelihood Find the
+#' approximated log likelihood at a
+#' value. Support a parameter in the
+#' standardized solution.
+#'
+#' @order 10
+#' @export
 
 loglike_quad_point_ur <- function(theta0,
                                   sem_out,
@@ -360,42 +439,15 @@ loglike_quad_point_ur <- function(theta0,
     -.5 * p_info * (theta0 - est) ^ 2
   }
 
+# #' @describeIn loglikelihood Fit a
+# #' parameter to a value and compare the
+# #' restricted model with the original
+# #' model by a likelihood ratio test.
+# #' A helper function for other
+# #'
+# #' @order 11
+# #' @export
 #' @noRd
-
-loglike_point_ur <- function(theta0,
-                             sem_out,
-                             par_i,
-                             standardized = FALSE,
-                             verbose = FALSE) {
-    if (is.character(par_i)) {
-        par_i <- syntax_to_i(par_i, sem_out)
-        if (length(par_i) != 1) {
-            stop("par_i must denote one parameter only.")
-          }
-      }
-    est_i_func <- gen_est_i(i = par_i,
-                            sem_out = sem_out,
-                            standardized = standardized)
-    fit_i <- add_func(func = est_i_func,
-                      sem_out = sem_out)
-    out <- loglik_user(x = theta0,
-                       sem_out_userp = fit_i,
-                       sem_out = sem_out)
-    lrt <- attr(out, "lrt")
-    if (verbose) print(lrt)
-    loglike <- as.vector(out)
-    p <- lrt[2, "Pr(>Chisq)"]
-    out <- list(loglike = loglike,
-                pvalue = p,
-                fit = attr(out, "sem_out_userp_x"),
-                lrt = lrt)
-    out
-  }
-
-
-#' @noRd
-# TODO:
-# - To be exported for plotting loglikelihood
 
 loglik_user <- function(x,
                         sem_out_userp,
