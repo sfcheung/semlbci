@@ -1,3 +1,22 @@
+# semlbci 0.11.3
+
+## New Feature
+
+- Can plot log profile likelihood of
+  parameters using root finding. The
+  function is `loglike_compare_ur()`,
+  which related helper functions with
+  suffix `_ur`. This variant can be used
+  for parameters in the standardized
+  solution, such as standardized
+  regression paths or correlations.
+  (0.11.2.1)
+
+## Miscellaneous
+
+- Addressed a minor numerical difference
+  in a test. (0.11.2.2)
+
 # semlbci 0.11.2
 
 ## New Feature

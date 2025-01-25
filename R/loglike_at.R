@@ -23,6 +23,17 @@
 #' model. It is the responsibility of the users to ensure that the
 #' computation is appropriate for the model and parameter.
 #'
+#' In version 0.11.2.1, added variants
+#' of the function, with suffix `_ur`,
+#' which use root finding (`"ur"` in
+#' [semlbci()]). These variants are
+#' slower to run but can be used for
+#' parameter in the standardized
+#' solution. Therefore, they can used to
+#' generate plots for parameters such as
+#' standardized regression paths and
+#' correlations.
+#'
 #' @return [loglike_range()] returns a data frame with these columns:
 #'
 #' - `theta`: The values to which the parameter is fixed to.
