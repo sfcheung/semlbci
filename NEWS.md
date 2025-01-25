@@ -1,4 +1,4 @@
-# semlbci 0.11.2.1
+# semlbci 0.11.2.2
 
 ## New Feature
 
@@ -11,6 +11,11 @@
   solution, such as standardized
   regression paths or correlations.
   (0.11.2.1)
+
+## Miscellaneous
+
+- Addressed a minor numerical difference
+  in a test. (0.11.2.2)
 
 # semlbci 0.11.2
 

@@ -1,6 +1,6 @@
 Package: semlbci
 Title: Likelihood-Based Confidence Interval in Structural Equation Models
-Version: 0.11.2.1
+Version: 0.11.2.2
 Authors@R:
     c(
       person(given = "Shu Fai",
@@ -28,7 +28,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Suggests:
     testthat (>= 3.0.0),
     knitr,
