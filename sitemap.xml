@@ -1,111 +1,39 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/404.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/articles/loglike.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/articles/semlbci.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/articles/technical_searching_one_bound.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/articles/technical_workflow.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/index.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/cfa_evar_near_zero.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/cfa_two_factors.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/cfa_two_factors_mg.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/check_sem_out.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/ci_bound_ur.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/ci_bound_ur_i.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/ci_bound_wn_i.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/ci_i_one.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/ci_order.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/confint.semlbci.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/gen_userp.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/get_cibound.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/loglikelihood.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/mediation_latent.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/mediation_latent_skewed.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/nearby_levels.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/plot.loglike_compare.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/print.cibound.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/print.semlbci.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/reg_cor_near_one.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/semlbci-package.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/semlbci.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/set_constraint.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/simple_med.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/simple_med_mg.html</loc>
-  </url>
-  <url>
-    <loc>https://sfcheung.github.io/semlbci/reference/syntax_to_i.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://sfcheung.github.io/semlbci/404.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/articles/index.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/articles/loglike.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/articles/semlbci.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/articles/technical_searching_one_bound.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/articles/technical_workflow.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/authors.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/index.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/news/index.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/cfa_evar_near_zero.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/cfa_two_factors.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/cfa_two_factors_mg.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/check_sem_out.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/ci_bound_ur.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/ci_bound_ur_i.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/ci_bound_wn_i.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/ci_i_one.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/ci_order.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/confint.semlbci.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/gen_userp.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/get_cibound.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/index.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/loglikelihood.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/mediation_latent.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/mediation_latent_skewed.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/nearby_levels.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/plot.loglike_compare.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/print.cibound.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/print.semlbci.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/reg_cor_near_one.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/semlbci-package.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/semlbci.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/set_constraint.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/simple_med.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/simple_med_mg.html</loc></url>
+<url><loc>https://sfcheung.github.io/semlbci/reference/syntax_to_i.html</loc></url>
 </urlset>
+
