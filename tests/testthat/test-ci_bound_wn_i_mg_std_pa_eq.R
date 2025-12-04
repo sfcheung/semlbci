@@ -5,7 +5,7 @@ library(semlbci)
 
 # Fit the model
 
-library(lavaan)
+suppressMessages(library(lavaan))
 
 data(simple_med_mg)
 dat <- simple_med_mg
@@ -36,8 +36,16 @@ time1l <- system.time(out1l <- ci_bound_wn_i(1, 16, sem_out = fit, f_constr = fn
 time2u <- system.time(out2u <- ci_bound_wn_i(10, 16, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, opts = opts0, std_method = "internal"))
 
 test_that("Check against precomputed answers", {
-    expect_equal(out1l$bound, 0.1385524, tolerance = 1e-5)
-    expect_equal(out2u$bound, 0.5580358, tolerance = 1e-5)
+    # 2025-12-04:
+    # Increase the tolerance due to changes in lavaan optimization
+    # lavaan 0.6-21:     0.1379478
+    # lavaan pre 0.6-21: 0.1385524
+    # lavaan 0.6-21:     0.5581735
+    # lavaan pre 0.6-21: 0.5580358
+    expect_equal(out1l$diag$ciperc_final, .96, tolerance = 1e-3)
+    expect_equal(out2u$diag$ciperc_final, .96, tolerance = 1e-3)
+    expect_equal(out1l$bound, 0.1385524, tolerance = 1e-2)
+    expect_equal(out2u$bound, 0.5580358, tolerance = 1e-3)
   })
 
 skip("Run only if data changed")

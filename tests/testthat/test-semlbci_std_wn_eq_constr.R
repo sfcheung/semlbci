@@ -6,7 +6,7 @@ library(semlbci)
 
 # context("Check semlbci: With equality constraints")
 
-library(lavaan)
+suppressMessages(library(lavaan))
 
 data(simple_med)
 dat <- simple_med

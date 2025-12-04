@@ -5,7 +5,7 @@ library(semlbci)
 
 # https://lavaan.ugent.be/tutorial/groups.html
 
-library(lavaan)
+suppressMessages(library(lavaan))
 HS.model <- ' visual  =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6
               speed   =~ x7 + x8 + x9 '

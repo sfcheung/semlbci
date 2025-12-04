@@ -4,7 +4,7 @@ library(semlbci)
 
 # Fit the model
 
-library(lavaan)
+suppressMessages(library(lavaan))
 
 data(cfa_two_factors_mg)
 dat <- cfa_two_factors_mg

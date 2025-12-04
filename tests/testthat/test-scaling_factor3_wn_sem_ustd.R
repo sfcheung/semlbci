@@ -3,12 +3,12 @@ skip_on_cran()
 # Updated for lavaan 0.6-13
 
 library(semlbci)
-library(lavaan)
+suppressMessages(library(lavaan))
 options(width = 132)
 
 # Fit model
 
-library(lavaan)
+suppressMessages(library(lavaan))
 
 data(cfa_two_factors)
 dat <- cfa_two_factors

@@ -3,11 +3,11 @@ library(semlbci)
 
 dat <- cfa_two_factors
 
-library(lavaan)
+suppressMessages(library(lavaan))
 
 data(cfa_two_factors_mg)
 dat <- cfa_two_factors_mg
-mod <- 
+mod <-
 "
 f1 =~ x1 + c(a1, a2)*x2 + c(b1, b2)*x3
 f2 =~ x4 + c(c1, c1)*x5 + c(d1, d2)*x6
