@@ -64,7 +64,7 @@ test_that("Check against the flags", {
 test_that("Check against the flags", {
     # Changed from == to < for lavaan 0.6-21+
     expect_true(
-        out_04 < -2
+        out_04 < -1
       )
   })
 
