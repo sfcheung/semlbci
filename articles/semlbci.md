@@ -1,0 +1,748 @@
+# Get Started
+
+## Introduction
+
+The package [`semlbci`](https://sfcheung.github.io/semlbci/) ([Cheung &
+Pesigan, 2023](https://doi.org/10.1080/10705511.2023.2183860)) includes
+functions for finding the likelihood-based confidence intervals (LBCIs)
+of parameters in the output of a structural equation modeling (SEM)
+function. Currently, it supports the output from
+[`lavaan::lavaan()`](https://rdrr.io/pkg/lavaan/man/lavaan.html) and its
+wrappers, such as
+[`lavaan::sem()`](https://rdrr.io/pkg/lavaan/man/sem.html) and
+[`lavaan::cfa()`](https://rdrr.io/pkg/lavaan/man/cfa.html).
+
+The latest stable version can be installed from GitHub:
+
+``` r
+remotes::install_github("sfcheung/semlbci")
+```
+
+Further information about `semlbci` can be found in [Cheung and Pesigan
+(2023)](https://doi.org/10.1080/10705511.2023.2183860).
+
+## Fit a Model to a Dataset
+
+The package has a dataset, `simple_med`, with three variables, `x`, `m`,
+and `y`. Let us fit a simple mediation model to this dataset.
+
+``` r
+library(semlbci)
+data(simple_med)
+dat <- simple_med
+head(dat)
+#>            x          m         y
+#> 1 -0.3447375   7.284273 -5.636897
+#> 2 -0.3658919  -5.449121 -4.525402
+#> 3 -0.8294968  -7.016254 -7.823257
+#> 4 -0.3389654   4.367018  1.563098
+#> 5 -0.9628162  -4.015469 -7.288511
+#> 6 -1.0749302 -11.538140 -4.153572
+```
+
+``` r
+library(lavaan)
+mod <-
+"
+m ~ a*x
+y ~ b*m
+ab := a * b
+"
+# We set fixed.x = FALSE because we will also find the LBCIs for
+# standardized solution
+fit <- sem(mod, simple_med, fixed.x = FALSE)
+```
+
+To illustrate how to find the LBCIs for user-defined parameters, we
+labelled the `m ~ x` path by `a`, the `y ~ m` path by `b`, and defined
+the indirect effect, `ab`, by `a * b`.
+
+This is the summary:
+
+``` r
+summary(fit, standardized = TRUE)
+#> lavaan 0.6.17 ended normally after 1 iteration
+#> 
+#>   Estimator                                         ML
+#>   Optimization method                           NLMINB
+#>   Number of model parameters                         5
+#> 
+#>   Number of observations                           200
+#> 
+#> Model Test User Model:
+#>                                                       
+#>   Test statistic                                10.549
+#>   Degrees of freedom                                 1
+#>   P-value (Chi-square)                           0.001
+#> 
+#> Parameter Estimates:
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> Regressions:
+#>                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+#>   m ~                                                                   
+#>     x          (a)    1.676    0.431    3.891    0.000    1.676    0.265
+#>   y ~                                                                   
+#>     m          (b)    0.535    0.073    7.300    0.000    0.535    0.459
+#> 
+#> Variances:
+#>                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+#>    .m                34.710    3.471   10.000    0.000   34.710    0.930
+#>    .y                40.119    4.012   10.000    0.000   40.119    0.790
+#>     x                 0.935    0.094   10.000    0.000    0.935    1.000
+#> 
+#> Defined Parameters:
+#>                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+#>     ab                0.897    0.261    3.434    0.001    0.897    0.122
+```
+
+## Examples
+
+The main function to find the LBCIs for free parameters is
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md).
+This should be the only function used by normal users. We will first
+illustrate its usage by some examples, and then present other technical
+details in the following section.
+
+### Find the LBCI for Selected Free Parameters
+
+All free parameters can be specified in `lavaan` style. For example, the
+path from `m` to `y` is denoted by `"y ~ m"`, and the covariance or
+correlation between `x` and `m` (not in the example) is denoted by
+`"x ~~ m"` (order does not matter).
+
+``` r
+out <- semlbci(sem_out = fit,
+               pars = c("y ~ m",
+                        "m ~ x"))
+```
+
+Since version 0.10.4.25, `lavaan` model syntax operators can be used to
+represent all parameters of the same type: `"~"` for regression paths,
+`"~~"` for variances and covariances, `"=~"` for factor loadings, and
+`":="` for all user-defined parameters. For example, the following call
+and the one above find LBCIs for the same set of parameters:
+
+``` r
+out <- semlbci(sem_out = fit,
+               pars = c("~"))
+```
+
+The output is the parameter table of the fitted `lavaan` object, with
+two columns added, `lbci_lb` and `lbci_ub`, the likelihood-based lower
+bounds and upper bounds, respectively.
+
+``` r
+out
+#> 
+#> Results:
+#>   id lhs op rhs label   est lbci_lb lbci_ub    lb    ub cl_lb cl_ub
+#> 1  1   m  ~   x     a 1.676   0.828   2.525 0.832 2.520 0.950 0.950
+#> 2  2   y  ~   m     b 0.535   0.391   0.679 0.391 0.679 0.950 0.950
+#> 
+#> Annotation:
+#> * lbci_lb, lbci_ub: The lower and upper likelihood-based bounds.
+#> * est: The point estimates from the original lavaan output.
+#> * lb, ub: The original lower and upper bounds, extracted from the
+#>     original lavaan output. Usually Wald CIs for free parameters and
+#>     delta method CIs for user-defined parameters
+#> * cl_lb, cl_ub: One minus the p-values of chi-square difference tests
+#>     at the bounds. Should be close to the requested level of
+#>     confidence, e.g., .95 for 95% confidence intervals.
+#> 
+#> Call:
+#> semlbci(sem_out = fit, pars = c("~"))
+```
+
+In this example, the point estimate of the unstandardized coefficient
+from `x` to `m` is 1.676, and the LBCI is 0.828 to 2.525.
+
+#### Default Parameters
+
+By default, factor loadings, covariances (except for error covariances),
+and regression paths are included in the search. Therefore, `pars` can
+be omitted, although the search will take time to run for a big model.
+In this case, it is advised to enable parallel processing by add
+`parallel = TRUE` and set `ncpus` to the number of processes to run
+(these arguments are explained later):
+
+``` r
+out <- semlbci(sem_out = fit,
+               parallel = TRUE,
+               ncpus = 6)
+print(out,
+      annotation = FALSE)
+#> 
+#> Results:
+#>   id lhs op rhs label   est lbci_lb lbci_ub    lb    ub cl_lb cl_ub
+#> 1  1   m  ~   x     a 1.676   0.828   2.525 0.832 2.520 0.950 0.950
+#> 2  2   y  ~   m     b 0.535   0.391   0.679 0.391 0.679 0.950 0.950
+#> 6  6  ab := a*b    ab 0.897   0.427   1.464 0.385 1.409 0.950 0.950
+```
+
+#### Customizing the Printout
+
+For users familiar with the column names, the annotation can be disabled
+by calling [`print()`](https://rdrr.io/r/base/print.html) and add
+`annotation = FALSE`:
+
+``` r
+print(out, annotation = FALSE)
+#> 
+#> Results:
+#>   id lhs op rhs label   est lbci_lb lbci_ub    lb    ub cl_lb cl_ub
+#> 1  1   m  ~   x     a 1.676   0.828   2.525 0.832 2.520 0.950 0.950
+#> 2  2   y  ~   m     b 0.535   0.391   0.679 0.391 0.679 0.950 0.950
+#> 6  6  ab := a*b    ab 0.897   0.427   1.464 0.385 1.409 0.950 0.950
+```
+
+The results can also be printed in a `lavaan`-like format by calling
+[`print()`](https://rdrr.io/r/base/print.html), setting `sem_out` to the
+original fit object (`fit` in this example), and add
+`output = "lavaan"`:
+
+``` r
+print(out,
+      sem_out = fit,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
+#> 
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Parameter Estimates:
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> Regressions:
+#>                    Estimate  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>   m ~                                                                   
+#>     x          (a)    1.676    0.431    3.891    0.000    0.828    2.525
+#>   y ~                                                                   
+#>     m          (b)    0.535    0.073    7.300    0.000    0.391    0.679
+#> 
+#> Defined Parameters:
+#>                    Estimate  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>     ab                0.897    0.261    3.434    0.001    0.427    1.464
+```
+
+By default, the original confidence intervals will not be printed. See
+the help page of
+[`print.semlbci()`](https://sfcheung.github.io/semlbci/reference/print.semlbci.md)
+for other options available.
+
+### Find the LBCI for a User-Defined Parameter
+
+To find the LBCI for a user-defined parameter, use `label :=`, where
+`label` is the label used in the model specification. The definition of
+this parameter can be omitted. The content after `:=` will be ignored by
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md).
+
+``` r
+out <- semlbci(sem_out = fit,
+               pars = c("ab := "))
+print(out,
+      sem_out = fit,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
+#> 
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Parameter Estimates:
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> Defined Parameters:
+#>                    Estimate  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>     ab                0.897    0.261    3.434    0.001    0.427    1.464
+```
+
+In this example, the point estimate of the indirect effect is 0.897, and
+the LBCI is 0.427 to 1.464.
+
+(Note: In some examples, we added `annotation = FALSE` to suppress the
+annotation in the printout to minimize the length of this vignette.)
+
+### Find the LBCI for the Parameters in the Standardized Metric
+
+By the default, the unstandardized solution is used by
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md).
+If the LBCIs for the standardized solution solution are needed, set
+`standardized = TRUE`.
+
+``` r
+out <- semlbci(sem_out = fit,
+               pars = c("y ~ m",
+                        "m ~ x"),
+               standardized = TRUE)
+```
+
+This one also works:
+
+``` r
+out <- semlbci(sem_out = fit,
+               pars = "~",
+               standardized = TRUE)
+```
+
+This is the printout, in `lavaan`-style:
+
+``` r
+print(out,
+      sem_out = fit,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
+#> 
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Standardized Estimates Only
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> Regressions:
+#>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>   m ~                                                                   
+#>     x          (a)    0.265    0.066    4.035    0.000    0.133    0.389
+#>   y ~                                                                   
+#>     m          (b)    0.459    0.056    8.215    0.000    0.342    0.561
+```
+
+If LBCIs are for the standardized solution and `output` set to
+`"lavaan"` when printing the results, the parameter estimates, standard
+errors, *z*-values, and *p*-values are those from the standardized
+solution.
+
+The LBCIs for standardized user-defined parameters can be requested
+similarly.
+
+``` r
+out <- semlbci(sem_out = fit,
+               pars = c("ab :="),
+               standardized = TRUE)
+print(out,
+      sem_out = fit,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
+#> 
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Standardized Estimates Only
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> Defined Parameters:
+#>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>     ab                0.122    0.034    3.538    0.000    0.059    0.194
+```
+
+``` r
+out <- semlbci(sem_out = fit,
+               standardized = TRUE)
+print(out,
+      sem_out = fit,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
+#> 
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Standardized Estimates Only
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> Regressions:
+#>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>   m ~                                                                   
+#>     x          (a)    0.265    0.066    4.035    0.000    0.133    0.389
+#>   y ~                                                                   
+#>     m          (b)    0.459    0.056    8.215    0.000    0.342    0.561
+#> 
+#> Defined Parameters:
+#>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>     ab                0.122    0.034    3.538    0.000    0.059    0.194
+```
+
+## Basic Arguments in `semlbci()`
+
+### `sem_out` and `pars`: The Fit Object and the Parameters
+
+The only required argument for
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+is `sem_out`, the fit object from
+[`lavaan::lavaan()`](https://rdrr.io/pkg/lavaan/man/lavaan.html) or its
+wrappers (e.g., `lavann::cfa()` and
+[`lavaan::sem()`](https://rdrr.io/pkg/lavaan/man/sem.html)). By default,
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+will find the LBCIs for all free parameters (except for variances and
+error variances) and user-defined parameters, which can take a long time
+for a model with many parameters. Moreover, LBCI is usually used when
+Wald-type confidence interval may not be suitable, for example, forming
+the confidence interval for an indirect effect or a parameter in the
+standardized solution. These parameters may have sampling distributions
+that are asymmetric or otherwise substantially nonnormal due to bounded
+parameter spaces or other reasons.
+
+Therefore, it is recommended to call
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+without specifying any parameters. If the time to run is long, then call
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+only for selected parameters. The argument `pars` should be a model
+syntax or a vector of strings which specifies the parameters for which
+LBCIs will be formed (detailed below).
+
+If time is not a concern, for example, when users want to explore the
+LBCIs for all free and user-defined parameters in a final model, then
+`pars` can be omitted to request the LBCIs for all free parameters
+(except for variances and covariances) and user-defined parameters (if
+any) in a model.
+
+### `ciperc`: The Level of Confidence
+
+By default, the 95% LBCIs for the unstandardized solution will be
+formed. To change the level of confidence, set the argument `ciperc` to
+the desired coverage probability, e.g., .95 for 95%, .90 for 90%.
+
+### `standardized`: Whether Standardized Solution Is Used
+
+By default, the LBCIs for the unstandardized solution will be formed. If
+the LBCIs for the standardized solution are desired, set
+`standardized = TRUE`. Note that for some models it can be much slower
+to find the LBCIs for the standardized solution than for the
+unstandardized solution.
+
+### `parallel` and `ncpus`
+
+The search for the bounds needs to be done separately for each bound and
+this can take a long time for a model with many parameters and/or with
+equality constraints. Therefore, parallel processing should always be
+enabled by setting `parallel` to `TRUE` and `ncpus` to a number smaller
+than the number of available cores. For example, without parallel
+processing, the following search took about 28 seconds on Intel i7-8700:
+
+``` r
+data(HolzingerSwineford1939)
+mod_test <-
+'
+visual  =~ x1 + x2 + x3
+textual =~ x4 + x5 + x6
+speed   =~ x7 + x8 + x9
+'
+fit_cfa <- cfa(model = mod_test,
+               data = HolzingerSwineford1939)
+semlbci(fit_cfa)
+```
+
+With parallel processing enabled and using 6 cores, it took about 20
+seconds.
+
+``` r
+semlbci(fit_cfa,
+        parallel = TRUE,
+        ncpus = 6)
+```
+
+The speed difference can be much greater for a model with many
+parameters and some equality constraints.
+
+Enabling parallel processing also has the added benefit of showing the
+progress in real time.
+
+### `try_k_more_times` and `semlbci_out`
+
+For some models and some parameters, the search may be difficult. By
+default,
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+will try two more times, successively changing some settings internally.
+If still failed in forming the LBCI, users can try to set
+`try_k_more_times` to a larger number slightly larger than 2 (the
+default value) to see whether it can help forming the LBCI. This can be
+done without forming other LBCIs again if the output of
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+is passed to the new call using `semlbci_out`.
+
+For example, assume that some LBCIs could not be found in the first run:
+
+``` r
+lbci_some_failed <- semlbci(fit_cfa)
+```
+
+We can call
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+again, increasing `try_k_more_times` to 5, and set `semlbci_out` to
+`lbci_some_failed`.
+
+``` r
+lbci_try_again <- semlbci(fit_cfa,
+                          try_k_more_times = 5,
+                          semlbci_out = lbci_some_failed)
+```
+
+It will only form LBCIs for parameters failed in the first one. The
+output, `lbci_try_again`, will have the original LBCIs plus the new
+ones, if the search succeeds.
+
+### Other Arguments
+
+For detailed documentation of other arguments, please refer to the help
+page of
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md).
+Advanced users who want to tweak the optimization options can check the
+help pages of
+[`ci_bound_wn_i()`](https://sfcheung.github.io/semlbci/reference/ci_bound_wn_i.md)
+and
+[`ci_i_one()`](https://sfcheung.github.io/semlbci/reference/ci_i_one.md),
+
+## Additional Features
+
+### Multiple-Group Models
+
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+supports multiple-group models. For example, this is a two-group
+confirmatory factor analysis model with equality constraints:
+
+``` r
+data(HolzingerSwineford1939)
+mod_cfa <-
+'
+visual  =~ x1 + v(lambda2, lambda2)*x2 + v(lambda3, lambda3)*x3
+textual =~ x4 + v(lambda5, lambda5)*x5 + v(lambda6, lambda6)*x6
+speed   =~ x7 + v(lambda8, lambda8)*x8 + v(lambda9, lambda9)*x9
+'
+fit_cfa <- cfa(model = mod_cfa,
+               data = HolzingerSwineford1939,
+               group = "school")
+```
+
+The factor correlations between group are not constrained to be equal.
+
+``` r
+parameterEstimates(fit_cfa)[c(22, 23, 58, 59), ]
+#>       lhs op     rhs block group label   est    se     z pvalue ci.lower
+#> 22 visual ~~ textual     1     1       0.416 0.097 4.271  0.000    0.225
+#> 23 visual ~~   speed     1     1       0.169 0.064 2.643  0.008    0.044
+#> 58 visual ~~ textual     2     2       0.437 0.099 4.423  0.000    0.243
+#> 59 visual ~~   speed     2     2       0.314 0.079 3.958  0.000    0.158
+#>    ci.upper
+#> 22    0.606
+#> 23    0.294
+#> 58    0.631
+#> 59    0.469
+```
+
+This is the LBCI for covariance between visual ability and textual
+ability:
+
+``` r
+fcov <- semlbci(fit_cfa,
+                pars = c("visual ~~ textual"))
+print(fcov,
+      sem_out = fit_cfa,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
+#> 
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Parameter Estimates:
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> 
+#> Group 1 [Pasteur]:
+#> 
+#> Covariances:
+#>                    Estimate  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>   visual ~~                                                             
+#>     textual           0.416    0.097    4.271    0.000    0.221    0.654
+#> 
+#> 
+#> Group 2 [Grant-White]:
+#> 
+#> Covariances:
+#>                    Estimate  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>   visual ~~                                                             
+#>     textual           0.437    0.099    4.423    0.000    0.263    0.663
+```
+
+This is the LBCI for correlation between visual ability and textual
+ability:
+
+``` r
+fcor <- semlbci(fit_cfa,
+                pars = c("visual ~~ textual"),
+                standardized = TRUE)
+print(fcor,
+      sem_out = fit_cfa,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
+#> 
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Standardized Estimates Only
+#> 
+#>   Standard errors                             Standard
+#>   Information                                 Expected
+#>   Information saturated (h1) model          Structured
+#> 
+#> 
+#> Group 1 [Pasteur]:
+#> 
+#> Covariances:
+#>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>   visual ~~                                                             
+#>     textual           0.485    0.087    5.601    0.000    0.291    0.640
+#> 
+#> 
+#> Group 2 [Grant-White]:
+#> 
+#> Covariances:
+#>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>   visual ~~                                                             
+#>     textual           0.540    0.086    6.317    0.000    0.357    0.692
+```
+
+Note that the example above can take more than one minute to one if
+parallel processing is not enabled.
+
+### Robust LBCI
+
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+also supports the robust LBCI proposed by Falk (2018). To form robust
+LBCI, the model must be fitted with robust test statistics requested
+(e.g., `estimator = "MLR"`). To request robust LBCIs, add
+`robust = "satorra.2000"` when calling
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md).
+
+We use the simple mediation model as an example:
+
+``` r
+fit_robust <- sem(mod, simple_med,
+                  fixed.x = FALSE,
+                  estimator = "MLR")
+fit_lbci_ab_robust <- semlbci(fit_robust,
+                              pars = "ab := ",
+                              robust = "satorra.2000")
+print(fit_lbci_ab_robust,
+      sem_out = fit_robust,
+      output = "lavaan")
+#> Likelihood-Based CI Notes:
+#> 
+#> - lb.lower, lb.upper: The lower and upper likelihood-based confidence
+#>                       bounds.
+#> 
+#> Parameter Estimates:
+#> 
+#>   Standard errors                             Sandwich
+#>   Information bread                           Observed
+#>   Observed information based on                Hessian
+#> 
+#> Defined Parameters:
+#>                    Estimate  Std.Err  z-value  P(>|z|) lb.lower lb.upper
+#>     ab                0.897    0.305    2.941    0.003    0.353    1.571
+```
+
+### Latent Level Parameters
+
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+support forming the LBCIs for most free parameters. Not illustrated
+above but LBCIs can be formed for path coefficients between latent
+variables and also user-defined parameters based on latent-level
+parameters, such as an indirect effect from one latent variable to
+another.
+
+### More Examples
+
+More examples can be found in the “examples” folders in [the OSF
+page](https://osf.io/b9a2p/files/osfstorage) for this package.
+
+## Limitations
+
+The following is a summary of the limitations of
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md).
+Please refer to
+[`check_sem_out()`](https://sfcheung.github.io/semlbci/reference/check_sem_out.md)
+for the full list of limitations. This function is called by
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+to check the `sem_out` object, and will raise warnings or errors as
+appropriate.
+
+### Estimators
+
+The function
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+currently supports
+[`lavaan::lavaan()`](https://rdrr.io/pkg/lavaan/man/lavaan.html) results
+estimated by maximum likelihood (`ML`), full information maximum
+likelihood for missing data (`fiml`), and their robust variants (e.g.,
+`MLM`).
+
+### Models
+
+This package currently supports single and multiple group models with
+continuous variables. It *may* work for a model with ordered variables
+but this is not officially tested.
+
+### Methods
+
+The current and preferred method is the one proposed by Wu and Neale
+(2012), illustrated by Pek and Wu (2015). The current implementation in
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+does not check whether a parameter is near its boundary. The more
+advanced methods by Pritikin, Rappaport, and Neale (2017) will be
+considered in future development.
+
+## Technical Details
+
+A detailed presentation of the internal workflow of
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+can be found in the
+`vignette("technical_workflow", package = "semlbci")`. Users interested
+in calling the lowest level function,
+[`ci_bound_wn_i()`](https://sfcheung.github.io/semlbci/reference/ci_bound_wn_i.md),
+can see some illustrative examples in
+[`vignette("technical_searching_one_bound", package = "semlbci")`](https://sfcheung.github.io/semlbci/articles/technical_searching_one_bound.md).
+
+## References
+
+Cheung, S. F., & Pesigan, I. J. A. (2023). *semlbci*: An R package for
+forming likelihood-based confidence intervals for parameter estimates,
+correlations, indirect effects, and other derived parameters.
+*Structural Equation Modeling: A Multidisciplinary Journal*. *30*(6),
+985–999. <https://doi.org/10.1080/10705511.2023.2183860>
+
+Falk, C. F. (2018). Are robust standard errors the best approach for
+interval estimation with nonnormal data in structural equation modeling?
+*Structural Equation Modeling: A Multidisciplinary Journal, 25*(2),
+244-266. <https://doi.org/10.1080/10705511.2017.1367254>
+
+Pek, J., & Wu, H. (2015). Profile likelihood-based confidence intervals
+and regions for structural equation models. *Psychometrika, 80*(4),
+1123–1145. <https://doi.org/10.1007/s11336-015-9461-1>
+
+Pritikin, J. N., Rappaport, L. M., & Neale, M. C. (2017).
+Likelihood-based confidence intervals for a parameter with an upper or
+lower bound. *Structural Equation Modeling: A Multidisciplinary Journal,
+24*(3), 395-401. <https://doi.org/10.1080/10705511.2016.1275969>
+
+Wu, H., & Neale, M. C. (2012). Adjusted confidence intervals for a
+bounded parameter. *Behavior Genetics, 42*(6), 886–898.
+<https://doi.org/10.1007/s10519-012-9560-z>

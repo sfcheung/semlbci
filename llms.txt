@@ -1,0 +1,216 @@
+# semlbci
+
+(Version 0.11.4, updated on 2025-12-04 [release
+history](https://sfcheung.github.io/semlbci/news/index.html))
+
+This package includes functions for forming the likelihood-based
+confidence intervals (LBCIs) for parameters in structural equation
+modeling. It also supports the robust LBCI proposed by [Falk
+(2018)](https://doi.org/10.1080/10705511.2017.1367254). It was described
+in the following manuscript:
+
+- Cheung, S. F., & Pesigan, I. J. A. (2023). *semlbci*: An R package for
+  forming likelihood-based confidence intervals for parameter estimates,
+  correlations, indirect effects, and other derived parameters.
+  *Structural Equation Modeling: A Multidisciplinary Journal*. *30*(6),
+  985–999. <https://doi.org/10.1080/10705511.2023.2183860>
+
+As argued in the article and by others, LBCI is usually better than
+Wald-based confidence interval and delta method confidence interval,
+which are the default method in most structural equation modeling (SEM)
+program. However, there is one technical disadvantage: LBCI cannot be
+directly computed but needs to be “found” (searched) by some algorithms.
+Wald CIs, on the other hand, can be computed quickly.
+
+In [`semlbci`](https://sfcheung.github.io/semlbci/), we try to address
+this disadvantage of LBCI by implementing an efficient method
+(illustrated by [Pek & Wu,
+2018](https://doi.org/10.1007/s11336-015-9461-1), adapted from [Wu &
+Neale, 2012](https://doi.org/10.1007/s10519-012-9560-z)), to help
+researchers to form LBCIs for model parameters, including user-defined
+parameters, in models fitted by `lavaan`. It can also form LBCIs for the
+standardized solution, such as “betas” (standardized regression
+coefficients) and correlations, and support multiple-group models. Last,
+it supports the robust LBCI proposed by [Falk
+(2018)](https://doi.org/10.1080/10705511.2017.1367254) for nonnormal
+variables.
+
+More information on this package can be found below:
+
+<https://sfcheung.github.io/semlbci/>
+
+# How To Use It
+
+Illustration with examples can be found in the [*Get Started*
+guide](https://sfcheung.github.io/semlbci/articles/semlbci.html)
+([`vignette("semlbci", package = "semlbci")`](https://sfcheung.github.io/semlbci/articles/semlbci.md)).
+
+# Installation
+
+The stable CRAN version can be installed by
+[`install.packages()`](https://rdrr.io/r/utils/install.packages.html):
+
+``` r
+install.packages("semlbci")
+```
+
+The latest version at GitHub can be installed by
+`remotes::install_github()`:
+
+``` r
+remotes::install_github("sfcheung/semlbci")
+```
+
+# Implementation
+
+It currently implements the algorithm illustrated by [Pek and Wu
+(2018)](https://doi.org/10.1007/s11336-015-9461-1), adapted from [Wu and
+Neale (2012)](https://doi.org/10.1007/s10519-012-9560-z) without
+adjustment for parameters with attainable bounds. It also supports the
+robust LBCI proposed by Falk (2018). More on the implementation can be
+found in the [technical
+appendices](https://sfcheung.github.io/semlbci/articles/).
+
+# References
+
+Cheung, S. F., & Pesigan, I. J. A. (2023). *semlbci*: An R package for
+forming likelihood-based confidence intervals for parameter estimates,
+correlations, indirect effects, and other derived parameters.
+*Structural Equation Modeling: A Multidisciplinary Journal*. *30*(6),
+985–999. <https://doi.org/10.1080/10705511.2023.2183860>
+
+Falk, C. F. (2018). Are robust standard errors the best approach for
+interval estimation with nonnormal data in structural equation modeling?
+*Structural Equation Modeling: A Multidisciplinary Journal, 25*(2),
+244-266. <https://doi.org/10.1080/10705511.2017.1367254>
+
+Pek, J., & Wu, H. (2015). Profile likelihood-based confidence intervals
+and regions for structural equation models. *Psychometrika, 80*(4),
+1123-1145. <https://doi.org/10.1007/s11336-015-9461-1>
+
+Wu, H., & Neale, M. C. (2012). Adjusted confidence intervals for a
+bounded parameter. *Behavior Genetics, 42*(6), 886-898.
+<https://doi.org/10.1007/s10519-012-9560-z>
+
+# Issues
+
+If you have any suggestions or found any bugs or limitations, please
+feel feel to open a GitHub issue. Thanks.
+
+<https://github.com/sfcheung/semlbci/issues>
+
+# Package index
+
+## Forming LBCIs
+
+Form LBCIs for selected parameters in a model fitted by
+\[lavaan::lavaan()\] or related functions such as \[lavaan::sem()\] and
+\[lavaan::cfa()\].
+
+- [`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+  : Likelihood-Based Confidence Interval
+
+## Helper Functions
+
+- [`check_sem_out()`](https://sfcheung.github.io/semlbci/reference/check_sem_out.md)
+  : Pre-analysis Check For 'semlbci'
+
+- [`get_cibound()`](https://sfcheung.github.io/semlbci/reference/get_cibound.md)
+  [`get_cibound_status_not_0()`](https://sfcheung.github.io/semlbci/reference/get_cibound.md)
+  : A 'cibound' Output From a 'semlbci' Object
+
+- [`nearby_levels()`](https://sfcheung.github.io/semlbci/reference/nearby_levels.md)
+  : LBCI Bounds of Nearby Levels of Confidence
+
+- [`ci_order()`](https://sfcheung.github.io/semlbci/reference/ci_order.md)
+  [`print(`*`<ci_order>`*`)`](https://sfcheung.github.io/semlbci/reference/ci_order.md)
+  :
+
+  Check The Order of Bounds in a List of `semlbci` Objects
+
+- [`syntax_to_i()`](https://sfcheung.github.io/semlbci/reference/syntax_to_i.md)
+  : Parameter Positions From lavaan Syntax
+
+- [`loglike_compare()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+  [`loglike_range()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+  [`loglike_point()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+  [`loglike_quad_range()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+  [`loglike_quad_point()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+  [`loglike_compare_ur()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+  [`loglike_range_ur()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+  [`loglike_point_ur()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+  [`loglike_quad_range_ur()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+  [`loglike_quad_point_ur()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+  : Log Profile likelihood of a Parameter
+
+- [`plot(`*`<loglike_compare>`*`)`](https://sfcheung.github.io/semlbci/reference/plot.loglike_compare.md)
+  : Plot the Output of 'loglike_compare()'
+
+## Methods
+
+Methods of `semlbci-class` objects (output of \[semlbci()\]).
+
+- [`confint(`*`<semlbci>`*`)`](https://sfcheung.github.io/semlbci/reference/confint.semlbci.md)
+  : Confidence Intervals for a 'smelbci' Object
+- [`print(`*`<semlbci>`*`)`](https://sfcheung.github.io/semlbci/reference/print.semlbci.md)
+  : Print Method of a 'semlbci' Object
+
+## Advanced Functions
+
+Low level functions for advanced users.
+
+- [`ci_bound_wn_i()`](https://sfcheung.github.io/semlbci/reference/ci_bound_wn_i.md)
+  : Likelihood-based Confidence Bound By Wu-Neale-2012
+- [`ci_bound_ur_i()`](https://sfcheung.github.io/semlbci/reference/ci_bound_ur_i.md)
+  : Likelihood-Based Confidence Bound By Root Finding
+- [`ci_bound_ur()`](https://sfcheung.github.io/semlbci/reference/ci_bound_ur.md)
+  [`gen_est_i()`](https://sfcheung.github.io/semlbci/reference/ci_bound_ur.md)
+  : Find a Likelihood-Based Confidence Bound By Root Finding
+- [`ci_i_one()`](https://sfcheung.github.io/semlbci/reference/ci_i_one.md)
+  : Likelihood-Based Confidence Bound for One Parameter
+- [`set_constraint()`](https://sfcheung.github.io/semlbci/reference/set_constraint.md)
+  : Equality Constraint for Finding the LBCI by Wu-Neale-2012
+- [`print(`*`<cibound>`*`)`](https://sfcheung.github.io/semlbci/reference/print.cibound.md)
+  : Print Method of a 'cibound'-class Object
+- [`gen_userp()`](https://sfcheung.github.io/semlbci/reference/gen_userp.md)
+  [`gen_sem_out_userp()`](https://sfcheung.github.io/semlbci/reference/gen_userp.md)
+  : Create a Wrapper To Be Used in 'lavaan' Models
+
+## Datasets
+
+Datasets used in examples.
+
+- [`cfa_evar_near_zero`](https://sfcheung.github.io/semlbci/reference/cfa_evar_near_zero.md)
+  : Dataset (CFA, Two Factors, One Standardized Error Variance Close to
+  Zero)
+- [`cfa_two_factors`](https://sfcheung.github.io/semlbci/reference/cfa_two_factors.md)
+  : Dataset (CFA, Two Factors, Six Variables)
+- [`cfa_two_factors_mg`](https://sfcheung.github.io/semlbci/reference/cfa_two_factors_mg.md)
+  : Dataset (CFA, Two Factors, Six Variables, Two Groups)
+- [`mediation_latent`](https://sfcheung.github.io/semlbci/reference/mediation_latent.md)
+  : Dataset (SEM, Three Factors, Nine Variables, Mediation)
+- [`mediation_latent_skewed`](https://sfcheung.github.io/semlbci/reference/mediation_latent_skewed.md)
+  : Dataset (SEM, Three Factors, Nine Variables, Mediation, Skewed)
+- [`reg_cor_near_one`](https://sfcheung.github.io/semlbci/reference/reg_cor_near_one.md)
+  : Dataset (Six Variables, One Correlation Close to One)
+- [`simple_med`](https://sfcheung.github.io/semlbci/reference/simple_med.md)
+  : Dataset (Simple Mediation Model)
+- [`simple_med_mg`](https://sfcheung.github.io/semlbci/reference/simple_med_mg.md)
+  : Dataset (Simple Mediation Model, Two Groups)
+
+# Articles
+
+### Articles
+
+- [Get Started](https://sfcheung.github.io/semlbci/articles/semlbci.md):
+- [Log Profile Likelihood of a
+  Parameter](https://sfcheung.github.io/semlbci/articles/loglike.md):
+
+### Technical Appendices
+
+For advanced users and developers
+
+- [Searching for One
+  Bound](https://sfcheung.github.io/semlbci/articles/technical_searching_one_bound.md):
+- [Internal Workflow of
+  semlbci()](https://sfcheung.github.io/semlbci/articles/technical_workflow.md):

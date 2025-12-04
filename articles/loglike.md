@@ -1,0 +1,155 @@
+# Log Profile Likelihood of a Parameter
+
+## Introduction
+
+This vignette illustrates how to use
+[`loglike_compare()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+in the package [`semlbci`](https://sfcheung.github.io/semlbci/) to
+compare the log profile likelihood of a parameter in a structural
+equation model (SEM) when it is fixed to a range of values to the log
+profile likelihood approximated by a quadratic function, using the
+method by Pawitan (2013).
+
+## Limitations
+
+The function
+[`loglike_compare()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+and its helper functions are for creating illustrative examples and
+learning only, not for research use. Therefore, they are not as
+versatile as
+[`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md)
+in the types of models and parameters supported. They can only be used
+for free parameters and user-defined parameters not involved in any
+constraints. Only a model fitted by maximum likelihood is supported.
+Last, they will not check whether the computation is appropriate for a
+model. It is the responsibility of the users to ensure that the
+computation is appropriate for the model and parameter.
+
+Despite these limitations, they are still useful for generating graphs
+for illustration and learning.
+
+## Fitting a Simple Mediation model
+
+Suppose a simple mediation model is fitted to the dataset `simple_med`,
+came with the package `semlbci`:
+
+``` r
+library(lavaan)
+library(semlbci)
+dat <- simple_med
+mod <-
+"
+m ~ a * x
+y ~ b * m
+ab := a * b
+"
+fit <- lavaan::sem(model = mod,
+                   data = simple_med,
+                   fixed.x = FALSE)
+parameterEstimates(fit)
+#>   lhs op rhs label    est    se      z pvalue ci.lower ci.upper
+#> 1   m  ~   x     a  1.676 0.431  3.891  0.000    0.832    2.520
+#> 2   y  ~   m     b  0.535 0.073  7.300  0.000    0.391    0.679
+#> 3   m ~~   m       34.710 3.471 10.000  0.000   27.907   41.513
+#> 4   y ~~   y       40.119 4.012 10.000  0.000   32.256   47.982
+#> 5   x ~~   x        0.935 0.094 10.000  0.000    0.752    1.118
+#> 6  ab := a*b    ab  0.897 0.261  3.434  0.001    0.385    1.409
+```
+
+## Log Profile likelihood Plots
+
+### The *a*-path
+
+To generate the plot for the *a*-path coefficient, we can simply call
+[`loglike_compare()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+and setting the parameter to `"a"`.
+
+``` r
+ll_a <- loglike_compare(fit,
+                        par_i = "m ~ x")
+```
+
+Although teh *a*-path is labelled, `par_i` requires the parameter
+specified in
+[`lavaan::model.syntax`](https://rdrr.io/pkg/lavaan/man/model.syntax.html).
+Please refer to the help page of `loglike_compare`.
+
+By default, 21 values will be used to generate the plot. This can be
+controlled by the argument `n_points`.
+
+Once the run finishes, we can use
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) to plot the
+likelihood values:
+
+``` r
+plot(ll_a, add_pvalues = TRUE)
+```
+
+![a-path](loglike_plot_a-1.png)
+
+a-path
+
+As expected, the log profile likelihood of the *a*-path is
+well-approximated by the quadratic approximation.
+
+### The indirect effect
+
+Let us examine the log profile likelihood of the indirect effect. To
+specify it, we need to use `ab :=`:
+
+``` r
+ll_ab <- loglike_compare(fit,
+                         par_i = "ab := ")
+```
+
+Note that it usually take longer for parameter which is a nonlinear
+function of other parameters, such as an indirect effect, which is the
+product of two other parameters.
+
+This is the plot:
+
+``` r
+plot(ll_ab, add_pvalues = TRUE)
+```
+
+![Indirect Effect](loglike_plot_ab-1.png)
+
+Indirect Effect
+
+We can see that, as expected, the quadratic approximation is less
+satisfactory for the indirect effect.
+
+Please refer to the help page of
+[`loglike_compare()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+and its plot method
+([`plot.loglike_compare()`](https://sfcheung.github.io/semlbci/reference/plot.loglike_compare.md)),
+for other available options.
+
+## Final Remarks
+
+The other functions,
+[`loglike_range()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md),
+[`loglike_point()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md),
+[`loglike_quad_range()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md),
+and
+[`loglike_quad_point()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md)
+are helper functions used by
+[`loglike_compare()`](https://sfcheung.github.io/semlbci/reference/loglikelihood.md).
+They are exported such that interested users can use them to compute the
+points directly.
+
+More examples can be found in the “examples” folders in [the OSF
+page](https://osf.io/b9a2p/files/osfstorage) for this package and Cheung
+and Pesigan (2023). Some of the figures in the examples were generated
+by these functions.
+
+## Reference
+
+Cheung, S. F., & Pesigan, I. J. A. (2023). *semlbci*: An R package for
+forming likelihood-based confidence intervals for parameter estimates,
+correlations, indirect effects, and other derived parameters.
+*Structural Equation Modeling: A Multidisciplinary Journal*. *30*(6),
+985–999. <https://doi.org/10.1080/10705511.2023.2183860>
+
+Pawitan, Y. (2013). *In all likelihood: Statistical modelling and
+inference using likelihood*. Oxford University Press.
