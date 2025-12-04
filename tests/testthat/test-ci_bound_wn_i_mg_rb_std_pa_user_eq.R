@@ -45,10 +45,26 @@ time2l <- system.time(out2l <- ci_bound_wn_i(17,16, sem_out = fit, f_constr = fn
 time2u <- system.time(out2u <- ci_bound_wn_i(17,16, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = opts0, verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf2$c_rb, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 
 test_that("Check against precomputed answers", {
-    expect_equal(out1l$bound, 0.1264349, tolerance = 1e-5)
-    expect_equal(out1u$bound, 0.4379829, tolerance = 1e-5)
-    expect_equal(out2l$bound, 0.0459604, tolerance = 1e-5)
-    expect_equal(out2u$bound, 0.2377641, tolerance = 1e-5)
+    # 2025-12-04:
+    # Increase the tolerance due to changes in lavaan optimization
+    # lavaan 0.6-21:     0.1258713
+    # lavaan pre 0.6-21: 0.1264349
+    # lavaan 0.6-21:
+    # lavaan pre 0.6-21:
+    expect_equal(out1l$diag$ciperc_final, .96, tolerance = 1e-3)
+    expect_equal(out1u$diag$ciperc_final, .96, tolerance = 1e-3)
+    expect_equal(out1l$bound, 0.1264349, tolerance = 1e-2)
+    expect_equal(out1u$bound, 0.4379829, tolerance = 1e-3)
+    # 2025-12-04:
+    # Increase the tolerance due to changes in lavaan optimization
+    # lavaan 0.6-21:     0.04576938
+    # lavaan pre 0.6-21: 0.0459604
+    # lavaan 0.6-21:     0.2382386
+    # lavaan pre 0.6-21: 0.2377641
+    expect_equal(out2l$diag$ciperc_final, .96, tolerance = 1e-3)
+    expect_equal(out2u$diag$ciperc_final, .96, tolerance = 1e-3)
+    expect_equal(out2l$bound, 0.0459604, tolerance = 1e-2)
+    expect_equal(out2u$bound, 0.2377641, tolerance = 1e-2)
   })
 
 skip("Run only if data changed")

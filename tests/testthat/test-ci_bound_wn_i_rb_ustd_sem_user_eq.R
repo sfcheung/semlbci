@@ -41,8 +41,16 @@ time1l <- system.time(out1l <- ci_bound_wn_i(16, 13, sem_out = fit, f_constr = f
 time2u <- system.time(out2u <- ci_bound_wn_i( 5, 13, sem_out = fit, f_constr = fn_constr0, which = "ubound", opts = list(ftol_abs = 1e-7), verbose = TRUE, ciperc = ciperc, sf = sf2$c_r, sf2 = sf1$c_rb))
 
 test_that("Check against precomputed answers", {
-    expect_equal(out1l$bound, 0.9409085, tolerance = 1e-5)
-    expect_equal(out2u$bound, 0.9463263, tolerance = 1e-5)
+    # 2025-12-04:
+    # Increase the tolerance due to changes in lavaan optimization
+    # lavaan 0.6-21:
+    # lavaan pre 0.6-21:
+    # lavaan 0.6-21:     0.9462513
+    # lavaan pre 0.6-21: 0.9463263
+    expect_equal(out1l$diag$ciperc_final, .96, tolerance = 1e-3)
+    expect_equal(out2u$diag$ciperc_final, .96, tolerance = 1e-3)
+    expect_equal(out1l$bound, 0.9409085, tolerance = 1e-3)
+    expect_equal(out2u$bound, 0.9463263, tolerance = 1e-3)
   })
 
 skip("Run only if data changed")
