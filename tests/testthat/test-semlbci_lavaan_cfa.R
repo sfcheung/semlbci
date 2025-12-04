@@ -6,7 +6,7 @@ library(semlbci)
 
 # lavaan example: cfa()
 
-library(lavaan)
+suppressMessages(library(lavaan))
 ## The famous Holzinger and Swineford (1939) example
 HS.model <- ' visual  =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6

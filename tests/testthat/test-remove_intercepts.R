@@ -2,7 +2,7 @@ library(testthat)
 library(semlbci)
 
 
-library(lavaan)
+suppressMessages(library(lavaan))
 dat <- cfa_two_factors
 
 mod <-

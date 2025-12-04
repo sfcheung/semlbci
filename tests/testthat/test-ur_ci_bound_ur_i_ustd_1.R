@@ -3,7 +3,7 @@ skip_on_cran()
 # Ready
 
 library(testthat)
-library(lavaan)
+suppressMessages(library(lavaan))
 
 HS.model <- ' visual  =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6

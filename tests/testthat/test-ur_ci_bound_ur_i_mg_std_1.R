@@ -4,7 +4,7 @@ skip("To be run in an interactive session")
 # Ready
 
 library(testthat)
-library(lavaan)
+suppressMessages(library(lavaan))
 
 HS.model_gp <- ' visual  =~ x1 + x2 + x3
                  textual =~ x4 + x5 + x6

@@ -2,7 +2,7 @@ skip_on_cran()
 
 library(testthat)
 library(semlbci)
-library(lavaan)
+suppressMessages(library(lavaan))
 
 dat_cov <- matrix(c(1, .30, .40,
                     .30, 1, .20,

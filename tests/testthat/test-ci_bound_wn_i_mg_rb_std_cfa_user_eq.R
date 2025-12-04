@@ -5,7 +5,7 @@ library(semlbci)
 
 # Fit the model
 
-library(lavaan)
+suppressMessages(library(lavaan))
 
 data(cfa_two_factors_mg)
 dat <- cfa_two_factors_mg
@@ -39,8 +39,15 @@ time1l <- system.time(out1l <- ci_bound_wn_i(47, 38, sem_out = fit, which = "lbo
 time1u <- system.time(out1u <- ci_bound_wn_i(47, 38, sem_out = fit, which = "ubound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, sf = sf1$c_r, sf2 = sf1$c_rb, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 
 test_that("Check against precomputed answers", {
-    expect_equal(out1l$bound, 0.2317424, tolerance = 1e-5)
-    expect_equal(out1u$bound, 0.4321312, tolerance = 1e-5)
+    # Increase the tolerance due to changes in lavaan optimization
+    # lavaan 0.6-21:  0.2316969
+    # lavaan pre 0.6-21: 0.304952
+    # lavaan 0.6-21:  0.4321523
+    # lavaan pre 0.6-21: 0.4321312
+    expect_equal(out1l$diag$ciperc_final, .96, tolerance = 1e-3)
+    expect_equal(out1u$diag$ciperc_final, .96, tolerance = 1e-3)
+    expect_equal(out1l$bound, 0.2317424, tolerance = 1e-3)
+    expect_equal(out1u$bound, 0.4321312, tolerance = 1e-3)
   })
 
 skip("Run only if data changed")
