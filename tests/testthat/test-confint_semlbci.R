@@ -1,7 +1,7 @@
 skip_on_cran()
 skip("To be run in an interactive session")
 
-library(lavaan)
+suppressMessages(library(lavaan))
 mod <-
 "
 m ~ a*x

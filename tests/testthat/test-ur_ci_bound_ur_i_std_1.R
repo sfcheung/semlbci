@@ -3,7 +3,7 @@ skip_on_cran()
 # Ready
 
 library(testthat)
-library(lavaan)
+suppressMessages(library(lavaan))
 
 # Standardized
 

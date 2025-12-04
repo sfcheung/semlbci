@@ -5,7 +5,7 @@ library(semlbci)
 
 # https://lavaan.ugent.be/tutorial/mediation.html
 
-library(lavaan)
+suppressMessages(library(lavaan))
 set.seed(1234)
 X <- rnorm(100)
 M <- 0.5*X + rnorm(100)

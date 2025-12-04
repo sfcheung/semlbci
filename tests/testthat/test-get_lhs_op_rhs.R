@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-library(lavaan)
+suppressMessages(library(lavaan))
 
 dat <- HolzingerSwineford1939
 mod <- "

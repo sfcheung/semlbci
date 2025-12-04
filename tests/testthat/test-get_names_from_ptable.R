@@ -1,7 +1,7 @@
 library(testthat)
 library(semlbci)
 
-library(lavaan)
+suppressMessages(library(lavaan))
 
 dat <- HolzingerSwineford1939
 mod <- "
@@ -31,9 +31,9 @@ mod2 <- "
   textual =~ x4 + c(c, c)*x5 + c(d1, d2)*x6
   cd1 := c*d1
   cd2 := c*d2
-  cd1 == .900 
+  cd1 == .900
 "
-fit_lavaan_gp <- cfa(mod2, dat, group = "school", baseline = FALSE, 
+fit_lavaan_gp <- cfa(mod2, dat, group = "school", baseline = FALSE,
                      h1 = FALSE, do.fit = FALSE)
 ptable_gp <- parameterTable(fit_lavaan_gp)
 

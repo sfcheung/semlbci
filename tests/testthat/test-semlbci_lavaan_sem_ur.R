@@ -5,7 +5,7 @@ library(semlbci)
 
 # lavaan example: sem()
 
-library(lavaan)
+suppressMessages(library(lavaan))
 model <- '
   # latent variable definitions
      ind60 =~ x1 + x2 + x3

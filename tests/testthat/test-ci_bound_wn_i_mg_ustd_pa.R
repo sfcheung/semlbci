@@ -3,7 +3,7 @@ library(semlbci)
 
 # Fit the model (two groups)
 
-library(lavaan)
+suppressMessages(library(lavaan))
 
 data(simple_med_mg)
 dat <- simple_med_mg
