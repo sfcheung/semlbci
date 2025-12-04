@@ -1,3 +1,11 @@
+# semlbci 0.11.4
+
+## Miscellaneous
+
+- Fixed minor numerical differences
+  in tests in the forthcoming
+  version of `lavaan`. (0.11.4)
+
 # semlbci 0.11.3
 
 ## New Feature
