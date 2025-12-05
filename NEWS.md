@@ -1,4 +1,4 @@
-# semlbci 0.11.4.1
+# semlbci 0.11.5
 
 ## Miscellaneous
 
@@ -9,6 +9,10 @@
 - Relaxed the tolerance to allow for
   cross-platforms minor differences in
   optimization. (0.11.4.1)
+
+- Added `on.exit()` to functions that
+  may create a cluster of R sessions.
+  (0.11.4.2)
 
 # semlbci 0.11.3
 
