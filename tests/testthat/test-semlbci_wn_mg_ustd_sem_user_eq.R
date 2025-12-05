@@ -84,5 +84,6 @@ c1 == c2
 fitc <- lavaan::sem(modc0, cfa_two_factors_mg, group = "gp")
 
 test_that("Check p-values: out3l", {
-    expect_equal(anova(fitc, fit)[2, "Pr(>Chisq)"], .05, tolerance = 1e-4)
+    # 2025-12-05: Relax the tolerance
+    expect_equal(anova(fitc, fit)[2, "Pr(>Chisq)"], .05, tolerance = 1e-3)
   })

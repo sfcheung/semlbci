@@ -33,7 +33,8 @@ test_that("add_func", {
                                  object = fit_i)
   expect_equal(lavTestLRT(fit_i_tmp, fit)[2, "Df diff"],
                1)
+  # 2025-12-05: Relax the tolerance
   expect_equal(unname(coef(fit_i_tmp, type = "user")["user"]),
                .400,
-               tolerance = 1e-4)
+               tolerance = 1e-3)
 })

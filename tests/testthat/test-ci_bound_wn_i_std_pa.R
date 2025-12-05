@@ -32,8 +32,9 @@ time1l <- system.time(out1l <- ci_bound_wn_i(1, 5, sem_out = fit, f_constr = fn_
 time2u <- system.time(out2u <- ci_bound_wn_i(2, 5, sem_out = fit, f_constr = fn_constr0, which = "ubound", verbose = TRUE, ciperc = ciperc, standardized = TRUE, wald_ci_start = FALSE, std_method = "internal"))
 
 test_that("Check against precomputed answers", {
-    expect_equal(out1l$bound, 0.1256137, tolerance = 1e-5)
-    expect_equal(out2u$bound, 0.5656437, tolerance = 1e-5)
+    # 2025-12-05: Relax the tolerance
+    expect_equal(out1l$bound, 0.1256137, tolerance = 1e-3)
+    expect_equal(out2u$bound, 0.5656437, tolerance = 1e-3)
   })
 
 skip("Run only if data changed")

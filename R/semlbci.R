@@ -290,6 +290,8 @@ semlbci <- function(sem_out,
     if (parallel) {
         # Parallel
         cl <- parallel::makeCluster(ncpus)
+        on.exit(try(parallel::stopCluster(cl),
+                    silent = TRUE))
         # Rebuild the environment
         pkgs <- .packages()
         pkgs <- rev(pkgs)

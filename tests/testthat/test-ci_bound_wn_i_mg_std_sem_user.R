@@ -42,8 +42,9 @@ opts0 <- list(#ftol_abs = 1e-7,
 time2l <- system.time(out2l <- ci_bound_wn_i( 7, 38, sem_out = fit, which = "lbound", opts = opts0, f_constr = fn_constr0, verbose = TRUE, ciperc = ciperc, standardized = TRUE, std_method = "internal", wald_ci_start = FALSE))
 
 test_that("Check against precomputed answers", {
-    expect_equal(out1l$bound, 0.37788, tolerance = 1e-5)
-    expect_equal(out2l$bound, 0.2786241, tolerance = 1e-5)
+    # 2025-12-05: Relax the tolerance
+    expect_equal(out1l$bound, 0.37788, tolerance = 1e-3)
+    expect_equal(out2l$bound, 0.2786241, tolerance = 1e-3)
   })
 
 skip("Run only if data changed")

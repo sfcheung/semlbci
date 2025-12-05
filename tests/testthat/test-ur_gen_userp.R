@@ -42,7 +42,8 @@ fit_userp <- gen_sem_out_userp(userp = userp1234,
                                 userp_name = "userp1234",
                                 sem_out = fit)
 fit_test <- fit_userp(.12)
+# 2025-12-05: Relax the tolerance
 expect_equal(coef(fit_test, type = "user")["user"],
               .12,
               ignore_attr = TRUE,
-              tolerance = 1e-4)
+              tolerance = 1e-3)

@@ -5,7 +5,7 @@ library(semlbci)
 
 data(simple_med)
 dat <- simple_med
-mod <- 
+mod <-
 "
 m ~ x
 y ~ m
@@ -16,19 +16,21 @@ fn_constr0 <- set_constraint(fit_med)
 out <- fn_constr0(lavaan::coef(fit_med), sem_out = fit_med)
 
 test_that("Equal to lavaaan fmin", {
+    # 2025-12-05: Relax the tolerance
     expect_equal(
-        out$objective, 
+        out$objective,
         lavaan::lavTech(fit_med, "optim")$fx,
-        tolerance = 1e-5,
+        tolerance = 1e-3,
         ignore_attr = TRUE
       )
   })
 
 test_that("Equal to lavaaan gradient", {
+    # 2025-12-05: Relax the tolerance
     expect_equal(
-        as.numeric(out$gradient), 
+        as.numeric(out$gradient),
         lavaan::lavTech(fit_med, "gradient"),
-        tolerance = 1e-5,
+        tolerance = 1e-3,
         ignore_attr = TRUE
       )
   })

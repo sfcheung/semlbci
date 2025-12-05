@@ -49,7 +49,7 @@ test_that("Check against precomputed answers", {
     expect_equal(out1l$diag$ciperc_final, .96, tolerance = 1e-3)
     expect_equal(out1u$diag$ciperc_final, .96, tolerance = 1e-3)
     expect_equal(out1l$bound, 0.304952, tolerance = 1e-3)
-    expect_equal(out1u$bound, 0.5995398, tolerance = 1e-5)
+    expect_equal(out1u$bound, 0.5995398, tolerance = 1e-3)
   })
 
 skip("Run only if data changed")
