@@ -1,10 +1,14 @@
-# semlbci 0.11.4
+# semlbci 0.11.4.1
 
 ## Miscellaneous
 
 - Fixed minor numerical differences
   in tests in the forthcoming
   version of `lavaan`. (0.11.4)
+
+- Relaxed the tolerance to allow for
+  cross-platforms minor differences in
+  optimization. (0.11.4.1)
 
 # semlbci 0.11.3
 
