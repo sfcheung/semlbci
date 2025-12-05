@@ -270,7 +270,7 @@ print(lbci_med, time = TRUE)
 #> 
 #> Results:
 #>   id lhs op rhs label   est lbci_lb lbci_ub    lb    ub sec_l sec_u cl_lb cl_ub
-#> 6  6  ab := a*b    ab 0.897   0.427   1.464 0.385 1.409 0.186 0.163 0.950 0.950
+#> 6  6  ab := a*b    ab 0.897   0.427   1.464 0.385 1.409 0.185 0.162 0.950 0.950
 #> 
 #> Annotation:
 #> * lbci_lb, lbci_ub: The lower and upper likelihood-based bounds.
