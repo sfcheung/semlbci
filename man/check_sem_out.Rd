@@ -93,7 +93,7 @@ fit <- sem(mod, cfa_two_factors)
 # Should be 0
 check_sem_out(fit)
 
-fit2 <- sem(mod, cfa_two_factors, estimator = "DWLS")
+fit2 <- sem(mod, cfa_two_factors, estimator = "DWLS", ordered = FALSE)
 
 # Should be negative because DWLS is officially not supported
 check_sem_out(fit2)

@@ -28,7 +28,6 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Suggests:
     testthat (>= 3.0.0),
     knitr,
@@ -51,3 +50,4 @@ VignetteBuilder: knitr
 Config/testthat/parallel: true
 Config/testthat/edition: 3
 Config/testthat/start-first: semlbci_wn_mg_*, ur_ci_bound_ur*
+Config/roxygen2/version: 8.0.0

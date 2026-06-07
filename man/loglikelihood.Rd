@@ -119,7 +119,7 @@ If supplied, it will extract the likelihood-based confidence
 interval from the output. If not, it will call \code{\link[=semlbci]{semlbci()}}.}
 
 \item{par_i}{The row number of the parameter in the output of
-\code{\link[lavaan:parTable]{lavaan::parameterTable()}}. Can also be a \link[lavaan:model.syntax]{lavaan::model.syntax}
+\code{\link[lavaan:parameterTable]{lavaan::parameterTable()}}. Can also be a \link[lavaan:model.syntax]{lavaan::model.syntax}
 specification for a parameter, e.g., \code{"y ~ x"} or \verb{ab := }.
 It will be converted to the row number by \code{\link[=syntax_to_i]{syntax_to_i()}}. Refer to
 \code{\link[=syntax_to_i]{syntax_to_i()}} for details.}
