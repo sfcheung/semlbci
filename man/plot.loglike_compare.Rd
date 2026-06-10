@@ -29,11 +29,11 @@ to plot the graph. If \code{"default"}, will use R base graphics, The
 
 \item{size_label}{The relative size of the labels for thetas
 (and \emph{p}-values, if requested) in the
-plot, determined by \code{\link[ggplot2:element]{ggplot2::rel()}}. Default is 4.}
+plot, determined by \code{\link[ggplot2:rel]{ggplot2::rel()}}. Default is 4.}
 
 \item{size_point}{The relative size of the points to be added
 if \emph{p}-values are requested in the
-plot, determined by \code{\link[ggplot2:element]{ggplot2::rel()}}. Default is 4.}
+plot, determined by \code{\link[ggplot2:rel]{ggplot2::rel()}}. Default is 4.}
 
 \item{nd_theta}{The number of decimal places for the labels
 of theta. Default is 3.}

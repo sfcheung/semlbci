@@ -1,4 +1,18 @@
-# semlbci 0.11.5
+# semlbci 0.11.6
+
+## Miscellaneous
+
+- Updated a test and an example
+  due to a new behavior
+  regarding "DWLS" in the forthcoming
+  version of `lavaan`.
+  (0.11.6)
+
+- Fixed some internal help pages due
+  to a change in roxygen2 8.0.0.
+  (0.11.6)
+
+# semlbci 0.11.6
 
 ## Miscellaneous
 

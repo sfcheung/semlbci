@@ -27,7 +27,8 @@ fit02 <- lavaan::sem(mod, dat, estimator = "MLR")
 # (out_03 <- check_sem_out(fit03))
 
 # The warning can be ignored because this problem is intentional
-suppressWarnings(fit04 <- lavaan::sem(mod, dat, estimator = "DWLS"))
+# 2026-06-07: Added 'ordered = FALSE' due to a new behavior of lavaan
+suppressWarnings(fit04 <- lavaan::sem(mod, dat, estimator = "DWLS", ordered = FALSE))
 (out_04 <- check_sem_out(fit04))
 
 suppressWarnings(fit05 <- lavaan::sem(mod, dat, group = "gp"))

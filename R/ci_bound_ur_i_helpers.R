@@ -89,13 +89,13 @@ uniroot_interval <- function(sem_out,
 #'
 #' @details
 #' The model must be the output of
-#' [add_func()].
+#' `add_func()`.
 #'
 #' @param target The value to which the
 #' user parameter will be fixed to.
 #'
 #' @param object The output of
-#' [add_func()].
+#' `add_func()`.
 #'
 #' @param verbose Whether diagnostic
 #' information will be printed. Default
