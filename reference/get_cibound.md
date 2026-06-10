@@ -62,6 +62,7 @@ Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
 ## Examples
 
 ``` r
+
 library(lavaan)
 mod <-
 "
@@ -115,7 +116,7 @@ get_cibound(lbci_med, row_id = 6, which = "lbound")
 #> Which Bound:            Lower Bound
 #> Method:                 Wu-Neale-2012
 #> Confidence Level:       0.95
-#> Achieved Level:         0.95000000158432
+#> Achieved Level:         0.95000000158433
 #> Standardized:           No
 #> Likelihood-Based Bound: 0.42653
 #> Wald Bound:             0.38491
@@ -159,7 +160,7 @@ get_cibound(lbci_med, row_id = 6, which = "ubound")
 #> Which Bound:            Upper Bound
 #> Method:                 Wu-Neale-2012
 #> Confidence Level:       0.95
-#> Achieved Level:         0.950000073477164
+#> Achieved Level:         0.950000073477175
 #> Standardized:           No
 #> Likelihood-Based Bound: 1.46404
 #> Wald Bound:             1.40883

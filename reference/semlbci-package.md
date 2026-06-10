@@ -22,6 +22,11 @@ Useful links:
 **Maintainer**: Shu Fai Cheung <shufai.cheung@gmail.com>
 ([ORCID](https://orcid.org/0000-0002-9871-9448))
 
+Authors:
+
+- Shu Fai Cheung <shufai.cheung@gmail.com>
+  ([ORCID](https://orcid.org/0000-0002-9871-9448))
+
 Other contributors:
 
 - Ivan Jacob Agaloos Pesigan <r.jeksterslab@gmail.com>

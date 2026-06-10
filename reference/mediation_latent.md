@@ -66,6 +66,7 @@ This model is used for examples like this one:
 ## Examples
 
 ``` r
+
 print(head(mediation_latent), digits = 3)
 #>       x1     x2      x3     x4     x5     x6      x7     x8     x9
 #> 1 -1.393  0.141 -0.8749  0.166 -0.652 -0.469 -0.0309 -1.111 -1.378

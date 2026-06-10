@@ -17,8 +17,8 @@ Cheung SF, Pesigan IJA (2023). “semlbci: An R package for forming
 likelihood-based confidence intervals for parameter estimates,
 correlations, indirect effects, and other derived parameters.”
 *Structural Equation Modeling: A Multidisciplinary Journal*, **30**(6),
-985–999. ISSN 1070-5511, 1532-8007,
-[doi:10.1080/10705511.2023.2183860](https://doi.org/10.1080/10705511.2023.2183860),
+985–999. ISSN 1070-5511, 1532-8007.
+[doi:10.1080/10705511.2023.2183860](https://doi.org/10.1080/10705511.2023.2183860).
 <https://doi.org/10.1080/10705511.2023.2183860>.
 
     @Article{,

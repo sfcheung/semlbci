@@ -1,6 +1,6 @@
 # semlbci
 
-(Version 0.11.5, updated on 2025-12-05 [release
+(Version 0.11.6, updated on 2026-06-07 [release
 history](https://sfcheung.github.io/semlbci/news/index.html))
 
 This package includes functions for forming the likelihood-based
@@ -51,6 +51,7 @@ The stable CRAN version can be installed by
 [`install.packages()`](https://rdrr.io/r/utils/install.packages.html):
 
 ``` r
+
 install.packages("semlbci")
 ```
 
@@ -58,6 +59,7 @@ The latest version at GitHub can be installed by
 `remotes::install_github()`:
 
 ``` r
+
 remotes::install_github("sfcheung/semlbci")
 ```
 

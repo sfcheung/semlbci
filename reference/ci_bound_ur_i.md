@@ -246,6 +246,7 @@ on the version for the method by Wu and Neale (2012).
 ## Examples
 
 ``` r
+
 library(lavaan)
 data(simple_med)
 dat <- simple_med
@@ -268,7 +269,7 @@ out1l
 #> Which Bound:            Lower Bound
 #> Method:                 Root Finding
 #> Confidence Level:       0.95
-#> Achieved Level:         0.950000451126927
+#> Achieved Level:         0.950000451127706
 #> Standardized:           No
 #> Likelihood-Based Bound: 0.8277
 #> Wald Bound:             0.83177

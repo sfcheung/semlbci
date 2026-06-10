@@ -158,6 +158,7 @@ process, usually created by `callr` in other internal functions.
 ## Examples
 
 ``` r
+
 library(lavaan)
 
 data(simple_med)

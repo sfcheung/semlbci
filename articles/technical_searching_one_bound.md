@@ -32,6 +32,7 @@ The dataset `simple_med` from `semlbci` is used to fit a simple
 mediation model:
 
 ``` r
+
 library(semlbci)
 library(lavaan)
 dat <- simple_med
@@ -53,6 +54,7 @@ proposed by Wu & Neale (2012) and adapted by Pek & Wu (2015), with
 for 95%):
 
 ``` r
+
 fn_constraint <- set_constraint(fit,
                                 ciperc = .95)
 ```
@@ -63,6 +65,7 @@ To find the lower bound of the LBCI of, say, `y ~ m`, we first check the
 row number of this parameter in the *parameter table*:
 
 ``` r
+
 parameterTable(fit)
 #>   id lhs op rhs user block group free ustart exo label plabel  start    est
 #> 1  1   m  ~   x    1     1     1    1     NA   0     a   .p1.  1.676  1.676
@@ -91,6 +94,7 @@ We can then call
 [`ci_bound_wn_i()`](https://sfcheung.github.io/semlbci/reference/ci_bound_wn_i.md):
 
 ``` r
+
 out_lb <- ci_bound_wn_i(i = 2,
                         npar = 4,
                         sem_out = fit,
@@ -104,6 +108,7 @@ The output is a `cibound`-class object with a `print` method for
 printing diagnostic information.
 
 ``` r
+
 out_lb
 #> Target Parameter:    y ~ m (group = 1, block = 1)
 #> Position:        2
@@ -258,6 +263,7 @@ The printout is explained briefly below:
 The `cibound`-class object has three elements:
 
 ``` r
+
 names(out_lb)
 #> [1] "bound" "diag"  "call"
 ```
@@ -282,6 +288,7 @@ We can verify the definitional validity of the bound by doing a
 likelihood ratio test manually:
 
 ``` r
+
 mod_chk <-
 "
 m ~ a*x
@@ -309,6 +316,7 @@ This process can be repeated with `which = "ubound"` to find the upper
 bound:
 
 ``` r
+
 out_ub <- ci_bound_wn_i(i = 2,
                         npar = 4,
                         sem_out = fit,
@@ -382,6 +390,7 @@ To find the bounds for a user-defined parameters, for example, the
 indirect effect in the model, the steps are the same.
 
 ``` r
+
 parameterTable(fit)
 #>   id lhs op rhs user block group free ustart exo label plabel  start    est
 #> 1  1   m  ~   x    1     1     1    1     NA   0     a   .p1.  1.676  1.676
@@ -403,6 +412,7 @@ The indirect effect, `ab`, is on the 6^(th) row. Therefore, we set `i`
 to 6. All other arguments are the same as in the previous example.
 
 ``` r
+
 ind_lb <- ci_bound_wn_i(i = 6,
                         npar = 4,
                         sem_out = fit,
@@ -415,6 +425,7 @@ ind_lb <- ci_bound_wn_i(i = 6,
 This is the printout:
 
 ``` r
+
 ind_lb
 #> Target Parameter:    ab := a*b (group = 0, block = 0)
 #> Position:        6
@@ -458,6 +469,7 @@ This bound passes all the checks. We can verify the bound using the
 likelihood ratio test:
 
 ``` r
+
 mod_chk <-
 "
 m ~ a*x

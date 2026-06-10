@@ -346,6 +346,7 @@ inference using likelihood*. Oxford University Press.
 ## Examples
 
 ``` r
+
 ## loglike_compare
 
 library(lavaan)

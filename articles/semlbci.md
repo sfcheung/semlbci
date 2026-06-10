@@ -15,6 +15,7 @@ wrappers, such as
 The latest stable version can be installed from GitHub:
 
 ``` r
+
 remotes::install_github("sfcheung/semlbci")
 ```
 
@@ -27,6 +28,7 @@ The package has a dataset, `simple_med`, with three variables, `x`, `m`,
 and `y`. Let us fit a simple mediation model to this dataset.
 
 ``` r
+
 library(semlbci)
 data(simple_med)
 dat <- simple_med
@@ -41,6 +43,7 @@ head(dat)
 ```
 
 ``` r
+
 library(lavaan)
 mod <-
 "
@@ -60,6 +63,7 @@ the indirect effect, `ab`, by `a * b`.
 This is the summary:
 
 ``` r
+
 summary(fit, standardized = TRUE)
 #> lavaan 0.6.17 ended normally after 1 iteration
 #> 
@@ -115,6 +119,7 @@ correlation between `x` and `m` (not in the example) is denoted by
 `"x ~~ m"` (order does not matter).
 
 ``` r
+
 out <- semlbci(sem_out = fit,
                pars = c("y ~ m",
                         "m ~ x"))
@@ -127,6 +132,7 @@ represent all parameters of the same type: `"~"` for regression paths,
 and the one above find LBCIs for the same set of parameters:
 
 ``` r
+
 out <- semlbci(sem_out = fit,
                pars = c("~"))
 ```
@@ -136,6 +142,7 @@ two columns added, `lbci_lb` and `lbci_ub`, the likelihood-based lower
 bounds and upper bounds, respectively.
 
 ``` r
+
 out
 #> 
 #> Results:
@@ -170,6 +177,7 @@ In this case, it is advised to enable parallel processing by add
 (these arguments are explained later):
 
 ``` r
+
 out <- semlbci(sem_out = fit,
                parallel = TRUE,
                ncpus = 6)
@@ -190,6 +198,7 @@ by calling [`print()`](https://rdrr.io/r/base/print.html) and add
 `annotation = FALSE`:
 
 ``` r
+
 print(out, annotation = FALSE)
 #> 
 #> Results:
@@ -205,6 +214,7 @@ original fit object (`fit` in this example), and add
 `output = "lavaan"`:
 
 ``` r
+
 print(out,
       sem_out = fit,
       output = "lavaan")
@@ -244,6 +254,7 @@ this parameter can be omitted. The content after `:=` will be ignored by
 [`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md).
 
 ``` r
+
 out <- semlbci(sem_out = fit,
                pars = c("ab := "))
 print(out,
@@ -279,6 +290,7 @@ If the LBCIs for the standardized solution solution are needed, set
 `standardized = TRUE`.
 
 ``` r
+
 out <- semlbci(sem_out = fit,
                pars = c("y ~ m",
                         "m ~ x"),
@@ -288,6 +300,7 @@ out <- semlbci(sem_out = fit,
 This one also works:
 
 ``` r
+
 out <- semlbci(sem_out = fit,
                pars = "~",
                standardized = TRUE)
@@ -296,6 +309,7 @@ out <- semlbci(sem_out = fit,
 This is the printout, in `lavaan`-style:
 
 ``` r
+
 print(out,
       sem_out = fit,
       output = "lavaan")
@@ -327,6 +341,7 @@ The LBCIs for standardized user-defined parameters can be requested
 similarly.
 
 ``` r
+
 out <- semlbci(sem_out = fit,
                pars = c("ab :="),
                standardized = TRUE)
@@ -350,6 +365,7 @@ print(out,
 ```
 
 ``` r
+
 out <- semlbci(sem_out = fit,
                standardized = TRUE)
 print(out,
@@ -436,6 +452,7 @@ than the number of available cores. For example, without parallel
 processing, the following search took about 28 seconds on Intel i7-8700:
 
 ``` r
+
 data(HolzingerSwineford1939)
 mod_test <-
 '
@@ -452,6 +469,7 @@ With parallel processing enabled and using 6 cores, it took about 20
 seconds.
 
 ``` r
+
 semlbci(fit_cfa,
         parallel = TRUE,
         ncpus = 6)
@@ -479,6 +497,7 @@ is passed to the new call using `semlbci_out`.
 For example, assume that some LBCIs could not be found in the first run:
 
 ``` r
+
 lbci_some_failed <- semlbci(fit_cfa)
 ```
 
@@ -488,6 +507,7 @@ again, increasing `try_k_more_times` to 5, and set `semlbci_out` to
 `lbci_some_failed`.
 
 ``` r
+
 lbci_try_again <- semlbci(fit_cfa,
                           try_k_more_times = 5,
                           semlbci_out = lbci_some_failed)
@@ -517,6 +537,7 @@ supports multiple-group models. For example, this is a two-group
 confirmatory factor analysis model with equality constraints:
 
 ``` r
+
 data(HolzingerSwineford1939)
 mod_cfa <-
 '
@@ -532,6 +553,7 @@ fit_cfa <- cfa(model = mod_cfa,
 The factor correlations between group are not constrained to be equal.
 
 ``` r
+
 parameterEstimates(fit_cfa)[c(22, 23, 58, 59), ]
 #>       lhs op     rhs block group label   est    se     z pvalue ci.lower
 #> 22 visual ~~ textual     1     1       0.416 0.097 4.271  0.000    0.225
@@ -549,6 +571,7 @@ This is the LBCI for covariance between visual ability and textual
 ability:
 
 ``` r
+
 fcov <- semlbci(fit_cfa,
                 pars = c("visual ~~ textual"))
 print(fcov,
@@ -586,6 +609,7 @@ This is the LBCI for correlation between visual ability and textual
 ability:
 
 ``` r
+
 fcor <- semlbci(fit_cfa,
                 pars = c("visual ~~ textual"),
                 standardized = TRUE)
@@ -635,6 +659,7 @@ LBCI, the model must be fitted with robust test statistics requested
 We use the simple mediation model as an example:
 
 ``` r
+
 fit_robust <- sem(mod, simple_med,
                   fixed.x = FALSE,
                   estimator = "MLR")

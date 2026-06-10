@@ -41,7 +41,7 @@ attainable bounds. To avoid confusion with the method by Wu & Neale
 
 ## Overall Workflow
 
-We first present the overall workflow[¹](#fn1) of
+We first present the overall workflow[^1] of
 [`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md).
 We then present the workflow of
 [`ci_i_one()`](https://sfcheung.github.io/semlbci/reference/ci_i_one.md),
@@ -88,35 +88,38 @@ This function, called by
 [`semlbci()`](https://sfcheung.github.io/semlbci/reference/semlbci.md),
 is used to set the equality constraint used by the WNPW method.
 
-As presented in Pek & Wu (2015), to find the lower bound, $\theta_{L}$,
-of the 100(1-$\alpha$)% LBCI of ${\widehat{\theta}}_{j}$, $\theta_{L}$
-is minimized with respect to all parameters,
-$\left( \theta_{L},{\mathbf{θ}}_{q} \right)$,
-${\mathbf{θ}}_{\mathbf{q}}$ being all parameters other than
-$\theta_{L}$, subject to the following constraint:
+As presented in Pek & Wu (2015), to find the lower bound, $`\theta_L`$,
+of the 100(1-$`\alpha`$)% LBCI of $`\hat{\theta}_j`$, $`\theta_L`$ is
+minimized with respect to all parameters,
+$`(\theta_L, \boldsymbol{\theta}_q)`$, $`\boldsymbol{\theta_q}`$ being
+all parameters other than $`\theta_L`$, subject to the following
+constraint:
 
-$$0 = 2nF\left( \theta_{L},{\mathbf{θ}}_{\mathbf{q}} \right) - \left( 2nF\left( \widehat{\theta} \right) + \chi_{(1,1 - \alpha)}^{2} \right)$$
+``` math
+0 = 2nF(\theta_L, \boldsymbol{\theta_q}) - (2nF(\hat{\theta}) + \chi_{(1, 1 - \alpha)}^2)
+```
 
-$F\left( \widehat{\mathbf{θ}} \right)$ is the value of the discrepancy
-function evaluated at the ML estimate $\widehat{\mathbf{θ}}$.
-$\chi_{(1,1 - \alpha)}^{2}$ is the $\chi^{2}$ critical value at $df = 1$
-and level of significance = $\alpha$ (about 3.84 with $\alpha = .05$),
-and $n$ is the sample size (total sample size in multisample models).
+$`F(\hat{\boldsymbol{\theta}})`$ is the value of the discrepancy
+function evaluated at the ML estimate $`\hat{\boldsymbol{\theta}}`$.
+$`\chi_{(1, 1 - \alpha)}^2`$ is the $`\chi^2`$ critical value at
+$`df = 1`$ and level of significance = $`\alpha`$ (about 3.84 with
+$`\alpha = .05`$), and $`n`$ is the sample size (total sample size in
+multisample models).
 
-This constraint means that model $\chi^{2}$ difference test between the
-model with $\theta_{j}$ fixed to $\theta_{L}$ and the original model
-with $\theta_{j}$ freely estimated should have a *p*-value equal to
-$\alpha$.
+This constraint means that model $`\chi^2`$ difference test between the
+model with $`\theta_j`$ fixed to $`\theta_L`$ and the original model
+with $`\theta_j`$ freely estimated should have a *p*-value equal to
+$`\alpha`$.
 
-In `lavaan`, $F\left( \theta_{L},{\mathbf{θ}}_{q} \right)$ is `"fmin"`
-in the output of
+In `lavaan`, $`F(\theta_L, \boldsymbol{\theta}_q)`$ is `"fmin"` in the
+output of
 [`lavaan::fitMeasures()`](https://rdrr.io/pkg/lavaan/man/fitMeasures.html).
 When the estimator is `ML` and `likelihood = "normal"`, the default,
-multiplying `"fmin"` by $2n$ yields the model $\chi^{2}$.
+multiplying `"fmin"` by $`2n`$ yields the model $`\chi^2`$.
 
-To find the upper bound, $\theta_{U}$, $- \theta_{U}$ is minimized
-(equivalently, $\theta_{U}$ is maximized). The final value will be
-multiplied by $- 1$ to get the upper bound.
+To find the upper bound, $`\theta_U`$, $`-\theta_U`$ is minimized
+(equivalently, $`\theta_U`$ is maximized). The final value will be
+multiplied by $`-1`$ to get the upper bound.
 
 The WNPW method can easily be used when a model has one or more equality
 constraints on the parameters. These constraints are simply extracted
@@ -129,14 +132,16 @@ The function
 [`set_constraint()`](https://sfcheung.github.io/semlbci/reference/set_constraint.md)
 returns a general version of the constraint:
 
-$$0 = 2nF\left( \theta_{L},{\mathbf{θ}}_{q} \right) - \left( 2nF\left( \widehat{\mathbf{θ}} \right) + \frac{\chi_{(1,1 - \alpha)}^{2} - b}{a} \right)$$
+``` math
+0 = 2nF(\theta_L, \boldsymbol{\theta}_q) - (2nF(\hat{\boldsymbol{\theta}}) + \frac{\chi_{(1, 1 - \alpha)}^2 - b}{a})
+```
 
-In this general form, $a$ is the scaling factor and $b$ is the shift
-factor. When $a = 1$ and $b = 0$, it is the constraint in the WNPW
+In this general form, $`a`$ is the scaling factor and $`b`$ is the shift
+factor. When $`a = 1`$ and $`b = 0`$, it is the constraint in the WNPW
 method. When robust LBCI is requested, the scaling and shift factors are
 computed as in the same way by
 [`lavaan::lavTestLRT()`](https://rdrr.io/pkg/lavaan/man/lavTestLRT.html)
-with `method = satorra.2000` and `A.method = "exact"`.[²](#fn2)
+with `method = satorra.2000` and `A.method = "exact"`.[^2]
 
 #### `semlbci:::scaling_factors3()`
 
@@ -231,28 +236,36 @@ in this stage, `lbci_b_f()` and `lbci_b_grad()`, are described below.
 
 ###### `lbci_b_f()`
 
-In the WNPW method, if the parameter, $\theta_{j}$, is a free parameter,
+In the WNPW method, if the parameter, $`\theta_j`$, is a free parameter,
 and the lower bound is to be searched, this function simply returns the
-value of $\theta_{j}$ (all other free parameters other than $\theta_{j}$
-are denoted by $\theta_{q}$):
+value of $`\theta_j`$ (all other free parameters other than $`\theta_j`$
+are denoted by $`\theta_q`$):
 
-$$f\left( \theta_{j},{\mathbf{θ}}_{q} \right) = \theta_{j}$$
+``` math
+f(\theta_j, \boldsymbol{\theta}_q) = \theta_j
+```
 
 If the upper bound is to be searched, then this function is:
 
-$$f\left( \theta_{j},{\mathbf{θ}}_{q} \right) = - \theta_{j}$$
+``` math
+f(\theta_j, \boldsymbol{\theta}_q) = -\theta_j
+```
 
 If the parameter is a function of some free parameters (e.g., an
 indirect effect, or a standardized coefficient such as correlation),
-denoted by $h({\mathbf{θ}})$, $\mathbf{θ}$ being all free parameters
-(though some may not be used in $h$), and the lower bound is to be
-searched, then this function is:
+denoted by $`h(\boldsymbol{\theta})`$, $`\boldsymbol{\theta}`$ being all
+free parameters (though some may not be used in $`h`$), and the lower
+bound is to be searched, then this function is:
 
-$$f({\mathbf{θ}}) = h({\mathbf{θ}})$$
+``` math
+f(\boldsymbol{\theta}) = h(\boldsymbol{\theta})
+```
 
 Similarly, if the upper bound is to be searched, this function is:
 
-$$f({\mathbf{θ}}) = - h({\mathbf{θ}})$$
+``` math
+f(\boldsymbol{\theta}) = -h(\boldsymbol{\theta})
+```
 
 Therefore, in the optimization, minimization is conducted whether the
 lower or upper bound is to be searched.
@@ -605,11 +618,11 @@ These are the main arguments of
 - `lb_se_k`
 
   Used by an internal function to set the lower bound for free
-  variances. Default is 3, the estimate minus 3 $\times$ standard error.
-  If negative, the lower bound is set using `lb_prop`. This constraint
-  is used only in the optimization to prevent intermediate values too
-  far away from the point estimates. The final check done by fitting the
-  model in `lavaan` will not implement this constraint.
+  variances. Default is 3, the estimate minus 3 $`\times`$ standard
+  error. If negative, the lower bound is set using `lb_prop`. This
+  constraint is used only in the optimization to prevent intermediate
+  values too far away from the point estimates. The final check done by
+  fitting the model in `lavaan` will not implement this constraint.
 
 Please refer to the help page of
 [`ci_bound_wn_i()`](https://sfcheung.github.io/semlbci/reference/ci_bound_wn_i.md)
@@ -645,10 +658,8 @@ Wu, H., & Neale, M. C. (2012). Adjusted confidence intervals for a
 bounded parameter. *Behavior Genetics*, *42*(6), 886–898.
 <https://doi.org/10.1007/s10519-012-9560-z>
 
-------------------------------------------------------------------------
+[^1]: Some steps are omitted for readability.
 
-1.  Some steps are omitted for readability.
-
-2.  Internally, `sf = a^(-1)` is stored. To be consistent with `T_3`
+[^2]: Internally, `sf = a^(-1)` is stored. To be consistent with `T_3`
     presented in Asparouhov & Muthén (2010), we used `a` instead of
     `a^(-1)` in the equation in this document.

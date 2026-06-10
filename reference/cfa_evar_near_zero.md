@@ -30,6 +30,7 @@ This model is used for examples like this one:
 ## Examples
 
 ``` r
+
 print(head(cfa_evar_near_zero), digits = 3)
 #>       x1      x2      x3     x4    x5     x6
 #> 1  3.750  1.3970  6.3719 -0.602  2.04 -0.363

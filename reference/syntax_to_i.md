@@ -74,6 +74,7 @@ outputs only.
 ## Examples
 
 ``` r
+
 library(lavaan)
 data(simple_med)
 mod <-

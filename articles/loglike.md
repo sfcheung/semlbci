@@ -34,6 +34,7 @@ Suppose a simple mediation model is fitted to the dataset `simple_med`,
 came with the package `semlbci`:
 
 ``` r
+
 library(lavaan)
 library(semlbci)
 dat <- simple_med
@@ -65,6 +66,7 @@ To generate the plot for the *a*-path coefficient, we can simply call
 and setting the parameter to `"a"`.
 
 ``` r
+
 ll_a <- loglike_compare(fit,
                         par_i = "m ~ x")
 ```
@@ -82,6 +84,7 @@ Once the run finishes, we can use
 likelihood values:
 
 ``` r
+
 plot(ll_a, add_pvalues = TRUE)
 ```
 
@@ -98,6 +101,7 @@ Let us examine the log profile likelihood of the indirect effect. To
 specify it, we need to use `ab :=`:
 
 ``` r
+
 ll_ab <- loglike_compare(fit,
                          par_i = "ab := ")
 ```
@@ -109,6 +113,7 @@ product of two other parameters.
 This is the plot:
 
 ``` r
+
 plot(ll_ab, add_pvalues = TRUE)
 ```
 

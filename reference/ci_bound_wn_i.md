@@ -279,6 +279,7 @@ bounded parameter. *Behavior Genetics, 42*(6), 886-898.
 ## Examples
 
 ``` r
+
 data(simple_med)
 dat <- simple_med
 

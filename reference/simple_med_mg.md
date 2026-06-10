@@ -42,6 +42,7 @@ This model is used for examples like this one:
 ## Examples
 
 ``` r
+
 print(head(simple_med_mg), digits = 3)
 #>    gp      x      m     y
 #> 1 gp1 -0.345   7.28 -5.64

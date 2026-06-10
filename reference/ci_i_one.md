@@ -149,6 +149,7 @@ likelihood-based confidence interval.
 ## Examples
 
 ``` r
+
 data(simple_med)
 
 library(lavaan)

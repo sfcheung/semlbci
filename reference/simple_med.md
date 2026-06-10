@@ -37,6 +37,7 @@ This model is used for examples like this one:
 ## Examples
 
 ``` r
+
 print(head(simple_med), digits = 3)
 #>        x      m     y
 #> 1 -0.345   7.28 -5.64

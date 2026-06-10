@@ -25,6 +25,7 @@ This model is used for examples like this one:
 ## Examples
 
 ``` r
+
 print(head(cfa_two_factors), digits = 3)
 #>       x1     x2     x3    x4     x5     x6
 #> 1 -0.445  1.606  4.199 -0.61  2.437  0.393

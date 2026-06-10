@@ -48,6 +48,7 @@ This model is used for examples like this one:
 ## Examples
 
 ``` r
+
 print(head(reg_cor_near_one), digits = 3)
 #>       x1     x2      x3      x4      x5      y
 #> 1 -0.687 -0.266  1.1400  0.2151  0.2368  0.305

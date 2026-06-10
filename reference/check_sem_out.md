@@ -105,7 +105,7 @@ Models not yet supported:
 
 ``` r
 library(lavaan)
-#> This is lavaan 0.6-20
+#> This is lavaan 0.6-21
 #> lavaan is FREE software! Please report any bugs.
 data(cfa_two_factors)
 mod <-
@@ -120,17 +120,18 @@ fit <- sem(mod, cfa_two_factors)
 check_sem_out(fit)
 #> [1] 0
 
-fit2 <- sem(mod, cfa_two_factors, estimator = "DWLS")
+fit2 <- sem(mod, cfa_two_factors, estimator = "DWLS", ordered = FALSE)
 #> Warning: lavaan->lav_options_est_dwls():  
 #>    estimator “DWLS” is not recommended for continuous data. Did you forget to 
 #>    set the ordered= argument?
 
 # Should be negative because DWLS is officially not supported
 check_sem_out(fit2)
-#> [1] -2
+#> [1] -3
 #> attr(,"info")
-#> [1] "Estimator DWLS is not yet supported."                       
-#> [2] "Only support models fitted with likelihood set to 'normal'."
+#> [1] "Estimator DWLS is not yet supported."                                                         
+#> [2] "Test method(s) standard, browne.residual.nt is/are not yet supported when 'robust' is 'none'."
+#> [3] "Only support models fitted with likelihood set to 'normal'."                                  
 
 fit3 <- sem(mod, cfa_two_factors, estimator = "MLR")
 
@@ -139,7 +140,7 @@ fit3 <- sem(mod, cfa_two_factors, estimator = "MLR")
 check_sem_out(fit3)
 #> [1] -1
 #> attr(,"info")
-#> [1] "Test method(s) yuan.bentler.mplus is/are not yet supported when 'robust' is 'none'."
+#> [1] "Test method(s) standard, yuan.bentler.mplus is/are not yet supported when 'robust' is 'none'."
 
 # Should be zero because robust is set to "satorra.2000"
 check_sem_out(fit3, robust = "satorra.2000")
