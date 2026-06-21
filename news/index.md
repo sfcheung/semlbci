@@ -1,5 +1,15 @@
 # Changelog
 
+## semlbci 0.11.6.1
+
+### Miscellaneous
+
+- Updated
+  [`syntax_to_i()`](https://sfcheung.github.io/semlbci/reference/syntax_to_i.md)
+  to explicitly uses `parser = "new"` when calling
+  [`lavaan::lavParseModelString()`](https://rdrr.io/pkg/lavaan/man/model.syntax.html).
+  Will update to `parser = "open"` in the future. (0.11.6.1)
+
 ## semlbci 0.11.6
 
 CRAN release: 2026-06-08
@@ -12,9 +22,7 @@ CRAN release: 2026-06-08
 - Fixed some internal help pages due to a change in roxygen2 8.0.0.
   (0.11.6)
 
-## semlbci 0.11.6
-
-CRAN release: 2026-06-08
+## semlbci 0.11.4
 
 ### Miscellaneous
 
