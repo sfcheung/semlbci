@@ -1,3 +1,14 @@
+# semlbci 0.11.6.1
+
+## Miscellaneous
+
+- Updated `syntax_to_i()` to explicitly
+  uses `parser = "new"` when calling
+  `lavaan::lavParseModelString()`.
+  Will update to `parser = "open"` in
+  the future.
+  (0.11.6.1)
+
 # semlbci 0.11.6
 
 ## Miscellaneous
@@ -12,7 +23,7 @@
   to a change in roxygen2 8.0.0.
   (0.11.6)
 
-# semlbci 0.11.6
+# semlbci 0.11.4
 
 ## Miscellaneous
 

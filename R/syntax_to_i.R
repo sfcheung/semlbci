@@ -86,7 +86,7 @@ syntax_to_i <- function(syntax,
       }
     ptable <- lavaan::parameterTable(sem_out)
     ngroups <- lavaan::lavTech(sem_out, "ngroups")
-    l_model <- lavaan::lavParseModelString(syntax, as.data.frame = TRUE)
+    l_model <- lavaan::lavParseModelString(syntax, as.data.frame = TRUE, parser = "new")
     if (nrow(l_model) > 0) {
         if (ngroups == 1) {
             # Single-sample
