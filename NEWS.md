@@ -1,4 +1,4 @@
-# semlbci 0.11.6.1
+# semlbci 0.12.0
 
 ## Miscellaneous
 
