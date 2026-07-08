@@ -9,6 +9,10 @@
   the future.
   (0.11.6.1)
 
+- Updated tests to suppress harmless
+  warnings in `lavaan` 0.7-1.
+  (0.11.6.2)
+
 # semlbci 0.11.6
 
 ## Miscellaneous
