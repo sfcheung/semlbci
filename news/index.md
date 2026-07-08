@@ -1,6 +1,8 @@
 # Changelog
 
-## semlbci 0.11.6.1
+## semlbci 0.12.0
+
+CRAN release: 2026-07-08
 
 ### Miscellaneous
 
@@ -9,6 +11,9 @@
   to explicitly uses `parser = "new"` when calling
   [`lavaan::lavParseModelString()`](https://rdrr.io/pkg/lavaan/man/model.syntax.html).
   Will update to `parser = "open"` in the future. (0.11.6.1)
+
+- Updated tests to suppress harmless warnings in `lavaan` 0.7-1.
+  (0.11.6.2)
 
 ## semlbci 0.11.6
 
