@@ -245,7 +245,7 @@ ci_bound_wn_i <- function(i = NULL,
     # Get original point estimate and CI
     if (standardized) {
         ## Standardized solution
-        p_est <- lavaan::standardizedSolution(sem_out,
+        p_est <- suppressWarnings(lavaan::standardizedSolution(sem_out,
                     type = "std.all",
                     se = TRUE,
                     zstat = FALSE,
@@ -255,7 +255,7 @@ ci_bound_wn_i <- function(i = NULL,
                     remove.eq = FALSE,
                     remove.ineq = FALSE,
                     remove.def = FALSE,
-                    output = "data.frame")
+                    output = "data.frame"))
         i_est <- p_est[i, "est.std"]
         i_org_ci_lower <- p_est[i, "ci.lower"]
         i_org_ci_upper <- p_est[i, "ci.upper"]
@@ -264,7 +264,7 @@ ci_bound_wn_i <- function(i = NULL,
             # solution from lavaan::standardizedSolution().
             p_est_int <- std_lav(lavaan::coef(sem_out),
                                   sem_out)
-            p_est_test <- lavaan::parameterEstimates(
+            p_est_test <- suppressWarnings(lavaan::parameterEstimates(
                                     sem_out,
                                     standardized = TRUE,
                                     se = FALSE,
@@ -276,7 +276,7 @@ ci_bound_wn_i <- function(i = NULL,
                                     remove.eq = FALSE,
                                     remove.ineq = FALSE,
                                     remove.def = FALSE,
-                                    remove.nonfree = FALSE)
+                                    remove.nonfree = FALSE))
             if (lavaan::lavTech(sem_out, "ngroups") > 1) {
                 p_est_test <- p_est_test[, c("lhs", "op", "rhs",
                                               "group",
@@ -318,7 +318,7 @@ ci_bound_wn_i <- function(i = NULL,
                         dQuote("internal")))
           }
         if (std_method == "lavaan") {
-            p_std <- lavaan::standardizedSolution(sem_out,
+            p_std <- suppressWarnings(lavaan::standardizedSolution(sem_out,
                                                   type = "std.all",
                                                   se = FALSE,
                                                   zstat = FALSE,
@@ -327,7 +327,7 @@ ci_bound_wn_i <- function(i = NULL,
                                                   remove.eq = FALSE,
                                                   remove.ineq = FALSE,
                                                   remove.def = FALSE,
-                                                  output = "data.frame")
+                                                  output = "data.frame"))
             p_std$id <- seq_len(nrow(p_std))
             if (lavaan::lavTech(sem_out, "ngroups") > 1) {
                 i_lor <- get_lhs_op_rhs(i, sem_out, more = TRUE)
@@ -347,7 +347,7 @@ ci_bound_wn_i <- function(i = NULL,
                 sem_model <- lavaan::lav_model_set_parameters(sem_model,
                                           start1[start1$free > 0, "est"])
                 sem_out2@Model <- sem_model
-                std0 <- lavaan::standardizedSolution(sem_out2,
+                std0 <- suppressWarnings(lavaan::standardizedSolution(sem_out2,
                                                 type = "std.all",
                                                 se = FALSE,
                                                 zstat = FALSE,
@@ -356,12 +356,12 @@ ci_bound_wn_i <- function(i = NULL,
                                                 remove.eq = FALSE,
                                                 remove.ineq = FALSE,
                                                 remove.def = FALSE,
-                                                output = "data.frame")
+                                                output = "data.frame"))
                 k * std0[i_std, "est.std"]
               }
           }
         if (std_method == "internal") {
-            p_std <- lavaan::parameterEstimates(
+            p_std <- suppressWarnings(lavaan::parameterEstimates(
                                   sem_out,
                                   standardized = TRUE,
                                   se = FALSE,
@@ -373,7 +373,7 @@ ci_bound_wn_i <- function(i = NULL,
                                   remove.eq = FALSE,
                                   remove.ineq = FALSE,
                                   remove.def = FALSE,
-                                  remove.nonfree = FALSE)
+                                  remove.nonfree = FALSE))
             p_std$id <- seq_len(nrow(p_std))
             if (lavaan::lavTech(sem_out, "ngroups") > 1) {
                 i_lor <- get_lhs_op_rhs(i, sem_out, more = TRUE)

@@ -61,7 +61,7 @@ tstd := geteststd()
 geteststd <- semlbci:::get_std_genfct(fit = fit, i = 16)
 
 i <- 16
-est_i <- standardizedSolution(fit)[i, "est.std"]
+est_i <- suppressWarnings(standardizedSolution(fit)[i, "est.std"])
 modc <- paste(modc0, "\ntstd == ", est_i * .98, "\n0 < 1")
 fitc <- lavaan::sem(modc, cfa_two_factors_mg, do.fit = FALSE, test = "satorra.bentler")
 ptable <- parameterTable(fitc)
@@ -86,7 +86,7 @@ writeClipboard(capture.output(dput(sf1_ans)))
 geteststd <- semlbci:::get_std_genfct(fit = fit, i = 6)
 
 i <- 6
-est_i <- standardizedSolution(fit)[i, "est.std"]
+est_i <- suppressWarnings(standardizedSolution(fit)[i, "est.std"])
 modc <- paste(modc0, "\ntstd == ", est_i * .98, "\n0 < 1")
 fitc <- lavaan::sem(modc, cfa_two_factors_mg, do.fit = FALSE, test = "satorra.bentler")
 ptable <- parameterTable(fitc)

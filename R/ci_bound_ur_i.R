@@ -925,7 +925,7 @@ gen_est_i <- function(i,
             out <- function(object) {
                 # Just in case
                 force(i_est)
-                std <- lavaan::standardizedSolution(object,
+                std <- suppressWarnings(lavaan::standardizedSolution(object,
                                 est = lavaan::lav_model_get_parameters(object@Model, type = "user"),
                                 GLIST = object@Model@GLIST,
                                 se = FALSE,
@@ -935,7 +935,7 @@ gen_est_i <- function(i,
                                 remove.eq = FALSE,
                                 remove.ineq = FALSE,
                                 remove.def = FALSE,
-                                type = "std.all")
+                                type = "std.all"))
                 unname(std[i_est, "est.std"])
               }
           } else {

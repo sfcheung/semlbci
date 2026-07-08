@@ -17,7 +17,7 @@ b1 == b2
 "
 fit <- lavaan::sem(mod, cfa_two_factors_mg, group = "gp")
 
-est_std <- parameterEstimates(fit,
+est_std <- suppressWarnings(parameterEstimates(fit,
                               standardized = TRUE,
                               se = FALSE,
                               zstat = FALSE,
@@ -28,7 +28,7 @@ est_std <- parameterEstimates(fit,
                               remove.eq = FALSE,
                               remove.ineq = FALSE,
                               remove.def = FALSE,
-                              remove.nonfree = FALSE)
+                              remove.nonfree = FALSE))
 est_std <- est_std[, c("lhs", "op", "rhs", "group", "label",
                        "std.all")]
 std <- std_lav(coef(fit), fit)

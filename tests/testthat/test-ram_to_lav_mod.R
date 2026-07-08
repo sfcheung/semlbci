@@ -17,7 +17,7 @@ b1 == b2
 "
 fit <- lavaan::sem(mod, cfa_two_factors_mg, group = "gp")
 
-est_std <- standardizedSolution(fit)
+est_std <- suppressWarnings(standardizedSolution(fit))
 
 lav_mod <- lavInspect(fit, "est")
 lav_mod_pt <- lavInspect(fit, "partable")
@@ -49,7 +49,7 @@ b == e
 "
 fit <- lavaan::sem(mod, cfa_two_factors)
 
-est_std <- standardizedSolution(fit)
+est_std <- suppressWarnings(standardizedSolution(fit))
 
 lav_mod <- lavInspect(fit, "est", drop.list.single.group = FALSE)
 lav_mod_pt <- lavInspect(fit, "partable", drop.list.single.group = FALSE)
@@ -84,7 +84,7 @@ b1 == b2
 "
 fit <- lavaan::sem(mod, cfa_two_factors_mg, group = "gp")
 
-est_std <- standardizedSolution(fit)
+est_std <- suppressWarnings(standardizedSolution(fit))
 
 lav_mod <- lavInspect(fit, "est")
 lav_mod_pt <- lavInspect(fit, "partable")
@@ -114,7 +114,7 @@ b == e
 "
 fit <- lavaan::sem(mod, cfa_two_factors)
 
-est_std <- standardizedSolution(fit)
+est_std <- suppressWarnings(standardizedSolution(fit))
 
 lav_mod <- lavInspect(fit, "est", drop.list.single.group = FALSE)
 lav_mod_pt <- lavInspect(fit, "partable", drop.list.single.group = FALSE)

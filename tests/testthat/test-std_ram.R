@@ -17,7 +17,7 @@ b1 == b2
 "
 fit <- lavaan::sem(mod, cfa_two_factors_mg, group = "gp")
 
-est_std <- standardizedSolution(fit)
+est_std <- suppressWarnings(standardizedSolution(fit))
 
 lav_mod <- lavInspect(fit, "est")
 
