@@ -42,7 +42,7 @@ set_start_wn <- function(i = NULL,
     if (standardized) {
         # Standardized solution
         # Will exist in this block
-        p_std <- lavaan::standardizedSolution(sem_out,
+        p_std <- suppressWarnings(lavaan::standardizedSolution(sem_out,
                                               type = "std.all",
                                               se = FALSE,
                                               zstat = FALSE,
@@ -51,7 +51,7 @@ set_start_wn <- function(i = NULL,
                                               remove.eq = FALSE,
                                               remove.ineq = FALSE,
                                               remove.def = FALSE,
-                                              output = "data.frame")
+                                              output = "data.frame"))
         p_std$id <- seq_len(nrow(p_std))
         if (lavaan::lavTech(sem_out, "ngroups") > 1) {
             i_lor <- get_lhs_op_rhs(i, sem_out, more = TRUE)
@@ -74,7 +74,7 @@ set_start_wn <- function(i = NULL,
             sem_model <- lavaan::lav_model_set_parameters(sem_model,
                                       start1[start1$free > 0, "est"])
             sem_out2@Model <- sem_model
-            std0 <- lavaan::standardizedSolution(sem_out2,
+            std0 <- suppressWarnings(lavaan::standardizedSolution(sem_out2,
                                             type = "std.all",
                                             se = FALSE,
                                             zstat = FALSE,
@@ -83,7 +83,7 @@ set_start_wn <- function(i = NULL,
                                             remove.eq = FALSE,
                                             remove.ineq = FALSE,
                                             remove.def = FALSE,
-                                            output = "data.frame")
+                                            output = "data.frame"))
             std0[i_std, "est.std"]
           }
         # NOTE: g_i0 is of the same length as the parameter vector

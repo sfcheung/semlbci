@@ -37,8 +37,8 @@ test_that("Unstandardized", {
 # Standardized
 
 test_that("Standardized", {
-  std_all <- standardizedSolution(fit)
-  std_all_gp <- standardizedSolution(fit_gp)
+  std_all <- suppressWarnings(standardizedSolution(fit))
+  std_all_gp <- suppressWarnings(standardizedSolution(fit_gp))
 
   est_i <- gen_est_i(i = 9, sem_out = fit, standardized = TRUE)
   expect_equal(est_i(fit),
@@ -106,8 +106,8 @@ expect_equal(userp(tmp),
 
 test_that("Standardized", {
 
-  std_all <- standardizedSolution(fit)
-  std_all_gp <- standardizedSolution(fit_gp)
+  std_all <- suppressWarnings(standardizedSolution(fit))
+  std_all_gp <- suppressWarnings(standardizedSolution(fit_gp))
 
   est_i <- gen_est_i(i = 9, sem_out = fit, standardized = TRUE)
   userp <- gen_userp(func = est_i, sem_out = fit)

@@ -52,7 +52,7 @@ tstd := geteststd()
 geteststd <- semlbci:::get_std_genfct(fit = fit, i = 2)
 
 i <- 2
-est_i <- standardizedSolution(fit)[i, "est.std"]
+est_i <- suppressWarnings(standardizedSolution(fit)[i, "est.std"])
 modc <- paste(modc0, "\ntstd == ", est_i * .98, "\n0 < 1")
 fitc <- lavaan::cfa(modc, cfa_two_factors_mg, do.fit = FALSE, test = "satorra.bentler", group = "gp")
 ptable <- parameterTable(fitc)

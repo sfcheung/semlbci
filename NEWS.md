@@ -1,4 +1,4 @@
-# semlbci 0.11.6.1
+# semlbci 0.12.0
 
 ## Miscellaneous
 
@@ -8,6 +8,10 @@
   Will update to `parser = "open"` in
   the future.
   (0.11.6.1)
+
+- Updated tests to suppress harmless
+  warnings in `lavaan` 0.7-1.
+  (0.11.6.2)
 
 # semlbci 0.11.6
 

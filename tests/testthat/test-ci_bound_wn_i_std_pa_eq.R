@@ -16,7 +16,7 @@ y ~ a*m
 "
 fit <- lavaan::sem(mod, simple_med, fixed.x = FALSE)
 lavaan::parameterTable(fit)
-lavaan::standardizedSolution(fit)
+suppressWarnings(lavaan::standardizedSolution(fit))
 
 # Find the LBCIs
 

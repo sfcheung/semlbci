@@ -24,7 +24,7 @@ fit <- lavaan::cfa(mod, dat)
 ptable <- parameterTable(fit)
 ptable
 parameterEstimates(fit)
-standardizedSolution(fit)
+suppressWarnings(standardizedSolution(fit))
 
 loglike_point_ur(2, fit, par_i = "f1 ~~ f2")
 loglike_point_ur(.514, fit, par_i = "f1 ~~ f2", standardized = TRUE)

@@ -63,7 +63,7 @@ scaling_factor3 <- function(sem_out,
               "augmented.information"),
               tol = .Machine$double.eps^(3 / 4))[seq_len(npar), seq_len(npar)]
     if (standardized) {
-        p_std <- lavaan::parameterEstimates(
+        p_std <- suppressWarnings(lavaan::parameterEstimates(
                               sem_out,
                               standardized = TRUE,
                               se = FALSE,
@@ -75,7 +75,7 @@ scaling_factor3 <- function(sem_out,
                               remove.eq = FALSE,
                               remove.ineq = FALSE,
                               remove.def = FALSE,
-                              remove.nonfree = FALSE)
+                              remove.nonfree = FALSE))
         p_std$id <- seq_len(nrow(p_std))
         if (lavaan::lavTech(sem_out, "ngroups") > 1) {
             i_lor <- get_lhs_op_rhs(i, sem_out, more = TRUE)

@@ -24,7 +24,7 @@ fit <- lavaan::cfa(mod, dat)
 ptable <- parameterTable(fit)
 ptable
 parameterEstimates(fit)
-standardizedSolution(fit)
+suppressWarnings(standardizedSolution(fit))
 
 # fit_lbci <- semlbci(fit, c("f1 ~~ f2"))
 # fit_lbci
