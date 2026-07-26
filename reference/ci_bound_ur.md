@@ -258,7 +258,7 @@ out1l
 #> 
 #> 
 #> $sem_out_bound
-#> lavaan 0.6-21 ended normally after 39 iterations
+#> lavaan 0.7-2 ended normally after 39 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB

@@ -275,7 +275,7 @@ lower or upper bound is to be searched.
 The gradient of the object function, `lbci_b_f()`, is either precomputed
 (if the parameter for which the bound is being searched is a parameter)
 or computed by
-[`lavaan::lav_func_gradient_complex()`](https://rdrr.io/pkg/lavaan/man/lav_func.html).
+[`lavaan::lav_func_gradient_complex()`](https://rdrr.io/pkg/lavaan/man/lav_long_names.html).
 
 ##### Tweaking the Optimization
 
