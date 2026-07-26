@@ -1,3 +1,14 @@
+# semlbci 0.12.0.1
+
+## Miscellaneous
+
+- Updated to address changes in
+  the forthcoming `lavaan` 0.7-3.
+  (0.12.0.1)
+
+- Changed `.Dim` to `dim` in some tests.
+  (0.12.0.1)
+
 # semlbci 0.12.0
 
 ## Miscellaneous
