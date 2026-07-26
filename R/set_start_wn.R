@@ -112,6 +112,11 @@ set_start_wn <- function(i = NULL,
             i_label <- gen_unique_name(get_names_from_ptable(ptable))
             ptable[i, "label"] <- i_label
           }
+        # 2026-07-26:
+        # - Temp fix for lavaan 0.7-3
+        # - Remove all browne.residual.* tests
+        tmp_test <- lavaan::lavInspect(sem_out, "options")$test
+        tmp_test <- tmp_test[!grepl("browne.residual.", tmp_test)]
         for (rs in c(1, .5, .25, .1)) {
             i_est_fix2 <- get_fix2(ptable, i, qcrit, ratio = rs)
             sem_out2 <- tryCatch(lavaan::update(sem_out, model = ptable,
@@ -119,6 +124,7 @@ set_start_wn <- function(i = NULL,
                                       do.fit = TRUE,
                                       baseline = FALSE,
                                       h1 = FALSE,
+                                      test = tmp_test,
                                       se = "none"),
                                       error = function(e) e,
                                       warning = function(e) e)
