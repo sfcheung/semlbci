@@ -27,7 +27,7 @@ test_A <- structure(
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 25, 26, 0, 0, 0, 0, 0, 0, 0,
     0, 27, 28, 29, 30, 0),
   dim = c(8L, 8L),
-  .Dimnames = list(
+  dimnames = list(
     c("x1",
       "x2", "x3", "x4", "x5", "x6", "f1", "f2"), c("x1", "x2", "x3",
       "x4", "x5", "x6", "f1", "f2")))
@@ -38,7 +38,7 @@ test_S <- structure(
       35, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0,
       0, 0, 0, 0, 0, 0, 0, 38),
     dim = c(8L, 8L),
-    .Dimnames = list(
+    dimnames = list(
       c("x1", "x2", "x3", "x4", "x5", "x6", "f1", "f2"), c("x1",
         "x2", "x3", "x4", "x5", "x6", "f1", "f2")))
 
@@ -47,14 +47,14 @@ test_F <- structure(
       0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
     dim = c(6L, 8L),
-    .Dimnames = list(
+    dimnames = list(
       c("x1", "x2", "x3", "x4", "x5", "x6"), c("x1", "x2", "x3",
       "x4", "x5", "x6", "f1", "f2")))
 
 test_M <- structure(
     c(39, 40, 41, 42, 43, 44, 45, 46),
     dim = c(1L, 8L),
-    .Dimnames = list(
+    dimnames = list(
        NULL, c("x1", "x2", "x3", "x4", "x5", "x6", "f1", "f2")))
 
 test_that("Check the generated matrices", {
@@ -88,7 +88,7 @@ test_A <- structure(
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0,
       4, 5, 6, 7, 0),
     dim = c(8L, 8L),
-    .Dimnames = list(
+    dimnames = list(
       c("x1", "x2",
         "x3", "x4", "x5", "x6", "f1", "f2"), c("x1", "x2", "x3", "x4",
         "x5", "x6", "f1", "f2")))
@@ -99,7 +99,7 @@ test_S <- structure(
       0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0,
       0, 0, 0, 0, 0, 0, 15),
     dim = c(8L, 8L),
-    .Dimnames = list(
+    dimnames = list(
       c("x1",
         "x2", "x3", "x4", "x5", "x6", "f1", "f2"), c("x1", "x2", "x3",
         "x4", "x5", "x6", "f1", "f2")))
@@ -109,14 +109,14 @@ test_F <- structure(
       0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
     dim = c(6L, 8L),
-    .Dimnames = list(
+    dimnames = list(
       c("x1", "x2", "x3", "x4", "x5", "x6"), c("x1", "x2", "x3",
        "x4", "x5", "x6", "f1", "f2")))
 
 test_M <- structure(
   c(0, 0, 0, 0, 0, 0, 0, 0),
   dim = c(1L, 8L),
-  .Dimnames = list(
+  dimnames = list(
     NULL, c("x1", "x2", "x3", "x4", "x5", "x6", "f1", "f2")))
 
 test_that("Check the generated matrices", {
@@ -152,7 +152,7 @@ test_A <- structure(
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 25, 26, 0, 0, 0, 0, 0, 0, 0,
     0, 27, 28, 29, 0, 0),
   dim = c(8L, 8L),
-  .Dimnames = list(
+  dimnames = list(
     c("x1",
       "x2", "x3", "x4", "x5", "x6", "f1", "f2"), c("x1", "x2", "x3",
       "x4", "x5", "x6", "f1", "f2")))
@@ -163,7 +163,7 @@ test_S <- structure(
       34, 0, 0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 36, 38,
       0, 0, 0, 0, 0, 0, 38, 37),
     dim = c(8L, 8L),
-    .Dimnames = list(
+    dimnames = list(
       c("x1", "x2", "x3", "x4", "x5", "x6", "f1", "f2"),
       c("x1",
         "x2", "x3", "x4", "x5", "x6", "f1", "f2")))
@@ -173,14 +173,14 @@ test_F <- structure(
       0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
     dim = c(6L, 8L),
-    .Dimnames = list(
+    dimnames = list(
       c("x1", "x2", "x3", "x4", "x5", "x6"), c("x1", "x2", "x3",
       "x4", "x5", "x6", "f1", "f2")))
 
 test_M <- structure(
     c(39, 40, 41, 42, 43, 44, 45, 46),
     dim = c(1L, 8L),
-    .Dimnames = list(
+    dimnames = list(
        NULL, c("x1", "x2", "x3", "x4", "x5", "x6", "f1", "f2")))
 
 test_that("Check the generated matrices", {
@@ -213,7 +213,7 @@ test_A <- structure(
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0,
       4, 5, 6, 0, 0),
     dim = c(8L, 8L),
-    .Dimnames = list(
+    dimnames = list(
       c("x1", "x2",
         "x3", "x4", "x5", "x6", "f1", "f2"), c("x1", "x2", "x3", "x4",
         "x5", "x6", "f1", "f2")))
@@ -224,7 +224,7 @@ test_S <- structure(
         0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 13, 15, 0,
         0, 0, 0, 0, 0, 15, 14),
       dim = c(8L, 8L),
-      .Dimnames = list(
+      dimnames = list(
         c("x1",
           "x2", "x3", "x4", "x5", "x6", "f1", "f2"),
         c("x1", "x2", "x3",
@@ -235,14 +235,14 @@ test_F <- structure(
       0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
     dim = c(6L, 8L),
-    .Dimnames = list(
+    dimnames = list(
       c("x1", "x2", "x3", "x4", "x5", "x6"), c("x1", "x2", "x3",
        "x4", "x5", "x6", "f1", "f2")))
 
 test_M <- structure(
   c(0, 0, 0, 0, 0, 0, 0, 0),
   dim = c(1L, 8L),
-  .Dimnames = list(
+  dimnames = list(
     NULL, c("x1", "x2", "x3", "x4", "x5", "x6", "f1", "f2")))
 
 test_that("Check the generated matrices", {
