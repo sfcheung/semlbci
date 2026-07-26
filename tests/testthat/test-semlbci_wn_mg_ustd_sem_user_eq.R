@@ -59,7 +59,10 @@ test_out2l <- test_constr(fit = fit, dat = cfa_two_factors_mg, ciperc = ciperc, 
 test_out2u <- test_constr(fit = fit, dat = cfa_two_factors_mg, ciperc = ciperc, parc = "c2 == ", modc0 = modc0, ci_out = out2u, semfct = lavaan::sem, tol = 1e-4, group = "gp")
 # Random issue with lavaan for out3l. Manually check it.
 # test_out3l <- test_constr(fit = fit, dat = cfa_two_factors_mg, ciperc = ciperc, parc = "ab == ", modc0 = modc0, ci_out = out3l, semfct = lavaan::sem, tol = 1e-4, group = "gp")
+# Suppress a lavaan 0.7-3 warning regarding browne.residual.* tests
+suppressWarnings(
 test_out3u <- test_constr(fit = fit, dat = cfa_two_factors_mg, ciperc = ciperc, parc = "ab == ", modc0 = modc0, ci_out = out3u, semfct = lavaan::sem, tol = 1e-4, group = "gp")
+)
 
 test_that("Check p-values", {
     expect_true(test_out1l)
@@ -81,7 +84,10 @@ ab := a1 * b2
 c1 == c2
 ", "ab ==", out3l$bound, "\n")
 
+# Suppress a lavaan 0.7-3 warning regarding browne.residual.* tests
+suppressWarnings(
 fitc <- lavaan::sem(modc0, cfa_two_factors_mg, group = "gp")
+)
 
 test_that("Check p-values: out3l", {
     # 2025-12-05: Relax the tolerance

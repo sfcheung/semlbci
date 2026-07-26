@@ -52,8 +52,14 @@ test_out1l <- test_constr(fit = fit, dat = simple_med_mg, ciperc = ciperc, parc 
 test_out1u <- test_constr(fit = fit, dat = simple_med_mg, ciperc = ciperc, parc = "a == ", modc0 = modc0, ci_out = out1u, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE, group = "gp")
 test_out2l <- test_constr(fit = fit, dat = simple_med_mg, ciperc = ciperc, parc = "b2 == ", modc0 = modc0, ci_out = out2l, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE, group = "gp")
 test_out2u <- test_constr(fit = fit, dat = simple_med_mg, ciperc = ciperc, parc = "b2 == ", modc0 = modc0, ci_out = out2u, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE, group = "gp")
+# Suppress a lavaan 0.7-3 warning regarding browne.residual.* tests
+suppressWarnings(
 test_out3l <- test_constr(fit = fit, dat = simple_med_mg, ciperc = ciperc, parc = "ab == ", modc0 = modc0, ci_out = out3l, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE, group = "gp")
+)
+# Suppress a lavaan 0.7-3 warning regarding browne.residual.* tests
+suppressWarnings(
 test_out3u <- test_constr(fit = fit, dat = simple_med_mg, ciperc = ciperc, parc = "ab == ", modc0 = modc0, ci_out = out3u, semfct = lavaan::sem, tol = 1e-4, fixed.x = FALSE, group = "gp")
+)
 
 test_that("Check p-values", {
     expect_true(test_out1l)
