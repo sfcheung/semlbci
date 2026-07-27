@@ -467,7 +467,12 @@ ci_bound_wn_i <- function(i = NULL,
                                which = which,
                                standardized = standardized,
                                ciperc = ciperc)
-        xstart <- xstart[xstart$free > 0, "est"]
+        if (is.null(xstart)) {
+          # Fallback to wald_ci_start = FALSE if set_start_wn() fails.
+          xstart <- perturbation_factor * lavaan::coef(sem_out)
+        } else {
+          xstart <- xstart[xstart$free > 0, "est"]
+        }
       } else {
         xstart <- perturbation_factor * lavaan::coef(sem_out)
       }
