@@ -1,4 +1,4 @@
-# semlbci 0.12.0.3
+# semlbci 0.12.0.4
 
 ## Miscellaneous
 
@@ -13,6 +13,9 @@
 - Updated `set_start_wn()` to work more
   reliably.
   (0.12.0.3)
+
+- Fixed some typos in a vignette.
+  (0.12.0.4)
 
 # semlbci 0.12.0
 
