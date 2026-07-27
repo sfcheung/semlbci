@@ -1,6 +1,8 @@
 # Changelog
 
-## semlbci 0.12.0.2
+## semlbci 0.12.1
+
+CRAN release: 2026-07-27
 
 ### Miscellaneous
 
@@ -8,7 +10,11 @@
   (0.12.0.1)
 
 - Changed `.Dim` to `dim` and `.Dimnames` to `dimnames` in some tests.
-  (0.12.0.1, 0.12.0.2)
+  (0.12.0.1, 0.12.0.3)
+
+- Updated `set_start_wn()` to work more reliably. (0.12.0.3)
+
+- Fixed some typos in a vignette. (0.12.0.4)
 
 ## semlbci 0.12.0
 

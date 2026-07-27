@@ -1,6 +1,6 @@
 # semlbci
 
-(Version 0.12.0.2, updated on 2026-07-26 [release
+(Version 0.12.1, updated on 2026-07-27 [release
 history](https://sfcheung.github.io/semlbci/news/index.html))
 
 This package includes functions for forming the likelihood-based

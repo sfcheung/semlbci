@@ -160,7 +160,7 @@ get_cibound(lbci_med, row_id = 6, which = "ubound")
 #> Which Bound:            Upper Bound
 #> Method:                 Wu-Neale-2012
 #> Confidence Level:       0.95
-#> Achieved Level:         0.950000073477175
+#> Achieved Level:         0.950000073477154
 #> Standardized:           No
 #> Likelihood-Based Bound: 1.46404
 #> Wald Bound:             1.40883

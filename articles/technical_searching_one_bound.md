@@ -110,31 +110,32 @@ printing diagnostic information.
 ``` r
 
 out_lb
-#> Target Parameter:    y ~ m (group = 1, block = 1)
-#> Position:        2
-#> Which Bound:     Lower Bound
-#> Method:          Wu-Neale-2012
-#> Confidence Level:    0.95
-#> Achieved Level:      0.950000000016768
-#> Standardized:        No
-#> Likelihood-Based Bound:  0.39073
-#> Wald Bound:      0.39142
-#> Point Estimate:      0.53508
-#> Ratio to Wald Bound: 1.00482
+#> Target Parameter:       y ~ m (group = 1, block = 1)
+#> Position:               2
+#> Which Bound:            Lower Bound
+#> Method:                 Wu-Neale-2012
+#> Confidence Level:       0.95
+#> Achieved Level:         0.950000000016768
+#> Standardized:           No
+#> Likelihood-Based Bound: 0.39073
+#> Wald Bound:             0.39142
+#> Point Estimate:         0.53508
+#> Ratio to Wald Bound:    1.00482
 #> 
 #> -- Check --
-#> Level achieved?      Yes (Difference: 1.6768e-11; Tolerance: 5e-04)
-#> Solution admissible? Yes
-#> Direction valid? Yes
+#> Level achieved?         Yes (Difference: 1.6768e-11; Tolerance: 5e-04)
+#> Solution admissible?    Yes
+#> Direction valid?        Yes
 #> 
 #> -- Optimization Information --
-#> Solver Status:       3
-#> Convergence Message: NLOPT_FTOL_REACHED: Optimization stopped because ftol_rel or ftol_abs (above) was reached.
-#> Iterations:      3
+#> Solver Status:          3
+#> Convergence Message:    NLOPT_FTOL_REACHED: Optimization stopped because ftol_rel or ftol_abs (above) was reached.
+#> Iterations:             3
 #> Termination Conditions:
 #>  xtol_rel: 1e-05
 #>  ftol_rel: 1e-05
 #>  maxeval:  500
+#>  maxtime: 300
 #> 
 #> -- Parameter Estimates --
 #>              a        b    m~~m     y~~y
@@ -142,8 +143,8 @@ out_lb
 #> Final  1.67613  0.39073 34.7103 40.88955
 #> Change 0.00000 -0.00069  0.0000  0.00002
 #> 
-#> Bound before check:  0.39073
-#> Status Code:     0
+#> Bound before check:     0.39073
+#> Status Code:            0
 #> Call: ci_bound_wn_i(i = 2, npar = 4, sem_out = fit, f_constr = fn_constraint, 
 #>     which = "lbound", ciperc = 0.95, verbose = TRUE)
 ```
@@ -265,7 +266,7 @@ The `cibound`-class object has three elements:
 ``` r
 
 names(out_lb)
-#> [1] "bound" "diag"  "call"
+#> [1] "bound"       "diag"        "call"        "method_name"
 ```
 
 - `bound`:
@@ -325,31 +326,32 @@ out_ub <- ci_bound_wn_i(i = 2,
                         verbose = TRUE,
                         ciperc = .95)
 out_ub
-#> Target Parameter:    y ~ m (group = 1, block = 1)
-#> Position:        2
-#> Which Bound:     Upper Bound
-#> Method:          Wu-Neale-2012
-#> Confidence Level:    0.95
-#> Achieved Level:      0.950000000016757
-#> Standardized:        No
-#> Likelihood-Based Bound:  0.67944
-#> Wald Bound:      0.67874
-#> Point Estimate:      0.53508
-#> Ratio to Wald Bound: 1.00482
+#> Target Parameter:       y ~ m (group = 1, block = 1)
+#> Position:               2
+#> Which Bound:            Upper Bound
+#> Method:                 Wu-Neale-2012
+#> Confidence Level:       0.95
+#> Achieved Level:         0.950000000016768
+#> Standardized:           No
+#> Likelihood-Based Bound: 0.67944
+#> Wald Bound:             0.67874
+#> Point Estimate:         0.53508
+#> Ratio to Wald Bound:    1.00482
 #> 
 #> -- Check --
-#> Level achieved?      Yes (Difference: 1.6757e-11; Tolerance: 5e-04)
-#> Solution admissible? Yes
-#> Direction valid? Yes
+#> Level achieved?         Yes (Difference: 1.6768e-11; Tolerance: 5e-04)
+#> Solution admissible?    Yes
+#> Direction valid?        Yes
 #> 
 #> -- Optimization Information --
-#> Solver Status:       3
-#> Convergence Message: NLOPT_FTOL_REACHED: Optimization stopped because ftol_rel or ftol_abs (above) was reached.
-#> Iterations:      3
+#> Solver Status:          3
+#> Convergence Message:    NLOPT_FTOL_REACHED: Optimization stopped because ftol_rel or ftol_abs (above) was reached.
+#> Iterations:             3
 #> Termination Conditions:
 #>  xtol_rel: 1e-05
 #>  ftol_rel: 1e-05
 #>  maxeval:  500
+#>  maxtime: 300
 #> 
 #> -- Parameter Estimates --
 #>              a       b    m~~m     y~~y
@@ -357,8 +359,8 @@ out_ub
 #> Final  1.67613 0.67944 34.7103 40.88955
 #> Change 0.00000 0.00069  0.0000  0.00002
 #> 
-#> Bound before check:  0.67944
-#> Status Code:     0
+#> Bound before check:     0.67944
+#> Status Code:            0
 #> Call: ci_bound_wn_i(i = 2, npar = 4, sem_out = fit, f_constr = fn_constraint, 
 #>     which = "ubound", ciperc = 0.95, verbose = TRUE)
 mod_chk <-
@@ -427,31 +429,32 @@ This is the printout:
 ``` r
 
 ind_lb
-#> Target Parameter:    ab := a*b (group = 0, block = 0)
-#> Position:        6
-#> Which Bound:     Lower Bound
-#> Method:          Wu-Neale-2012
-#> Confidence Level:    0.95
-#> Achieved Level:      0.95000000158432
-#> Standardized:        No
-#> Likelihood-Based Bound:  0.42653
-#> Wald Bound:      0.38491
-#> Point Estimate:      0.89687
-#> Ratio to Wald Bound: 0.9187
+#> Target Parameter:       ab := a*b (group = 0, block = 0)
+#> Position:               6
+#> Which Bound:            Lower Bound
+#> Method:                 Wu-Neale-2012
+#> Confidence Level:       0.95
+#> Achieved Level:         0.95000000158432
+#> Standardized:           No
+#> Likelihood-Based Bound: 0.42653
+#> Wald Bound:             0.38491
+#> Point Estimate:         0.89687
+#> Ratio to Wald Bound:    0.9187
 #> 
 #> -- Check --
-#> Level achieved?      Yes (Difference: 1.5843e-09; Tolerance: 5e-04)
-#> Solution admissible? Yes
-#> Direction valid? Yes
+#> Level achieved?         Yes (Difference: 1.5843e-09; Tolerance: 5e-04)
+#> Solution admissible?    Yes
+#> Direction valid?        Yes
 #> 
 #> -- Optimization Information --
-#> Solver Status:       4
-#> Convergence Message: NLOPT_XTOL_REACHED: Optimization stopped because xtol_rel or xtol_abs (above) was reached.
-#> Iterations:      11
+#> Solver Status:          4
+#> Convergence Message:    NLOPT_XTOL_REACHED: Optimization stopped because xtol_rel or xtol_abs (above) was reached.
+#> Iterations:             11
 #> Termination Conditions:
 #>  xtol_rel: 1e-05
 #>  ftol_rel: 1e-05
 #>  maxeval:  500
+#>  maxtime: 300
 #> 
 #> -- Parameter Estimates --
 #>              a        b     m~~m     y~~y
@@ -459,8 +462,8 @@ ind_lb
 #> Final  0.86224  0.49467 35.32975 40.17929
 #> Change 0.08471 -0.00036 -0.13563  0.00042
 #> 
-#> Bound before check:  0.42653
-#> Status Code:     0
+#> Bound before check:     0.42653
+#> Status Code:            0
 #> Call: ci_bound_wn_i(i = 6, npar = 4, sem_out = fit, f_constr = fn_constraint, 
 #>     which = "lbound", ciperc = 0.95, verbose = TRUE)
 ```
@@ -479,6 +482,10 @@ ab ==  0.4265275
 "
 fit_chk <- sem(model = mod_chk,
                data = dat)
+#> Warning: lavaan->lav_model_test():  
+#>    test = "browne.residual.nt.model" could not be computed and is ignored: 
+#>    lavaan->lav_test_browne(): Browne's test is not available (yet) when 
+#>    nonlinear equality constraints are involved.
 lavTestLRT(fit, fit_chk)
 #> 
 #> Chi-Squared Difference Test

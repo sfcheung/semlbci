@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">semlbci</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,7 @@
                         <h4 data-toc-skip class="author">Shu Fai
 Cheung</h4>
             
-            <h4 data-toc-skip class="date">2023-05-04</h4>
+            <h4 data-toc-skip class="date">2026-07-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/semlbci/blob/master/vignettes/technical_searching_one_bound.Rmd" class="external-link"><code>vignettes/technical_searching_one_bound.Rmd</code></a></small>
       <div class="d-none name"><code>technical_searching_one_bound.Rmd</code></div>
@@ -161,31 +161,32 @@ number of free parameters is 4.</p>
 <code>print</code> method for printing diagnostic information.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_lb</span></span>
-<span><span class="co">#&gt; Target Parameter:    y ~ m (group = 1, block = 1)</span></span>
-<span><span class="co">#&gt; Position:        2</span></span>
-<span><span class="co">#&gt; Which Bound:     Lower Bound</span></span>
-<span><span class="co">#&gt; Method:          Wu-Neale-2012</span></span>
-<span><span class="co">#&gt; Confidence Level:    0.95</span></span>
-<span><span class="co">#&gt; Achieved Level:      0.950000000016768</span></span>
-<span><span class="co">#&gt; Standardized:        No</span></span>
-<span><span class="co">#&gt; Likelihood-Based Bound:  0.39073</span></span>
-<span><span class="co">#&gt; Wald Bound:      0.39142</span></span>
-<span><span class="co">#&gt; Point Estimate:      0.53508</span></span>
-<span><span class="co">#&gt; Ratio to Wald Bound: 1.00482</span></span>
+<span><span class="co">#&gt; Target Parameter:       y ~ m (group = 1, block = 1)</span></span>
+<span><span class="co">#&gt; Position:               2</span></span>
+<span><span class="co">#&gt; Which Bound:            Lower Bound</span></span>
+<span><span class="co">#&gt; Method:                 Wu-Neale-2012</span></span>
+<span><span class="co">#&gt; Confidence Level:       0.95</span></span>
+<span><span class="co">#&gt; Achieved Level:         0.950000000016768</span></span>
+<span><span class="co">#&gt; Standardized:           No</span></span>
+<span><span class="co">#&gt; Likelihood-Based Bound: 0.39073</span></span>
+<span><span class="co">#&gt; Wald Bound:             0.39142</span></span>
+<span><span class="co">#&gt; Point Estimate:         0.53508</span></span>
+<span><span class="co">#&gt; Ratio to Wald Bound:    1.00482</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; -- Check --</span></span>
-<span><span class="co">#&gt; Level achieved?      Yes (Difference: 1.6768e-11; Tolerance: 5e-04)</span></span>
-<span><span class="co">#&gt; Solution admissible? Yes</span></span>
-<span><span class="co">#&gt; Direction valid? Yes</span></span>
+<span><span class="co">#&gt; Level achieved?         Yes (Difference: 1.6768e-11; Tolerance: 5e-04)</span></span>
+<span><span class="co">#&gt; Solution admissible?    Yes</span></span>
+<span><span class="co">#&gt; Direction valid?        Yes</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; -- Optimization Information --</span></span>
-<span><span class="co">#&gt; Solver Status:       3</span></span>
-<span><span class="co">#&gt; Convergence Message: NLOPT_FTOL_REACHED: Optimization stopped because ftol_rel or ftol_abs (above) was reached.</span></span>
-<span><span class="co">#&gt; Iterations:      3</span></span>
+<span><span class="co">#&gt; Solver Status:          3</span></span>
+<span><span class="co">#&gt; Convergence Message:    NLOPT_FTOL_REACHED: Optimization stopped because ftol_rel or ftol_abs (above) was reached.</span></span>
+<span><span class="co">#&gt; Iterations:             3</span></span>
 <span><span class="co">#&gt; Termination Conditions:</span></span>
 <span><span class="co">#&gt;  xtol_rel: 1e-05</span></span>
 <span><span class="co">#&gt;  ftol_rel: 1e-05</span></span>
 <span><span class="co">#&gt;  maxeval:  500</span></span>
+<span><span class="co">#&gt;  maxtime: 300</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; -- Parameter Estimates --</span></span>
 <span><span class="co">#&gt;              a        b    m~~m     y~~y</span></span>
@@ -193,8 +194,8 @@ number of free parameters is 4.</p>
 <span><span class="co">#&gt; Final  1.67613  0.39073 34.7103 40.88955</span></span>
 <span><span class="co">#&gt; Change 0.00000 -0.00069  0.0000  0.00002</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Bound before check:  0.39073</span></span>
-<span><span class="co">#&gt; Status Code:     0</span></span>
+<span><span class="co">#&gt; Bound before check:     0.39073</span></span>
+<span><span class="co">#&gt; Status Code:            0</span></span>
 <span><span class="co">#&gt; Call: ci_bound_wn_i(i = 2, npar = 4, sem_out = fit, f_constr = fn_constraint, </span></span>
 <span><span class="co">#&gt;     which = "lbound", ciperc = 0.95, verbose = TRUE)</span></span></code></pre></div>
 <p>The printout is explained briefly below:</p>
@@ -319,7 +320,7 @@ the checks.</p>
 <p>The <code>cibound</code>-class object has three elements:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">out_lb</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "bound" "diag"  "call"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "bound"       "diag"        "call"        "method_name"</span></span></code></pre></div>
 <ul>
 <li>
 <p><code>bound</code>:</p>
@@ -371,31 +372,32 @@ find the upper bound:</p>
 <span>                        verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                        ciperc <span class="op">=</span> <span class="fl">.95</span><span class="op">)</span></span>
 <span><span class="va">out_ub</span></span>
-<span><span class="co">#&gt; Target Parameter:    y ~ m (group = 1, block = 1)</span></span>
-<span><span class="co">#&gt; Position:        2</span></span>
-<span><span class="co">#&gt; Which Bound:     Upper Bound</span></span>
-<span><span class="co">#&gt; Method:          Wu-Neale-2012</span></span>
-<span><span class="co">#&gt; Confidence Level:    0.95</span></span>
-<span><span class="co">#&gt; Achieved Level:      0.950000000016757</span></span>
-<span><span class="co">#&gt; Standardized:        No</span></span>
-<span><span class="co">#&gt; Likelihood-Based Bound:  0.67944</span></span>
-<span><span class="co">#&gt; Wald Bound:      0.67874</span></span>
-<span><span class="co">#&gt; Point Estimate:      0.53508</span></span>
-<span><span class="co">#&gt; Ratio to Wald Bound: 1.00482</span></span>
+<span><span class="co">#&gt; Target Parameter:       y ~ m (group = 1, block = 1)</span></span>
+<span><span class="co">#&gt; Position:               2</span></span>
+<span><span class="co">#&gt; Which Bound:            Upper Bound</span></span>
+<span><span class="co">#&gt; Method:                 Wu-Neale-2012</span></span>
+<span><span class="co">#&gt; Confidence Level:       0.95</span></span>
+<span><span class="co">#&gt; Achieved Level:         0.950000000016768</span></span>
+<span><span class="co">#&gt; Standardized:           No</span></span>
+<span><span class="co">#&gt; Likelihood-Based Bound: 0.67944</span></span>
+<span><span class="co">#&gt; Wald Bound:             0.67874</span></span>
+<span><span class="co">#&gt; Point Estimate:         0.53508</span></span>
+<span><span class="co">#&gt; Ratio to Wald Bound:    1.00482</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; -- Check --</span></span>
-<span><span class="co">#&gt; Level achieved?      Yes (Difference: 1.6757e-11; Tolerance: 5e-04)</span></span>
-<span><span class="co">#&gt; Solution admissible? Yes</span></span>
-<span><span class="co">#&gt; Direction valid? Yes</span></span>
+<span><span class="co">#&gt; Level achieved?         Yes (Difference: 1.6768e-11; Tolerance: 5e-04)</span></span>
+<span><span class="co">#&gt; Solution admissible?    Yes</span></span>
+<span><span class="co">#&gt; Direction valid?        Yes</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; -- Optimization Information --</span></span>
-<span><span class="co">#&gt; Solver Status:       3</span></span>
-<span><span class="co">#&gt; Convergence Message: NLOPT_FTOL_REACHED: Optimization stopped because ftol_rel or ftol_abs (above) was reached.</span></span>
-<span><span class="co">#&gt; Iterations:      3</span></span>
+<span><span class="co">#&gt; Solver Status:          3</span></span>
+<span><span class="co">#&gt; Convergence Message:    NLOPT_FTOL_REACHED: Optimization stopped because ftol_rel or ftol_abs (above) was reached.</span></span>
+<span><span class="co">#&gt; Iterations:             3</span></span>
 <span><span class="co">#&gt; Termination Conditions:</span></span>
 <span><span class="co">#&gt;  xtol_rel: 1e-05</span></span>
 <span><span class="co">#&gt;  ftol_rel: 1e-05</span></span>
 <span><span class="co">#&gt;  maxeval:  500</span></span>
+<span><span class="co">#&gt;  maxtime: 300</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; -- Parameter Estimates --</span></span>
 <span><span class="co">#&gt;              a       b    m~~m     y~~y</span></span>
@@ -403,8 +405,8 @@ find the upper bound:</p>
 <span><span class="co">#&gt; Final  1.67613 0.67944 34.7103 40.88955</span></span>
 <span><span class="co">#&gt; Change 0.00000 0.00069  0.0000  0.00002</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Bound before check:  0.67944</span></span>
-<span><span class="co">#&gt; Status Code:     0</span></span>
+<span><span class="co">#&gt; Bound before check:     0.67944</span></span>
+<span><span class="co">#&gt; Status Code:            0</span></span>
 <span><span class="co">#&gt; Call: ci_bound_wn_i(i = 2, npar = 4, sem_out = fit, f_constr = fn_constraint, </span></span>
 <span><span class="co">#&gt;     which = "ubound", ciperc = 0.95, verbose = TRUE)</span></span>
 <span><span class="va">mod_chk</span> <span class="op">&lt;-</span></span>
@@ -464,31 +466,32 @@ as in the previous example.</p>
 <p>This is the printout:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ind_lb</span></span>
-<span><span class="co">#&gt; Target Parameter:    ab := a*b (group = 0, block = 0)</span></span>
-<span><span class="co">#&gt; Position:        6</span></span>
-<span><span class="co">#&gt; Which Bound:     Lower Bound</span></span>
-<span><span class="co">#&gt; Method:          Wu-Neale-2012</span></span>
-<span><span class="co">#&gt; Confidence Level:    0.95</span></span>
-<span><span class="co">#&gt; Achieved Level:      0.95000000158432</span></span>
-<span><span class="co">#&gt; Standardized:        No</span></span>
-<span><span class="co">#&gt; Likelihood-Based Bound:  0.42653</span></span>
-<span><span class="co">#&gt; Wald Bound:      0.38491</span></span>
-<span><span class="co">#&gt; Point Estimate:      0.89687</span></span>
-<span><span class="co">#&gt; Ratio to Wald Bound: 0.9187</span></span>
+<span><span class="co">#&gt; Target Parameter:       ab := a*b (group = 0, block = 0)</span></span>
+<span><span class="co">#&gt; Position:               6</span></span>
+<span><span class="co">#&gt; Which Bound:            Lower Bound</span></span>
+<span><span class="co">#&gt; Method:                 Wu-Neale-2012</span></span>
+<span><span class="co">#&gt; Confidence Level:       0.95</span></span>
+<span><span class="co">#&gt; Achieved Level:         0.95000000158432</span></span>
+<span><span class="co">#&gt; Standardized:           No</span></span>
+<span><span class="co">#&gt; Likelihood-Based Bound: 0.42653</span></span>
+<span><span class="co">#&gt; Wald Bound:             0.38491</span></span>
+<span><span class="co">#&gt; Point Estimate:         0.89687</span></span>
+<span><span class="co">#&gt; Ratio to Wald Bound:    0.9187</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; -- Check --</span></span>
-<span><span class="co">#&gt; Level achieved?      Yes (Difference: 1.5843e-09; Tolerance: 5e-04)</span></span>
-<span><span class="co">#&gt; Solution admissible? Yes</span></span>
-<span><span class="co">#&gt; Direction valid? Yes</span></span>
+<span><span class="co">#&gt; Level achieved?         Yes (Difference: 1.5843e-09; Tolerance: 5e-04)</span></span>
+<span><span class="co">#&gt; Solution admissible?    Yes</span></span>
+<span><span class="co">#&gt; Direction valid?        Yes</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; -- Optimization Information --</span></span>
-<span><span class="co">#&gt; Solver Status:       4</span></span>
-<span><span class="co">#&gt; Convergence Message: NLOPT_XTOL_REACHED: Optimization stopped because xtol_rel or xtol_abs (above) was reached.</span></span>
-<span><span class="co">#&gt; Iterations:      11</span></span>
+<span><span class="co">#&gt; Solver Status:          4</span></span>
+<span><span class="co">#&gt; Convergence Message:    NLOPT_XTOL_REACHED: Optimization stopped because xtol_rel or xtol_abs (above) was reached.</span></span>
+<span><span class="co">#&gt; Iterations:             11</span></span>
 <span><span class="co">#&gt; Termination Conditions:</span></span>
 <span><span class="co">#&gt;  xtol_rel: 1e-05</span></span>
 <span><span class="co">#&gt;  ftol_rel: 1e-05</span></span>
 <span><span class="co">#&gt;  maxeval:  500</span></span>
+<span><span class="co">#&gt;  maxtime: 300</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; -- Parameter Estimates --</span></span>
 <span><span class="co">#&gt;              a        b     m~~m     y~~y</span></span>
@@ -496,8 +499,8 @@ as in the previous example.</p>
 <span><span class="co">#&gt; Final  0.86224  0.49467 35.32975 40.17929</span></span>
 <span><span class="co">#&gt; Change 0.08471 -0.00036 -0.13563  0.00042</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Bound before check:  0.42653</span></span>
-<span><span class="co">#&gt; Status Code:     0</span></span>
+<span><span class="co">#&gt; Bound before check:     0.42653</span></span>
+<span><span class="co">#&gt; Status Code:            0</span></span>
 <span><span class="co">#&gt; Call: ci_bound_wn_i(i = 6, npar = 4, sem_out = fit, f_constr = fn_constraint, </span></span>
 <span><span class="co">#&gt;     which = "lbound", ciperc = 0.95, verbose = TRUE)</span></span></code></pre></div>
 <p>This bound passes all the checks. We can verify the bound using the
@@ -512,6 +515,10 @@ likelihood ratio test:</p>
 <span><span class="st">"</span></span>
 <span><span class="va">fit_chk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">mod_chk</span>,</span>
 <span>               data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: lavaan-&gt;lav_model_test():  </span></span>
+<span><span class="co">#&gt;    test = "browne.residual.nt.model" could not be computed and is ignored: </span></span>
+<span><span class="co">#&gt;    lavaan-&gt;lav_test_browne(): Browne's test is not available (yet) when </span></span>
+<span><span class="co">#&gt;    nonlinear equality constraints are involved.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/lavTestLRT.html" class="external-link">lavTestLRT</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">fit_chk</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Chi-Squared Difference Test</span></span>
