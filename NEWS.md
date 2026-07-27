@@ -1,4 +1,4 @@
-# semlbci 0.12.0.2
+# semlbci 0.12.0.3
 
 ## Miscellaneous
 
@@ -8,7 +8,11 @@
 
 - Changed `.Dim` to `dim` and
   `.Dimnames` to `dimnames` in some tests.
-  (0.12.0.1, 0.12.0.2)
+  (0.12.0.1, 0.12.0.3)
+
+- Updated `set_start_wn()` to work more
+  reliably.
+  (0.12.0.3)
 
 # semlbci 0.12.0
 
