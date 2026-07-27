@@ -445,9 +445,9 @@ model with equality constraints:
 data(HolzingerSwineford1939)
 mod_cfa <-
 '
-visual  =~ x1 + v(lambda2, lambda2)*x2 + v(lambda3, lambda3)*x3
-textual =~ x4 + v(lambda5, lambda5)*x5 + v(lambda6, lambda6)*x6
-speed   =~ x7 + v(lambda8, lambda8)*x8 + v(lambda9, lambda9)*x9
+visual  =~ x1 + c(lambda2, lambda2)*x2 + c(lambda3, lambda3)*x3
+textual =~ x4 + c(lambda5, lambda5)*x5 + c(lambda6, lambda6)*x6
+speed   =~ x7 + c(lambda8, lambda8)*x8 + c(lambda9, lambda9)*x9
 '
 fit_cfa <- cfa(model = mod_cfa,
                data = HolzingerSwineford1939,
