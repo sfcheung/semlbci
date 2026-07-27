@@ -136,7 +136,10 @@ set_start_wn <- function(i = NULL,
               }
           }
         if (inherits(sem_out2, "warning") | inherits(sem_out2, "error")) {
-            return(ptable)
+            # 2026-07-27:
+            # - Return NULL to tell the caller to fallback to wald_ci_start = FALSE
+            # return(ptable)
+            return(NULL)
           }
         ptable2_final <- lavaan::parameterTable(sem_out2)
         i_con <- get_i_from_lor(ptable2_final,
