@@ -1,7 +1,7 @@
 ---
 title: "Get Started"
 author: "Shu Fai Cheung"
-date: "2024-06-01"
+date: "2026-07-27"
 output:
   rmarkdown::html_vignette
 vignette: >
@@ -53,9 +53,6 @@ head(dat)
 #> 4 -0.3389654   4.367018  1.563098
 #> 5 -0.9628162  -4.015469 -7.288511
 #> 6 -1.0749302 -11.538140 -4.153572
-```
-
-``` r
 library(lavaan)
 mod <-
 "
@@ -79,7 +76,7 @@ This is the summary:
 
 ``` r
 summary(fit, standardized = TRUE)
-#> lavaan 0.6.17 ended normally after 1 iteration
+#> lavaan 0.7-2.3166 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -90,6 +87,11 @@ summary(fit, standardized = TRUE)
 #> Model Test User Model:
 #>                                                       
 #>   Test statistic                                10.549
+#>   Degrees of freedom                                 1
+#>   P-value (Chi-square)                           0.001
+#>                                                       
+#>   Browne's residual (NT model-based) test             
+#>   Test statistic                                10.275
 #>   Degrees of freedom                                 1
 #>   P-value (Chi-square)                           0.001
 #> 
@@ -115,6 +117,11 @@ summary(fit, standardized = TRUE)
 #> Defined Parameters:
 #>                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
 #>     ab                0.897    0.261    3.434    0.001    0.897    0.122
+#> lavaan NOTE:  
+#>    Standard errors and confidence intervals of the (nonlinear) defined (:=) 
+#>    parameters are based on the first-order delta method; for strongly 
+#>    nonlinear definitions, se.def = "mc" (Monte Carlo) or se = "bootstrap" may 
+#>    be more accurate.
 ```
 
 # Examples
@@ -374,7 +381,7 @@ print(out,
 #> Regressions:
 #>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
 #>   m ~                                                                   
-#>     x          (a)    0.265    0.066    4.035    0.000    0.133    0.389
+#>     x          (a)    0.265    0.066    4.035    0.000    0.132    0.389
 #>   y ~                                                                   
 #>     m          (b)    0.459    0.056    8.215    0.000    0.342    0.561
 ```
@@ -410,7 +417,7 @@ print(out,
 #> 
 #> Defined Parameters:
 #>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
-#>     ab                0.122    0.034    3.538    0.000    0.059    0.194
+#>     ab                0.122    0.034    3.538    0.000    0.058    0.194
 ```
 
 
@@ -434,13 +441,13 @@ print(out,
 #> Regressions:
 #>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
 #>   m ~                                                                   
-#>     x          (a)    0.265    0.066    4.035    0.000    0.133    0.389
+#>     x          (a)    0.265    0.066    4.035    0.000    0.132    0.389
 #>   y ~                                                                   
 #>     m          (b)    0.459    0.056    8.215    0.000    0.342    0.561
 #> 
 #> Defined Parameters:
 #>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
-#>     ab                0.122    0.034    3.538    0.000    0.059    0.194
+#>     ab                0.122    0.034    3.538    0.000    0.058    0.194
 ```
 
 
@@ -621,9 +628,9 @@ model with equality constraints:
 data(HolzingerSwineford1939)
 mod_cfa <-
 '
-visual  =~ x1 + v(lambda2, lambda2)*x2 + v(lambda3, lambda3)*x3
-textual =~ x4 + v(lambda5, lambda5)*x5 + v(lambda6, lambda6)*x6
-speed   =~ x7 + v(lambda8, lambda8)*x8 + v(lambda9, lambda9)*x9
+visual  =~ x1 + c(lambda2, lambda2)*x2 + c(lambda3, lambda3)*x3
+textual =~ x4 + c(lambda5, lambda5)*x5 + c(lambda6, lambda6)*x6
+speed   =~ x7 + c(lambda8, lambda8)*x8 + c(lambda9, lambda9)*x9
 '
 fit_cfa <- cfa(model = mod_cfa,
                data = HolzingerSwineford1939,
@@ -675,7 +682,7 @@ print(fcov,
 #> Covariances:
 #>                    Estimate  Std.Err  z-value  P(>|z|) lb.lower lb.upper
 #>   visual ~~                                                             
-#>     textual           0.416    0.097    4.271    0.000    0.221    0.654
+#>     textual           0.416    0.097    4.271    0.000    0.221    0.653
 #> 
 #> 
 #> Group 2 [Grant-White]:
@@ -723,7 +730,7 @@ print(fcor,
 #> Covariances:
 #>                Standardized  Std.Err  z-value  P(>|z|) lb.lower lb.upper
 #>   visual ~~                                                             
-#>     textual           0.540    0.086    6.317    0.000    0.357    0.692
+#>     textual           0.540    0.086    6.317    0.000    0.358    0.692
 ```
 
 Note that the example above can take more

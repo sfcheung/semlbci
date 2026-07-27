@@ -115,8 +115,10 @@ set_start_wn <- function(i = NULL,
         # 2026-07-26:
         # - Temp fix for lavaan 0.7-3
         # - Remove all browne.residual.* tests
-        tmp_test <- lavaan::lavInspect(sem_out, "options")$test
-        tmp_test <- tmp_test[!grepl("browne.residual.", tmp_test)]
+        # tmp_test <- lavaan::lavInspect(sem_out, "options")$test
+        # tmp_test <- tmp_test[!grepl("browne.residual.", tmp_test)]
+        # 2026-07-27:
+        # - It is actually not necessary to do the test
         for (rs in c(1, .5, .25, .1)) {
             i_est_fix2 <- get_fix2(ptable, i, qcrit, ratio = rs)
             sem_out2 <- tryCatch(lavaan::update(sem_out, model = ptable,
@@ -124,7 +126,7 @@ set_start_wn <- function(i = NULL,
                                       do.fit = TRUE,
                                       baseline = FALSE,
                                       h1 = FALSE,
-                                      test = tmp_test,
+                                      test = "none",
                                       se = "none"),
                                       error = function(e) e,
                                       warning = function(e) e)
@@ -134,7 +136,10 @@ set_start_wn <- function(i = NULL,
               }
           }
         if (inherits(sem_out2, "warning") | inherits(sem_out2, "error")) {
-            return(ptable)
+            # 2026-07-27:
+            # - Return NULL to tell the caller to fallback to wald_ci_start = FALSE
+            # return(ptable)
+            return(NULL)
           }
         ptable2_final <- lavaan::parameterTable(sem_out2)
         i_con <- get_i_from_lor(ptable2_final,
