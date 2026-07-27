@@ -11,7 +11,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/sfcheung/semlbci/blob/master/inst/CITATION)
+[`inst/CITATION`](https://github.com/sfcheung/semlbci/blob/v0.12.1/inst/CITATION)
 
 Cheung SF, Pesigan IJA (2023). “semlbci: An R package for forming
 likelihood-based confidence intervals for parameter estimates,
