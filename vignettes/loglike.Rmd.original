@@ -15,7 +15,9 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = ""
+  fig.path = "",
+  dev = "png",
+  dev.args = list(type = "cairo")
 )
 ```
 
